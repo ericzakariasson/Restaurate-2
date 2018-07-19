@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import { NavLink } from 'react-router-dom';
 
+import { animated } from 'react-spring';
+
 const StyledButton = styled.button`
   border-radius: 5px;
   box-shadow: ${p => p.theme.boxShadow};
@@ -16,6 +18,7 @@ const StyledButton = styled.button`
 const ButtonText = styled.span`
   color: ${p => p.theme.action};
   font-size: 2.4rem;
+  font-family: ${p => p.theme.fonts.text};
 `;
 
 const Button = ({ onClick, disabled, children }) => {
@@ -32,6 +35,7 @@ Button.propTypes = {
   children: PropTypes.node
 }
 
+
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   border-radius: 5px;
@@ -41,6 +45,7 @@ const StyledNavLink = styled(NavLink)`
   border: none;
   outline: none;
   text-align: center;
+  display: block;
 `;
 
 export const NavButton = ({ to, disabled, children }) => {
