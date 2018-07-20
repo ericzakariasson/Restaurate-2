@@ -15,8 +15,8 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test:/\.css$/,
-        use:['style-loader','css-loader']
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
@@ -25,7 +25,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/',
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -37,6 +38,7 @@ module.exports = {
   devServer: {
     contentBase: './dist',
     port: 3000,
-    hot: true
+    hot: true,
+    historyApiFallback: true,
   }
 };
