@@ -9,6 +9,7 @@ import NewVisit from './views/NewVisit';
 import NotFound from './views/NotFound';
 
 import { Trail } from 'react-spring';
+import Login from './views/Login';
 
 const App = ({ location }) => {
 

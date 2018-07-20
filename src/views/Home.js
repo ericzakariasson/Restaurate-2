@@ -2,8 +2,11 @@ import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 
 import { NavButton } from '../components/Button';
+import { NavLink } from 'react-router-dom';
 
-import { Keyframes, animated, config } from 'react-spring'
+import { findDOMNode } from 'react-dom';
+
+import { Transition, Keyframes, animated, config } from 'react-spring'
 
 const Start = styled(animated.div)`
   background-color: ${p => p.theme.main};
@@ -32,7 +35,7 @@ const Description = styled(animated.p)`
 `;
 
 const NotLoggedIn = Keyframes.Spring({
-  default: { from: { height: 0 }, to: { height: window.innerHeight } },
+  default: { to: { height: window.innerHeight } },
   login: { delay: 500, to: { y: 0.01, height: 10 }, config: config.gentle }
 })
 
@@ -54,7 +57,7 @@ const LoginPage = styled(animated.div)`
   flex-direction: column;
   background: ${p => p.theme.background};
   justify-content: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 10px);
 `;
 
 const LoginTitle = styled(animated.h1)`
@@ -73,7 +76,7 @@ const LoginDescription = styled(animated.p)`
 
 const LogIn = Keyframes.Spring({
   login: { delay: 500, from: { y: 100, opacity: 0 }, to: { y: 0, opacity: 1 } },
-  default: { delay: 300, to: { y: 100 } }
+  default: { delay: 0, to: { y: 100 } }
 })
 
 const LoginContent = Keyframes.Trail({
@@ -85,18 +88,91 @@ const LoginContent = Keyframes.Trail({
 const LoginContentItems = [
   ({ style }) => <LoginTitle style={style}>Logga in</LoginTitle>,
   ({ style }) => <LoginDescription style={style}>Vi kommer aldrig att publicera något eller utföra annan aktivitet med ditt konto</LoginDescription>,
-  ({ style }) => <animated.div style={style}><NavButton to="/">Bakåt</NavButton></animated.div>
+  ({ style }) => <animated.div style={style}><NavButton to="/nytt">Logga in</NavButton></animated.div>
 ]
+
+
+const HomeInfoPage = styled(animated.div)`
+  display: flex;
+  flex-direction: column;
+  padding: 80px 40px;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -100%);
+  }
+`;
+
+const SubTitle = styled.h2`
+  font-size: 2.4rem;
+  color: #222;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-weight: 600;
+`;
+
+const Text = styled.p`
+  line-height: 1.5;
+  font-size: 1.6rem;
+  margin-bottom: 40px;
+`;
+
+const LoginText = styled.button`
+  color: ${p => p.theme.action};
+  font-size: 1.8rem;
+  text-decoration: underline;
+`;
+
+const Login = ({ style }) => (
+  <LoginPage style={style}>
+    <LoginTitle >Logga in</LoginTitle>,
+        <LoginDescription >Vi kommer aldrig att publicera något eller utföra annan aktivitet med ditt konto</LoginDescription>,
+        <NavButton to="/nytt">Logga in</NavButton>
+  </LoginPage>
+)
+
+const HomeInfo = ({ style }) => (
+  <HomeInfoPage style={style}>
+    <SubTitle>Varför</SubTitle>
+    <Text>"Vad hette den restaurangen jag var på förra veckan med så god tapas?" är en mening du aldrig kommer att  säga efter att du börjat använda Restaurate. Den hjälper dig att hålla koll på vart du varit, vart du kan tänka dig gå tillbaka, och vart du verkligen inte går tillbaka!</Text>
+    <SubTitle>Hur</SubTitle>
+    <Text>
+      Efter du har besökt en restaurang eller café kan du enkelt recensera den för framtida referenser.
+        <br />
+      <br />
+      Fyll i så mycket du vill. Allt från vilken prisklass till smak, du bestämmer! För att börja behöver du bara logga in med ditt Google-konto
+      </Text>
+  </HomeInfoPage>
+)
 
 class Home extends Component {
 
-  state = { login: false }
+  state = { height: undefined }
 
-  toggleLogin = () => this.setState(prevState => ({ login: !prevState.login }));
+  container = React.createRef();
+
+  componentDidMount() {
+    window.addEventListener('resize', this.updateHeight);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateHeight);
+  }
+
+
+  updateHeight = () => {
+    this.setState({ height: window.innerHeight });
+  }
 
   render() {
     const login = this.props.location.pathname === '/logga-in';
     const state = login ? 'login' : 'default';
+
+    console.log('this.state.height: ', this.state.height);
 
     return (
       <Fragment>
@@ -113,8 +189,21 @@ class Home extends Component {
             </Start>
           )}
         </NotLoggedIn>
+        <Transition
+          native
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+          config={config.slow}
+        >
+          {
+            login
+              ? style => <Login style={style} />
+              : style => <HomeInfo style={style} />
+          }
+        </Transition>
         {
-          login
+          /* login
             ? (
               <LogIn native state={state}>
                 {({ y }) => (
@@ -130,9 +219,7 @@ class Home extends Component {
                 )}
               </LogIn>
             )
-            : (
-              <div style={{ height: '200vh' }}>Varför restauraag</div>
-            )
+            : style => <animated.div style={{ background: 'red', height: '200vh', ...style }}><h1 style={{ padding: '100px', color: 'black', fontSize: 40 }}>Varför restauraag</h1></animated.div> */
         }
       </Fragment >
 
