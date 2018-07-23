@@ -172,8 +172,6 @@ class Home extends Component {
     const login = this.props.location.pathname === '/logga-in';
     const state = login ? 'login' : 'default';
 
-    console.log('this.state.height: ', this.state.height);
-
     return (
       <Fragment>
         <NotLoggedIn native state={state}>

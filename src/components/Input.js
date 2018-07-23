@@ -112,7 +112,7 @@ const InputChildrenWrapper = styled.div`
   z-index: 10;
 `;
 
-export const InputWithIcon = ({ onChange, name, value, label, placeholder, Icon, onSubmit, children, color, ...props }) => {
+export const InputWithIcon = ({ onChange, name, value, label, placeholder, Icon, onSubmit, children, color, onIconClick, ...props }) => {
   const id = label
     .replace(/[ÅÄåä]/, 'a')
     .replace(/[Öö]/, 'o')
@@ -133,7 +133,7 @@ export const InputWithIcon = ({ onChange, name, value, label, placeholder, Icon,
             icon="true"
             {...props}
           />
-          <IconWrapper type="submit" color={color}>
+          <IconWrapper onClick={onIconClick} type="button" color={color}>
             <Icon />
           </IconWrapper>
         </InputIconWrapper>
