@@ -5,10 +5,9 @@ import { theme } from './style';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import Home from './views/Home';
-import NewVisit from './views/NewVisit';
+import NewVisit from './views/NewVisit/';
 import NotFound from './views/NotFound';
 
-import { Trail } from 'react-spring';
 import Login from './views/Login';
 
 const App = ({ location }) => {

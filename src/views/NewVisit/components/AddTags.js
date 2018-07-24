@@ -3,7 +3,7 @@ import styled, { withTheme } from 'styled-components';
 
 import { Transition, animated } from 'react-spring';
 import { PlusCircle, X } from 'react-feather';
-import { InputWithIcon } from './Input';
+import { InputWithIcon } from '../../../components/Input';
 
 const TagList = styled.ul`
   list-style: none;
@@ -15,13 +15,11 @@ const TagList = styled.ul`
 `;
 
 const Tag = styled(animated.li)`
-  font-size: 1.8rem;
-  padding: 20px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-weight: 500;
+  padding-right: 20px !important;
 
   &:not(:last-of-type) {
     border-bottom: 1px solid #EEE;
@@ -35,6 +33,13 @@ const Tag = styled(animated.li)`
 
 const TagText = styled.p`
   display: block;
+  padding: 10px 12px;
+  background: #F5F5F5;
+  border-radius: 5px;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  color: #222;
+  font-weight: 500;
 `;
 
 const NoTags = styled(animated.span)`
@@ -44,36 +49,38 @@ const NoTags = styled(animated.span)`
   display: block;
 `;
 
-class Tags extends Component {
+class AddTags extends Component {
   state = {
     value: '',
-    tags: []
+    items: []
   }
 
   handleChange = ({ target: { value } }) => this.setState({ value });
 
   handleSubmit = e => {
     e.preventDefault();
-    this.addTag();
+    this.addItem();
   }
 
-  addTag = () => {
-    const alreadyExists = this.state.tags.includes(this.state.value);
+  addItem = () => {
 
-    if (!alreadyExists && this.state.value.length > 0) {
-      this.setState({ tags: this.state.tags.concat([this.state.value]), value: '' })
+    const newItem = this.state.value.toUpperCase();
+
+    const alreadyExists = this.state.items.includes(newItem);
+
+    if (!alreadyExists && newItem.length > 0 && newItem.length < 64) {
+      this.setState({ items: this.state.items.concat([newItem]), value: '' })
     }
   }
 
-  removeTag = tag => {
-    console.log('tag: ', tag);
-    const tags = this.state.tags.filter(oldTag => oldTag !== tag);
-    this.setState({ tags });
+  removeItem = item => {
+    const items = this.state.items.filter(oldItem => oldItem !== item);
+    this.setState({ items });
   }
 
   render() {
 
-    const gotTags = this.state.tags.length > 0;
+    const gotItems = this.state.items.length > 0;
 
     return (
       <InputWithIcon
@@ -83,22 +90,22 @@ class Tags extends Component {
         onSubmit={this.handleSubmit}
         placeholder={'Nationalitet, specialkost'}
         color='action'
-        style={gotTags ? { borderRadius: '5px 5px 0 0' } : undefined}
+        style={gotItems ? { borderRadius: '5px 5px 0 0' } : undefined}
         Icon={PlusCircle}
-        onIconClick={this.addTag}
+        onIconClick={this.addItem}
         autoComplete="off"
       >
-        <TagList length={gotTags}>
+        <TagList length={gotItems}>
           <Transition
             native
-            keys={this.state.tags}
+            keys={this.state.items}
             from={{ opacity: 0, padding: 0, height: 0 }}
-            enter={{ opacity: 1, padding: 20, height: 'auto' }}
+            enter={{ opacity: 1, padding: 10, height: 'auto' }}
             leave={{ opacity: 0, padding: 0, height: 0 }}>
-            {this.state.tags.map(item => styles => (
-              <Tag style={{ ...styles, padding: styles.padding.interpolate(y => `${y}px 20px`) }}>
+            {this.state.items.map(item => styles => (
+              <Tag style={{ ...styles, padding: styles.padding.interpolate(y => `${y}px 10px`) }}>
                 <TagText>{item}</TagText>
-                <X color={this.props.theme.danger} onClick={() => this.removeTag(item)} />
+                <X color={this.props.theme.danger} onClick={() => this.removeItem(item)} />
               </Tag>)
             )}
           </Transition>
@@ -109,7 +116,7 @@ class Tags extends Component {
           enter={{ opacity: 1 }}
           leave={{ opacity: 0 }}>
           {
-            this.state.tags.length === 0
+            this.state.items.length === 0
               ? style => <NoTags style={style}>Inga taggar</NoTags>
               : () => null
           }
@@ -119,4 +126,4 @@ class Tags extends Component {
   }
 }
 
-export default withTheme(Tags);
+export default withTheme(AddTags);

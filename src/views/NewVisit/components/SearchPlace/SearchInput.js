@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, X } from 'react-feather';
 
-import { InputWithIcon } from '../../components/Input';
+import { InputWithIcon } from '../../../../components/Input';
 
 const SearchInput = ({ isOpen, onChange, onSubmit, children, value, clear }) => {
   return (

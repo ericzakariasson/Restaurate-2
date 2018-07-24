@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-import Label from './Label';
-
+import Label from '../../../components/Label';
 import { PlusSquare } from 'react-feather';
+import { Wrapper } from '../../../components/Input';
 
-import { Wrapper } from './Input';
-
-const types = [{ label: 'Restaurang', value: 'restaurant' }, { label: 'Café', value: 'cafe' }];
 
 const Types = styled.ul`
   border-radius: 5px;
@@ -72,7 +70,7 @@ const Text = styled.span`
   font-weight: 500;
 `;
 
-class TypeOfPlace extends Component {
+class SelectTypeOfPlace extends Component {
   state = { selected: [] }
 
   toggle = value => {
@@ -84,6 +82,7 @@ class TypeOfPlace extends Component {
     } else {
       newState = selected.concat([value])
     }
+
     this.setState({ selected: newState })
   }
 
@@ -93,7 +92,7 @@ class TypeOfPlace extends Component {
         <Label>Typ av plats</Label>
         <Types>
           {
-            types.map(type => (
+            this.props.types.map(type => (
               <TypeWrapper key={type.value} onClick={() => this.toggle(type.value)}>
                 <Icon active={this.state.selected.includes(type.value)}>
                   <PlusSquare size={26} />
@@ -108,4 +107,11 @@ class TypeOfPlace extends Component {
   }
 }
 
-export default TypeOfPlace;
+SelectTypeOfPlace.propTypes = {
+  types: PropTypes.arrayOf(PropTypes.shape({
+    value: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+  }))
+}
+
+export default SelectTypeOfPlace;

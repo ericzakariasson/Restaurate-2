@@ -1,14 +1,14 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { Transition, Keyframes, animated, config } from 'react-spring';
+import { Transition, animated, config } from 'react-spring';
 import { Easing } from 'react-spring/dist/addons'
 
 import ResultList from './ResultList';
 import SearchInput from './SearchInput';
 import SelectedPlace from './SelectedPlace';
 
-import { Wrapper } from '../Input';
+import { Wrapper } from '../../../../components/Input';
 
 const Background = styled(animated.div)`
   position: absolute;
@@ -27,7 +27,7 @@ const SearchPlaceWrapper = styled(animated.div)`
   transform-origin: 50% 0;
 `;
 
-class SearchPlace extends Component {
+class SearchGooglePlace extends Component {
   state = {
     value: '',
     results: [],
@@ -135,9 +135,9 @@ class SearchPlace extends Component {
 
         <Transition
           native
-          from={{ opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
-          enter={{ opacity: 1, transform: 'scale3d(1,1,1)' }}
-          leave={{ opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
+          from={{ height: 0, opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
+          enter={{ height: 'auto', opacity: 1, transform: 'scale3d(1,1,1)' }}
+          leave={{ height: 0, opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
           config={config.stiff}
         >
           {
@@ -190,4 +190,4 @@ class SearchPlace extends Component {
   }
 }
 
-export default SearchPlace;
+export default SearchGooglePlace;

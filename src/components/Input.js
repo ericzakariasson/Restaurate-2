@@ -156,7 +156,6 @@ InputWithIcon.propTypes = {
   children: PropTypes.node,
   onIconClick: PropTypes.func,
   color: PropTypes.string,
-  Icon: PropTypes.element,
 }
 
 export default Input;

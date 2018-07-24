@@ -68,6 +68,10 @@ const Deselect = Select.extend`
   color: ${p => p.theme.danger};
 `;
 
+const LargerName = Name.extend`
+  font-size: 2.2rem;
+`;
+
 const SelectedPlace = ({ style, name, formatted_address, geometry, onDeselect, ...props }) => {
 
   const { lng, lat } = geometry.location;
@@ -77,13 +81,12 @@ const SelectedPlace = ({ style, name, formatted_address, geometry, onDeselect, .
   const width = 600;
   const height = 250;
 
-  console.log('props: ', props);
   const mapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/${lng()},${lat()},${zoom}.0,0,50/${width}x${height}?access_token=${process.env.MAPBOX_TOKEN}`;
 
   return (
     <Item style={style}>
       <Content src={mapUrl}>
-        <Name>{name}</Name>
+        <LargerName>{name}</LargerName>
         <Address>{formatted_address}</Address>
         <ColorOverlay />
       </Content>
