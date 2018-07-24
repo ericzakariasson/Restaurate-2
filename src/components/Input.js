@@ -26,9 +26,13 @@ export const StyledInput = styled.input`
   }
 `;
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+
+  &:not(:last-of-type) {
+    margin-bottom: 40px;
+  }
 `;
 
 const Input = ({ onChange, name, value, label, placeholder }) => {
@@ -109,7 +113,6 @@ const IconWrapper = styled.button`
 
 const InputChildrenWrapper = styled.div`
   position: relative;
-  z-index: 10;
 `;
 
 export const InputWithIcon = ({ onChange, name, value, label, placeholder, Icon, onSubmit, children, color, onIconClick, ...props }) => {
@@ -127,7 +130,7 @@ export const InputWithIcon = ({ onChange, name, value, label, placeholder, Icon,
           <StyledInput
             onChange={onChange}
             value={value}
-            name={name}
+            name={name || undefined}
             placeholder={placeholder}
             id={id}
             icon="true"
@@ -141,6 +144,19 @@ export const InputWithIcon = ({ onChange, name, value, label, placeholder, Icon,
       </InputChildrenWrapper>
     </Wrapper>
   )
+}
+
+InputWithIcon.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  value: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  onSubmit: PropTypes.func.isRequired,
+  children: PropTypes.node,
+  onIconClick: PropTypes.func,
+  color: PropTypes.string,
+  Icon: PropTypes.element,
 }
 
 export default Input;

@@ -7,10 +7,10 @@ import ResultItem from './ResultItem';
 
 const AnimatedWrapper = styled(animated.div)`
   transform-origin: 100% 0;
-  position: relative;
+  position: absolute;
   z-index: 11;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  top: 0;
+  top: 60px;
   right: 0;
   width: 100%;
   max-height: calc(100vh - 172px);
@@ -30,6 +30,14 @@ const StyledList = styled.ul`
   overflow: hidden;
 `;
 
+const NoResults = styled.h1`
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #CCC;
+  margin: 40px 0;
+`;
+
 const ResultList = ({ results, loading, open, onSelect }) => {
   if (open && loading) {
     return (
@@ -39,11 +47,9 @@ const ResultList = ({ results, loading, open, onSelect }) => {
 
   if (results.length === 0) {
     return (
-      <h1>Inga resultat</h1>
+      <NoResults>Inga resultat</NoResults>
     )
   }
-
-  console.log('results: ', results);
 
   return (
     <StyledList>

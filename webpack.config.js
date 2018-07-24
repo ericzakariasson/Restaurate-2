@@ -34,7 +34,7 @@ module.exports = {
     new Dotenv(),
     new HtmlWebpackPlugin({
       hash: true,
-      template: './dist/index.html'
+      template: './dist/index.html',
     }),
     new webpack.HotModuleReplacementPlugin(),
   ],

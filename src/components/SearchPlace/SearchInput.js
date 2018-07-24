@@ -17,6 +17,7 @@ const SearchInput = ({ isOpen, onChange, onSubmit, children, value, clear }) => 
       clear={clear}
       style={isOpen ? { borderRadius: '5px 5px 0 0' } : undefined}
       autoComplete="off"
+      autoFocus
     >
       {children}
     </InputWithIcon>

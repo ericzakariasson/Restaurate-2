@@ -13,8 +13,6 @@ const StyledItem = styled(animated.li)`
   position: relative;
   background: rgba(255,255,255,0.8);
 
-  cursor: pointer;
-
   &:hover {
     background: rgba(255,255,255,0.2);
   }
@@ -24,14 +22,14 @@ const StyledItem = styled(animated.li)`
   }
 `;
 
-const Name = styled.h3`
+export const Name = styled.h3`
   font-size: 1.8rem;
   margin-bottom: 5px;
   color: #222;
   font-weight: 600;
 `;
 
-const Address = styled.p`
+export const Address = styled.p`
   font-size: 1.6rem;
   color: #222;
   font-weight: 400;
@@ -46,8 +44,27 @@ const OpenNow = styled.span`
   margin-top: 10px;
 `;
 
+export const Select = styled.button`
+  background: none;
+  color: ${p => p.theme.action};
+  font-family: ${p => p.theme.fonts.text};
+  font-weight: 500;
+  font-size: 1.6rem;
+  border: none;
+  align-self: flex-start;
+  padding: 10px;
+  transform: translate(-10px, 10px);
+  cursor: pointer;
+  transition: ${p => p.theme.transition};
+  border-radius: 5px;
 
-const ResultItem = ({ style, opening_hours, id, name, formatted_address, geometry: { location }, onSelect }) => {
+  &:hover {
+    background: #EEE;
+  }
+`;
+
+
+const ResultItem = ({ opening_hours, id, name, formatted_address, geometry: { location }, onSelect }) => {
 
   const { lat, lng } = location;
 
@@ -65,7 +82,7 @@ const ResultItem = ({ style, opening_hours, id, name, formatted_address, geometr
       <Name>{name}</Name>
       <Address>{formatted_address}</Address>
       {opening_hours && opening_hours.open_now && <OpenNow>ÖPPET NU</OpenNow>}
-      <span onClick={() => onSelect(id)}>Välj</span>
+      <Select onClick={() => onSelect(id)}>Välj plats</Select>
     </StyledItem>
   )
 }

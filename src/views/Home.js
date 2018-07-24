@@ -36,7 +36,7 @@ const Description = styled(animated.p)`
 
 const NotLoggedIn = Keyframes.Spring({
   default: { to: { height: window.innerHeight } },
-  login: { delay: 500, to: { y: 0.01, height: 10 }, config: config.gentle }
+  login: { delay: 500, to: { height: 10 }, config: config.gentle }
 })
 
 const NotLoggedInContent = Keyframes.Trail({
@@ -179,9 +179,7 @@ class Home extends Component {
             <Start style={style} >
               <NotLoggedInContent native keys={NotLoggedInContentItems.map((_, i) => i)} state={state}>
                 {
-                  NotLoggedInContentItems.map((Item, i) => ({ y, ...props }) => {
-                    return <Item style={{ ...props }} />
-                  })
+                  NotLoggedInContentItems.map(Item => styles => <Item style={styles} />)
                 }
               </NotLoggedInContent>
             </Start>

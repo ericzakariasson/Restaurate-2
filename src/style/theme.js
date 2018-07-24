@@ -2,8 +2,8 @@ export default {
   main: '#FFD14C',
   action: '#6C3EAD',
   danger: '#EA4335',
-  visits: '#FFD14C',
-  places: '#1E6699',
+  visit: '#FFD14C',
+  place: '#1E6699',
   fonts: {
     display: 'Playfair Display',
     text: '"Work Sans", sans-serif',

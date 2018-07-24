@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 import SearchPlace from '../components/SearchPlace/';
+import TypeOfPlace from '../components/TypeOfPlace';
+import Tags from '../components/Tags';
 
 const Page = styled.div`
   display: flex;
@@ -24,6 +26,8 @@ const NewVisit = () => {
     <Page>
       <Title>Plats</Title>
       <SearchPlace />
+      <TypeOfPlace />
+      <Tags />
     </Page>
   )
 }

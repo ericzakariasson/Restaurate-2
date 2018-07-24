@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 
-import { Transition, animated, config } from 'react-spring';
+import { Transition, Keyframes, animated, config } from 'react-spring';
+import { Easing } from 'react-spring/dist/addons'
 
 import ResultList from './ResultList';
 import SearchInput from './SearchInput';
+import SelectedPlace from './SelectedPlace';
+
+import { Wrapper } from '../Input';
 
 const Background = styled(animated.div)`
   position: absolute;
@@ -13,9 +17,14 @@ const Background = styled(animated.div)`
   width: 100vw;
   height: 100vh;
   background: rgba(0,0,0,0.05);
-  opacity: ${p => p.open ? 1 : 0};
-  transition: ${p => p.theme.transition};
   z-index: 5;
+`;
+
+
+const SearchPlaceWrapper = styled(animated.div)`
+  position: relative;
+  z-index: 10;
+  transform-origin: 50% 0;
 `;
 
 class SearchPlace extends Component {
@@ -23,6 +32,7 @@ class SearchPlace extends Component {
     value: '',
     results: [],
     selected: null,
+    isSelected: false,
     isOpen: false,
     loading: false,
     error: '',
@@ -44,7 +54,7 @@ class SearchPlace extends Component {
 
   clear = e => {
     e.preventDefault();
-    this.setState({ isOpen: false, value: '' });
+    this.setState({ isOpen: false, value: '', results: [] });
   }
 
   handleSubmit = e => {
@@ -80,10 +90,12 @@ class SearchPlace extends Component {
   }
 
   selectPlace = id => {
-    console.log('id: ', id);
-    const i = this.state.results.findIndex(place => place.id === id);
-    console.log('i: ', i);
-    this.setState({ selected: i });
+    const selected = this.state.results.find(place => place.id === id);
+    this.setState({ selected, isSelected: true, isOpen: false });
+  }
+
+  deselectPlace = () => {
+    this.setState({ selected: null, isSelected: false });
   }
 
   handleStatus = status => {
@@ -114,44 +126,66 @@ class SearchPlace extends Component {
 
   render() {
 
-    const { isOpen, value, results, loading, selected } = this.state;
+    const { isOpen, value, results, loading, selected, isSelected } = this.state;
 
-    if (selected) {
-      console.log('results: ', results);
-      const selectedPlace = results[selected];
-      console.log('selected: ', selected);
-      console.log('place: ', selectedPlace);
-      return (
-        <div>
-          <h1>{selectedPlace.name}</h1>
-        </div>
-      )
-    }
+    const state = this.state.isSelected ? 'selected' : 'default';
 
     return (
-      <div>
-        <SearchInput
-          isOpen={isOpen}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-          value={value}
-          clear={this.clear}
+      <Wrapper>
+
+        <Transition
+          native
+          from={{ opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
+          enter={{ opacity: 1, transform: 'scale3d(1,1,1)' }}
+          leave={{ opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
+          config={config.stiff}
         >
-          <Transition
-            from={{ opacity: 0.5, transform: 'scale3d(0.25,0.25,0.5)' }}
-            enter={{ opacity: 1, transform: 'scale3d(1,1,1)' }}
-            leave={{ opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
-            config={config.stiff}
-          >
-            {
-              isOpen
-                ? style => <ResultList onSelect={this.selectPlace} style={style} results={results} loading={loading} open={isOpen} />
-                : () => null
-            }
-          </Transition>
-        </SearchInput>
-        <Background open={isOpen} onClick={this.close} />
-      </div>
+          {
+            isSelected
+              ? style => <SelectedPlace style={style} onDeselect={this.deselectPlace} {...selected} />
+              : style => {
+                return (
+                  <SearchPlaceWrapper style={style}>
+                    <SearchInput
+                      isOpen={isOpen}
+                      onChange={this.handleChange}
+                      onSubmit={this.handleSubmit}
+                      value={value}
+                      clear={this.clear}
+                    >
+                      <Transition
+                        native
+                        from={{ opacity: 0.5, transform: 'scale3d(0.25,0.25,0.5)' }}
+                        enter={{ opacity: 1, transform: 'scale3d(1,1,1)' }}
+                        leave={{ opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
+                        config={config.stiff}
+                      >
+                        {
+                          isOpen
+                            ? style => <ResultList onSelect={this.selectPlace} style={style} results={results} loading={loading} open={isOpen} />
+                            : () => null
+                        }
+                      </Transition>
+                    </SearchInput>
+                  </SearchPlaceWrapper>
+                )
+              }
+          }
+        </Transition>
+        <Transition
+          native
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+          config={{ duraton: 200, easing: Easing.inOut }}
+        >
+          {
+            isOpen
+              ? style => <Background style={style} onClick={this.close} />
+              : () => null
+          }
+        </Transition>
+      </Wrapper>
     )
   }
 }
