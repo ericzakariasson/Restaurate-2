@@ -5,7 +5,7 @@ import SearchPlace from './components/SearchPlace/';
 import SelectTypeOfPlace from './components/SelectTypeOfPlace';
 import AddTags from './components/AddTags';
 import AddOrders from './components/AddOrders';
-import Rating from './components/Rating';
+import Rating from './components/Rating/';
 
 
 const Page = styled.section`
@@ -15,6 +15,7 @@ const Page = styled.section`
   background-color: #FCFCFC;
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
 `;
 
 const Title = styled.h1`
