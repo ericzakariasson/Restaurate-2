@@ -5,6 +5,7 @@ import SearchPlace from './components/SearchPlace/';
 import SelectTypeOfPlace from './components/SelectTypeOfPlace';
 import AddTags from './components/AddTags';
 import AddOrders from './components/AddOrders';
+import Rating from './components/Rating';
 
 const Page = styled.section`
   display: flex;
@@ -34,6 +35,33 @@ const Article = styled.article`
 
 const types = [{ label: 'Restaurang', value: 'restaurant' }, { label: 'Café', value: 'cafe' }];
 
+const rateTree = {
+  food: {
+    label: 'Mat',
+    children: {
+      taste: {
+        label: 'Smak'
+      }
+    }
+  }
+} 
+
+const rateTree2 = [
+  {
+    name: 'food',
+    label: 'Mat',
+    children: [
+      {
+        name: 'taste',
+        label: 'Smak'
+      },
+      {
+        name: 'quality',
+        label: 'Råvaror'
+      }
+    ]
+  }
+]
 
 const NewVisit = () => {
   return (
@@ -47,6 +75,7 @@ const NewVisit = () => {
       <Article>
         <Title>Besök</Title>
         <AddOrders />
+        <Rating tree={rateTree2} />
       </Article>
     </Page>
   )

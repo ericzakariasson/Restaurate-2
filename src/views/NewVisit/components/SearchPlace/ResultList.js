@@ -13,7 +13,7 @@ const AnimatedWrapper = styled(animated.div)`
   top: 60px;
   right: 0;
   width: 100%;
-  max-height: calc(100vh - 172px);
+  max-height: calc(100vh - 213px);
   border-radius: 0 0 5px 5px;
   background: #FFF;
   border-top: 1px solid #EEE;

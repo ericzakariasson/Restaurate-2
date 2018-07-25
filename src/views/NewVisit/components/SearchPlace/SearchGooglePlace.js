@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import ScrollLock from 'react-scrolllock';
+
 import { Transition, animated, config } from 'react-spring';
 import { Easing } from 'react-spring/dist/addons'
 
@@ -128,11 +130,9 @@ class SearchGooglePlace extends Component {
 
     const { isOpen, value, results, loading, selected, isSelected } = this.state;
 
-    const state = this.state.isSelected ? 'selected' : 'default';
-
     return (
       <Wrapper>
-
+        { isOpen ? <ScrollLock /> : null }
         <Transition
           native
           from={{ height: 0, opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}

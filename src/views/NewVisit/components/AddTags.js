@@ -47,6 +47,7 @@ const NoTags = styled(animated.span)`
   font-size: 1.6rem;
   margin-top: 10px; 
   display: block;
+  overflow: hidden;
 `;
 
 class AddTags extends Component {
@@ -112,9 +113,9 @@ class AddTags extends Component {
         </TagList>
         <Transition
           native
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0 }}>
+          from={{ opacity: 0, height: 0, marginTop: 0}}
+          enter={{ opacity: 1, height: 16, marginTop: 10 }}
+          leave={{ opacity: 0, height: 0, marginTop: 0 }}>
           {
             this.state.items.length === 0
               ? style => <NoTags style={style}>Inga taggar</NoTags>
