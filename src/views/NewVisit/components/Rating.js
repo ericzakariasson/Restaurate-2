@@ -4,6 +4,20 @@ import styled from 'styled-components';
 import Label from '../../../components/Label';
 import { Wrapper } from '../../../components/Input';
 
+const Nodes = styled.div``;
+
+const Node = styled.p`
+  padding: 20px;
+`;
+
+const ParentNode = Node.withComponent('h1').extend`
+  font-size: 2.4rem;
+`;
+
+const ChildNode = Node.extend`
+  padding-left: 40px;
+`;
+
 class Ratings extends Component {
   render() {
     return (
@@ -12,15 +26,15 @@ class Ratings extends Component {
         {
           this.props.tree.map(node => {
             return (
-              <div key={node.value}>
-                <h1>{node.label}</h1>
+              <div key={node.name}>
+                <ParentNode>{node.label}</ParentNode>
                 {
                   node.children
-                  ? (
-                    <ul>
-                      {node.children.map(childNode => <li key={childNode.value}>{childNode.label}</li>)}
-                    </ul>
-                  ) : null
+                    ? (
+                      <ul>
+                        {node.children.map(childNode => <li key={childNode.name}>{childNode.label}</li>)}
+                      </ul>
+                    ) : null
                 }
               </div>
             )
