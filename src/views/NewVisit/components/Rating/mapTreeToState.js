@@ -1,22 +1,24 @@
 function mapTreeToState(tree) {
-  const treeObj = tree.reduce((state, item) => {
+  return tree.reduce((state, item) => {
     var name = item.name;
 
-    if (item.children) {
-      var childObj = item.children.reduce((results, child) => {
-        var childName = child.name;
-        results[childName] = 0;
-        return results;
-      }, {});
-
-      state[name] = { useAverage: false, ...childObj };
-    } else {
-      state[name] = null;
+    if (!state[name]) {
+      state[name] = { value: 0, isRated: false };
     }
+
+    if (item.children) {
+      state[name].average = 0;
+      state[name].useAverage = false;
+      state[name].children = item.children.map(child => child.name)
+      for (const child of item.children) {
+        if (!state[child]) {
+          state[child.name] = { value: 0, isRated: false, parent: name };
+        }
+      }
+    }
+
     return state;
   }, {})
-
-  return treeObj;
 }
 
 export default mapTreeToState;

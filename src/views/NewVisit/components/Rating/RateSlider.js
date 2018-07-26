@@ -104,7 +104,7 @@ const RateSlider = ({ style, onChange, value, onCancel, onSave, isRated, ...prop
         }}
       />
       <Buttons>
-        <Cancel onClick={onCancel}>{isRated ? `Återställ` : `Avbryt`}</Cancel>
+        <Cancel onClick={onCancel}>Avbryt</Cancel>
         <Save onClick={onSave}>Spara</Save>
       </Buttons>
     </SliderWrapper>

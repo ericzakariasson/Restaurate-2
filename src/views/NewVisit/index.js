@@ -19,7 +19,7 @@ const Page = styled.section`
 `;
 
 const Title = styled.h1`
-  font-size: 2.4rem;
+  font-size: 4.2rem;
   font-weight: 500;
   margin-bottom: 20px;
   color: #DDD;

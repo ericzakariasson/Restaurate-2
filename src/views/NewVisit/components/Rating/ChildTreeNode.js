@@ -8,7 +8,7 @@ import RateSlider from './RateSlider';
 
 
 
-const StyledChildNode = styled.li`
+const StyledChildNode = styled(animated.li)`
   padding: 20px;
   font-size: 1.8rem;
   border-bottom: 1px solid #EEE;
@@ -50,10 +50,11 @@ const ScoreWrapper = styled.div`
 class ChildTreeNode extends TreeNode {
   render() {
 
-    const { isOpen, isRated, score } = this.state;
+    const { isOpen, touched, score } = this.state;
+    const { isRated } = this.props;
 
     return (
-      <StyledChildNode >
+      <StyledChildNode style={this.props.style}>
         <NodeWrapper>
           <TextWrapper>
             <TextIcon color="#CCC" size={18} />
@@ -68,12 +69,12 @@ class ChildTreeNode extends TreeNode {
               leave={{ opacity: 0, transform: `scale(0)` }}
             >
               {
-                isRated
-                  ? style => <Score style={style}>{score}</Score>
+                touched
+                  ? style => <Score style={style}>{isRated ? this.props.score : score}</Score>
                   : () => null
               }
             </Transition>
-            <ToggleIcon open={isOpen || isRated} onClick={isRated ? this.reset : this.toggle} />
+            <ToggleIcon open={isOpen || isRated} onClick={touched ? this.reset : this.toggle} />
           </ScoreWrapper>
         </NodeWrapper>
         <Transition
@@ -85,7 +86,7 @@ class ChildTreeNode extends TreeNode {
         >
           {
             isOpen
-              ? style => <RateSlider onCancel={this.reset} onSave={this.save} isRated={isRated} style={style} onChange={this.handleChange} value={score} />
+              ? style => <RateSlider onCancel={this.reset} onSave={this.save} style={style} onChange={this.handleChange} value={score} />
               : () => null
           }
         </Transition>

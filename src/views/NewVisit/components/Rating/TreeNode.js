@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import styled from 'styled-components';
 
+import { RESET_RATE } from './';
+
 export const NodeWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
@@ -9,20 +11,19 @@ export const NodeWrapper = styled.div`
 
 const initialState = {
   isOpen: false,
-  isRated: false,
+  touched: false,
   score: 0,
 }
 
 class TreeNode extends Component {
   state = initialState;
 
-  handleChange = score => this.setState({ score, isRated: true });
+  handleChange = score => this.setState({ score, touched: true });
 
-  setRate = (type) => {
+  setRate = type => {
     this.props.setRate(
       this.props.name,
       this.state.score,
-      this.props.parent || undefined,
       type
     );
   }
@@ -33,7 +34,7 @@ class TreeNode extends Component {
   }
 
   reset = () => {
-    this.setRate('remove');
+    this.setRate(RESET_RATE);
     this.setState(initialState)
   }
 

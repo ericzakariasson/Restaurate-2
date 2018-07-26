@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
 
-import { Plus } from 'react-feather';
-import { NodeWrapper } from './TreeNode';
 import ChildNode from './ChildTreeNode';
+
+import { Transition, animated } from 'react-spring';
 
 import Label from '../../../../components/Label';
 import { Wrapper } from '../../../../components/Input';
@@ -11,71 +11,194 @@ import { Wrapper } from '../../../../components/Input';
 import mapTreeToState from './mapTreeToState';
 import ParentTreeNode from './ParentTreeNode';
 
+import { NodeWrapper } from './TreeNode';
+
 const Nodes = styled.section`
   box-shadow: ${p => p.theme.boxShadow};
   border-radius: 5px;
+
+  & > div:first-child {
+    border-radius: 5px 5px 0 0;
+  }
+  
+  & > div:last-child {
+    border-radius: 0 0 5px 5px;
+  }
 `;
 
-const NodeArticle = styled.article``;
-const ChildNodes = styled.ul``;
+const TotalScoreWrapper = NodeWrapper.extend`
+  background: #222;
+  font-size: 2.4rem;
+  padding: 20px;
+  color: #FFF;
+`;
+
+const TotalScoreText = styled.h2`
+  font-weight: 500;
+  text-transform: uppercase;
+`;
+
+const TotalScore = styled.h1`
+  font-weight: 500;
+  font-size: 3rem;
+`;
+
+const OfMax = styled.span`
+  font-weight: 500;
+  font-size: 1.2rem;
+  opacity: 0.5;
+`;
+
+export const RESET_RATE = 'RESET_RATE';
+export const ADD_RATE = 'ADD_RATE';
 
 class Ratings extends Component {
 
   state = mapTreeToState(this.props.tree);
 
-  setRate = (name, score, parent, type = 'add') => {
+  setRate = (name, score, type) => {
     let newState = this.state;
-    if (parent) {
-      if (typeof newState[parent] !== 'object') {
-        newState[parent] = {};
-      }
 
-      newState[parent][name] = score;
-
-      if (type === 'remove') {
-        newState[parent].useAverage = false;
-      } else {
-        newState[parent].useAverage = true;
-        newState[parent].averageScore = averageScore(newState[parent]);
-      }
+    if (type === RESET_RATE) {
+      newState[name].value = 0;
+      newState[name].isRated = false;
     } else {
-      newState[name] = score;
+      newState[name].value = score;
+      newState[name].isRated = true;
+
+      if (newState[name].children) {
+        for (const child of newState[name].children) {
+          if (newState[child].isRated) {
+            newState[child].value = 0;
+            newState[child].isRated = false;
+          }
+        }
+      }
     }
+
     this.setState(newState)
   }
 
+  useAverage = name => {
+    const item = this.state[name];
+
+    if (item.isRated) {
+      return false;
+    }
+
+    if (item.children) {
+      for (const child of item.children) {
+        if (this.state[child].isRated) {
+          return true;
+        }
+      }
+    }
+  }
+
+  getAverageScore = name => {
+    const item = this.state[name];
+    if (item.children) {
+      let i = 0;
+      let totalScore = 0;
+      for (const child of item.children) {
+        if (this.state[child].isRated) {
+          totalScore += this.state[child].value
+          i++;
+        }
+      }
+
+      return totalScore / i;
+    }
+  }
+
+  shouldHideChildren = name => {
+    const item = this.state[name];
+    return item.isRated;
+  }
+
+  getTotalScore = () => {
+    let iterations = 0;
+    const total = Object.keys(this.state).reduce((total, item) => {
+      if (this.state[item].isRated) {
+        total += this.state[item].value
+        iterations++;
+      }
+      return total;
+    }, 0);
+
+    if (iterations === 0) {
+      return 0
+    } else {
+      const average = (total / iterations).toFixed(1);
+      return parseFloat(average);
+    }
+  }
+
   render() {
+
+    const total = this.getTotalScore();
+
     return (
       <Wrapper>
         <Label>Betyg</Label>
         <Nodes>
           {
             this.props.tree.map(node => {
+
+              const shouldHideChildren = this.shouldHideChildren(node.name);
+
               return (
-                <NodeArticle key={node.name}>
+                <React.Fragment key={node.name}>
                   <ParentTreeNode
+                    isRated={this.state[node.name].isRated}
+                    score={this.state[node.name].value}
                     setRate={this.setRate}
-                    useAverage={this.state[node.name] && this.state[node.name].useAverage}
-                    averageScore={this.state[node.name] && this.state[node.name].averageScore}
-                    {...node} />
+                    useAverage={this.useAverage(node.name)}
+                    averageScore={this.getAverageScore(node.name)}
+                    {...node}
+                  />
                   {
                     node.children
                       ? (
-                        <ChildNodes>
-                          {node.children.map(childNode => (
-                            <ChildNode
-                              key={childNode.name}
-                              setRate={this.setRate}
-                              parent={node.name}
-                              {...childNode} />
-                          ))}
-                        </ChildNodes>
+                        <Transition
+                          native
+                          from={{ opacity: 0, transform: `scale(1, 0)`, maxHeight: 0 }}
+                          enter={{ opacity: 1, transform: `scale(1, 1)`, maxHeight: 280 }}
+                          leave={{ opacity: 0, transform: `scale(1, 0)`, maxHeight: 0 }}
+                        >
+                          {
+                            shouldHideChildren
+                              ? () => null
+                              : style => (
+                                <animated.ul style={{ ...style, transformOrigin: '0 100%' }}>
+                                  {
+                                    node.children.map(childNode => {
+                                      return (
+                                        <ChildNode
+                                          key={childNode.name}
+                                          isRated={this.state[childNode.name].isRated}
+                                          score={this.state[childNode.name].value}
+                                          setRate={this.setRate}
+                                          parent={node.name}
+                                          {...childNode} />
+                                      )
+                                    })
+                                  }
+                                </animated.ul>
+                              )
+                          }
+                        </Transition>
                       ) : null
                   }
-                </NodeArticle>
+                </React.Fragment>
               )
             })
           }
+          <TotalScoreWrapper>
+            <TotalScoreText>Total</TotalScoreText>
+
+            <TotalScore>{total}<OfMax>/10</OfMax></TotalScore>
+          </TotalScoreWrapper>
         </Nodes>
       </Wrapper>
     )

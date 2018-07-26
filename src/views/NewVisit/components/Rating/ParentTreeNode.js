@@ -40,29 +40,9 @@ const ToggleIcon = styled(Plus)`
 
 class ParentTreeNode extends TreeNode {
 
-  static getDerivedStateFromProps(props, state) {
-    console.log('props.useAverage: ', props.useAverage);
-    if (props.useAverage) {
-      return {
-        ...state,
-        score: props.averageScore,
-        isRated: true,
-      }
-    } else {
-      return null;
-    }
-  }
-
-  //TODO ComponentDidUpdate
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.useAverage && !this.props.useAverage) {
-      this.setRate({ isRated: false, score: 0 })
-    }
-  }
-
   render() {
-    const { isOpen, isRated, score } = this.state;
+    const { isOpen, touched, score } = this.state;
+    const { useAverage, averageScore, isRated } = this.props;
 
     return (
       <ParentNodeWrapper>
@@ -71,22 +51,26 @@ class ParentTreeNode extends TreeNode {
           <ScoreWrapper>
             <Transition
               native
-              native
               from={{ opacity: 0, transform: `scale(0)` }}
               enter={{ opacity: 1, transform: `scale(1)` }}
               leave={{ opacity: 0, transform: `scale(0)` }}
             >
               {
-                isRated
-                  ? style => <Score style={style}>{score}</Score>
+                touched || useAverage
+                  ? style => <Score style={style}>{
+                    touched && useAverage
+                      ? score
+                      : useAverage
+                        ? averageScore
+                        : isRated ? this.props.score : score
+                  }</Score>
                   : () => null
               }
             </Transition>
-            <ToggleIcon open={isOpen || isRated} onClick={isRated ? this.reset : this.toggle} />
+            <ToggleIcon open={isOpen || isRated} onClick={touched ? this.reset : this.toggle} />
           </ScoreWrapper>
         </NodeWrapper>
         <Transition
-          native
           native
           from={{ opacity: 0, marginTop: 0, height: 0, transform: `scale(0)` }}
           enter={{ opacity: 1, marginTop: 20, height: 55, transform: `scale(1)` }}
@@ -94,7 +78,7 @@ class ParentTreeNode extends TreeNode {
         >
           {
             isOpen
-              ? style => <RateSlider onCancel={this.reset} onSave={this.save} isRated={isRated} style={style} onChange={this.handleChange} value={score} />
+              ? style => <RateSlider onCancel={this.reset} onSave={this.save} style={style} onChange={this.handleChange} value={score} />
               : () => null
           }
         </Transition>
