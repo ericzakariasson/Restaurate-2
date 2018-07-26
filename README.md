@@ -10,5 +10,6 @@ Webapp to rate your visited restaurants and cafés
 - Option to publish anonymously
 - Customize rate tree
 - Fetch rate tree from database
+- Fetch price levels from database
 - Admin dashboard
 - Custom tags

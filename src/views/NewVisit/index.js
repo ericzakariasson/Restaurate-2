@@ -6,6 +6,7 @@ import SelectTypeOfPlace from './components/SelectTypeOfPlace';
 import AddTags from './components/AddTags';
 import AddOrders from './components/AddOrders';
 import Rating from './components/Rating/';
+import PriceLevel from './components/PriceLevel';
 
 
 const Page = styled.section`
@@ -83,6 +84,13 @@ const rateTree2 = [
   }
 ]
 
+const priceLevels = [
+  { value: 1, label: 'Billig' },
+  { value: 2, label: 'Medel' },
+  { value: 3, label: 'Dyr' },
+  { value: 4, label: 'Exklusiv' },
+];
+
 const NewVisit = () => {
   return (
     <Page>
@@ -91,6 +99,7 @@ const NewVisit = () => {
         <SearchPlace />
         <SelectTypeOfPlace types={types} />
         <AddTags />
+        <PriceLevel priceLevels={priceLevels} />
       </Article>
       <Article>
         <Title>Besök</Title>
