@@ -65,7 +65,7 @@ class SearchPlace extends Component {
     const service = new google.maps.places.PlacesService(map);
 
     const request = {
-      type: ['restaurant'],
+      type: ['food'],
       query: this.state.value
     }
 
@@ -75,10 +75,14 @@ class SearchPlace extends Component {
   handleResponse = (results, status) => {
     this.handleStatus(status);
 
-    this.setState({
-      results,
-      loading: false
-    })
+    const { OK } = window.google.maps.places.PlacesServiceStatus;
+
+    if (this.state.isOpen && status === OK) {
+      this.setState({ results });
+      setTimeout(() => this.setState({ loading: false }), 500); //Delay for better UX
+    } else {
+      this.setState({ results, loading: false })
+    }
   }
 
   selectPlace = id => {

@@ -97,7 +97,6 @@ class NewVisit extends Component {
   state = initialState;
 
   setValue = (name, value) => this.setState({ [name]: value });
-
   resetField = (name) => this.setState({ [name]: initialState[name] })
 
   render() {
@@ -108,7 +107,7 @@ class NewVisit extends Component {
       <Page>
         <Article>
           <Title>Plats</Title>
-          <SearchPlace onReset={this.resetField} selected={this.state.place} onSelect={this.setValue} />
+          <SearchPlace onReset={this.resetField} selected={this.state.place} setValue={this.setValue} />
           <SelectTypeOfPlace onSelect={this.setValue} checked={this.state.typesOfPlace} types={TYPE_OF_PLACES} />
           <AddTags onAdd={this.setValue} tags={this.state.tags} />
           <PriceLevel onSelect={this.setValue} onReset={this.resetField} selected={this.state.priceLevel} priceLevels={PRICE_LEVELS} />
