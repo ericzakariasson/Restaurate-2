@@ -21,11 +21,11 @@ const ButtonText = styled.span`
   font-family: ${p => p.theme.fonts.text};
 `;
 
-const Button = ({ onClick, disabled, children }) => {
+const Button = ({ onClick, disabled, children, ...props }) => {
   return (
-    <StyledButton onClick={onClick} disabled={disabled}>
+    <StyledButton onClick={onClick} disabled={disabled} {...props}>
       <ButtonText>{children}</ButtonText>
-    </StyledButton>
+    </StyledButton >
   )
 }
 

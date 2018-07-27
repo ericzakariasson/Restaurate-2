@@ -73,7 +73,6 @@ class SearchPlace extends Component {
   }
 
   handleResponse = (results, status) => {
-    console.log(status);
     this.handleStatus(status);
 
     this.setState({
@@ -84,11 +83,13 @@ class SearchPlace extends Component {
 
   selectPlace = id => {
     const selected = this.state.results.find(place => place.id === id);
-    this.setState({ selected, isSelected: true, isOpen: false });
+    this.props.setValue('place', selected);
+    this.setState({ isSelected: true, isOpen: false });
   }
 
   deselectPlace = () => {
-    this.setState({ selected: null, isSelected: false });
+    this.props.onReset('place');
+    this.setState({ isSelected: false });
   }
 
   handleStatus = status => {
@@ -119,7 +120,8 @@ class SearchPlace extends Component {
 
   render() {
 
-    const { isOpen, value, results, loading, selected, isSelected } = this.state;
+    const { isOpen, value, results, loading, isSelected } = this.state;
+    const { selected } = this.props;
 
     return (
       <Wrapper>

@@ -45,10 +45,8 @@ const OrderText = styled.p`
 `;
 
 class AddOrders extends Component {
-  state = { items: [] }
-
-  addItem = items => this.setState({ items });
-  removeItem = items => this.setState({ items })
+  addItem = items => this.props.onAdd('orders', items);
+  removeItem = items => this.props.onAdd('orders', items);
 
   render() {
     return (
@@ -58,7 +56,7 @@ class AddOrders extends Component {
         padding={20}
         addItem={this.addItem}
         removeItem={this.removeItem}
-        items={this.state.items}
+        items={this.props.orders}
         render={
           ({ item, styles, removeItem }) => (
             <Order style={styles}>

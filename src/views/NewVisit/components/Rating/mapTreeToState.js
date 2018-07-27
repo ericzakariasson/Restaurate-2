@@ -7,8 +7,6 @@ function mapTreeToState(tree) {
     }
 
     if (item.children) {
-      state[name].average = 0;
-      state[name].useAverage = false;
       state[name].children = item.children.map(child => child.name)
       for (const child of item.children) {
         if (!state[child]) {

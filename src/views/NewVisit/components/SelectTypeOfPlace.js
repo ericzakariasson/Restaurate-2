@@ -37,29 +37,31 @@ const TypeWrapper = styled.li`
 
 const Icon = styled.div`
   margin-right: 10px;
-  transform: translateY(1px);
+  /* transform: translateY(1px); */
+  transform-origin: 50% 50%;
+  transition: ${p => p.theme.transition};
   
   svg {
     transition: ${p => p.theme.transition};
   }
 
   rect {
-    fill: ${p => p.active ? p.theme.action : 'none'};
+    fill: ${p => p.checked ? p.theme.action : 'none'};
     stroke: ${p => p.theme.action};
     transition: ${p => p.theme.transition};
   }
 
   line {
-    stroke: ${p => p.active ? '#FFF' : p.theme.action};
+    stroke: ${p => p.checked ? '#FFF' : p.theme.action};
     transform-origin: 50% 50%;
     transition: ${p => p.theme.transition};
 
     &:first-of-type {
-      transform: ${p => p.active ? `rotate(-45deg)` : 'none'}
+      transform: ${p => p.checked ? `rotate(-45deg)` : 'none'}
     }
     
     &:last-of-type {
-      transform: ${p => p.active ? `rotate(-45deg)` : 'none'}
+      transform: ${p => p.checked ? `rotate(-45deg)` : 'none'}
     }
   }
 
@@ -70,20 +72,32 @@ const Text = styled.span`
   font-weight: 500;
 `;
 
+const HiddenInput = styled.input`
+  display: none;
+`;
+
+const TypeLabel = styled.label`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:active ${Icon} {
+    transform: scale(0.9);
+  }
+`;
+
 class SelectTypeOfPlace extends Component {
-  state = { selected: [] }
+  toggle = ({ target: { value, checked: isChecked } }) => {
+    const { checked } = this.props;
+    let newChecked;
 
-  toggle = value => {
-    const { selected } = this.state;
-    let newState;
-
-    if (selected.includes(value)) {
-      newState = selected.filter(type => type !== value);
+    if (!isChecked) {
+      newChecked = checked.filter(type => type !== value);
     } else {
-      newState = selected.concat([value])
+      newChecked = checked.concat([value])
     }
 
-    this.setState({ selected: newState })
+    this.props.onSelect('typesOfPlace', newChecked);
   }
 
   render() {
@@ -92,14 +106,27 @@ class SelectTypeOfPlace extends Component {
         <Label>Typ av plats</Label>
         <Types>
           {
-            this.props.types.map(type => (
-              <TypeWrapper key={type.value} onClick={() => this.toggle(type.value)}>
-                <Icon active={this.state.selected.includes(type.value)}>
-                  <PlusSquare size={26} />
-                </Icon>
-                <Text>{type.label}</Text>
-              </TypeWrapper>
-            ))
+            this.props.types.map(type => {
+              const checked = this.props.checked.includes(type.value);
+              const id = `type-of-place-${type.value}`;
+              return (
+                <TypeWrapper key={type.value}>
+                  <TypeLabel htmlFor={id}>
+                    <HiddenInput
+                      type="checkbox"
+                      value={type.value}
+                      checked={checked}
+                      onChange={this.toggle}
+                      id={id}
+                    />
+                    <Icon checked={checked}>
+                      <PlusSquare size={26} />
+                    </Icon>
+                    <Text checked={checked}>{type.label}</Text>
+                  </TypeLabel>
+                </TypeWrapper>
+              )
+            })
           }
         </Types>
       </Wrapper>
@@ -111,7 +138,8 @@ SelectTypeOfPlace.propTypes = {
   types: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-  }))
+  })),
+  checked: PropTypes.arrayOf(PropTypes.string.isRequired)
 }
 
 export default SelectTypeOfPlace;

@@ -76,7 +76,30 @@ class Ratings extends Component {
       }
     }
 
-    this.setState(newState)
+    this.setState(newState);
+    this.setParentState();
+  }
+
+  setParentState = () => {
+    const ratings = this.state;
+    const obj = Object.keys(this.state).reduce((results, item) => {
+      if (ratings[item].isRated) {
+        if (ratings[item].parent) {
+          const parent = ratings[item].parent;
+          if (!results[parent] || typeof results[parent] !== 'object') {
+            results[parent] = {};
+          }
+
+          results[parent][item] = ratings[item].value;
+        } else {
+          results[item] = ratings[item].value;
+        }
+      }
+
+      return results;
+    }, {});
+
+    this.props.setValue('rating', obj);
   }
 
   useAverage = name => {
