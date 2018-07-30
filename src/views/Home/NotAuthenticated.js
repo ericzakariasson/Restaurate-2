@@ -1,20 +1,20 @@
 import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import { Transition, config } from 'react-spring'
+import { Transition, config, animated } from 'react-spring'
 
 import Landing from './Landing';
 import LandingInfo from './LandingInfo';
 
 import Login from '../Login';
 
-const NotAuthenticated = ({ location }) => {
+const NotAuthenticated = ({ style, location }) => {
 
   const isLoginPath = location.pathname === '/logga-in';
   const state = isLoginPath ? 'login' : 'default';
 
   return (
-    <Fragment>
+    <animated.div style={{ ...style, transformOrigin: '100% 100%' }}>
       <Landing state={state} />
       <Transition
         native
@@ -29,7 +29,7 @@ const NotAuthenticated = ({ location }) => {
             : style => <LandingInfo style={style} />
         }
       </Transition>
-    </Fragment>
+    </animated.div>
   )
 }
 

@@ -1,11 +1,40 @@
 import React from 'react';
 
-const Dashboard = (props) => {
+import styled from 'styled-components';
+import { animated } from 'react-spring';
+import { AUTH_TOKEN } from '../constants';
+
+import LinkCard from '../components/LinkCard';
+import { NavButton } from '../components/Button';
+
+
+import { Hash, MapPin } from 'react-feather';
+
+const Page = styled(animated.div)`
+  padding: 20px;
+  transform-origin: 0 0;
+`;
+
+const Dashboard = ({ style, ...props }) => {
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <button onClick={props.onSignout}>Logga ut</button>
-    </div>
+    <Page style={style}>
+      <LinkCard
+        label={`Besök`}
+        count={0}
+        to={`/besök`}
+        color={`visit`}
+        Icon={Hash}
+      />
+      <LinkCard
+        label={`Platser`}
+        count={0}
+        to={`/platser`}
+        color={`place`}
+        Icon={MapPin}
+      />
+      <NavButton to="/nytt" cta>Nytt besök</NavButton>
+      <button onClick={() => localStorage.removeItem(AUTH_TOKEN)}>Logga ut</button>
+    </Page>
   )
 }
 

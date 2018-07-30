@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import { AUTH_TOKEN } from '../constants';
 
@@ -68,24 +68,34 @@ class Login extends Component {
 
   state = {
     isSigningIn: false,
+    success: false,
+    redirectToReferrer: false
   }
 
   handleLogin = () => {
     this.setState({ isSigningIn: true });
 
-    setTimeout(() => this.setState({ isSigningIn: false }), 5000);
+    setTimeout(() => {
+      this.setState({ isSigningIn: false, success: true })
 
-    let success = true;
-
-    if (success) {
-      localStorage.setItem(AUTH_TOKEN, '123');
-      this.props.history.push('/');
-    }
+      let success = true;
+      if (success) {
+        localStorage.setItem(AUTH_TOKEN, '123');
+        this.setState({ redirectToReferrer: true });
+      }
+    }, 5000);
   }
 
   render() {
 
     const { isSigningIn } = this.state;
+
+    const { from } = this.props.location.state || { from: { pathname: '/' } }
+    const { redirectToReferrer } = this.state
+
+    if (redirectToReferrer) {
+      return <Redirect to={from} />
+    }
 
     return (
       <animated.div style={this.props.style}>
@@ -95,8 +105,7 @@ class Login extends Component {
               <CenterWrapper>
                 LOGGAR IN
               </CenterWrapper>
-            )
-            : (
+            ) : (
               <Page /* style={this.props.style} */>
                 <Title >Logga in</Title>
                 <Disclaimer >Vi kommer aldrig att publicera något eller utföra annan aktivitet med ditt konto</Disclaimer>

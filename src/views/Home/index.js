@@ -2,47 +2,29 @@ import React, { Component } from 'react';
 
 import { AUTH_TOKEN } from '../../constants';
 
-
 import Dashboard from '../Dashboard';
 import NotAuthenticated from './NotAuthenticated';
 
-class Home extends Component {
+import { Transition } from 'react-spring';
 
-  state = {
-    isAuthenticated: false,
-  }
+const Home = () => {
 
-  componentDidMount() {
-    this.checkAuth();
-  }
+  const isAuthenticated = localStorage.getItem(AUTH_TOKEN);
 
-  componentDidUpdate() {
-    this.checkAuth();
-  }
-
-  signout = () => {
-    localStorage.removeItem(AUTH_TOKEN);
-    this.setState({ isAuthenticated: false });
-  }
-
-  checkAuth = () => {
-    const token = localStorage.getItem(AUTH_TOKEN);
-    const { isAuthenticated } = this.state;
-
-    if (token && !isAuthenticated) {
-      this.setState({ isAuthenticated: true })
-    }
-  }
-
-  render() {
-    const { isAuthenticated } = this.state;
-
-    if (isAuthenticated) {
-      return <Dashboard onSignout={this.signout} />
-    } else {
-      return <NotAuthenticated />
-    }
-  }
+  return (
+    <Transition
+      native
+      from={{ opacity: 0, height: 0, /* transform: 'scale(1,0)' */ }}
+      enter={{ opacity: 1, height: 'auto', /* transform: 'scale(1,1)' */ }}
+      leave={{ opacity: 0, height: 0, /* transform: 'scale(1,0)' */ }}
+    >
+      {
+        isAuthenticated
+          ? style => <Dashboard style={style} />
+          : style => <NotAuthenticated style={style} />
+      }
+    </Transition>
+  )
 }
 
 export default Home;
