@@ -29,6 +29,7 @@ class SearchPlace extends Component {
     isOpen: false,
     loading: false,
     error: '',
+    searched: false,
   }
 
   constructor() {
@@ -60,7 +61,7 @@ class SearchPlace extends Component {
   }
 
   searchPlaces = () => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, searched: true });
     const map = new google.maps.Map(document.createElement('div'));
     const service = new google.maps.places.PlacesService(map);
 
