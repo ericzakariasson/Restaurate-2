@@ -48,9 +48,9 @@ const StyledNavLink = styled(NavLink)`
   display: block;
 `;
 
-export const NavButton = ({ to, disabled, children }) => {
+export const NavButton = ({ to, disabled, children, ...props }) => {
   return (
-    <StyledNavLink to={to} disabled={disabled}>
+    <StyledNavLink to={to} disabled={disabled} {...props}>
       <ButtonText>{children}</ButtonText>
     </StyledNavLink>
   )

@@ -4,8 +4,9 @@ import { theme } from './style';
 
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import Home from './views/Home';
+import Home from './views/Home/';
 import NewVisit from './views/NewVisit/';
+import Dashboard from './views/Dashboard';
 import NotFound from './views/NotFound';
 
 import Login from './views/Login';
@@ -17,7 +18,8 @@ const App = ({ location }) => {
       <ThemeProvider theme={theme}>
         <Switch location={location}>
           <Route exact path="/nytt" component={NewVisit} />
-          <Route exact path="/(logga-in)?" component={Home} />
+          <Route exact path="/logga-in" component={Home} />
+          <Route exact path="/" component={Home} />
           <Route path="/" component={NotFound} />
         </Switch>
       </ThemeProvider>
