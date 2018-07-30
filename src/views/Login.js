@@ -1,14 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
-
 import { withRouter, Redirect } from 'react-router-dom';
+import { animated } from 'react-spring';
+
+import { GoogleLogin} from 'react-google-login';
+
+import Button from '../components/Button';
+import Google from '../icons/Google.svg';
+
 
 import { AUTH_TOKEN } from '../constants';
 
-import { animated } from 'react-spring';
-import Button from '../components/Button';
-
-import Google from '../icons/Google.svg';
 
 const Page = styled(animated.div)`
   padding: 40px;
@@ -64,6 +66,21 @@ const CenterWrapper = styled.div`
   justify-content: center;
 `;
 
+const StyledGoogleLogin = styled(GoogleLogin)`
+  border-radius: 5px;
+  box-shadow: ${p => p.theme.boxShadow};
+  background: ${p => p.cta ? p.theme.action : '#FFF'};
+  padding: 20px 0;
+  border: none;
+  outline: none;
+  position: relative;
+  height: 60px;
+  text-align: left;
+  padding-left: 60px;
+  font-family: ${p => p.theme.fonts.text};
+  font-size: 1.8rem;
+`;
+
 class Login extends Component {
 
   state = {
@@ -84,6 +101,10 @@ class Login extends Component {
         this.setState({ redirectToReferrer: true });
       }
     }, 5000);
+  }
+
+  handleResponse = response => {
+    console.log(response);
   }
 
   render() {
@@ -109,12 +130,17 @@ class Login extends Component {
               <Page /* style={this.props.style} */>
                 <Title >Logga in</Title>
                 <Disclaimer >Vi kommer aldrig att publicera något eller utföra annan aktivitet med ditt konto</Disclaimer>
-                <SocialLoginButton onClick={this.handleLogin}>
+                <StyledGoogleLogin
+                  clientId={process.env.GOOGLE_CLIENT_ID}
+                  onSuccess={this.handleResponse}
+                  onFailure={this.handleResponse}
+                  buttonText={`Logga in med Google`}
+                >
                   <IconWrapper>
                     <img src={Google} alt={`Logga in med Google`} />
                   </IconWrapper>
                   Logga in med Google
-                </SocialLoginButton>
+                </StyledGoogleLogin>
               </Page>
             )
         }
