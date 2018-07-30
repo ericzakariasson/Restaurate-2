@@ -34,9 +34,9 @@ class SearchPlace extends Component {
   constructor() {
     super();
 
-    if (!window.google) {
+    /* if (!window.google) {
       throw Error('Google Maps API must be imported');
-    }
+    } */
   }
 
   handleChange = ({ target: { value } }) => this.setState({ value });

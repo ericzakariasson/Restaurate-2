@@ -21,12 +21,13 @@ const PriceItem = styled.li`
   background: ${p => p.selected ? '#222' : '#FFF'};
   transition: ${p => p.theme.transition};
   display: block;
+  cursor: pointer;
 `;
 
 const Text = styled.p`
   font-size: 1.8rem;
   color: ${p => p.selected ? '#FFF' : '#222'};
-  font-weight: 500;
+  font-weight: 400;
 `;
 
 const Icons = styled.div`
@@ -51,6 +52,7 @@ const IconWrapper = styled(animated.div)`
 
 const StyledCheck = styled(Check)`
   stroke-width: 4;
+  color: ${p => p.theme.action};
 `;
 
 const ItemLabel = styled.label`
@@ -108,7 +110,7 @@ class PriceLevel extends React.Component {
                         enter={{ opacity: 1, transform: `translate(-50%, -50%) scale(1, 1)` }}
                         leave={{ opacity: 0, transform: `translate(-50%, -50%) scale(0, 0)` }}
                       >
-                        {isSelected ? style => <IconWrapper style={style}><StyledCheck color={`#222`} size={12} /></IconWrapper> : () => null}
+                        {isSelected ? style => <IconWrapper style={style}><StyledCheck size={12} /></IconWrapper> : () => null}
                       </Transition>
                       <StyledCircle selected={isSelected} />
                     </Icons>

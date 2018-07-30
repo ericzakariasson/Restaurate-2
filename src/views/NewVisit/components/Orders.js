@@ -6,13 +6,12 @@ import { X } from 'react-feather';
 
 import InputList from '../../../components/InputList';
 
-const Tag = styled(animated.li)`
+const Order = styled(animated.li)`
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-right: 20px;
-  padding-left: 10px;
+  padding: 20px;
 
   &:not(:last-of-type) {
     border-bottom: 1px solid #EEE;
@@ -23,39 +22,47 @@ const Tag = styled(animated.li)`
   }
 `;
 
-const TagText = styled.p`
+const OrderText = styled.p`
   display: block;
-  padding: 10px 12px;
-  background: #F5F5F5;
-  border-radius: 5px;
-  font-size: 1.6rem;
-  text-transform: uppercase;
+  font-size: 1.8rem;
   color: #222;
   font-weight: 500;
+  position: relative;
+  padding-left: 18px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+
+    width: 8px;
+    height: 8px;
+    border-radius: 5px;
+    background: ${p => p.theme.visit};
+  }
 `;
 
-class AddTags extends Component {
-  state = { items: [] }
-
-  addItem = items => this.props.onAdd('tags', items);
-  removeItem = items => this.props.onAdd('tags', items);
+class Orders extends Component {
+  addItem = items => this.props.onAdd('orders', items);
+  removeItem = items => this.props.onAdd('orders', items);
 
   render() {
-
     return (
       <InputList
-        label={'Taggar'}
-        placeholder={'Nationalitet, specialkost'}
-        padding={10}
+        label={'Beställningar'}
+        placeholder={'Namn, nummer'}
+        padding={20}
         addItem={this.addItem}
         removeItem={this.removeItem}
-        items={this.props.tags}
+        items={this.props.orders}
         render={
           ({ item, styles, removeItem }) => (
-            <Tag style={styles}>
-              <TagText>{item}</TagText>
+            <Order style={styles}>
+              <OrderText>{item}</OrderText>
               <X color={this.props.theme.danger} onClick={() => removeItem(item)} />
-            </Tag>
+            </Order>
           )
         }
       />
@@ -63,4 +70,4 @@ class AddTags extends Component {
   }
 }
 
-export default withTheme(AddTags);
+export default withTheme(Orders);
