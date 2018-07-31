@@ -9,18 +9,18 @@ import Home from './views/Home/';
 import NewVisit from './views/NewVisit/';
 import NotFound from './views/NotFound';
 
-import Header from './components/Header';
-import { AUTH_TOKEN } from './constants';
+import Menu from './components/Menu';
+import { ACCESS_TOKEN } from './constants';
 
 const App = ({ location }) => {
 
-  const isAuthenticated = localStorage.getItem(AUTH_TOKEN);
+  const isAuthenticated = localStorage.getItem(ACCESS_TOKEN);
 
   return (
     <div>
       <ThemeProvider theme={theme}>
         <React.Fragment>
-          {isAuthenticated && <Header />}
+          {isAuthenticated && <Menu />}
           <Switch location={location}>
             <AuthRoute exact path="/nytt" component={NewVisit} />
             <Route exact path="/logga-in" component={Home} />

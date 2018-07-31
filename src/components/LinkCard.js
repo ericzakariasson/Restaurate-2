@@ -94,7 +94,7 @@ const LinkCard = ({ to, label, count, Icon, color }) => {
         <Label>{label}</Label>
         <Number>{count}</Number>
       </Count>
-      <ShowAll to={to}>Visa alla</ShowAll>
+      {count > 0 && <ShowAll to={to}>Visa alla</ShowAll>}
     </Card>
   )
 }

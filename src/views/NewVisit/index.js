@@ -12,10 +12,11 @@ import PriceLevel from './components/PriceLevel';
 import Comment from './components/Comment';
 
 import Loading from '../../components/Loading';
+import Button from '../../components/Button';
 
-import { 
-  TYPE_OF_PLACES, 
-  RATE_TREE, 
+import {
+  TYPE_OF_PLACES,
+  RATE_TREE,
   PRICE_LEVELS,
   COMMENT_MAX_LENGTH,
 } from './defaults';
@@ -44,6 +45,10 @@ const Title = styled.h1`
 const Article = styled.article`
   display: flex;
   flex-direction: column;
+
+  &:last-of-type {
+    margin-bottom: 40px;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -51,6 +56,7 @@ const SubmitButton = styled.button`
   padding: 20px;
   margin-top: 40px;
   background: ${p => p.theme.action};
+  border: none;
   color: #FFF;
   font-size: 2.4rem;
   border-radius: 5px;
@@ -91,7 +97,7 @@ class NewVisit extends Component {
   }
 
   render() {
-    
+
     const { isSubmitting } = this.state;
 
     return (
@@ -103,25 +109,25 @@ class NewVisit extends Component {
       >
         {
           isSubmitting
-          ? style => <LoadingWrapper style={style}><Loading /></LoadingWrapper>
-          : style => (
-            <Page style={style}>
-              <Article>
-                <Title>Plats</Title>
-                <SearchPlace onReset={this.resetField} selected={this.state.place} setValue={this.setValue} />
-                <SelectTypeOfPlace onSelect={this.setValue} checked={this.state.typesOfPlace} types={TYPE_OF_PLACES} />
-                <Tags onAdd={this.setValue} tags={this.state.tags} />
-                <PriceLevel onSelect={this.setValue} onReset={this.resetField} selected={this.state.priceLevel} priceLevels={PRICE_LEVELS} />
-              </Article>
-              <Article>
-                <Title>Besök</Title>
-                <Orders orders={this.state.orders} onAdd={this.setValue} />
-                <Rating ratings={this.state.rating} setValue={this.setValue} tree={RATE_TREE} />
-                <Comment setValue={this.setValue} maxLength={COMMENT_MAX_LENGTH} />
-              </Article>
-              <SubmitButton onClick={this.handleSubmit}>Spara besök</SubmitButton>
-            </Page>
-          )
+            ? style => <LoadingWrapper style={style}><Loading /></LoadingWrapper>
+            : style => (
+              <Page style={style}>
+                <Article>
+                  <Title>Plats</Title>
+                  <SearchPlace onReset={this.resetField} selected={this.state.place} setValue={this.setValue} />
+                  <SelectTypeOfPlace onSelect={this.setValue} checked={this.state.typesOfPlace} types={TYPE_OF_PLACES} />
+                  <Tags onAdd={this.setValue} tags={this.state.tags} />
+                  <PriceLevel onSelect={this.setValue} onReset={this.resetField} selected={this.state.priceLevel} priceLevels={PRICE_LEVELS} />
+                </Article>
+                <Article>
+                  <Title>Besök</Title>
+                  <Orders orders={this.state.orders} onAdd={this.setValue} />
+                  <Rating ratings={this.state.rating} setValue={this.setValue} tree={RATE_TREE} />
+                  <Comment setValue={this.setValue} maxLength={COMMENT_MAX_LENGTH} />
+                </Article>
+                <Button cta onClick={this.handleSubmit}>Spara besök</Button>
+              </Page>
+            )
         }
       </Transition>
     )

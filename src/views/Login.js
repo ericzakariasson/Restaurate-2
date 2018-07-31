@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import { withRouter, Redirect } from 'react-router-dom';
 import { animated } from 'react-spring';
 
-import { GoogleLogin} from 'react-google-login';
+import { GoogleLogin } from 'react-google-login';
 
 import Button from '../components/Button';
 import Google from '../icons/Google.svg';
 
 
-import { AUTH_TOKEN } from '../constants';
+import { ACCESS_TOKEN, USER_DATA, TOKEN_ID } from '../constants';
 
 
 const Page = styled(animated.div)`
@@ -86,33 +86,34 @@ class Login extends Component {
   state = {
     isSigningIn: false,
     success: false,
-    redirectToReferrer: false
+    redirectToReferrer: false,
+    error: '',
   }
 
-  handleLogin = () => {
-    this.setState({ isSigningIn: true });
+  onRequest = () => this.setState({ isSigningIn: true })
 
-    setTimeout(() => {
-      this.setState({ isSigningIn: false, success: true })
+  handleSuccess = response => {
+    const { profileObj, accessToken, tokenId } = response;
 
-      let success = true;
-      if (success) {
-        localStorage.setItem(AUTH_TOKEN, '123');
-        this.setState({ redirectToReferrer: true });
-      }
-    }, 5000);
+    localStorage.setItem(ACCESS_TOKEN, accessToken);
+    localStorage.setItem(TOKEN_ID, tokenId);
+    localStorage.setItem(USER_DATA, JSON.stringify(profileObj));
+
+    this.setState({ redirectToReferrer: true });
+    this.props.history.push('/');
   }
 
-  handleResponse = response => {
-    console.log(response);
+  handleError = response => {
+    this.setState({ error: response })
+    this.setState({ isSigningIn: false });
   }
+
+
 
   render() {
 
-    const { isSigningIn } = this.state;
-
+    const { isSigningIn, redirectToReferrer } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } }
-    const { redirectToReferrer } = this.state
 
     if (redirectToReferrer) {
       return <Redirect to={from} />
@@ -132,8 +133,9 @@ class Login extends Component {
                 <Disclaimer >Vi kommer aldrig att publicera något eller utföra annan aktivitet med ditt konto</Disclaimer>
                 <StyledGoogleLogin
                   clientId={process.env.GOOGLE_CLIENT_ID}
-                  onSuccess={this.handleResponse}
-                  onFailure={this.handleResponse}
+                  onRequest={this.onRequest}
+                  onSuccess={this.handleSuccess}
+                  onFailure={this.handleError}
                   buttonText={`Logga in med Google`}
                 >
                   <IconWrapper>

@@ -21,10 +21,10 @@ const ButtonText = styled.span`
   font-family: ${p => p.theme.fonts.text};
 `;
 
-const Button = ({ onClick, disabled, children, ...props }) => {
+const Button = ({ onClick, disabled, children, cta, ...props }) => {
   return (
-    <StyledButton onClick={onClick} disabled={disabled} {...props}>
-      <ButtonText>{children}</ButtonText>
+    <StyledButton onClick={onClick} cta={cta ? 'true' : 'false'} disabled={disabled} {...props}>
+      <ButtonText cta={cta ? 'true' : 'false'}>{children}</ButtonText>
     </StyledButton>
   )
 }
@@ -51,7 +51,7 @@ const StyledNavLink = styled(NavLink)`
 export const NavButton = ({ to, disabled, children, cta, ...props }) => {
   return (
     <StyledNavLink to={to} cta={cta ? 'true' : 'false'} disabled={disabled} {...props}>
-      <ButtonText cta>{children}</ButtonText>
+      <ButtonText cta={cta ? 'true' : 'false'}>{children}</ButtonText>
     </StyledNavLink>
   )
 }
