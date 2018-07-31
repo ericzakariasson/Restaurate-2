@@ -7,7 +7,7 @@ const Dotenv = require('dotenv-webpack');
 module.exports = {
   entry: [
     'react-hot-loader/patch',
-    './src/index.js'
+    './client/index.js'
   ],
   module: {
     rules: [
@@ -37,7 +37,7 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, './public'),
     filename: 'bundle.js',
     publicPath: '/',
   },
@@ -45,13 +45,13 @@ module.exports = {
     new Dotenv(),
     new HtmlWebpackPlugin({
       hash: true,
-      template: './dist/index.html',
-      favicon: './dist/favicon.ico',
+      template: './public/index.html',
+      favicon: './public/favicon.ico',
     }),
     new webpack.HotModuleReplacementPlugin(),
   ],
   devServer: {
-    contentBase: path.resolve(__dirname, './dist'),
+    contentBase: path.resolve(__dirname, './public'),
     watchContentBase: true,
     port: 3000,
     hot: true,
