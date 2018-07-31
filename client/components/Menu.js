@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { NavLink, withRouter } from 'react-router-dom';
-import ScrollLock from 'react-scrolllock';
-import { Hash, MapPin, Settings } from 'react-feather';
-import { Transition, Keyframes, animated, config } from 'react-spring';
+import React, { Component } from "react";
+import styled from "styled-components";
+import { NavLink, withRouter } from "react-router-dom";
+import ScrollLock from "react-scrolllock";
+import { Hash, MapPin, Settings } from "react-feather";
+import { Transition, Keyframes, animated, config } from "react-spring";
 
-
-import Hamburger from './Hamburger';
-import Logo from './Logo';
-
+import Hamburger from "./Hamburger";
+import Logo from "./Logo";
 
 const HEADER_HEIGHT = 50;
 
@@ -16,7 +14,8 @@ const StyledHeader = styled.header`
   width: 100%;
   height: ${HEADER_HEIGHT}px;
   padding: 0 20px;
-  background: #d7c89433;
+  background: #ffe59a;
+  background: linear-gradient(to right, #ffe59a, #ffda6f);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -33,18 +32,19 @@ const MenuWrapper = styled(animated.ul)`
   left: 0;
   width: 100%;
   overflow: hidden;
+  z-index: 10;
 `;
 
 const MenuItem = styled(animated.li)`
   width: 100%;
   padding: 30px 20px;
-  background: #FFF;
+  background: #fff;
   overflow: hidden;
   transition: ${p => p.theme.transition} border;
-  border-bottom-color: #EEE;
+  border-bottom-color: #eee;
 
   &:not(:last-child) {
-  border-bottom: ${p => p.open ? '1px solid #EEE' : 'none'};
+    border-bottom: ${p => (p.open ? "1px solid #EEE" : "none")};
   }
 
   &:last-child {
@@ -75,7 +75,7 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 const MenuBackground = styled(animated.div)`
-  background: rgba(0,0,0,0.08);
+  background: rgba(0, 0, 0, 0.08);
   position: absolute;
   top: ${HEADER_HEIGHT}px;
   left: 0;
@@ -86,59 +86,75 @@ const MenuBackground = styled(animated.div)`
 
 const routes = [
   {
-    path: '/platser',
-    label: 'Platser',
-    Icon: MapPin,
+    path: "/platser",
+    label: "Platser",
+    Icon: MapPin
   },
   {
-    path: '/besök',
-    label: 'Besök',
-    Icon: Hash,
+    path: "/besök",
+    label: "Besök",
+    Icon: Hash
   },
   {
-    path: '/inställningar',
-    label: 'Inställningar',
-    Icon: Settings,
-  },
-]
+    path: "/inställningar",
+    label: "Inställningar",
+    Icon: Settings
+  }
+];
 
 const MenuContent = Keyframes.Trail({
-  open: { delay: 200, to: { opacity: 1, height: 'auto', padding: 30 }, config: config.stiff },
+  open: {
+    delay: 200,
+    to: { opacity: 1, height: "auto", padding: 30 },
+    config: config.stiff
+  },
   close: { to: { opacity: 1, height: 0, padding: 0 }, config: config.stiff }
-})
+});
 
 class Menu extends Component {
-  state = { isOpen: false }
+  state = { isOpen: false };
 
   componentDidUpdate(prevProps) {
-    const { location: { pathname } } = this.props;
-    const { location: { pathname: oldPathname } } = prevProps;
+    const {
+      location: { pathname }
+    } = this.props;
+    const {
+      location: { pathname: oldPathname }
+    } = prevProps;
 
-    if ((pathname !== oldPathname) && this.state.isOpen) {
+    if (pathname !== oldPathname && this.state.isOpen) {
       this.toggleOpen();
     }
   }
 
-  toggleOpen = () => this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+  toggleOpen = () =>
+    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
 
   render() {
-
     const { isOpen } = this.state;
-    const state = isOpen ? 'open' : 'close';
+    const state = isOpen ? "open" : "close";
 
     return (
       <Wrapper>
         {isOpen && <ScrollLock />}
         <StyledHeader>
-          <Logo />
+          <NavLink to="/">
+            <Logo />
+          </NavLink>
           <Hamburger onClick={this.toggleOpen} isOpen={isOpen} />
         </StyledHeader>
         <MenuWrapper>
           <MenuContent keys={routes.map((_, i) => _.path)} native state={state}>
             {routes.map(route => styles => (
-              <MenuItem open={isOpen} style={{ ...styles, padding: styles.padding.interpolate(p => `${p}px 20px`) }}>
+              <MenuItem
+                open={isOpen}
+                style={{
+                  ...styles,
+                  padding: styles.padding.interpolate(p => `${p}px 20px`)
+                }}
+              >
                 <StyledNavLink to={route.path}>
-                  <route.Icon color="#222" style={{ marginRight: '20px' }} />
+                  <route.Icon color="#222" style={{ marginRight: "20px" }} />
                   {route.label}
                 </StyledNavLink>
               </MenuItem>
@@ -154,7 +170,7 @@ class Menu extends Component {
           {isOpen && (style => <MenuBackground style={style} />)}
         </Transition>
       </Wrapper>
-    )
+    );
   }
 }
 
