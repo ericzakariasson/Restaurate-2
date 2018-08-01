@@ -10,14 +10,39 @@ import NewVisit from './views/NewVisit/';
 import NotFound from './views/NotFound';
 
 import Menu from './components/Menu';
-import { ACCESS_TOKEN } from './constants';
+import { TOKEN_ID } from './constants';
+
+import { ApolloProvider } from 'react-apollo';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { setContext } from 'apollo-link-context';
+
+const httpLink = createHttpLink({
+  uri: `http://localhost:${process.env.PORT}/graphql`,
+})
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem(TOKEN_ID);
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : null,
+    }
+  }
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
 
 const App = ({ location }) => {
 
-  const isAuthenticated = localStorage.getItem(ACCESS_TOKEN);
+  const isAuthenticated = localStorage.getItem(TOKEN_ID);
 
   return (
-    <div>
+    <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
         <React.Fragment>
           {isAuthenticated && <Menu />}
@@ -29,7 +54,7 @@ const App = ({ location }) => {
           </Switch>
         </React.Fragment>
       </ThemeProvider>
-    </div>
+    </ApolloProvider>
   )
 }
 

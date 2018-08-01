@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import { NavLink, withRouter } from "react-router-dom";
-import ScrollLock from "react-scrolllock";
-import { Hash, MapPin, Settings } from "react-feather";
-import { Transition, Keyframes, animated, config } from "react-spring";
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import { NavLink, withRouter } from 'react-router-dom';
+import ScrollLock from 'react-scrolllock';
+import { Hash, MapPin, Settings } from 'react-feather';
+import { Transition, Keyframes, animated, config } from 'react-spring';
 
-import Hamburger from "./Hamburger";
-import Logo from "./Logo";
+import Hamburger from './Hamburger';
+import Logo from './Logo';
 
 const HEADER_HEIGHT = 50;
 
@@ -44,7 +44,7 @@ const MenuItem = styled(animated.li)`
   border-bottom-color: #eee;
 
   &:not(:last-child) {
-    border-bottom: ${p => (p.open ? "1px solid #EEE" : "none")};
+    border-bottom: ${p => (p.open ? '1px solid #EEE' : 'none')};
   }
 
   &:last-child {
@@ -86,18 +86,18 @@ const MenuBackground = styled(animated.div)`
 
 const routes = [
   {
-    path: "/platser",
-    label: "Platser",
+    path: '/platser',
+    label: 'Platser',
     Icon: MapPin
   },
   {
-    path: "/besök",
-    label: "Besök",
+    path: '/besök',
+    label: 'Besök',
     Icon: Hash
   },
   {
-    path: "/inställningar",
-    label: "Inställningar",
+    path: '/inställningar',
+    label: 'Inställningar',
     Icon: Settings
   }
 ];
@@ -105,7 +105,7 @@ const routes = [
 const MenuContent = Keyframes.Trail({
   open: {
     delay: 200,
-    to: { opacity: 1, height: "auto", padding: 30 },
+    to: { opacity: 1, height: 'auto', padding: 30 },
     config: config.stiff
   },
   close: { to: { opacity: 1, height: 0, padding: 0 }, config: config.stiff }
@@ -132,7 +132,7 @@ class Menu extends Component {
 
   render() {
     const { isOpen } = this.state;
-    const state = isOpen ? "open" : "close";
+    const state = isOpen ? 'open' : 'close';
 
     return (
       <Wrapper>
@@ -154,7 +154,7 @@ class Menu extends Component {
                 }}
               >
                 <StyledNavLink to={route.path}>
-                  <route.Icon color="#222" style={{ marginRight: "20px" }} />
+                  <route.Icon color="#222" style={{ marginRight: '20px' }} />
                   {route.label}
                 </StyledNavLink>
               </MenuItem>

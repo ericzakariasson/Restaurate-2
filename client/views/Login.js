@@ -4,13 +4,10 @@ import { withRouter, Redirect } from 'react-router-dom';
 import { animated } from 'react-spring';
 
 import { GoogleLogin } from 'react-google-login';
+import { setLocalStorage } from '../auth';
 
 import Button from '../components/Button';
 import Google from '../icons/Google.svg';
-
-
-import { ACCESS_TOKEN, USER_DATA, TOKEN_ID } from '../constants';
-
 
 const Page = styled(animated.div)`
   padding: 40px;
@@ -69,7 +66,7 @@ const CenterWrapper = styled.div`
 const StyledGoogleLogin = styled(GoogleLogin)`
   border-radius: 5px;
   box-shadow: ${p => p.theme.boxShadow};
-  background: ${p => p.cta ? p.theme.action : '#FFF'};
+  background: ${p => (p.cta ? p.theme.action : '#FFF')};
   padding: 20px 0;
   border: none;
   outline: none;
@@ -82,72 +79,63 @@ const StyledGoogleLogin = styled(GoogleLogin)`
 `;
 
 class Login extends Component {
-
   state = {
     isSigningIn: false,
     success: false,
     redirectToReferrer: false,
-    error: '',
-  }
+    error: ''
+  };
 
-  onRequest = () => this.setState({ isSigningIn: true })
+  onRequest = () => this.setState({ isSigningIn: true });
 
   handleSuccess = response => {
-    const { profileObj, accessToken, tokenId } = response;
+    const { profileObj, tokenId } = response;
 
-    localStorage.setItem(ACCESS_TOKEN, accessToken);
-    localStorage.setItem(TOKEN_ID, tokenId);
-    localStorage.setItem(USER_DATA, JSON.stringify(profileObj));
-
+    setLocalStorage(tokenId, profileObj);
     this.setState({ redirectToReferrer: true });
     this.props.history.push('/');
-  }
+  };
 
   handleError = response => {
-    this.setState({ error: response })
+    this.setState({ error: response });
     this.setState({ isSigningIn: false });
-  }
-
-
+  };
 
   render() {
-
     const { isSigningIn, redirectToReferrer } = this.state;
-    const { from } = this.props.location.state || { from: { pathname: '/' } }
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
 
     if (redirectToReferrer) {
-      return <Redirect to={from} />
+      return <Redirect to={from} />;
     }
 
     return (
       <animated.div style={this.props.style}>
-        {
-          isSigningIn
-            ? (
-              <CenterWrapper>
-                LOGGAR IN
-              </CenterWrapper>
-            ) : (
-              <Page /* style={this.props.style} */>
-                <Title >Logga in</Title>
-                <Disclaimer >Vi kommer aldrig att publicera något eller utföra annan aktivitet med ditt konto</Disclaimer>
-                <StyledGoogleLogin
-                  clientId={process.env.GOOGLE_CLIENT_ID}
-                  onRequest={this.onRequest}
-                  onSuccess={this.handleSuccess}
-                  onFailure={this.handleError}
-                  buttonText={`Logga in med Google`}
-                >
-                  <IconWrapper>
-                    <img src={Google} alt={`Logga in med Google`} />
-                  </IconWrapper>
-                  Logga in med Google
-                </StyledGoogleLogin>
-              </Page>
-            )
-        }
+        {isSigningIn ? (
+          <CenterWrapper>LOGGAR IN</CenterWrapper>
+        ) : (
+          <Page /* style={this.props.style} */>
+            <Title>Logga in</Title>
+            <Disclaimer>
+              Vi kommer aldrig att publicera något eller utföra annan aktivitet
+              med ditt konto
+            </Disclaimer>
+            <StyledGoogleLogin
+              clientId={process.env.GOOGLE_CLIENT_ID}
+              onRequest={this.onRequest}
+              onSuccess={this.handleSuccess}
+              onFailure={this.handleError}
+              buttonText={`Logga in med Google`}
+            >
+              <IconWrapper>
+                <img src={Google} alt={`Logga in med Google`} />
+              </IconWrapper>
+              Logga in med Google
+            </StyledGoogleLogin>
+          </Page>
+        )}
       </animated.div>
-    )
+    );
   }
 }
 

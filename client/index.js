@@ -8,15 +8,14 @@ import App from './App';
 import 'reset-css';
 import './base.css';
 
+//gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse()
+
 const Root = () => (
   <Router>
     <App />
   </Router>
-)
-
-ReactDOM.render(
-  <Root />,
-  document.getElementById('app')
 );
+
+ReactDOM.render(<Root />, document.getElementById('app'));
 
 module.hot.accept();

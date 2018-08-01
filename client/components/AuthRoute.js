@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { ACCESS_TOKEN, USER_DATA } from '../constants';
+import { TOKEN_ID } from '../constants';
 
 const AuthRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => (
-    localStorage.getItem(ACCESS_TOKEN) && localStorage.getItem(USER_DATA)
+    localStorage.getItem(TOKEN_ID)
       ? <Component {...props} />
       : <Redirect to={{
         pathname: '/logga-in',
