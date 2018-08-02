@@ -5,11 +5,13 @@ const { OAuth2Client } = require('google-auth-library');
 const {
   ApolloServer,
   gql,
-  AuthenticationError
+  AuthenticationError,
+  UserInputError
 } = require('apollo-server-express');
 
-const cors = require('cors');
+const User = require('./models/User');
 
+const cors = require('cors');
 const morgan = require('morgan');
 
 const client = new OAuth2Client(
@@ -17,35 +19,15 @@ const client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_SECRET
 );
 
-const getUser = async token => {
+const verifyToken = async idToken => {
   try {
-    const idToken = token.split(' ')[1];
     const ticket = await client.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID
     });
 
     const payload = ticket.getPayload();
-
-    const {
-      name,
-      email,
-      email_verified,
-      picture,
-      sub: googleId,
-      locale
-    } = payload;
-
-    const user = {
-      googleId,
-      name,
-      email,
-      email_verified,
-      picture,
-      locale
-    };
-
-    return user;
+    return payload;
   } catch (error) {
     return null;
   }
@@ -53,9 +35,10 @@ const getUser = async token => {
 
 const typeDefs = gql`
   type User {
+    id: ID!
     googleId: String!
-    name: String
-    email: String
+    name: String!
+    email: String!
     email_verified: Boolean
     picture: String
     locale: String
@@ -65,16 +48,43 @@ const typeDefs = gql`
     viewer: User
   }
 
+  type LoginMutationResponse {
+    token: String!
+    refreshToken: String!
+    viewer: User!
+  }
+
+  type Mutation {
+    login(idToken: String!): LoginMutationResponse
+  }
 `;
 
 const resolvers = {
   Query: {
     viewer: (_, args, { user }) => {
-      if (!user) {
-        throw new AuthenticationError('User is not logged in');
-      }
+      if (!user) { throw new AuthenticationError('User is not logged in'); }
 
       return user;
+    }
+  },
+  Mutation: {
+    login: async (_, { idToken }) => {
+      console.log('LOGGING IN')
+      if (!idToken) {
+        throw new UserInputError('ID token is missing')
+      }
+
+      const newUser = await verifyToken(idToken);
+
+      console.log('newUser: ', newUser);
+
+      if (!newUser) {
+        throw new UserInputError('Invalid ID token')
+      }
+
+      const { user: viewer, token, refreshToken } = User.findOrCreate(newUser);
+
+      return { viewer, token, refreshToken };
     }
   }
 };
@@ -90,12 +100,11 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   playground: true,
-  context: async ({ req }) => {
-    const token = req.headers.authorization || '';
-    const user = await getUser(token);
-
-    return { user };
-  }
+  /* context: async ({ req }) => {
+    //const token = req.headers.authorization || '';
+    //const user = await getUser(token);
+    //return { user };
+  } */
 });
 
 server.applyMiddleware({

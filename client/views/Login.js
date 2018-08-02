@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { withRouter, Redirect } from 'react-router-dom';
 import { animated } from 'react-spring';
 
+import { graphql } from 'react-apollo';
+import loginWithToken from '../mutations/loginWithToken.gql';
+
 import { GoogleLogin } from 'react-google-login';
 import { setLocalStorage } from '../auth';
 
@@ -86,12 +89,31 @@ class Login extends Component {
     error: ''
   };
 
+  componentDidMount() {
+    console.log('this.props: ', this.props);
+  }
+
   onRequest = () => this.setState({ isSigningIn: true });
 
-  handleSuccess = response => {
-    const { profileObj, tokenId } = response;
+  handleSuccess = async ({ tokenId }) => {
+    console.log('tokenId: ', tokenId);
 
-    setLocalStorage(tokenId, profileObj);
+    const {
+      data: {
+        login: {
+          token,
+          refreshToken,
+          viewer: user
+        }
+      }
+    } = await this.props.login(tokenId);
+
+    setLocalStorage({
+      token,
+      refreshToken,
+      user
+    });
+
     this.setState({ redirectToReferrer: true });
     this.props.history.push('/');
   };
@@ -114,29 +136,35 @@ class Login extends Component {
         {isSigningIn ? (
           <CenterWrapper>LOGGAR IN</CenterWrapper>
         ) : (
-          <Page /* style={this.props.style} */>
-            <Title>Logga in</Title>
-            <Disclaimer>
-              Vi kommer aldrig att publicera något eller utföra annan aktivitet
-              med ditt konto
+            <Page /* style={this.props.style} */>
+              <Title>Logga in</Title>
+              <Disclaimer>
+                Vi kommer aldrig att publicera något eller utföra annan aktivitet
+                med ditt konto
             </Disclaimer>
-            <StyledGoogleLogin
-              clientId={process.env.GOOGLE_CLIENT_ID}
-              onRequest={this.onRequest}
-              onSuccess={this.handleSuccess}
-              onFailure={this.handleError}
-              buttonText={`Logga in med Google`}
-            >
-              <IconWrapper>
-                <img src={Google} alt={`Logga in med Google`} />
-              </IconWrapper>
-              Logga in med Google
+              <StyledGoogleLogin
+                clientId={process.env.GOOGLE_CLIENT_ID}
+                onRequest={this.onRequest}
+                onSuccess={this.handleSuccess}
+                onFailure={this.handleError}
+                buttonText={`Logga in med Google`}
+              >
+                <IconWrapper>
+                  <img src={Google} alt={`Logga in med Google`} />
+                </IconWrapper>
+                Logga in med Google
             </StyledGoogleLogin>
-          </Page>
-        )}
+            </Page>
+          )}
       </animated.div>
     );
   }
 }
 
-export default withRouter(Login);
+const withGraphQL = graphql(loginWithToken, {
+  props: ({ mutate }) => ({
+    login: (idToken) => mutate({ variables: { idToken } }),
+  }),
+})(Login);
+
+export default withRouter(withGraphQL);

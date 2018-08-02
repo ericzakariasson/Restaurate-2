@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { TOKEN_ID } from '../../constants';
+import { AUTH_TOKEN } from '../../constants';
 
 import Dashboard from '../Dashboard';
 import NotAuthenticated from './NotAuthenticated';
@@ -9,7 +9,7 @@ import { Transition } from 'react-spring';
 
 const Home = () => {
 
-    const isAuthenticated = localStorage.getItem(TOKEN_ID);
+    const isAuthenticated = localStorage.getItem(AUTH_TOKEN);
 
     return (
         <Transition

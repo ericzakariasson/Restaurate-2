@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 
 import styled from 'styled-components';
 import { animated } from 'react-spring';
-import { USER_DATA } from '../constants';
+import { Redirect } from 'react-router-dom';
 
 import { Query } from 'react-apollo';
 
@@ -28,13 +28,15 @@ const Username = styled.h1`
 
 const Dashboard = ({ style, ...props }) => {
 
-  const username = JSON.parse(localStorage.getItem(USER_DATA)).name;
-
   return (
     <Page style={style}>
       <Query query={currentUserQuery}>
         {({ data, loading, error }) => {
-          console.log(props);
+
+          /*  if (error && error.graphQLErrors && error.graphQLErrors[0].message === 'User is not logged in') {
+             return <Redirect to="logga" />
+           } */
+
           return (
             <Fragment>
               <Username>{loading ? '' : data.viewer.name}</Username>

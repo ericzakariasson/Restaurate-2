@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "client": "webpack-dev-server --config ./webpack.config.js --mode development",
-    "server": "nodemon ./server/index.js",
+    "server": "nodemon --ignore ./client/ ./server/index.js",
     "start": "concurrently 'npm:client' 'npm:server'"
   },
   "repository": {
@@ -44,6 +44,7 @@
     "apollo-link-context": "^1.0.8",
     "apollo-link-http": "^1.5.4",
     "apollo-server-express": "^2.0.0",
+    "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "dotenv-webpack": "^1.5.7",
@@ -51,6 +52,7 @@
     "google-auth-library": "^1.6.1",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
+    "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",

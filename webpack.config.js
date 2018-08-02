@@ -6,6 +6,7 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: [
+    'babel-polyfill',
     'react-hot-loader/patch',
     './client/index.js'
   ],

@@ -14,8 +14,8 @@ const StyledHeader = styled.header`
   width: 100%;
   height: ${HEADER_HEIGHT}px;
   padding: 0 20px;
-  background: #ffe59a;
-  background: linear-gradient(to right, #ffe59a, #ffda6f);
+  background: #f3eefa;
+  /* background: linear-gradient(to right, #ffe59a, #ffda6f); */
   display: flex;
   align-items: center;
   justify-content: space-between;
