@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const { User } = require('./models');
 const { OAuth2Client } = require('google-auth-library');
 const {
   ApolloServer,
@@ -9,15 +10,22 @@ const {
   UserInputError
 } = require('apollo-server-express');
 
-const User = require('./models/User');
-
 const cors = require('cors');
 const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
 
 const client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET
 );
+
+
+function generateToken(user) {
+  const token = jwt.sign(user, process.env.SECRET, { expiresIn: process.env.TOKEN_LIFE });
+  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_LIFE });
+
+  return { token, refreshToken }
+}
 
 const verifyToken = async idToken => {
   try {
@@ -112,6 +120,12 @@ server.applyMiddleware({
   path
 });
 
-const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+/* db.sequelize
+.sync()
+.then(() => {
+    console.log(`Database connection to ${process.env.DB_HOST} established`);
+  })
+  .catch(err => console.error(err)); */
