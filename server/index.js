@@ -1,16 +1,16 @@
 require('dotenv').config();
 
 const express = require('express');
-const { User } = require('./models');
-const { ApolloServer } = require('apollo-server-express');
-
-const schema = require('./schema');
-
 const cors = require('cors');
 const morgan = require('morgan');
 
+const { ApolloServer } = require('apollo-server-express');
+const { models, sequelize } = require('./models');
+const schema = require('./schema');
+
+const { getViewer } = require('./auth');
+
 const app = express();
-const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -18,11 +18,13 @@ app.use(morgan('dev'));
 const server = new ApolloServer({
   schema,
   playground: true,
-  /* context: async ({ req }) => {
-    //const token = req.headers.authorization || '';
-    //const user = await getUser(token);
-    //return { user };
-  } */
+  context: async ({ req }) => {
+    const viewer = getViewer(req);
+    return { 
+      models,
+      viewer,
+    };
+  }
 });
 
 server.applyMiddleware({
@@ -30,10 +32,10 @@ server.applyMiddleware({
   path: '/graphql'
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-/* db.sequelize
-.sync()
-.then(() => {
+const PORT = process.env.PORT || 4000;
+
+sequelize.sync().then(() => {
     console.log(`Database connection to ${process.env.DB_HOST} established`);
+    app.listen(PORT, () => console.log(`Apollo Server running on http://localhost:${PORT}/graphql`));
   })
-  .catch(err => console.error(err)); */
+  .catch(err => console.error(err));

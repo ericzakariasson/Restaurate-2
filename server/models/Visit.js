@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Visit.associate = models => {
-    Visit.belongsTo(models.user, { as: 'author'});
-    Visit.hasOne(models.place)
+    Visit.belongsTo(models.User);
   }
 
   return Visit;

@@ -1,10 +1,22 @@
 const { makeExecutableSchema, gql } = require('apollo-server-express');
 
-const { typeDef: User, resolvers: userResolvers } = require('./user');
+const { 
+  typeDef: User, 
+  resolvers: userResolvers 
+} = require('./user');
+
+const { 
+  typeDef: Visit, 
+  resolvers: visitResolvers 
+} = require('./visit');
 
 const Query = gql`
   type Query {
-    _empty: String
+    _: Boolean
+  }
+
+  type Mutation {
+    _: Boolean
   }
 `;
 
@@ -12,11 +24,12 @@ const resolvers = {}
 
 const combinedResolvers = Object.assign({}, 
   resolvers, 
-  userResolvers
+  userResolvers,
+  visitResolvers,
 )
 
 const schema = makeExecutableSchema({
-  typeDefs: [Query, User],
+  typeDefs: [Query, User, Visit],
   resolvers: combinedResolvers
 })
 

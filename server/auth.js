@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
-
+const { AuthenticationError } = require('apollo-server-express');
 
 const client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
@@ -8,18 +8,27 @@ const client = new OAuth2Client(
 );
 
 
-function signToken(user) {
-  const token = jwt.sign(user, process.env.SECRET, { expiresIn: process.env.TOKEN_LIFE });
-  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_LIFE });
+module.exports.createToken = async user => {
+  
+  const expiresIn = process.env.TOKEN_LIFE;
+  const secret = process.env.SECRET
 
-  return { token, refreshToken }
+  const {
+    id,
+    googleId,
+    name,
+    email,
+    picture,
+  } = user;
+
+  return await jwt.sign({ id, googleId, name, email, picture }, secret, { 
+    expiresIn 
+  });
+  
+  // const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_LIFE });
 }
 
-function verifyToken(token) {
-  const decoded = jwt.verify(token, process.env.SECRET);
-}
-
-const verifyGoogleToken = async idToken => {
+module.exports.verifyGoogleToken = async idToken => {
   try {
     const ticket = await client.verifyIdToken({
       idToken,
@@ -27,8 +36,28 @@ const verifyGoogleToken = async idToken => {
     });
 
     const payload = ticket.getPayload();
-    return payload;
+
+    if (payload.aud.includes(process.env.GOOGLE_CLIENT_ID)) {
+      return payload;
+    }
+
+    return null;
+
   } catch (error) {
     return null;
   }
 };
+
+module.exports.getViewer = async req => {
+  const token = req.headers.authorization;
+
+  if (token) {
+    try {
+      return await jwt.verify(token, process.env.SECRET)
+    } catch (err) {
+      throw new AuthenticationError(
+        'Your session has expored. Re-authentication needed'
+      );
+    }
+  }
+}
