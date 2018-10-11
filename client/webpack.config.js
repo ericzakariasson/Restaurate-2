@@ -1,14 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: [
-    'babel-polyfill',
-    'react-hot-loader/patch',
-    './client/index.js'
+    // 'babel-polyfill',
+    './src/index.js'
   ],
   module: {
     rules: [
@@ -45,8 +43,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './public'),
-    filename: 'bundle.js',
     publicPath: '/',
+    filename: 'bundle.js',
   },
   plugins: [
     new Dotenv(),
@@ -58,7 +56,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
   ],
   devServer: {
-    contentBase: path.resolve(__dirname, './public'),
+    contentBase: './public',
     watchContentBase: true,
     port: 3000,
     hot: true,

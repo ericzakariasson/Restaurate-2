@@ -5,7 +5,7 @@ import { theme } from './style';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import AuthRoute from './components/AuthRoute';
 
-import Home from './views/Home/';
+import Home from './views/Home';
 import NewVisit from './views/NewVisit/';
 import NotFound from './views/NotFound';
 
