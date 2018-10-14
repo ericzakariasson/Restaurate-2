@@ -5,7 +5,7 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: [
-    // 'babel-polyfill',
+    '@babel/polyfill',
     './src/index.js'
   ],
   module: {
@@ -20,7 +20,7 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|jpg|gif|svg|woff2)$/,
         use: [
           {
             loader: 'file-loader',

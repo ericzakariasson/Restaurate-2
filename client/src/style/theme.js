@@ -1,15 +1,27 @@
-export default {
-  main: '#FFD14C',
-  action: '#6C3EAD',
-  danger: '#EA4335',
-  visit: '#FFD14C',
-  place: '#1E6699',
-  fonts: {
-    display: 'Playfair Display',
-    text: '"Work Sans", sans-serif',
+const theme = {
+  black: '#222',
+  main: '#FFD966',
+  action: '#6681FF',
+  font: {
+    serif: 'Spectral, serif',
+    text: 'Karmilla, sans-serif',
   },
-  background: '#FCFCFC',
-  boxShadow: '0 4px 8px rgba(0,0,0,0.08)',
-  inputShadow: '0 4px 4px rgba(32, 9, 64, 0.08);',
-  transition: 'ease-in-out 0.2s'
+  danger: '#EA4335',
+  transition: 'ease-in-out 0.2s',
+  rgba: (color, opacity) => hexToRgbA(theme[color], opacity),
+}
+
+export default theme;
+
+function hexToRgbA(hex, opacity) {
+  var c;
+  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+    c = hex.substring(1).split('');
+    if (c.length == 3) {
+      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+    }
+    c = '0x' + c.join('');
+    return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + opacity + ')';
+  }
+  throw new Error('Bad Hex');
 }
