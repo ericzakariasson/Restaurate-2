@@ -2,14 +2,14 @@ const { gql, AuthenticationError } = require('apollo-server-express');
 
 const { verifyGoogleToken, createToken } = require('../auth');
 
-const typeDef  = gql`
+const typeDef = gql`
   extend type Query {
     viewer: User
   }
 
   extend type Mutation {
     signUp(
-      tokenId: String!
+      idToken: String!
     ): Token!
   }
 
@@ -32,8 +32,8 @@ const resolvers = {
     viewer: async (_, args, { viewer, models }) => {
       if (!viewer) {
         return null;
-      } 
-      
+      }
+
       return await models.User.findById(viewer.id);
     }
   },
@@ -47,7 +47,7 @@ const resolvers = {
 
       const {
         sub,
-        name, 
+        name,
         email,
         picture,
       } = payload;
@@ -63,7 +63,7 @@ const resolvers = {
     }
   },
   User: {
-    visits: async (user, args, {models}) => {
+    visits: async (user, args, { models }) => {
       await models.Visit.findAll({
         where: {
           visitor: user.id

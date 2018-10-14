@@ -1,0 +1,5 @@
+mutation ($idToken: String!) {
+  signUp(idToken: $idToken) {
+    token
+  }
+}

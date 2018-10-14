@@ -5,7 +5,8 @@ import GoogleIcon from '../icons/Google.svg';
 // import { animated } from 'react-spring';
 
 import { graphql } from 'react-apollo';
-// import loginWithToken from '../mutations/loginWithToken.gql';
+import signUp from '../mutations/signUp.gql';
+import { AUTH_TOKEN } from '../constants';
 
 import { GoogleLogin } from 'react-google-login';
 import { saveToken } from '../auth';
@@ -130,13 +131,12 @@ class SignIn extends Component {
     const {
       data: {
         login: {
-          token,
-          viewer
+          token
         }
       }
     } = await this.props.login(tokenId);
 
-    saveToken({ token });
+    localStorage.setItem(AUTH_TOKEN, token);
 
     this.setState({ redirectToReferrer: true });
     this.props.history.push('/');
