@@ -6,7 +6,9 @@ const morgan = require('morgan');
 
 const { ApolloServer } = require('apollo-server-express');
 const { models, sequelize } = require('./models');
+
 const schema = require('./schema');
+const resolvers = require('./resolvers');
 
 const { getViewer } = require('./auth');
 
@@ -16,11 +18,12 @@ app.use(cors());
 app.use(morgan('dev'));
 
 const server = new ApolloServer({
-  schema,
+  typeDefs: schema,
+  resolvers,
   playground: true,
   context: async ({ req }) => {
-    const viewer = getViewer(req);
-    return { 
+    const viewer = await getViewer(req);
+    return {
       models,
       viewer,
     };
@@ -35,7 +38,7 @@ server.applyMiddleware({
 const PORT = process.env.PORT || 4000;
 
 sequelize.sync().then(() => {
-    console.log(`Database connection to ${process.env.DB_HOST} established`);
-    app.listen(PORT, () => console.log(`Apollo Server running on http://localhost:${PORT}/graphql`));
-  })
+  console.log(`Database connection to ${process.env.DB_HOST} established`);
+  app.listen(PORT, () => console.log(`Apollo Server running on http://localhost:${PORT}/graphql`));
+})
   .catch(err => console.error(err));

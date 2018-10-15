@@ -1,87 +1,20 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+
+import {
+  Punchline,
+  Text,
+  Content,
+} from './Start';
+
 import GoogleIcon from '../icons/Google.svg';
 // import { withRouter, Redirect } from 'react-router-dom';
-// import { animated } from 'react-spring';
 
-import { graphql } from 'react-apollo';
-import signUp from '../mutations/signUp.gql';
 import { AUTH_TOKEN } from '../constants';
 
 import { GoogleLogin } from 'react-google-login';
-import { saveToken } from '../auth';
-
-// import Button from '../components/Button';
-// import Google from '../icons/Google.svg';
-
-/* const Page = styled(animated.div)`
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  background: ${p => p.theme.background};
-  justify-content: center;
-  min-height: calc(100vh - 10px);
-`;
-
-const Title = styled(animated.h1)`
-  font-size: 3.6rem;
-  color: #222;
-  margin-bottom: 10px;
-  font-weight: 500;
-`;
-
-const Disclaimer = styled(animated.p)`
-  color: #666;
-  line-height: 1.2;
-  font-size: 1.6rem;
-  margin-bottom: 60px;
-`;
-
-const SocialLoginButton = styled(Button)`
-  position: relative;
-  height: 60px;
-  text-align: left;
-  padding-left: 60px;
-
-  > span {
-    font-size: 1.8rem !important;
-    color: #222;
-    font-weight: 400;
-  }
-`;
-
-const IconWrapper = styled.span`
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CenterWrapper = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledGoogleLogin = styled(GoogleLogin)`
-  border-radius: 5px;
-  box-shadow: ${p => p.theme.boxShadow};
-  background: ${p => (p.cta ? p.theme.action : '#FFF')};
-  padding: 20px 0;
-  border: none;
-  outline: none;
-  position: relative;
-  height: 60px;
-  text-align: left;
-  padding-left: 60px;
-  font-family: ${p => p.theme.fonts.text};
-  font-size: 1.8rem;
-`; */
 
 const GoogleButton = styled(GoogleLogin)`
   border-radius: 2px;
@@ -89,7 +22,7 @@ const GoogleButton = styled(GoogleLogin)`
   position: relative;
   font-size: 2.0rem;
   padding: 15px 20px;
-  padding-left: 64px;
+  padding-left: 59px;
   font-weight: 700;
   border: none;
   outline: none;
@@ -99,22 +32,17 @@ const GoogleButton = styled(GoogleLogin)`
 
 const ButtonIcon = styled.span`
   position: absolute;
-  left: 10px;
+  left: 5px;
   top: 0;
   height: 100%;
 `;
 
-const Background = styled.section`
-  width: 100vw;
-  height: 100vh;
-  background: ${p => p.theme.black};
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; 
-`;
-
-
+const signUp = gql`
+  mutation ($tokenId: String!) {
+    signUp(tokenId: $tokenId) {
+      token
+    }
+}`;
 
 class SignIn extends Component {
   state = {
@@ -126,19 +54,12 @@ class SignIn extends Component {
   onRequest = () => this.setState({ isSigningIn: true });
 
   handleSuccess = async ({ tokenId }) => {
-    console.log('tokenId: ', tokenId);
+    const { data } = await this.props.signUp(tokenId);
 
-    const {
-      data: {
-        login: {
-          token
-        }
-      }
-    } = await this.props.login(tokenId);
+    localStorage.setItem(AUTH_TOKEN, data.signUp.token);
 
-    localStorage.setItem(AUTH_TOKEN, token);
+    await this.props.refetch();
 
-    this.setState({ redirectToReferrer: true });
     this.props.history.push('/');
   };
 
@@ -148,35 +69,39 @@ class SignIn extends Component {
   };
 
   render() {
+
+    const { styles } = this.props;
+
     return (
-      <Background>
-        <GoogleButton
-          clientId={process.env.GOOGLE_CLIENT_ID}
-          onRequest={this.onRequest}
-          onFailure={this.handleFailure}
-          onSuccess={this.handleSuccess}
-        >
-          <ButtonIcon>
-            <img style={{ height: '100%' }} src={GoogleIcon} alt={`Logga in med Google`} />
-          </ButtonIcon>
-          Logga in med Google
-        </GoogleButton>
-        {
-          this.state.isSigningIn
-            ? <h1 style={{ color: '#FFF' }}>Loggar in</h1>
-            : null
-        }
-      </Background>
+      <Fragment>
+        <Content style={{ transform: `translateY(${styles.y}px)`, ...styles }}>
+          <Punchline>Logga in</Punchline>
+          <Text>
+            Vi kommer aldrig att publicera något eller utföra annan aktivitet med ditt konto.
+          </Text>
+          <GoogleButton
+            clientId={process.env.GOOGLE_CLIENT_ID}
+            onRequest={this.onRequest}
+            onFailure={this.handleFailure}
+            onSuccess={this.handleSuccess}
+          >
+            <ButtonIcon>
+              <img style={{ height: '100%' }} src={GoogleIcon} alt={`Logga in med Google`} />
+            </ButtonIcon>
+            Logga in med Google
+          </GoogleButton>
+        </Content>
+        <div />
+      </Fragment>
     )
   }
 }
 
-/* const withGraphQL = graphql(loginWithToken, {
+const SignInWithGraphQL = graphql(signUp, {
   props: ({ mutate }) => ({
-    login: (idToken) => mutate({ variables: { idToken } }),
+    signUp: tokenId => mutate({ variables: { tokenId } }),
   }),
-})(Login);
- */
-// export default withRouter(withGraphQL);
+})(SignIn);
 
-export default SignIn;
+
+export default SignInWithGraphQL;

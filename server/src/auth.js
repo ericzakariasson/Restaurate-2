@@ -9,7 +9,7 @@ const client = new OAuth2Client(
 
 
 module.exports.createToken = async user => {
-  
+
   const expiresIn = process.env.TOKEN_LIFE;
   const secret = process.env.SECRET
 
@@ -21,10 +21,10 @@ module.exports.createToken = async user => {
     picture,
   } = user;
 
-  return await jwt.sign({ id, googleId, name, email, picture }, secret, { 
-    expiresIn 
+  return await jwt.sign({ id, googleId, name, email, picture }, secret, {
+    expiresIn: '7d',
   });
-  
+
   // const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_LIFE });
 }
 
@@ -36,6 +36,8 @@ module.exports.verifyGoogleToken = async idToken => {
     });
 
     const payload = ticket.getPayload();
+
+    console.log(payload);
 
     if (payload.aud.includes(process.env.GOOGLE_CLIENT_ID)) {
       return payload;
@@ -49,14 +51,18 @@ module.exports.verifyGoogleToken = async idToken => {
 };
 
 module.exports.getViewer = async req => {
-  const token = req.headers.authorization;
+  const token = req.headers["authorization"];
 
-  if (token) {
+  console.log('token: ', token);
+  console.log(typeof token)
+
+  if (token && token !== 'null') {
+    console.log('THERE IS A TOKEN')
     try {
-      return await jwt.verify(token, process.env.SECRET)
+      return await jwt.verify(token, process.env.SECRET);
     } catch (err) {
       throw new AuthenticationError(
-        'Your session has expored. Re-authentication needed'
+        'Your session has expired. Re-authentication needed'
       );
     }
   }

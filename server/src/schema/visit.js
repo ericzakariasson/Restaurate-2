@@ -1,6 +1,6 @@
 const { gql, AuthenticationError } = require('apollo-server-express');
 
-const typeDef = gql`
+module.exports = gql`
   extend type Query {
     visit(id: ID!): Visit
   }
@@ -44,16 +44,3 @@ const typeDef = gql`
     design: Int,
   }
 `;
-
-const resolvers = {
-  Query: {
-    visit: async (_, { id }, { models }) => {
-      return await models.Visit.findById(id);
-    }
-  },
-}
-
-module.exports = {
-  typeDef,
-  resolvers
-}

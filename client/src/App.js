@@ -4,8 +4,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { theme } from './style';
 
-import Landing from './views/Landing';
-import SignIn from './views/SignIn';
+import Start from './views/Start';
 
 import client from './apollo';
 
@@ -14,8 +13,7 @@ const App = ({ location }) => {
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
         <Switch location={location}>
-          <Route exact path="/logga-in" component={SignIn} />
-          <Route exact path="/" component={Landing} />
+          <Route path="/" component={Start} />
         </Switch>
       </ThemeProvider>
     </ApolloProvider>
