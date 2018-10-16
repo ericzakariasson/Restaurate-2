@@ -1,6 +1,31 @@
-export const ACCESS_TOKEN = 'ACCESS_TOKEN';
-export const TOKEN_ID = 'TOKEN_ID';
-
-export const USER_DATA = 'USER_DATA';
 export const AUTH_TOKEN = 'AUTH_TOKEN';
-export const REFRESH_TOKEN = 'REFRESH_TOKEN';
+// export const REFRESH_TOKEN = 'REFRESH_TOKEN';
+
+
+export const routes = {
+  HOME: {
+    label: 'Hem',
+    path: '/',
+    exact: true,
+  },
+  OVERVIEW: {
+    label: 'Överblick',
+    path: '/overblick',
+  },
+  VISITS: {
+    label: 'Besök',
+    path: '/besok',
+  },
+  PLACES: {
+    label: 'Platser',
+    path: '/platser',
+  },
+  LIST: {
+    label: 'Listan',
+    path: '/listan'
+  },
+  PROFILE: {
+    label: 'Profil',
+    path: '/profil'
+  }
+}

@@ -22,6 +22,10 @@ html {
   font-size: 10px;
 }
 
+html, body, #app {
+  height: 100%;
+}
+
 body, button {
   font-family: 'Karmilla', -apple-system, sans-serif;
 }
