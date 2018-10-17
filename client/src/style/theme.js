@@ -6,6 +6,7 @@ const theme = {
     serif: 'Spectral, serif',
     text: 'Karmilla, sans-serif',
   },
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.04)',
   danger: '#EA4335',
   transition: 'ease-in-out 0.2s',
   rgba: (color, opacity) => hexToRgbA(theme[color], opacity),

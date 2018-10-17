@@ -3,11 +3,14 @@ import styled, { ThemeProvider } from 'styled-components';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { theme } from './style';
-
-import Start from './views/Start';
 import client from './apollo';
 
+import Start from './views/Start';
+import NewVisit from './views/NewVisit/';
+
 import Menu from './components/Menu';
+
+import { routes } from './constants';
 
 const Wrapper = styled.section`
   display: flex;
@@ -18,7 +21,6 @@ const Wrapper = styled.section`
 
 const Main = styled.main`
   flex: 1;
-  padding: 20px;
 `;
 
 const App = ({ location }) => {
@@ -29,6 +31,7 @@ const App = ({ location }) => {
           <Menu />
           <Main>
             <Switch location={location}>
+              <Route path={routes.NEWVISIT.path} component={NewVisit} />
               <Route path="/" component={Start} />
             </Switch>
           </Main>

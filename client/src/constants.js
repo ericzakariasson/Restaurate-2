@@ -8,6 +8,11 @@ export const routes = {
     path: '/',
     exact: true,
   },
+  NEWVISIT: {
+    label: 'Nytt besök',
+    path: '/nytt-besok',
+    exact: true,
+  },
   OVERVIEW: {
     label: 'Överblick',
     path: '/overblick',

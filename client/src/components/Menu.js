@@ -15,6 +15,7 @@ const HEADER_HEIGHT = 45;
 
 const Wrapper = styled.div`
   position: relative;
+  z-index: 10;
 `;
 
 const Header = styled.header`
@@ -52,7 +53,7 @@ const MenuList = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 60px 10px;
+  padding: 60px 40px;
 `;
 
 const MenuItem = styled(NavLink)`
@@ -61,15 +62,14 @@ const MenuItem = styled(NavLink)`
   color: #222;
   text-decoration: none;
   font-weight: 500;
-  padding: 10px;
+  padding: 5px 0;
 
   &:not(:last-of-type) {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   &.active {
-    color: #FFF;
-    background: #222;
+    border-bottom: 1px solid ${p => p.theme.main};
   }
 `;
 
@@ -108,17 +108,19 @@ class Menu extends Component {
         </Header>
         <Transition
           native
-          from={{ height: 0 }}
-          enter={{ height: menuHeight }}
-          leave={{ height: 0 }}
+          from={{ transform: `translateX(-100%)` }}
+          enter={{ transform: `translateX(0)` }}
+          leave={{ transform: `translateX(-100%)` }}
         >
           {
             isOpen && (style => (
               <MenuWrapper style={style}>
                 <MenuList>
                   <Trail
+                    delay={300}
+                    config={config.stiff}
                     keys={Object.keys(routes)}
-                    from={{ opacity: 0, transform: `translateX(-20px)` }}
+                    from={{ opacity: 0, transform: `translateX(-10px)` }}
                     to={{ opacity: 1, transform: `translateX(0)` }}
                   >
                     {
@@ -127,6 +129,7 @@ class Menu extends Component {
 
                         return (
                           <MenuItem
+                            onClick={this.toggleOpen}
                             key={route.label}
                             style={props}
                             exact={route.exact}

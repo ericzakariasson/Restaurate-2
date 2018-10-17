@@ -15,6 +15,12 @@ module.exports = gql`
     token: String!
   }
 
+  type DataCount {
+    visitCount: Int!
+    placeCount: Int!
+    listCount: Int!
+  }
+
   type User {
     id: ID!,
     googleId: String!

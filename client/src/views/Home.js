@@ -2,13 +2,30 @@ import React from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
+import Page from '../components/Page';
+import TypeCards from '../components/TypeCards';
+import VisitNew from '../components/VisitNew';
+
 import withSession from '../components/withSession';
 
+const Name = styled.span`
+  font-size: 1.8rem;
+  color: #222;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: block;
+`;
+
 const Home = ({ session }) => {
+
+  const { viewer } = session;
+
   return (
-    <div>
-      {session.viewer.name}
-    </div>
+    <Page>
+      <Name>{viewer.name}</Name>
+      <TypeCards />
+      <VisitNew />
+    </Page>
   )
 }
 
