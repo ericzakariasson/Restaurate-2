@@ -13,7 +13,7 @@ const SearchPlaceWrapper = styled(animated.div)`
   transform-origin: 50% 0;
 `;
 
-const InputWithResultList = ({ style, isOpen, onChange, onSubmit, value, onClear, onSelect, results, loading }) => {
+const InputWithResultList = ({ style, isOpen, onChange, onSubmit, value, onClear, onSelect, restaurants, cafes, loading }) => {
   return (
     <SearchPlaceWrapper style={style}>
       <SearchInput
@@ -32,7 +32,7 @@ const InputWithResultList = ({ style, isOpen, onChange, onSubmit, value, onClear
         >
           {
             isOpen
-              ? style => <ResultList onSelect={onSelect} style={style} results={results} loading={loading} open={isOpen} />
+              ? style => <ResultList onSelect={onSelect} style={style} cafes={cafes} restaurants={restaurants} loading={loading} open={isOpen} />
               : () => null
           }
         </Transition>

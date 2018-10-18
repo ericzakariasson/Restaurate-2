@@ -5,24 +5,24 @@ import PropTypes from 'prop-types';
 import Label from './Label';
 
 export const StyledInput = styled.input`
-  border-radius: 5px;
+  border-radius: 2px;
   border: none;
   outline: none;
-  box-shadow: ${p => p.theme.inputShadow};
+  box-shadow: ${p => p.theme.boxShadow};
   font-size: 2rem;
   height: 60px;
   padding: 10px 20px;
   width: 100%;
-
+  border: 1px solid #F5F5F5;
   padding-right: ${p => p.icon ? '60px' : '20px'};
 
   font-size: 2rem;
-  font-family: ${p => p.theme.fonts.text};
+  font-family: ${p => p.theme.font.text};
 
   transition: ${p => p.theme.transition};
 
   &::placeholder {
-    color: #DDD;
+    color: #CCC ;
   }
 `;
 
@@ -98,12 +98,12 @@ const IconWrapper = styled.button`
 
   &:hover {
     transition: ${p => p.theme.transition};
-    transform: translate(0, -50%) scale(1.1);
+    /* transform: translate(0, -50%) scale(1.1); */
   }
  
   &:active {
     transition: ${p => p.theme.transition};
-    transform: translate(0, -50%) scale(0.9);
+    /* transform: translate(0, -50%) scale(0.9); */
   }
   
   svg {

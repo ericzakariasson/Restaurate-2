@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 const StyledLabel = styled.label`
   font-size: 1.8rem;
   color: #444;
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 10px;
 `;
 

@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { NavLink } from 'react-router-dom';
+import { animated } from 'react-spring';
 
-const Card = styled.article`
+const Card = styled(animated.article)`
    width: 100%;
    background: #FFF;
    box-shadow: ${p => p.theme.boxShadow};
@@ -68,9 +69,9 @@ const ShowAll = styled(NavLink)`
   font-weight: 700;
 `;
 
-const TypeCard = ({ count, label, to, dark }) => {
+const TypeCard = ({ count, label, to, dark, style }) => {
   return (
-    <Card>
+    <Card style={style}>
       <Count dark={dark}>
         <Number dark={dark}>{count}</Number>
       </Count>

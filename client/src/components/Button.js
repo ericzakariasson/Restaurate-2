@@ -18,6 +18,7 @@ const StyledButton = styled.button`
 const ButtonText = styled.span`
   color: #FFF;
   font-size: 2rem;
+  font-weight: 700;
   font-family: ${p => p.theme.font.text};
 `;
 

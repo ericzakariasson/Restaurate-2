@@ -23,7 +23,8 @@ const Background = styled(animated.div)`
 class SearchPlace extends Component {
   state = {
     value: '',
-    results: [],
+    restaurantResults: [],
+    cafeResults: [],
     selected: null,
     isSelected: false,
     isOpen: false,
@@ -65,24 +66,29 @@ class SearchPlace extends Component {
     const map = new google.maps.Map(document.createElement('div'));
     const service = new google.maps.places.PlacesService(map);
 
-    const request = {
-      type: ['food'],
-      query: this.state.value
+    const searchPlaceByType = type => {
+      return service.textSearch({
+        type: [type],
+        query: this.state.value
+      }, this.handleResponse.bind(null, type));
     }
 
-    service.textSearch(request, this.handleResponse);
+
+    searchPlaceByType('restaurant');
+    searchPlaceByType('cafe');
   }
 
-  handleResponse = (results, status) => {
+  handleResponse = (type, results, status) => {
     this.handleStatus(status);
 
     const { OK } = window.google.maps.places.PlacesServiceStatus;
 
-    if (this.state.isOpen && status === OK) {
-      this.setState({ results });
+    if (this.state.isOpen /* && status === OK */) {
+      console.log(results)
+      this.setState({ [`${type}Results`]: results });
       setTimeout(() => this.setState({ loading: false }), 500); //Delay for better UX
     } else {
-      this.setState({ results, loading: false })
+      this.setState({ loading: false })
     }
   }
 
@@ -125,11 +131,33 @@ class SearchPlace extends Component {
 
   render() {
 
-    const { isOpen, value, results, loading, isSelected } = this.state;
+    const { isOpen, value, restaurantResults, cafeResults, loading, isSelected } = this.state;
     const { selected } = this.props;
 
     return (
       <Wrapper>
+        {
+          isSelected
+            ? <SelectedPlace onDeselect={this.deselectPlace} {...selected} />
+            : (
+              <InputWithResultList
+                onChange={this.handleChange}
+                onSubmit={this.handleSubmit}
+                onSelect={this.selectPlace}
+                onClear={this.handleClear}
+                value={value}
+                isOpen={isOpen}
+                loading={loading}
+                restaurants={restaurantResults}
+                cafes={cafeResults} />
+            )
+        }
+      </Wrapper>
+    )
+  }
+}
+
+/* <Wrapper>
         <Transition
           native
           from={{ height: 0, opacity: 0, transform: 'scale3d(0.25,0.25,0.5)' }}
@@ -167,9 +195,6 @@ class SearchPlace extends Component {
               : () => null
           }
         </Transition>
-      </Wrapper>
-    )
-  }
-}
+      </Wrapper> */
 
 export default SearchPlace;

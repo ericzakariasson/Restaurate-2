@@ -38,7 +38,7 @@ export const Address = styled.p`
 
 const OpenNow = styled.span`
   text-transform: uppercase;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: green;
   margin-top: 10px;
@@ -47,8 +47,8 @@ const OpenNow = styled.span`
 export const Select = styled.button`
   background: none;
   color: ${p => p.theme.action};
-  font-family: ${p => p.theme.fonts.text};
-  font-weight: 500;
+  font-family: ${p => p.theme.font.text};
+  font-weight: 700;
   font-size: 1.6rem;
   border: none;
   align-self: flex-start;

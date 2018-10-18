@@ -91,7 +91,9 @@ class Menu extends Component {
 
     const { session } = this.props;
 
-    if (!session && !session.viewer) {
+    const isAithenticated = session && session.viewer;
+
+    if (!isAithenticated) {
       return null;
     }
 
@@ -129,8 +131,8 @@ class Menu extends Component {
 
                         return (
                           <MenuItem
-                            onClick={this.toggleOpen}
                             key={route.label}
+                            onClick={this.toggleOpen}
                             style={props}
                             exact={route.exact}
                             to={route.path} >

@@ -10,7 +10,7 @@ const SearchInput = ({ isOpen, onChange, onSubmit, children, value, onClear }) =
       placeholder="Namn eller adress"
       Icon={isOpen ? X : Search}
       onIconClick={isOpen ? onClear : onSubmit}
-      color={isOpen ? 'danger' : 'action'}
+      color={isOpen ? 'danger' : 'black'}
       value={value}
       onChange={onChange}
       onSubmit={onSubmit}

@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 
 import gql from 'graphql-tag';
 
-const GET_VIEWER = gql`
+export const GET_VIEWER = gql`
   {
     viewer {
       id
@@ -16,8 +16,8 @@ const GET_VIEWER = gql`
 
 const withSession = Component => props => (
   <Query query={GET_VIEWER}>
-    {({ data, refetch }) => (
-      <Component {...props} session={data} refetch={refetch} />
+    {({ data, refetch, loading }) => (
+      <Component {...props} loading={loading} session={data} refetch={refetch} />
     )}
   </Query>
 );

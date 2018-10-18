@@ -7,6 +7,8 @@ import TypeCards from '../components/TypeCards';
 import VisitNew from '../components/VisitNew';
 
 import withSession from '../components/withSession';
+import { Trail } from 'react-spring';
+
 
 const Name = styled.span`
   font-size: 1.8rem;
@@ -15,6 +17,8 @@ const Name = styled.span`
   margin-bottom: 20px;
   display: block;
 `;
+
+
 
 const Home = ({ session }) => {
 

@@ -7,11 +7,13 @@ export const routes = {
     label: 'Hem',
     path: '/',
     exact: true,
+    component: import('./views/Start').then(component => component.default)
   },
   NEWVISIT: {
     label: 'Nytt besök',
     path: '/nytt-besok',
     exact: true,
+    component: import('./views/NotFound').then(component => component.default)
   },
   OVERVIEW: {
     label: 'Överblick',

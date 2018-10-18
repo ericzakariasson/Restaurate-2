@@ -2,19 +2,20 @@ import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { withRouter } from 'react-router-dom';
+import { GoogleLogin } from 'react-google-login';
+
+
+import GoogleIcon from '../icons/Google.svg';
+import { AUTH_TOKEN } from '../constants';
 
 import {
   Punchline,
   Text,
-  Content,
-} from './Start';
-
-import GoogleIcon from '../icons/Google.svg';
-// import { withRouter, Redirect } from 'react-router-dom';
-
-import { AUTH_TOKEN } from '../constants';
-
-import { GoogleLogin } from 'react-google-login';
+  Background,
+  Title,
+  AnimatedContent
+} from './Landing';
 
 const GoogleButton = styled(GoogleLogin)`
   border-radius: 2px;
@@ -70,11 +71,10 @@ class SignIn extends Component {
 
   render() {
 
-    const { styles } = this.props;
-
     return (
-      <Fragment>
-        <Content style={{ transform: `translateY(${styles.y}px)`, ...styles }}>
+      <Background>
+        <Title>Restaurate</Title>
+        <AnimatedContent>
           <Punchline>Logga in</Punchline>
           <Text>
             Vi kommer aldrig att publicera något eller utföra annan aktivitet med ditt konto.
@@ -90,9 +90,9 @@ class SignIn extends Component {
             </ButtonIcon>
             Logga in med Google
           </GoogleButton>
-        </Content>
+        </AnimatedContent>
         <div />
-      </Fragment>
+      </Background>
     )
   }
 }
@@ -104,4 +104,4 @@ const SignInWithGraphQL = graphql(signUp, {
 })(SignIn);
 
 
-export default SignInWithGraphQL;
+export default withRouter(SignInWithGraphQL);

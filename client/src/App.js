@@ -6,11 +6,12 @@ import { theme } from './style';
 import client from './apollo';
 
 import Start from './views/Start';
-import NewVisit from './views/NewVisit/';
+import SignIn from './views/SignIn';
 
 import Menu from './components/Menu';
 
 import { routes } from './constants';
+import NewVisit from './views/NewVisit/index';
 
 const Wrapper = styled.section`
   display: flex;
@@ -32,7 +33,8 @@ const App = ({ location }) => {
           <Main>
             <Switch location={location}>
               <Route path={routes.NEWVISIT.path} component={NewVisit} />
-              <Route path="/" component={Start} />
+              <Route exact path="/logga-in" component={SignIn} />
+              <Route exact path="/" component={Start} />
             </Switch>
           </Main>
         </Wrapper>
