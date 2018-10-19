@@ -26,7 +26,7 @@ const Nodes = styled.section`
   }
 `;
 
-const TotalScoreWrapper = NodeWrapper.extend`
+const TotalScoreWrapper = styled(NodeWrapper)`
   background: #222;
   font-size: 2.4rem;
   padding: 20px;

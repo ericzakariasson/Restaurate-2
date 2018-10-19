@@ -62,11 +62,11 @@ const TextButton = styled.button`
   font-weight: 500;
 `;
 
-const Cancel = TextButton.extend`
+const Cancel = styled(TextButton)`
   color: ${p => p.theme.danger};
 `;
 
-const Save = TextButton.extend`
+const Save = styled(TextButton)`
   color: ${p => p.theme.action};
 `;
 

@@ -62,13 +62,13 @@ const ActionArea = styled.footer`
   padding: 15px 20px;
 `;
 
-const Deselect = Select.extend`
+const Deselect = styled(Select)`
   padding: 0;
   transform: none;
   color: ${p => p.theme.danger};
 `;
 
-const LargerName = Name.extend`
+const LargerName = styled(Name)`
   font-size: 2.2rem;
 `;
 

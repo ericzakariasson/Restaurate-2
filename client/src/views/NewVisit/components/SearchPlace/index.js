@@ -16,15 +16,15 @@ const Background = styled(animated.div)`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.05);
+  background: rgba(0,0,0,0.10);
   z-index: 5;
 `;
 
 class SearchPlace extends Component {
   state = {
     value: '',
-    restaurantResults: [],
-    cafeResults: [],
+    restaurant: [],
+    cafe: [],
     selected: null,
     isSelected: false,
     isOpen: false,
@@ -54,7 +54,6 @@ class SearchPlace extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.open();
 
     if (this.state.value.length > 2) {
       this.searchPlaces();
@@ -62,7 +61,7 @@ class SearchPlace extends Component {
   }
 
   searchPlaces = () => {
-    this.setState({ loading: true, searched: true });
+    this.setState({ isOpen: true, loading: true, searched: true });
     const map = new google.maps.Map(document.createElement('div'));
     const service = new google.maps.places.PlacesService(map);
 
@@ -85,15 +84,15 @@ class SearchPlace extends Component {
 
     if (this.state.isOpen /* && status === OK */) {
       console.log(results)
-      this.setState({ [`${type}Results`]: results });
+      this.setState({ [type]: results });
       setTimeout(() => this.setState({ loading: false }), 500); //Delay for better UX
     } else {
       this.setState({ loading: false })
     }
   }
 
-  selectPlace = id => {
-    const selected = this.state.results.find(place => place.id === id);
+  selectPlace = (id, type) => {
+    const selected = this.state[type].find(place => place.id === id);
     this.props.setValue('place', selected);
     this.setState({ isSelected: true, isOpen: false });
   }
@@ -131,7 +130,7 @@ class SearchPlace extends Component {
 
   render() {
 
-    const { isOpen, value, restaurantResults, cafeResults, loading, isSelected } = this.state;
+    const { isOpen, value, restaurant, cafe, loading, isSelected } = this.state;
     const { selected } = this.props;
 
     return (
@@ -148,9 +147,14 @@ class SearchPlace extends Component {
                 value={value}
                 isOpen={isOpen}
                 loading={loading}
-                restaurants={restaurantResults}
-                cafes={cafeResults} />
+                restaurants={restaurant}
+                cafes={cafe} />
             )
+        }
+        {
+          isOpen
+            ? <Background onClick={this.close} />
+            : null
         }
       </Wrapper>
     )
@@ -189,11 +193,7 @@ class SearchPlace extends Component {
           leave={{ opacity: 0 }}
           config={{ duraton: 200, easing: Easing.inOut }}
         >
-          {
-            isOpen
-              ? style => <Background style={style} onClick={this.close} />
-              : () => null
-          }
+          
         </Transition>
       </Wrapper> */
 
