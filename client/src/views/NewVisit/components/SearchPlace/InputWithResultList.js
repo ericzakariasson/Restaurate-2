@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ScrollLock from 'react-scrolllock';
 
-import ResultList from './ResultList';
+import ListWithType from './ListWithType';
 import SearchInput from './SearchInput';
 
 import { Transition, animated, config } from 'react-spring';
@@ -11,6 +11,23 @@ const SearchPlaceWrapper = styled(animated.div)`
   position: relative;
   z-index: 10;
   transform-origin: 50% 0;
+`;
+
+const Results = styled(animated.div)`
+  transform-origin: 100% 0;
+  top: 60px;
+  right: 0;
+  position: absolute;
+  z-index: 11;
+  background: #FFF;
+  width: 100%;
+  border: 1px solid #F5F5F5;
+  border-top: 1px solid #EEE;
+  border-radius: 0 0 5px 5px;
+  box-shadow: ${p => p.theme.boxShadow};
+  max-height: calc(100vh - 281px);
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 `;
 
 const InputWithResultList = ({ style, isOpen, onChange, onSubmit, value, onClear, onSelect, restaurants, cafes, loading }) => {
@@ -32,12 +49,12 @@ const InputWithResultList = ({ style, isOpen, onChange, onSubmit, value, onClear
         >
           {
             isOpen
-              ? style => <ResultList onSelect={onSelect} style={style} cafes={cafes} restaurants={restaurants} loading={loading} open={isOpen} />
+              ? style => <Results style={style}><ListWithType onSelect={onSelect} cafes={cafes} restaurants={restaurants} loading={loading} open={isOpen} /></Results>
               : () => null
           }
         </Transition>
       </SearchInput>
-      {isOpen ? <ScrollLock /> : null}
+      {isOpen && false ? <ScrollLock /> : null}
     </SearchPlaceWrapper>
   )
 }

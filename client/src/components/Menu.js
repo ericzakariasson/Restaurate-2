@@ -15,7 +15,7 @@ const HEADER_HEIGHT = 45;
 
 const Wrapper = styled.div`
   position: relative;
-  z-index: 10;
+  z-index: 50;
 `;
 
 const Header = styled.header`

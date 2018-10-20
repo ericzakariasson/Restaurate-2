@@ -13,7 +13,8 @@ const Item = styled(animated.div)`
   position: relative;
 
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 2px;
+  background: #FFF;
   box-shadow: ${p => p.theme.boxShadow};
 `;
 

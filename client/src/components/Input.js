@@ -6,14 +6,13 @@ import Label from './Label';
 
 export const StyledInput = styled.input`
   border-radius: 2px;
-  border: none;
-  outline: none;
   box-shadow: ${p => p.theme.boxShadow};
+  -webkit-appearance: none;
   font-size: 2rem;
   height: 60px;
   padding: 10px 20px;
   width: 100%;
-  border: 1px solid #F5F5F5;
+  border: 1px solid #EEE;
   padding-right: ${p => p.icon ? '60px' : '20px'};
 
   font-size: 2rem;
@@ -86,11 +85,11 @@ const IconWrapper = styled.button`
   background: none;
   outline: none;
   border: none;
-  padding: 0;  
+  padding: 10px;  
 
   position: absolute;
   top: 50%;
-  right: 20px;
+  right: 10px;
   transform: translate(0, -50%);
   border-radius: 50%;
   transition: ${p => p.theme.transition};

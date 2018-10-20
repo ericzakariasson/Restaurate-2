@@ -64,7 +64,7 @@ export const Select = styled.button`
 `;
 
 
-const ResultItem = ({ opening_hours, id, name, formatted_address, geometry: { location }, onSelect }) => {
+const ResultItem = ({ opening_hours, id, name, formatted_address, geometry: { location }, onSelect, style }) => {
 
   const { lat, lng } = location;
 
@@ -78,7 +78,7 @@ const ResultItem = ({ opening_hours, id, name, formatted_address, geometry: { lo
   //const mapUrl2 = `https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/${lng()},${lat()},${zoom}.0,0,0/${width}x${height}?access_token=${process.env.MAPBOX_TOKEN}`;
 
   return (
-    <StyledItem>
+    <StyledItem style={style}>
       <Name>{name}</Name>
       <Address>{formatted_address}</Address>
       {opening_hours && opening_hours.open_now && <OpenNow>ÖPPET NU</OpenNow>}

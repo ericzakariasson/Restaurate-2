@@ -80,10 +80,9 @@ class SearchPlace extends Component {
   handleResponse = (type, results, status) => {
     this.handleStatus(status);
 
-    const { OK } = window.google.maps.places.PlacesServiceStatus;
+    const { OK, ZERO_RESULTS } = window.google.maps.places.PlacesServiceStatus;
 
-    if (this.state.isOpen /* && status === OK */) {
-      console.log(results)
+    if (this.state.isOpen && (status === OK || status === ZERO_RESULTS)) {
       this.setState({ [type]: results });
       setTimeout(() => this.setState({ loading: false }), 500); //Delay for better UX
     } else {
@@ -91,7 +90,7 @@ class SearchPlace extends Component {
     }
   }
 
-  selectPlace = (id, type) => {
+  selectPlace = (type, id) => {
     const selected = this.state[type].find(place => place.id === id);
     this.props.setValue('place', selected);
     this.setState({ isSelected: true, isOpen: false });
