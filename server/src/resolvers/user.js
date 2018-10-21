@@ -27,12 +27,19 @@ module.exports = {
         picture,
       } = payload;
 
-      const viewer = await models.User.create({
-        googleId: sub,
-        name,
-        email,
-        picture,
-      });
+
+      const viewer = await models.User
+        .findOrCreate({
+          where: {
+            googleId: sub,
+            name,
+            email,
+            picture,
+          }
+        })
+        .spread((user, created) => {
+          return user.get({ plain: true });
+        })
 
       return { token: createToken(viewer) }
     }

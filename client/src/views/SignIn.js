@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
-import { graphql } from 'react-apollo';
+import { graphql, Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { withRouter } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
+
+import withSession from '../components/withSession';
 
 
 import GoogleIcon from '../icons/Google.svg';
@@ -38,7 +40,7 @@ const ButtonIcon = styled.span`
   height: 100%;
 `;
 
-const signUp = gql`
+const SIGN_UP = gql`
   mutation ($tokenId: String!) {
     signUp(tokenId: $tokenId) {
       token
@@ -60,7 +62,6 @@ class SignIn extends Component {
     localStorage.setItem(AUTH_TOKEN, data.signUp.token);
 
     await this.props.refetch();
-
     this.props.history.push('/');
   };
 
@@ -97,11 +98,13 @@ class SignIn extends Component {
   }
 }
 
-const SignInWithGraphQL = graphql(signUp, {
-  props: ({ mutate }) => ({
-    signUp: tokenId => mutate({ variables: { tokenId } }),
-  }),
+const SignInWithGraphQL = graphql(SIGN_UP, {
+  props: ({ mutate }) => {
+    return {
+      signUp: tokenId => mutate({ variables: { tokenId } }),
+    }
+  },
 })(SignIn);
 
 
-export default withRouter(SignInWithGraphQL);
+export default withRouter(withSession(SignInWithGraphQL));

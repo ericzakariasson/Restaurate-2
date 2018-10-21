@@ -110,6 +110,7 @@ class NewVisit extends Component {
         <Article>
           <ArticleHeader>Plats</ArticleHeader>
           <SearchPlace onReset={this.resetField} selected={this.state.place} setValue={this.setValue} />
+          <SelectTypeOfPlace onSelect={this.setValue} checked={this.state.typesOfPlace} types={TYPE_OF_PLACES} />
         </Article>
       </Page>
     )

@@ -11,7 +11,7 @@ const Blank = styled.div`
   background: #F9F9F9;
 `;
 
-const Start = ({ session, loading }) => {
+const Start = ({ session, refetch, loading }) => {
 
   if (loading) {
     return (

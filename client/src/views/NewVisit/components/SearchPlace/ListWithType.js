@@ -6,6 +6,8 @@ import { Trail, animated, config } from 'react-spring';
 import ResultByType from './ResultByType';
 import ResultList from './ResultList';
 
+import { TYPE_OF_PLACES } from '../../defaults';
+
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -28,7 +30,7 @@ const ListWrapper = styled.div`
   align-items: center;
 `;
 
-const types = ['Restaurang', 'Cafe'];
+const types = TYPE_OF_PLACES;
 
 class ListWithType extends Component {
 
@@ -55,7 +57,7 @@ class ListWithType extends Component {
       )
     }
 
-    const index = types.findIndex(type => type === selectedType);
+    const index = types.findIndex(type => type.name === selectedType.name);
 
     return (
       <Wrapper>

@@ -21,6 +21,9 @@ const Background = styled(animated.div)`
 `;
 
 class SearchPlace extends Component {
+
+
+
   state = {
     value: '',
     restaurant: [],
@@ -36,9 +39,11 @@ class SearchPlace extends Component {
   constructor() {
     super();
 
-    /* if (!window.google) {
+    this.wrapperRef = React.createRef();
+
+    if (!window.google) {
       throw Error('Google Maps API must be imported');
-    } */
+    }
   }
 
   handleChange = ({ target: { value } }) => this.setState({ value });
@@ -61,6 +66,15 @@ class SearchPlace extends Component {
   }
 
   searchPlaces = () => {
+
+    const { top } = this.wrapperRef.current.getBoundingClientRect();
+    console.log('TCL: SearchPlace -> searchPlaces -> top', top);
+
+    window.scroll({
+      top: top - 20,
+      behavior: "smooth"
+    });
+
     this.setState({ isOpen: true, loading: true, searched: true });
     const map = new google.maps.Map(document.createElement('div'));
     const service = new google.maps.places.PlacesService(map);
@@ -93,6 +107,7 @@ class SearchPlace extends Component {
   selectPlace = (type, id) => {
     const selected = this.state[type].find(place => place.id === id);
     this.props.setValue('place', selected);
+    this.props.setValue('typesOfPlace', [type]);
     this.setState({ isSelected: true, isOpen: false });
   }
 
@@ -133,7 +148,7 @@ class SearchPlace extends Component {
     const { selected } = this.props;
 
     return (
-      <Wrapper>
+      <Wrapper ref={this.wrapperRef}>
         {
           isSelected
             ? <SelectedPlace onDeselect={this.deselectPlace} {...selected} />
