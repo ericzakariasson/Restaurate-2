@@ -15,23 +15,46 @@ const Tag = styled(animated.li)`
   padding-left: 10px;
 
   &:not(:last-of-type) {
-    border-bottom: 1px solid #EEE;
   }
 
   &:last-of-type {
     border-radius: 0 0 5px 5px;
   }
+
+  svg {
+    padding: 3px;
+    border-radius: 50%;
+    stroke-width: 3;
+    border: 2px solid rgba(0,0,0,0.04);
+  }
 `;
 
 const TagText = styled.p`
   display: block;
-  padding: 10px 12px;
-  background: #F5F5F5;
   border-radius: 5px;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   text-transform: uppercase;
-  color: #222;
-  font-weight: 500;
+  color: #444;
+  font-weight: 700;
+`;
+
+const Separator = styled.span`
+  flex: 1;
+  height: 1px;
+  background: #222;
+  opacity: 0.2;
+  margin: 0 10px;
+`;
+
+const Delete = styled.button`
+  color: ${p => p.theme.danger};
+  font-weight: 700;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  background: none;
+  font-size: 1.6rem;
 `;
 
 class Tags extends Component {
@@ -47,18 +70,21 @@ class Tags extends Component {
         label={'Taggar'}
         placeholder={'Nationalitet, specialkost'}
         padding={10}
+        uppercase
         addItem={this.addItem}
         removeItem={this.removeItem}
         items={this.props.tags}
-        render={
+      >
+        {
           ({ item, styles, removeItem }) => (
             <Tag style={styles}>
               <TagText>{item}</TagText>
-              <X color={this.props.theme.danger} onClick={() => removeItem(item)} />
+              <Separator />
+              <X size={24} color={this.props.theme.danger} onClick={() => removeItem(item)} />
             </Tag>
           )
         }
-      />
+      </InputList>
     )
   }
 }

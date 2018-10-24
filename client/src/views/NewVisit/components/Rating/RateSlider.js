@@ -16,7 +16,7 @@ const HandleWrapper = styled.div`
 
 const TooltipWrapper = styled.div`
   padding: 10px 15px;
-  background: ${p => p.theme.visit};
+  background: ${p => p.theme.main};
   display: inline-block;
   border-radius: 5px;
   position: absolute;
@@ -58,7 +58,7 @@ const TextButton = styled.button`
   font-size: 1.8rem;
   padding: 0;
   background: none;
-  font-family: ${p => p.theme.fonts.text};
+  font-family: ${p => p.theme.font.text};
   font-weight: 500;
 `;
 
@@ -83,14 +83,14 @@ const RateSlider = ({ style, onChange, value, onCancel, onSave, isRated, ...prop
         handleStyle={{
           height: 24,
           width: 24,
-          borderColor: props.theme.visit,
+          borderColor: props.theme.main,
           boxShadow: props.theme.boxShadow,
           transition: '0.2s',
           margin: 0
         }}
         trackStyle={{
           height: 10,
-          background: props.theme.visit,
+          background: props.theme.main,
           transition: '0.2s',
         }}
         railStyle={{

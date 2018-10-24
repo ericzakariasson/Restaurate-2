@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -24,23 +24,29 @@ const Main = styled.main`
   flex: 1;
 `;
 
-const App = ({ location }) => {
-  return (
-    <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <Wrapper>
-          <Menu />
-          <Main>
-            <Switch location={location}>
-              <Route path={routes.NEWVISIT.path} component={NewVisit} />
-              <Route exact path="/logga-in" component={SignIn} />
-              <Route exact path="/" component={Start} />
-            </Switch>
-          </Main>
-        </Wrapper>
-      </ThemeProvider>
-    </ApolloProvider>
-  )
-}
+class App extends Component {
 
+  componentDidCatch(err, message) {
+    console.log(err);
+  }
+
+  render() {
+    return (
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <Wrapper>
+            <Menu />
+            <Main>
+              <Switch>
+                <Route path={routes.NEWVISIT.path} component={NewVisit} />
+                <Route exact path="/logga-in" component={SignIn} />
+                <Route exact path="/" component={Start} />
+              </Switch>
+            </Main>
+          </Wrapper>
+        </ThemeProvider>
+      </ApolloProvider>
+    )
+  }
+}
 export default withRouter(App);

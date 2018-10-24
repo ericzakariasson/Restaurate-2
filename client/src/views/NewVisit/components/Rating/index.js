@@ -13,29 +13,20 @@ import ParentTreeNode from './ParentTreeNode';
 
 import { NodeWrapper } from './TreeNode';
 
-const Nodes = styled.section`
-  box-shadow: ${p => p.theme.boxShadow};
-  border-radius: 5px;
-
-  & > div:first-child {
-    border-radius: 5px 5px 0 0;
-  }
-  
-  & > div:last-child {
-    border-radius: 0 0 5px 5px;
-  }
-`;
+const Nodes = styled.section``;
 
 const TotalScoreWrapper = styled(NodeWrapper)`
-  background: #222;
+  border-bottom: 5px solid ${p => p.theme.action};
+  background: #FFF;
   font-size: 2.4rem;
   padding: 20px;
-  color: #FFF;
+  color: #222;
+  margin-top: 20px;
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 const TotalScoreText = styled.h2`
-  font-weight: 500;
-  text-transform: uppercase;
+  font-weight: 700;
 `;
 
 const TotalScore = styled.h1`
@@ -47,6 +38,17 @@ const OfMax = styled.span`
   font-weight: 500;
   font-size: 1.2rem;
   opacity: 0.5;
+`;
+
+const Node = styled.article`
+  background: #FFF;
+  border-radius: 2px;
+  box-shadow: ${p => p.theme.boxShadow};
+
+
+  &:not(:last-of-type) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const RESET_RATE = 'RESET_RATE';
@@ -171,7 +173,7 @@ class Ratings extends Component {
               const shouldHideChildren = this.shouldHideChildren(node.name);
 
               return (
-                <React.Fragment key={node.name}>
+                <Node key={node.name}>
                   <ParentTreeNode
                     isRated={this.state[node.name].isRated}
                     score={this.state[node.name].value}
@@ -213,7 +215,7 @@ class Ratings extends Component {
                         </Transition>
                       ) : null
                   }
-                </React.Fragment>
+                </Node>
               )
             })
           }

@@ -1,18 +1,7 @@
 import React from 'react';
+
 import { Query } from 'react-apollo';
-
-import gql from 'graphql-tag';
-
-export const GET_VIEWER = gql`
-  {
-    viewer {
-      id
-      name
-      email
-      picture
-    }
-  }
-`;
+import GET_VIEWER from './GET_VIEWER.gql';
 
 const withSession = Component => props => (
   <Query query={GET_VIEWER}>

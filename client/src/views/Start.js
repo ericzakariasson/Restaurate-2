@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import withSession from '../components/withSession';
+import {withSession} from '../components/Session/';
 
 import Landing from './Landing';
 import Home from './Home';

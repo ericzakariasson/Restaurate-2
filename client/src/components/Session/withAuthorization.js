@@ -2,8 +2,8 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 
-import { routes } from '../constants';
-import { GET_VIEWER } from './withSession';
+import GET_VIEWER from './GET_VIEWER.gql';
+import { routes } from '../../constants';
 
 const withAuthorization = conditionFn => Component => props => (
   <Query query={GET_VIEWER}>

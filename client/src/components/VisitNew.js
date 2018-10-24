@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { NavButton } from './Button';
-
 import { routes } from '../constants';
 
 const Wrapper = styled.div`

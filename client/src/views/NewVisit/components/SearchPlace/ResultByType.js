@@ -39,7 +39,7 @@ class ResultByType extends Component {
     super(props);
 
     props.types.forEach(type => {
-      this.typeRefs[type.name] = React.createRef();
+      this.typeRefs[type.value] = React.createRef();
     })
   }
 
@@ -52,7 +52,7 @@ class ResultByType extends Component {
   select = selected => this.props.select(selected);
 
   getPos = type => {
-    const selectedTypeRef = this.typeRefs[type.name];
+    const selectedTypeRef = this.typeRefs[type.value];
 
     if (!this.state.mounted) {
       return {
@@ -73,7 +73,6 @@ class ResultByType extends Component {
 
     const { pos, left, top, ready } = this.getPos(selected);
 
-
     const underLineStyle = ready ? {
       opacity: 1,
       width: pos ? pos.width : 0,
@@ -89,10 +88,10 @@ class ResultByType extends Component {
         {
           this.props.types.map(type => (
             <Type
-              key={type.name}
-              ref={this.typeRefs[type.name]}
+              key={type.value}
+              ref={this.typeRefs[type.value]}
               onClick={this.select.bind(null, type)}
-              selected={type.name === selected.name}
+              selected={type.value === selected.value}
             >
               {type.label}
             </Type>

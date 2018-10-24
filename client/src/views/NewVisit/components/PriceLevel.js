@@ -15,7 +15,8 @@ const GridWrapper = styled.div`
 
 const PriceItem = styled.li`
   width: calc(50% - 10px);
-  border-radius: 5px;
+  border-radius: 2px;
+  border: 1px solid #EEE;
   box-shadow: ${p => p.theme.boxShadow};
   margin: 5px;
   background: ${p => p.selected ? '#222' : '#FFF'};
@@ -37,7 +38,7 @@ const Icons = styled.div`
 const StyledCircle = styled(Circle)`
   transition: ${p => p.theme.transition};
   fill: ${p => p.selected ? '#FFF' : 'none'};
-  stroke: ${p => p.selected ? 'none' : p.theme.action};
+  stroke: ${p => p.selected ? 'none' : '#222'};
 `;
 
 const IconWrapper = styled(animated.div)`
@@ -52,7 +53,7 @@ const IconWrapper = styled(animated.div)`
 
 const StyledCheck = styled(Check)`
   stroke-width: 4;
-  color: ${p => p.theme.action};
+  color: #222;
 `;
 
 const ItemLabel = styled.label`

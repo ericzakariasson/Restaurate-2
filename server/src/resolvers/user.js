@@ -13,7 +13,7 @@ module.exports = {
     }
   },
   Mutation: {
-    signUp: async (_, { tokenId }, { models }) => {
+    signIn: async (_, { tokenId }, { models }) => {
       const payload = await verifyGoogleToken(tokenId);
 
       if (!payload) {

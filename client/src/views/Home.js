@@ -6,7 +6,7 @@ import Page from '../components/Page';
 import TypeCards from '../components/TypeCards';
 import VisitNew from '../components/VisitNew';
 
-import withSession from '../components/withSession';
+import {withSession} from '../components/Session';
 import { Trail } from 'react-spring';
 
 

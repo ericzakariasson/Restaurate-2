@@ -8,11 +8,9 @@ import { InputWithIcon } from './Input';
 
 const ItemList = styled.ul`
   list-style: none;
-  background: #FFF;
-  box-shadow: ${p => p.theme.boxShadow};
   border-radius: 0 0 5px 5px;
   position: relative;
-  border-top: ${p => p.length ? 1 : 0}px solid #DDD;
+  margin-top: 10px;
 `;
 
 const ItemText = styled.p`
@@ -47,7 +45,8 @@ class InputList extends Component {
   }
 
   addItem = () => {
-    const newItem = this.state.value.toUpperCase();
+    const { value } = this.state;
+    const newItem = this.props.uppercase ? value.toUpperCase() : value;
     const alreadyExists = this.props.items.includes(newItem);
 
     if (!alreadyExists && newItem.length > 0 && newItem.length < 64) {
@@ -86,7 +85,7 @@ class InputList extends Component {
             from={{ opacity: 0, paddingTop: 0, paddingBottom: 0, height: 0 }}
             enter={{ opacity: 1, paddingTop: this.props.padding, paddingBottom: this.props.padding, height: 'auto' }}
             leave={{ opacity: 0, paddingTop: 0, paddingBottom: 0, height: 0 }}>
-            {this.props.items.map(item => styles => this.props.render({ item, styles, removeItem: this.removeItem }))}
+            {this.props.items.map(item => styles => this.props.children({ item, styles, removeItem: this.removeItem }))}
           </Transition>
         </ItemList>
         <Transition
@@ -96,7 +95,7 @@ class InputList extends Component {
           leave={{ opacity: 0, height: 0, marginTop: 0 }}>
           {
             this.props.items.length === 0
-              ? style => <NoItems style={style}>Inga {this.props.label}</NoItems>
+              ? style => <NoItems style={style}>Inga {this.props.label.toLowerCase()}</NoItems>
               : () => null
           }
         </Transition>
@@ -108,7 +107,7 @@ class InputList extends Component {
 InputList.propTypes = {
   placeholder: PropTypes.string,
   label: PropTypes.string.isRequired,
-  render: PropTypes.func.isRequired,
+  children: PropTypes.func.isRequired,
   addItem: PropTypes.func,
   items: PropTypes.array.isRequired,
   padding: PropTypes.number.isRequired

@@ -6,7 +6,7 @@ module.exports = gql`
   }
 
   extend type Mutation {
-    signUp(
+    signIn(
       tokenId: String!
     ): Token!
   }

@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import TreeNode, { NodeWrapper } from './TreeNode';
+import TreeNode, { NodeWrapper, ToggleIcon } from './TreeNode';
 import { Transition, animated } from 'react-spring';
 
-import { CornerDownRight, Plus } from 'react-feather';
+import { CornerDownRight } from 'react-feather';
 import RateSlider from './RateSlider';
-
-
 
 const StyledChildNode = styled(animated.li)`
   padding: 20px;
@@ -35,12 +33,6 @@ const Score = styled(animated.h4)`
   height: 24px;
   font-size: 2.4rem;
   margin-right: 10px;
-`;
-
-const ToggleIcon = styled(Plus)`
-  stroke: ${p => p.open ? p.theme.danger : p.theme.action};
-  transition: ${p => p.theme.transition};
-  transform: rotate(${p => p.open ? `45deg` : `0deg`});
 `;
 
 const ScoreWrapper = styled.div`

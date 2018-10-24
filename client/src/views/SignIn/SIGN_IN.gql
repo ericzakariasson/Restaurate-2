@@ -1,0 +1,5 @@
+mutation ($tokenId: String!) {
+  signIn(tokenId: $tokenId) {
+    token
+  }
+}

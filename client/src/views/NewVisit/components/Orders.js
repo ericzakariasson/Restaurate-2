@@ -11,15 +11,22 @@ const Order = styled(animated.li)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding-right: 20px;
 
-  &:not(:last-of-type) {
-    border-bottom: 1px solid #EEE;
+  svg {
+    padding: 3px;
+    border-radius: 50%;
+    stroke-width: 3;
+    border: 2px solid rgba(0,0,0,0.04);
   }
+`;
 
-  &:last-of-type {
-    border-radius: 0 0 5px 5px;
-  }
+const Separator = styled.span`
+  flex: 1;
+  height: 1px;
+  background: #222;
+  opacity: 0.2;
+  margin: 0 10px;
 `;
 
 const OrderText = styled.p`
@@ -27,21 +34,6 @@ const OrderText = styled.p`
   font-size: 1.8rem;
   color: #222;
   font-weight: 500;
-  position: relative;
-  padding-left: 18px;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-
-    width: 8px;
-    height: 8px;
-    border-radius: 5px;
-    background: ${p => p.theme.visit};
-  }
 `;
 
 class Orders extends Component {
@@ -53,19 +45,20 @@ class Orders extends Component {
       <InputList
         label={'Beställningar'}
         placeholder={'Namn, nummer'}
-        padding={20}
+        padding={10}
         addItem={this.addItem}
         removeItem={this.removeItem}
-        items={this.props.orders}
-        render={
+        items={this.props.orders}>
+        {
           ({ item, styles, removeItem }) => (
             <Order style={styles}>
-              <OrderText>{item}</OrderText>
+              <OrderText>- {item}</OrderText>
+              <Separator />
               <X color={this.props.theme.danger} onClick={() => removeItem(item)} />
             </Order>
           )
         }
-      />
+      </InputList>
     )
   }
 }

@@ -57,8 +57,7 @@ class ListWithType extends Component {
       )
     }
 
-    const index = types.findIndex(type => type.name === selectedType.name);
-
+    const index = types.findIndex(type => type.value === selectedType.value);
     return (
       <Wrapper>
         <ResultByType types={types} select={this.selectType} selected={selectedType} />

@@ -2,22 +2,23 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 import Label from '../../../components/Label';
-import { StyledInput, Wrapper } from '../../../components/Input';
+import { Wrapper } from '../../../components/Input';
 
 import Textarea from 'react-textarea-autosize';
 
 const StyledTextarea = styled(Textarea)`
-  border-radius: 5px;
+  border-radius: 2px;
   border: none;
   outline: none;
-  box-shadow: ${p => p.theme.inputShadow};
+  box-shadow: ${p => p.theme.boxShadow};
   font-size: 2rem;
   padding: 20px;
   width: 100%;
   font-size: 2rem;
-  font-family: ${p => p.theme.fonts.text};
+  font-family: ${p => p.theme.font.text};
   transition: ${p => p.theme.transition};
   line-height: 1.5;
+  border: 1px solid #EEE;
 
   &::placeholder {
     color: #DDD;
@@ -66,7 +67,7 @@ class Comment extends Component {
           <Characters maxLengthReached={maxLengthReached}>{this.state.value.length}/{this.props.maxLength}</Characters>
         </LabelWrapper>
         <StyledTextarea
-          minRows={2}
+          minRows={3}
           id={id}
           placeholder={`Skriv något som är värt att minnas till nästa gång.`}
           value={this.state.value}

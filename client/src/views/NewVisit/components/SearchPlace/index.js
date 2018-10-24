@@ -34,15 +34,19 @@ class SearchPlace extends Component {
     loading: false,
     error: '',
     searched: false,
+    disabled: false,
   }
 
   constructor() {
     super();
 
     this.wrapperRef = React.createRef();
+  }
 
+  componentDidMount() {
     if (!window.google) {
-      throw Error('Google Maps API must be imported');
+      this.setState({ disabled: true });
+      // throw Error('Google Maps API must be imported');
     }
   }
 

@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import TreeNode, { NodeWrapper } from './TreeNode';
+import TreeNode, { NodeWrapper, ToggleIcon } from './TreeNode';
 import { Transition, animated } from 'react-spring';
 
-import { Plus } from 'react-feather';
 import RateSlider from './RateSlider';
 
 const ParentNode = styled.h1`
@@ -32,11 +31,7 @@ const Score = styled(animated.h4)`
   margin-right: 10px;
 `;
 
-const ToggleIcon = styled(Plus)`
-  stroke: ${p => p.open ? p.theme.danger : p.theme.action};
-  transition: ${p => p.theme.transition};
-  transform: rotate(${p => p.open ? `45deg` : `0deg`});
-`;
+
 
 class ParentTreeNode extends TreeNode {
 

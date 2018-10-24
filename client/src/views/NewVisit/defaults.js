@@ -1,4 +1,13 @@
-export const TYPE_OF_PLACES = [{ label: 'Restaurang', value: 'restaurant' }, { label: 'Café', value: 'cafe' }];
+export const TYPE_OF_PLACES = [
+  { 
+    label: 'Restaurang', 
+    value: 'restaurant' 
+  }, 
+  { 
+    label: 'Café', 
+    value: 'cafe' 
+  }
+];
 
 export const RATE_TREE = [
   {

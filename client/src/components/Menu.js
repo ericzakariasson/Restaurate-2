@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { NavLink, withRouter } from 'react-router-dom';
 import { Transition, Trail, animated, config } from 'react-spring';
 
-import withSession from './withSession';
+import {withSession} from './Session';
 
 import Hamburger from './Hamburger';
 import Logo from './Logo';
