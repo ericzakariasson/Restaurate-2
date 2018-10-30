@@ -6,7 +6,7 @@ import { theme } from './style';
 import client from './apollo';
 
 import Start from './views/Start';
-import SignIn from './views/SignIn';
+import SignIn from './views/SignIn/';
 
 import Menu from './components/Menu';
 

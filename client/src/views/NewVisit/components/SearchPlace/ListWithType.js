@@ -58,12 +58,29 @@ class ListWithType extends Component {
     }
 
     const index = types.findIndex(type => type.value === selectedType.value);
+
+    const data = {
+      restaurant: restaurants,
+      cafe: cafes,
+    }
+
+    const selected = types[index].value;
+
     return (
       <Wrapper>
         <ResultByType types={types} select={this.selectType} selected={selectedType} />
         <ListWrapper index={index}>
-          <ResultList type="restaurang" results={restaurants} onSelect={onSelect.bind(null, 'restaurant')} />
-          <ResultList type="café" results={cafes} onSelect={onSelect.bind(null, 'cafe')} />
+          {
+            types.map(type => (
+              <ResultList
+                key={type.value}
+                type={type.label}
+                results={data[type.value]}
+                onSelect={onSelect.bind(null, type.value)}
+                active={selected === type.value}
+              />
+            ))
+          }
         </ListWrapper>
       </Wrapper>
     )

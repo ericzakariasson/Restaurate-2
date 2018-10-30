@@ -74,6 +74,7 @@ class NewVisit extends Component {
   handleSubmit = () => {
     console.log('click')
     this.setState({ isSubmitting: true });
+    console.log(this.state);
     setTimeout(() => this.setState({ isSubmitting: true }), 5000);
   }
 
@@ -83,22 +84,22 @@ class NewVisit extends Component {
 
 
     return (
-        <Page>
-          <Article>
-            <ArticleHeader>Plats</ArticleHeader>
-            <SearchPlace onReset={this.resetField} selected={this.state.place} setValue={this.setValue} />
-            <SelectTypeOfPlace onSelect={this.setValue} checked={this.state.typesOfPlace} types={TYPE_OF_PLACES} />
-            <Tags onAdd={this.setValue} tags={this.state.tags} />
-            <PriceLevel onSelect={this.setValue} onReset={this.resetField} selected={this.state.priceLevel} priceLevels={PRICE_LEVELS} />
-          </Article>
-          <Article>
-            <ArticleHeader>Besök</ArticleHeader>
-            <Orders orders={this.state.orders} onAdd={this.setValue} />
-            <Rating ratings={this.state.rating} setValue={this.setValue} tree={RATE_TREE} />
-            <Comment setValue={this.setValue} maxLength={COMMENT_MAX_LENGTH} />
-          </Article>
-          <Button width="auto" onClick={this.handleSubmit}>Spara besök</Button>
-        </Page>
+      <Page>
+        <Article>
+          <ArticleHeader>Plats</ArticleHeader>
+          <SearchPlace onReset={this.resetField} selected={this.state.place} setValue={this.setValue} />
+          <SelectTypeOfPlace onSelect={this.setValue} checked={this.state.typesOfPlace} types={TYPE_OF_PLACES} />
+          <Tags onAdd={this.setValue} tags={this.state.tags} />
+          <PriceLevel onSelect={this.setValue} onReset={this.resetField} selected={this.state.priceLevel} priceLevels={PRICE_LEVELS} />
+        </Article>
+        <Article>
+          <ArticleHeader>Besök</ArticleHeader>
+          <Orders orders={this.state.orders} onAdd={this.setValue} />
+          <Rating ratings={this.state.rating} setValue={this.setValue} tree={RATE_TREE} />
+          <Comment setValue={this.setValue} maxLength={COMMENT_MAX_LENGTH} />
+        </Article>
+        <Button width="auto" onClick={this.handleSubmit}>Spara besök</Button>
+      </Page>
     )
 
     /* return (

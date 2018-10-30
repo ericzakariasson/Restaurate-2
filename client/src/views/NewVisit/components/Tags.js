@@ -23,19 +23,23 @@ const Tag = styled(animated.li)`
 
   svg {
     padding: 3px;
-    border-radius: 50%;
     stroke-width: 3;
-    border: 2px solid rgba(0,0,0,0.04);
+    border: 2px solid ${p => p.theme.danger};
   }
 `;
 
 const TagText = styled.p`
   display: block;
-  border-radius: 5px;
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   text-transform: uppercase;
   color: #444;
   font-weight: 700;
+
+  padding: 7px 10px;
+  border: 1px solid #EEE;
+  border-bottom: 2px solid ${p => p.theme.main};
+  background: #FFF;
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 const Separator = styled.span`
@@ -80,7 +84,7 @@ class Tags extends Component {
             <Tag style={styles}>
               <TagText>{item}</TagText>
               <Separator />
-              <X size={24} color={this.props.theme.danger} onClick={() => removeItem(item)} />
+              <X size={26} color={this.props.theme.danger} onClick={() => removeItem(item)} />
             </Tag>
           )
         }

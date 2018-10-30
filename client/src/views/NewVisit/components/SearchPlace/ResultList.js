@@ -11,9 +11,11 @@ const StyledList = styled.ul`
   align-self: flex-start;
   overflow: hidden;
   flex: 1 0 100%;
+  max-height: ${p => p.active ? window.innerHeight + 'px' : '0'};
+  transition: 0.5s ease-in-out;
 `;
 
-const ResultList = ({ results, onSelect, type }) => {
+const ResultList = ({ results, onSelect, type, active }) => {
 
   if (results.length === 0) {
     return (
@@ -22,7 +24,7 @@ const ResultList = ({ results, onSelect, type }) => {
   }
 
   return (
-    <StyledList>
+    <StyledList active={active}>
       {
         results.map(result => <ResultItem onSelect={onSelect} key={result.id} {...result} />)
       }

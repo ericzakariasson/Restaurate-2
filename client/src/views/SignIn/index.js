@@ -1,12 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { graphql, Mutation } from 'react-apollo';
-import SIGN_IN from './SIGN_IN.gql';
+import SIGN_IN from './SIGN_IN';
 import { withRouter } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 
-import {withSession} from '../../components/Session';
-
+import { withSession } from '../../components/Session';
 
 import GoogleIcon from '../../icons/Google.svg';
 import { AUTH_TOKEN } from '../../constants';
@@ -17,7 +16,7 @@ import {
   Background,
   Title,
   AnimatedContent
-} from './Landing';
+} from '../Landing';
 
 const GoogleButton = styled(GoogleLogin)`
   border-radius: 2px;
@@ -52,15 +51,17 @@ class SignIn extends Component {
   handleSuccess = async ({ tokenId }) => {
     const { data } = await this.props.signUp(tokenId);
 
-    localStorage.setItem(AUTH_TOKEN, data.signUp.token);
+    localStorage.setItem(AUTH_TOKEN, data.signIn.token);
 
     await this.props.refetch();
     this.props.history.push('/');
   };
 
   handleFailure = response => {
-    this.setState({ error: response });
-    this.setState({ isSigningIn: false });
+    this.setState({ 
+      error: response,
+      isSigningIn: false
+    });
   };
 
   render() {

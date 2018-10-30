@@ -15,9 +15,8 @@ const Order = styled(animated.li)`
 
   svg {
     padding: 3px;
-    border-radius: 50%;
     stroke-width: 3;
-    border: 2px solid rgba(0,0,0,0.04);
+    border: 2px solid ${p => p.theme.danger};
   }
 `;
 
@@ -31,7 +30,7 @@ const Separator = styled.span`
 
 const OrderText = styled.p`
   display: block;
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   color: #222;
   font-weight: 500;
 `;
@@ -54,7 +53,7 @@ class Orders extends Component {
             <Order style={styles}>
               <OrderText>- {item}</OrderText>
               <Separator />
-              <X color={this.props.theme.danger} onClick={() => removeItem(item)} />
+              <X size={26} color={this.props.theme.danger} onClick={() => removeItem(item)} />
             </Order>
           )
         }

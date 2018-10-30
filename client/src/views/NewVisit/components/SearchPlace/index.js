@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
-
-
 import { Transition, animated, config } from 'react-spring';
-import { Easing } from 'react-spring/dist/addons'
 
 import SelectedPlace from './SelectedPlace';
 import InputWithResultList from './InputWithResultList';
@@ -11,7 +8,7 @@ import InputWithResultList from './InputWithResultList';
 import { Wrapper } from '../../../../components/Input';
 
 const Background = styled(animated.div)`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -35,6 +32,7 @@ class SearchPlace extends Component {
     error: '',
     searched: false,
     disabled: false,
+    top: 0,
   }
 
   constructor() {
@@ -71,15 +69,14 @@ class SearchPlace extends Component {
 
   searchPlaces = () => {
 
-    const { top } = this.wrapperRef.current.getBoundingClientRect();
-    console.log('TCL: SearchPlace -> searchPlaces -> top', top);
+    const top = this.wrapperRef.current.offsetTop
 
     window.scroll({
       top: top - 20,
       behavior: "smooth"
     });
 
-    this.setState({ isOpen: true, loading: true, searched: true });
+    this.setState({ isOpen: true, loading: true, searched: true, top });
     const map = new google.maps.Map(document.createElement('div'));
     const service = new google.maps.places.PlacesService(map);
 
@@ -148,7 +145,7 @@ class SearchPlace extends Component {
 
   render() {
 
-    const { isOpen, value, restaurant, cafe, loading, isSelected } = this.state;
+    const { isOpen, value, restaurant, cafe, loading, isSelected, top } = this.state;
     const { selected } = this.props;
 
     return (
@@ -166,13 +163,21 @@ class SearchPlace extends Component {
                 isOpen={isOpen}
                 loading={loading}
                 restaurants={restaurant}
-                cafes={cafe} />
+                cafes={cafe}
+                top={top} />
             )
         }
         {
-          isOpen
-            ? <Background onClick={this.close} />
-            : null
+          <Transition
+            native
+            from={{ opacity: 0 }}
+            enter={{ opacity: 1 }}
+            leave={{ opacity: 0 }}
+          >
+            {
+              isOpen && (style => <Background style={style} onClick={this.close} />)
+            }
+          </Transition>
         }
       </Wrapper>
     )

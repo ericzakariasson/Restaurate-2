@@ -25,12 +25,12 @@ const Results = styled(animated.div)`
   border-top: 1px solid #EEE;
   border-radius: 0 0 5px 5px;
   box-shadow: ${p => p.theme.boxShadow};
-  max-height: calc(100vh - 281px);
+  max-height: calc(100vh - ${p => p.top}px );
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 `;
 
-const InputWithResultList = ({ style, isOpen, onChange, onSubmit, value, onClear, onSelect, restaurants, cafes, loading }) => {
+const InputWithResultList = ({ style, top, isOpen, onChange, onSubmit, value, onClear, onSelect, restaurants, cafes, loading }) => {
   return (
     <SearchPlaceWrapper style={style}>
       <SearchInput
@@ -49,7 +49,18 @@ const InputWithResultList = ({ style, isOpen, onChange, onSubmit, value, onClear
         >
           {
             isOpen
-              ? style => <Results style={style}><ListWithType onSelect={onSelect} cafes={cafes} restaurants={restaurants} loading={loading} open={isOpen} /></Results>
+              ? style => (
+                <Results top={top} style={style}>
+                  <ListWithType
+                    onSelect={onSelect}
+                    cafes={cafes}
+                    restaurants={restaurants}
+                    loading={loading}
+                    open={isOpen} />
+                  <ScrollLock />
+                </Results>
+
+              )
               : () => null
           }
         </Transition>

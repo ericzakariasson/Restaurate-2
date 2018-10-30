@@ -41,8 +41,8 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   background-image: url(${p => p.src});
-  background-size: contain;
-  padding: 20px;
+  background-size: cover;
+  padding: 40px 20px;
   position: relative;
   z-index: 0;
 `;
