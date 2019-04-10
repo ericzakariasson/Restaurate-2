@@ -1,0 +1,10 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "styled-components": "^4.2.0"
+  }
+}
