@@ -12,6 +12,7 @@ const Item = styled.article`
   background: #f5f5f5;
   background-image: url(${(p: ItemProps) => p.url});
   background-position: center;
+  background-size: cover;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
 `;
 

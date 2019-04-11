@@ -89,10 +89,10 @@ export function useGooglePlaces(query: string): UseGooglePlaces {
     if (!error && mounted) {
       const fetchPlaces = async () => {
         setLoading(true);
-        const [restaurant, cafe] = await Promise.all([
-          searchPlacesByType('restaurant'),
-          searchPlacesByType('cafe')
-        ]);
+        const promises = ['resturant', 'cafe'].map(type =>
+          searchPlacesByType(type)
+        );
+        const [restaurant, cafe] = await Promise.all(promises);
 
         setResults({
           restaurants: restaurant.results,
