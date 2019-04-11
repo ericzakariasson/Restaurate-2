@@ -1,13 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Item = styled.li``;
+const Item = styled.li`
+  padding: 10px;
+  background: none;
+  border-radius: 5px;
 
-const Name = styled.h3``;
+  &:not(:last-of-type) {
+    margin-bottom: 10px;
+  }
+`;
 
-const Address = styled.p``;
+const Name = styled.h4`
+  font-size: 1rem;
+  font-weight: 700;
+`;
 
-const SelectButton = styled.button``;
+const Address = styled.p`
+  font-size: 1rem;
+  font-weight: 400;
+`;
 
 export type SearchResult = google.maps.places.PlaceResult;
 
@@ -21,10 +33,9 @@ export const SearchPlaceResult = ({
   select
 }: SearchPlaceResultProps) => {
   return (
-    <Item>
+    <Item onClick={() => select()}>
       <Name>{name}</Name>
       <Address>{formatted_address}</Address>
-      <SelectButton onClick={() => select(id)}>Välj</SelectButton>
     </Item>
   );
 };

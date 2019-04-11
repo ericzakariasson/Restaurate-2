@@ -6,41 +6,76 @@ import { useGooglePlaces } from '../hooks';
 
 const Wrapper = styled.div``;
 
-const Input = styled.input``;
+interface ResultsWrapperProp {
+  open: boolean;
+}
 
-const Results = styled.ul``;
+const ResultsWrapper = styled.div`
+  box-shadow: ${(p: ResultsWrapperProp) =>
+    p.open ? '0 2px 4px rgba(0, 0, 0, 0.08)' : 'none'};
+  border-radius: 4px;
+  padding: 5px;
+  transition: 0.2s ease-in-out;
+  position: relative;
+`;
 
-interface Props {}
+const Input = styled.input`
+  display: block;
+  padding: 10px 12px;
+  border-radius: 4px;
+  background: #fcfcfc;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  border: 1px solid #eee;
+  width: 100%;
+`;
 
-export const SearchPlace = (props: Props) => {
+const Results = styled.ul`
+  list-style: none;
+  padding-top: 10px;
+  position: relative;
+`;
+
+interface SearchPlaceProps {
+  selected: SearchResult | null;
+  setSelected: (place: SearchResult) => void;
+  inputId: string;
+}
+
+export const SearchPlace = ({
+  selected,
+  setSelected,
+  inputId
+}: SearchPlaceProps) => {
   const [value, setValue] = useState<string>('');
   const { loading, results, status } = useGooglePlaces(value);
-  const [selected, setSelected] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
     setValue(e.target.value);
 
-  function handleSelect(id: string) {
-    setSelected(id);
-  }
-
-  const displayRestaurants: boolean = !loading && results.restaurants.length;
-  const displayCafes: boolean = !loading && results.cafes.length;
+  const displayResults: boolean = !loading && !selected;
+  const displayRestaurants: boolean =
+    displayResults && results.restaurants && results.restaurants.length;
+  const displayCafes: boolean =
+    displayResults && results.cafes && results.cafes.length;
 
   return (
     <Wrapper>
-      <Input value={value} onChange={handleChange} />
-      <Results>
-        {displayRestaurants
-          ? results.restaurants.map((result: SearchResult) => (
+      <ResultsWrapper open={displayRestaurants || displayCafes}>
+        <Input autoFocus id={inputId} value={value} onChange={handleChange} />
+        {displayRestaurants ? (
+          <Results>
+            {results.restaurants.map((result: SearchResult) => (
               <SearchPlaceResult
                 key={result.id}
-                select={handleSelect}
+                select={() => setSelected(result)}
                 result={result}
               />
-            ))
-          : null}
-      </Results>
+            ))}
+          </Results>
+        ) : null}
+      </ResultsWrapper>
     </Wrapper>
   );
 };
