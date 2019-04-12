@@ -12,3 +12,10 @@ export const GlobalStyle = createGlobalStyle`
     font-family: sans-serif;
   }
 `;
+
+export const theme = {
+  colors: {
+    main: ['#F3F0FE', '#8C74E4', '#5F4BA9']
+    // rgba: (opacity: number): string => `rgba(140, 116, 228, ${opacity / 100})`
+  }
+};

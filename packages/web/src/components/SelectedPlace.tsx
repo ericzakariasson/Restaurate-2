@@ -1,5 +1,6 @@
 import React from 'react';
 import { SearchResult } from './SearchPlaceResult';
+import { staticMapUrl } from '../utils';
 import styled from 'styled-components';
 
 interface ItemProps {
@@ -27,29 +28,14 @@ interface SelectedPlaceProps {
   deselect: () => void;
 }
 
-interface Coordinates {
-  lat: number;
-  lng: number;
-}
-
-const MAP_SIZE: string = `${window.innerWidth - 30}x${65}`;
+const MAP_SIZE: string = `${window.innerWidth - 30}x${85}`;
 const MAP_ZOOM: number = 13;
-
-const staticMapUrl = ({ lat, lng }: Coordinates): string => {
-  return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&size=${MAP_SIZE}&zoom=${MAP_ZOOM}&key=${
-    process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-  }`;
-};
 
 export const SelectedPlace = ({
   place: { name, formatted_address, geometry },
   deselect
 }: SelectedPlaceProps) => {
-  const location = geometry ? geometry.location : null;
-  const url = location
-    ? staticMapUrl({ lat: location.lat(), lng: location.lng() })
-    : '';
-
+  const url = staticMapUrl({ geometry, size: MAP_SIZE, zoom: MAP_ZOOM });
   return (
     <Item onClick={() => deselect()} url={url}>
       <Name>{name}</Name>

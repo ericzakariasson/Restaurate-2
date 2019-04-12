@@ -1,6 +1,6 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import { GlobalStyle } from './style';
+import styled, { ThemeProvider } from 'styled-components';
+import { GlobalStyle, theme } from './style';
 import { SelectPlace } from './components';
 import { useScript } from './hooks';
 
@@ -24,11 +24,13 @@ const App = () => {
   }
 
   return (
-    <Wrapper>
-      <Title>Restaurate</Title>
-      {scriptLoaded ? <SelectPlace /> : null}
-      <GlobalStyle />
-    </Wrapper>
+    <ThemeProvider theme={theme}>
+      <Wrapper>
+        <Title>Restaurate</Title>
+        {scriptLoaded ? <SelectPlace /> : null}
+        <GlobalStyle />
+      </Wrapper>
+    </ThemeProvider>
   );
 };
 

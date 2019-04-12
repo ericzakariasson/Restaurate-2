@@ -82,13 +82,20 @@ const TypeButton = styled.button`
   border: none;
   padding: 8px 10px;
   outline: none;
+  background: ${p =>
+    p.active ? p.theme.colors.main[2] : p.theme.colors.main[1]};
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 
   &:first-child {
-    border-radius: 4px 0 0 4px;
+    border-radius: 0 0 0 4px;
   }
 
   &:last-child {
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 0 4px 0;
   }
 `;
 
@@ -140,6 +147,9 @@ const TYPES: PlaceTypes = {
   }
 };
 
+const BUTTON_HEIGHT = 40;
+const PADDING = 25;
+
 export const SearchPlace = ({
   selected,
   setSelected,
@@ -154,10 +164,9 @@ export const SearchPlace = ({
   useLayoutEffect(() => {
     if (inputRef.current) {
       const bounds = inputRef.current.getBoundingClientRect();
-      console.log(bounds);
-
       const calculatedMaxHeight =
-        window.innerHeight - (bounds.height + bounds.top + 65);
+        window.innerHeight -
+        (bounds.height + bounds.top + BUTTON_HEIGHT + PADDING);
       setMaxHeight(calculatedMaxHeight);
     }
   }, []);
@@ -186,7 +195,9 @@ export const SearchPlace = ({
         {displayResults ? (
           <Dropdown>
             <Scroll style={{ maxHeight }}>
-              <TypeLabel>{activeType.label}</TypeLabel>
+              <TypeLabel>
+                {activeType.label} ({results[activeType.value].length})
+              </TypeLabel>
               <Results>
                 {results[activeType.value].map((result: SearchResult) => (
                   <SearchPlaceResult
@@ -200,6 +211,7 @@ export const SearchPlace = ({
             <Buttons>
               {Object.entries(TYPES).map(([key, type]: [string, PlaceType]) => (
                 <TypeButton
+                  key={key}
                   active={activeType.value === type.value}
                   onClick={() => setActiveType(type)}
                 >
