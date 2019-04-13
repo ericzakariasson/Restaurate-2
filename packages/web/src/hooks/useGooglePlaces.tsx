@@ -20,11 +20,14 @@ interface UseGooglePlaces {
   results: any;
   status: any;
   error: boolean;
+  search: Function;
+  clear: Function;
 }
 
-interface Results {
+export interface IResults {
   restaurants: Array<google.maps.places.PlaceResult> | [];
   cafes: Array<google.maps.places.PlaceResult> | [];
+  [key: string]: Array<google.maps.places.PlaceResult> | [];
 }
 
 interface Status {
@@ -48,7 +51,7 @@ export function useGooglePlaces(query: string): UseGooglePlaces {
     cafe: null
   });
 
-  const [results, setResults] = useState<Results>({
+  const [results, setResults] = useState<IResults>({
     restaurants: [],
     cafes: []
   });
@@ -85,29 +88,41 @@ export function useGooglePlaces(query: string): UseGooglePlaces {
       );
     });
 
+  const clear = () => {
+    setError(false);
+    setStatus({ restaurant: null, cafe: null });
+    setResults({ restaurants: [], cafes: [] });
+    setLoading(false);
+  };
+
+  const search = async () => {
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+    const promises = ['resturant', 'cafe'].map(type =>
+      searchPlacesByType(type)
+    );
+
+    const [restaurant, cafe] = await Promise.all(promises);
+
+    setResults({
+      restaurants: restaurant.results,
+      cafes: cafe.results
+    });
+
+    setStatus({
+      restaurant: restaurant.status,
+      cafe: cafe.status
+    });
+
+    setLoading(false);
+  };
+
   useEffect(() => {
     if (!error && mounted) {
-      const fetchPlaces = async () => {
-        setLoading(true);
-        const promises = ['resturant', 'cafe'].map(type =>
-          searchPlacesByType(type)
-        );
-        const [restaurant, cafe] = await Promise.all(promises);
-
-        setResults({
-          restaurants: restaurant.results,
-          cafes: cafe.results
-        });
-
-        setStatus({
-          restaurant: restaurant.status,
-          cafe: cafe.status
-        });
-
-        setLoading(false);
-      };
-
-      fetchPlaces();
+      search();
     }
   }, [throttledQuery]);
 
@@ -115,6 +130,8 @@ export function useGooglePlaces(query: string): UseGooglePlaces {
     loading,
     results,
     status,
-    error
+    error,
+    search,
+    clear
   };
 }

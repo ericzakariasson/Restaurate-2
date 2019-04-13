@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import styled from 'styled-components';
-import { SearchPlaceResult, SearchResult } from './SearchPlaceResult';
-
+import { SearchResult } from './SearchPlaceResult';
+import { SearchPlaceDropdown } from './SearchPlaceDropdown';
 import { useGooglePlaces } from '../hooks';
+
+import { X } from 'react-feather';
 
 const Wrapper = styled.div``;
 
@@ -12,112 +14,47 @@ interface ResultsWrapperProp {
 
 const ResultsWrapper = styled.div`
   box-shadow: ${(p: ResultsWrapperProp) =>
-    p.open ? '0 2px 8px rgba(0, 0, 0, 0.16)' : 'none'};
+    p.open ? '0 2px 2px rgba(0, 0, 0, 0.1)' : 'none'};
   border-radius: 4px;
   transition: 0.2s ease-in-out;
 `;
 
-const Padding = styled.div`
+const Form = styled.form`
   padding: 5px;
+  position: relative;
 `;
 
 const Input = styled.input`
   display: block;
-  padding: 10px 12px;
+  padding: 12px 12px;
   border-radius: 4px;
-  background: #fcfcfc;
-  border: none;
+  background: #f5f5f5;
+  border: 1px solid #f5f5f5;
   outline: none;
-  font-size: 1rem;
-  border: 1px solid #eee;
+  font-size: 1.125rem;
   width: 100%;
-`;
+  transition: 0.15s ease-in-out;
 
-const Dropdown = styled.div`
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2rem;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 0)
-    );
+  &:focus {
+    background: #fcfcfc;
+    border: 1px solid #eee;
+    transition: 0.15s ease-in-out;
   }
 `;
 
-const Buttons = styled.div`
-  display: flex;
-  height: 40px;
-
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    width: 100%;
-    height: 2rem;
-    background: linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 0)
-    );
-  }
-`;
-
-interface TypeButtonProps {
-  active: boolean;
+interface ClearButtonProps {
+  enabled: boolean;
 }
 
-const TypeButton = styled.button`
-  flex: 1;
-  background: ${(p: TypeButtonProps) => (p.active ? '#DDD' : '#EEE')};
+const ClearButton = styled.button`
+  background: none;
   border: none;
-  padding: 8px 10px;
   outline: none;
-  background: ${p =>
-    p.active ? p.theme.colors.main[2] : p.theme.colors.main[1]};
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-
-  &:first-child {
-    border-radius: 0 0 0 4px;
-  }
-
-  &:last-child {
-    border-radius: 0 0 4px 0;
-  }
-`;
-
-const Results = styled.ul`
-  list-style: none;
-  padding: 10px 5px;
-`;
-
-const Scroll = styled.div`
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  padding-top: 1rem;
-`;
-
-const TypeLabel = styled.span`
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.8rem;
-  padding: 0 15px;
-  margin-top: 10px;
-  font-weight: 700;
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  opacity: ${(p: ClearButtonProps) => (p.enabled ? 1 : 0.1)};
 `;
 
 interface SearchPlaceProps {
@@ -126,12 +63,12 @@ interface SearchPlaceProps {
   inputId: string;
 }
 
-interface PlaceTypes {
+export interface PlaceTypes {
   restaurants: PlaceType;
   cafes: PlaceType;
 }
 
-interface PlaceType {
+export interface PlaceType {
   label: string;
   value: string;
 }
@@ -156,10 +93,16 @@ export const SearchPlace = ({
   inputId
 }: SearchPlaceProps) => {
   const [value, setValue] = useState<string>('');
-  const { loading, results, status } = useGooglePlaces(value);
+  const { loading, results, status, search, clear } = useGooglePlaces(value);
   const [activeType, setActiveType] = useState<PlaceType>(TYPES.restaurants);
   const inputRef = useRef<HTMLInputElement>(null);
   const [maxHeight, setMaxHeight] = useState(0);
+
+  const someResults =
+    (results.restaurants && results.restaurants.length > 0) ||
+    (results.cafes && results.cafes.length > 0);
+
+  const displayResults: boolean = !loading && !selected && someResults;
 
   useLayoutEffect(() => {
     if (inputRef.current) {
@@ -171,19 +114,23 @@ export const SearchPlace = ({
     }
   }, []);
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    search();
+  };
+
+  const handleClear = () => {
+    setValue('');
+    clear();
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
     setValue(e.target.value);
-
-  const displayResults: boolean =
-    !loading &&
-    !selected &&
-    results[activeType.value] &&
-    results[activeType.value].length;
 
   return (
     <Wrapper>
       <ResultsWrapper open={displayResults}>
-        <Padding>
+        <Form onSubmit={handleSubmit}>
           <Input
             ref={inputRef}
             autoFocus
@@ -191,35 +138,23 @@ export const SearchPlace = ({
             value={value}
             onChange={handleChange}
           />
-        </Padding>
+          <ClearButton
+            type="button"
+            onClick={handleClear}
+            enabled={value.length > 0}
+          >
+            <X />
+          </ClearButton>
+        </Form>
         {displayResults ? (
-          <Dropdown>
-            <Scroll style={{ maxHeight }}>
-              <TypeLabel>
-                {activeType.label} ({results[activeType.value].length})
-              </TypeLabel>
-              <Results>
-                {results[activeType.value].map((result: SearchResult) => (
-                  <SearchPlaceResult
-                    key={result.id}
-                    select={() => setSelected(result)}
-                    result={result}
-                  />
-                ))}
-              </Results>
-            </Scroll>
-            <Buttons>
-              {Object.entries(TYPES).map(([key, type]: [string, PlaceType]) => (
-                <TypeButton
-                  key={key}
-                  active={activeType.value === type.value}
-                  onClick={() => setActiveType(type)}
-                >
-                  {type.label}
-                </TypeButton>
-              ))}
-            </Buttons>
-          </Dropdown>
+          <SearchPlaceDropdown
+            maxHeight={maxHeight}
+            types={TYPES}
+            activeType={activeType}
+            results={results}
+            setActiveType={setActiveType}
+            setSelected={setSelected}
+          />
         ) : null}
       </ResultsWrapper>
     </Wrapper>

@@ -15,7 +15,10 @@ export const GlobalStyle = createGlobalStyle`
 
 export const theme = {
   colors: {
-    main: ['#F3F0FE', '#8C74E4', '#5F4BA9']
+    main: {
+      hues: ['#faf9ff', '#F3F0FE', '#8C74E4', '#5F4BA9'],
+      rgba: (opacity: number) => `rgba(140, 116, 228, ${opacity / 100})`
+    }
     // rgba: (opacity: number): string => `rgba(140, 116, 228, ${opacity / 100})`
   }
 };

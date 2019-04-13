@@ -1,3 +1,3 @@
 export * from './useScript';
-export * from './useGooglePlaces';
+export { useGooglePlaces } from './useGooglePlaces';
 export * from './useThrottle';
