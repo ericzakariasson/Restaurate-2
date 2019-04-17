@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { SearchPlaceResult, SearchResult } from './SearchPlaceResult';
-import { IResults } from '../hooks/useGooglePlaces';
+import { Places } from '../hooks/useGooglePlaces';
 
-import { PlaceType, PlaceTypes } from './SearchPlace';
+import { PlaceType } from '../types/google';
 
 const Dropdown = styled.div`
   position: relative;
@@ -62,6 +62,10 @@ const TypeButton = styled.button`
   text-transform: uppercase;
   letter-spacing: 0.05em;
 
+  &:disabled {
+    color: #ccc;
+  }
+
   &:first-child {
     border-radius: 0 0 0 4px;
   }
@@ -82,22 +86,19 @@ const Scroll = styled.div`
   /* padding-top: 1rem; */
 `;
 
-const TypeLabel = styled.span`
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.8rem;
-  padding: 0 15px;
-  font-weight: 700;
-`;
-
 const PlaceCount = styled.span``;
+
+const LoadingBar = styled.div`
+  width: 100%;
+  background: red;
+`;
 
 interface SearchPlaceDropdownProps {
   maxHeight: number;
   activeType: PlaceType;
-  types: PlaceTypes;
-  results: IResults;
+  types: PlaceType[];
+  places: Places;
+  loading: boolean;
   setActiveType: Function;
   setSelected: (place: SearchResult) => void;
 }
@@ -106,41 +107,53 @@ export const SearchPlaceDropdown = ({
   maxHeight,
   activeType,
   types,
-  results,
+  places,
+  loading,
   setActiveType,
   setSelected
 }: SearchPlaceDropdownProps) => {
-  const places: any = results[activeType.value] || [];
+  const someResults =
+    (places.restaurants && places.restaurants.length > 0) ||
+    (places.cafes && places.cafes.length > 0);
+
+  const displayResults: boolean = !loading && someResults;
+  const places2: any = places[activeType.value] || [];
 
   return (
     <Dropdown>
       <Scroll style={{ maxHeight }}>
-        <Results>
-          {places.length > 0
-            ? places.map((result: SearchResult) => (
-                <SearchPlaceResult
-                  key={result.id}
-                  select={() => setSelected(result)}
-                  result={result}
-                />
-              ))
-            : null}
-        </Results>
+        {loading ? null : places.length > 0 ? (
+          <Results>
+            {places2.map((result: SearchResult) => (
+              <SearchPlaceResult
+                key={result.id}
+                select={() => setSelected(result)}
+                result={result}
+              />
+            ))}
+          </Results>
+        ) : null}
       </Scroll>
-      <Buttons>
-        {Object.entries(types).map(([key, type]: [string, PlaceType]) => (
-          <TypeButton
-            key={key}
-            active={activeType.value === type.value}
-            onClick={() => setActiveType(type)}
-          >
-            {type.label}{' '}
-            <PlaceCount>
-              ({results[type.value] && results[type.value].length})
-            </PlaceCount>
-          </TypeButton>
-        ))}
-      </Buttons>
+      {someResults && (
+        <Buttons>
+          {Object.entries(types).map(([key, type]: [string, PlaceType]) => (
+            <TypeButton
+              key={key}
+              active={activeType.value === type.value}
+              onClick={() => setActiveType(type)}
+              disabled={
+                places[type.value] === null ||
+                (places[type.value] && places[type.value].length === 0)
+              }
+            >
+              {type.label}{' '}
+              <PlaceCount>
+                ({places[type.value] && places[type.value].length})
+              </PlaceCount>
+            </TypeButton>
+          ))}
+        </Buttons>
+      )}
     </Dropdown>
   );
 };
