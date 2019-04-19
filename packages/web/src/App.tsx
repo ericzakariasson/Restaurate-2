@@ -6,6 +6,7 @@ import { useScript } from './hooks';
 
 const Wrapper = styled.div`
   padding: 15px;
+  height: 100%;
 `;
 
 const GOOGLE_API_URL: string = `https://maps.googleapis.com/maps/api/js?key=${

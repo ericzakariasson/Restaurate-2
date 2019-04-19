@@ -1,9 +1,9 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
-import { SearchResult } from './SearchPlaceResult';
 import { SearchPlaceDropdown } from './SearchPlaceDropdown';
 import { useGooglePlaces } from '../hooks';
-import { PlaceType } from '../types/google';
+import { PlaceType } from '../types/places';
+import { placeTypes } from '../constants';
 
 import { X, Search } from 'react-feather';
 import { Label } from './Label';
@@ -18,23 +18,32 @@ const Wrapper = styled.div<WrapperProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
 `;
 
-interface ResultsWrapperProp {
-  open: boolean;
-}
-
 const ResultsWrapper = styled.div`
-  box-shadow: ${(p: ResultsWrapperProp) =>
-    p.open ? '0 2px 2px rgba(0, 0, 0, 0.1)' : 'none'};
   border-radius: 4px;
   transition: 0.15s ease-in-out;
   width: 100%;
 `;
 
-const Form = styled.form`
+interface FormProps {
+  sticky: boolean;
+}
+
+const Form = styled.form<FormProps>`
   position: relative;
   width: 100%;
+  position: ${p => (p.sticky ? 'sticky' : 'relative')};
+  top: ${p => (p.sticky ? 15 : 0)}px;
+  z-index: 1;
+  transition: 0.2s ease-in-out;
+
+  ${p =>
+    p.sticky &&
+    css`
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
+    `}
 `;
 
 interface InputProps {
@@ -74,6 +83,17 @@ const ClearButton = styled.button`
   transform: translateY(-50%);
   opacity: ${(p: ClearButtonProps) => (p.enabled ? 1 : 0)};
   transition: 0.15s ease-in-out;
+`;
+
+const NoResults = styled.p`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #ccc;
+  width: 100%;
+  padding: 0 15px;
+  text-align: center;
 `;
 
 interface TextProps {
@@ -121,20 +141,9 @@ const Icon = styled.div<IconProps>`
 `;
 
 interface SearchPlaceProps {
-  selected: SearchResult | null;
-  setSelected: (place: SearchResult) => void;
+  selected: google.maps.places.PlaceResult | null;
+  setSelected: (place: google.maps.places.PlaceResult) => void;
 }
-
-const placeTypes: PlaceType[] = [
-  {
-    label: 'Restauranger',
-    value: 'restaurant'
-  },
-  {
-    label: 'Caféer',
-    value: 'cafe'
-  }
-];
 
 const BUTTON_HEIGHT = 40;
 const PADDING = 25;
@@ -145,19 +154,6 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
     query,
     placeTypes
   );
-  const [activeType, setActiveType] = useState<PlaceType>(placeTypes[0]);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [maxHeight, setMaxHeight] = useState(0);
-
-  useLayoutEffect(() => {
-    if (inputRef.current) {
-      const bounds = inputRef.current.getBoundingClientRect();
-      const calculatedMaxHeight =
-        window.innerHeight -
-        (bounds.height + bounds.top + BUTTON_HEIGHT + PADDING);
-      setMaxHeight(calculatedMaxHeight);
-    }
-  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -174,7 +170,9 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
 
   const hasValue = query.length > 0;
 
-  const showDropdown = !selected && !loading && places.total > 0;
+  const noResults = !loading && searched && places.total === 0;
+
+  const showDropdown = !selected && !noResults && places.total > 0;
 
   const showExtra = places.total === 0 && !searched;
 
@@ -182,13 +180,14 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
 
   const inputId = 'search-place-input';
 
+  const stickyInput = showDropdown;
+
   return (
     <Wrapper y={searchTop}>
       <Label htmlFor={inputId}>Sök ställe</Label>
-      <ResultsWrapper open={showDropdown}>
-        <Form onSubmit={handleSubmit}>
+      <ResultsWrapper>
+        <Form onSubmit={handleSubmit} sticky={stickyInput}>
           <Input
-            ref={inputRef}
             autoFocus
             id={inputId}
             value={query}
@@ -203,14 +202,13 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
         </Form>
         {showDropdown ? (
           <SearchPlaceDropdown
-            maxHeight={maxHeight}
             types={placeTypes}
-            activeType={activeType}
             places={places}
             loading={loading}
-            setActiveType={setActiveType}
             setSelected={setSelected}
           />
+        ) : noResults ? (
+          <NoResults>Inga resultat för "{query}"</NoResults>
         ) : null}
       </ResultsWrapper>
       {showExtra && (

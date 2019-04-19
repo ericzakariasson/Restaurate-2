@@ -9,7 +9,6 @@ interface ItemProps {
 }
 
 const Item = styled.li`
-  padding: 10px;
   background: none;
   border-radius: 5px;
   display: flex;
@@ -24,7 +23,7 @@ const Item = styled.li`
     `}
 
   &:not(:last-of-type) {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -69,7 +68,7 @@ const Map = styled.div`
 
 const Name = styled.h4`
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 5px;
   color: #111;
 `;
@@ -86,10 +85,8 @@ const Info = styled.div`
   flex-direction: column;
 `;
 
-export type SearchResult = google.maps.places.PlaceResult;
-
 interface SearchPlaceResultProps {
-  result: SearchResult;
+  result: google.maps.places.PlaceResult;
   select: Function;
 }
 

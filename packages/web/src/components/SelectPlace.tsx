@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SearchPlace } from './SearchPlace';
 import { SelectedPlace } from './SelectedPlace';
-import { SearchResult } from './SearchPlaceResult';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  height: 100%;
+`;
 
 export const SelectPlace = () => {
-  const [selected, setSelected] = useState<SearchResult | null>(null);
+  const [
+    selected,
+    setSelected
+  ] = useState<google.maps.places.PlaceResult | null>(null);
 
   const deselect = () => setSelected(null);
 

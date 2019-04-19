@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchResult } from './SearchPlaceResult';
 import { staticMapboxMapUrl } from '../utils';
 import styled from 'styled-components';
 
@@ -7,11 +6,11 @@ interface ItemProps {
   url: string;
 }
 
-const Item = styled.article`
+const Item = styled.article<ItemProps>`
   padding: 15px 10px;
   border-radius: 5px;
   background: #f5f5f5;
-  background-image: url(${(p: ItemProps) => p.url});
+  background-image: url(${p => p.url});
   background-position: center;
   background-size: cover;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
@@ -37,7 +36,7 @@ const Name = styled.h3`
 const Address = styled.p``;
 
 interface SelectedPlaceProps {
-  place: SearchResult;
+  place: google.maps.places.PlaceResult;
   deselect: () => void;
 }
 

@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import { PlaceType } from '../types/google';
+import { PlaceType, SearchTypeData } from '../types/places';
+
 declare global {
   interface Window {
     google: any;
   }
-}
-interface SearchedType {
-  type: string;
-  results: google.maps.places.PlaceResult[] | [];
-  status: google.maps.places.PlacesServiceStatus;
 }
 
 interface UseGooglePlaces {
@@ -22,20 +18,18 @@ interface UseGooglePlaces {
 }
 
 export interface Places {
-  [key: string]: any; //google.maps.places.PlaceResult[] | [];
-  total: number | null;
+  data: {
+    [key: string]: any; //google.maps.places.PlaceResult[] | [];
+  };
+  total: number;
 }
 
 const initialState = {
   places: {
+    data: {},
     total: 0
   }
 };
-
-interface Status {
-  restaurant: google.maps.places.PlacesServiceStatus | null;
-  cafe: google.maps.places.PlacesServiceStatus | null;
-}
 
 export function useGooglePlaces(
   query: string,
@@ -68,7 +62,7 @@ export function useGooglePlaces(
     return () => mapDiv.remove();
   }, []);
 
-  const SearchedType = (query: string, type: string): Promise<SearchedType> =>
+  const SearchedType = (query: string, type: string): Promise<SearchTypeData> =>
     new Promise((resolve, reject) => {
       if (!service) {
         return reject();
@@ -110,16 +104,13 @@ export function useGooglePlaces(
     const results = await Promise.all(promises);
 
     const reducedResults = placeTypes.reduce(
-      (acc: { [key: string]: any }, type: PlaceType, idx: number) => {
-        console.log(results[idx].results.length);
-        acc[type.value] = results[idx];
-        acc['total'] += results[idx].results.length as number;
+      (acc: Places, type: PlaceType, idx: number) => {
+        acc.data[type.value] = results[idx];
+        acc.total += results[idx].results ? results[idx].results.length : 0;
         return acc;
       },
-      {}
+      { ...initialState.places }
     );
-
-    console.log(reducedResults);
 
     setPlaces(reducedResults as Places);
 
