@@ -8,3 +8,13 @@ export interface SearchTypeData {
   results: google.maps.places.PlaceResult[] | [];
   status: google.maps.places.PlacesServiceStatus;
 }
+
+export interface PriceLevel {
+  name: string;
+  level: number;
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+}

@@ -22,8 +22,12 @@ export const GlobalStyle = createGlobalStyle`
 export const theme = {
   colors: {
     main: {
+      hex: '#FFD966',
       hues: ['#FFD966'],
-      rgba: (opacity: number) => `rgba(45, 60, 100, ${opacity / 100})`
+      rgba: (opacity: number) => `rgba(69, 69, 69, ${opacity / 100})`
+    },
+    error: {
+      hex: '#EA4335'
     }
     // rgba: (opacity: number): string => `rgba(140, 116, 228, ${opacity / 100})`
   }

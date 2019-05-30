@@ -8,3 +8,11 @@ export const Label = styled.label`
   color: #ccc;
   font-weight: 400;
 `;
+
+export const SmallLabel = styled.span`
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  color: #4d4a45;
+  font-weight: 500;
+  display: block;
+`;

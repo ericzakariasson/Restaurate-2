@@ -1,60 +1,113 @@
 import React from 'react';
-import { staticMapboxMapUrl } from '../utils';
 import styled from 'styled-components';
+import { X } from 'react-feather';
 
-interface ItemProps {
-  url: string;
-}
+import { staticMapboxMapUrl } from '../utils';
+import { MapMarker } from './MapMarker';
+import { SmallLabel } from './Label';
+import { PlaceTags } from './PlaceTags';
+import { PlacePriceLevels } from './PlacePriceLevels';
+
+import { PriceLevel, Tag } from '../types/places';
+import { priceLevels } from '../constants';
+
+interface ItemProps {}
 
 const Item = styled.article<ItemProps>`
-  padding: 15px 10px;
   border-radius: 5px;
-  background: #f5f5f5;
-  background-image: url(${p => p.url});
-  background-position: center;
-  background-size: cover;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
+  background: #fcfcfc;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  z-index: 0;
+`;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(231, 226, 255, 0.5);
-    z-index: -1;
-  }
+const MapWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
+
+const Map = styled.img``;
+
+const PlaceInfo = styled.div`
+  padding: 10px;
 `;
 
 const Name = styled.h3`
   margin-bottom: 5px;
+  font-size: 1.5rem;
+  font-weight: 700;
 `;
 
-const Address = styled.p``;
+const Deselect = styled.button`
+  background: #fff7f6;
+  border-radius: 0 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  outline: none;
+  z-index: 1;
+
+  svg {
+    color: ${p => p.theme.colors.error.hex};
+  }
+`;
+
+const Address = styled.p`
+  margin-bottom: 15px;
+`;
 
 interface SelectedPlaceProps {
   place: google.maps.places.PlaceResult;
   deselect: () => void;
+  activePriceLevel: number | null;
+  setPriceLevel: (level: number | null) => void;
+  tags: Tag[];
+  addTag: (tag: string) => void;
 }
 
 export const SelectedPlace = ({
   place: { name, formatted_address, geometry },
-  deselect
+  deselect,
+  activePriceLevel,
+  setPriceLevel,
+  tags,
+  addTag
 }: SelectedPlaceProps) => {
-  const url = staticMapboxMapUrl({
-    geometry,
-    width: window.innerWidth - 30,
-    height: 85,
-    zoom: 13
-  });
+  const width = window.innerWidth - 30;
+  const height = Math.floor(width / 2);
+  const url = staticMapboxMapUrl({ geometry, width, height, zoom: 13 });
 
   return (
-    <Item onClick={() => deselect()} url={url}>
-      <Name>{name}</Name>
-      <Address>{formatted_address}</Address>
+    <Item>
+      <Deselect onClick={() => deselect()}>
+        <X />
+      </Deselect>
+      <MapWrapper>
+        <MapMarker title={`${name} – ${formatted_address}`} />
+        <Map style={{ width, height }} src={url} alt={`Karta över ${name}`} />
+      </MapWrapper>
+      <PlaceInfo>
+        <Name>{name}</Name>
+        <Address>{formatted_address}</Address>
+        <SmallLabel>
+          Prisklass {activePriceLevel === null && <>(Välj)</>}
+        </SmallLabel>
+        <PlacePriceLevels
+          priceLevels={priceLevels}
+          activePriceLevel={activePriceLevel}
+          setPriceLevel={setPriceLevel}
+        />
+        <SmallLabel>Taggar</SmallLabel>
+        <PlaceTags tags={tags} addTag={addTag} />
+      </PlaceInfo>
     </Item>
   );
 };

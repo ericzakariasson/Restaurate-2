@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { PlaceType, SearchTypeData } from '../types/places';
 import { SearchPlaceResult } from './SearchPlaceResult';
+import { SmallLabel } from './Label';
 
 const Wrapper = styled.article`
   &:not(:last-of-type) {
@@ -17,15 +18,9 @@ const TypeName = styled.h2`
 
 const ResultWrapper = styled.div``;
 
-const ResultType = styled.span`
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  color: #4d4a45;
-  font-weight: 500;
-  display: block;
+const Results = styled.ul`
+  margin: 0 -5px;
 `;
-
-const Results = styled.ul``;
 
 const NoResults = styled.p`
   color: #ccc;
@@ -49,7 +44,7 @@ export const SearchPlaceType = ({
         {type.label} – {results.length}
       </TypeName>
       <ResultWrapper>
-        <ResultType>Sökresultat</ResultType>
+        <SmallLabel>Sökresultat</SmallLabel>
         <Results>
           {results.length > 0 ? (
             results.map((result: google.maps.places.PlaceResult) => (

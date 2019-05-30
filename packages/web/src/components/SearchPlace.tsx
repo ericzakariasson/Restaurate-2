@@ -101,11 +101,12 @@ interface TextProps {
 }
 
 const Text = styled.p<TextProps>`
-  font-size: 1rem;
-  color: ${p => (p.hasValue ? '#EEE' : '#CCC')};
+  font-size: 0.9rem;
+  color: ${p => (p.hasValue ? '#ccc' : '#aaa')};
   line-height: 1.5;
   text-align: center;
   transition: 0.3s ease-in-out;
+  margin-top: 20px;
 `;
 
 const pulse = keyframes`
@@ -213,9 +214,6 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
       </ResultsWrapper>
       {showExtra && (
         <>
-          <Icon hasValue={hasValue} loading={loading}>
-            <Search size={64} />
-          </Icon>
           <Text hasValue={hasValue}>
             Sök efter restauranger och caféer du besökt
           </Text>

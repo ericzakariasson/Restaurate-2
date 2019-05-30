@@ -4,19 +4,20 @@ import styled, { css } from 'styled-components';
 import { staticMapboxMapUrl } from '../utils';
 
 interface ItemProps {
-  touched: boolean;
+  touching: boolean;
   theme: any;
 }
 
 const Item = styled.li`
   background: none;
+  padding: 5px;
   border-radius: 5px;
   display: flex;
   align-items: center;
   transition: 0.15s ease-in-out;
 
   ${(p: ItemProps) =>
-    p.touched &&
+    p.touching &&
     css`
       transform: scale(1.02);
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
@@ -28,42 +29,24 @@ const Item = styled.li`
 `;
 
 interface MapProps {
-  url: string;
-  touched: boolean;
+  touching: boolean;
 }
 
-const Map = styled.div`
+const Map = styled.img`
   margin-right: 10px;
   border-radius: 10px;
   position: relative;
-  width: 60px;
-  height: 60px;
   flex-shrink: 0;
   transition: 0.15s ease-in-out;
   background-size: 100%;
   background-position: center;
 
   ${(p: MapProps) =>
-    p.touched &&
+    p.touching &&
     css`
       background-size: 120%;
       transition: 0.15s ease-in-out;
     `}
-
-  background-image: url(${(p: MapProps) => p.url});
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: ${p => p.theme.colors.main[1]};
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
-  }
 `;
 
 const Name = styled.h4`
@@ -91,13 +74,13 @@ interface SearchPlaceResultProps {
 }
 
 export const SearchPlaceResult = ({
-  result: { id, name, formatted_address, geometry },
+  result: { name, formatted_address, geometry },
   select
 }: SearchPlaceResultProps) => {
-  const [touched, setTouched] = useState(false);
+  const [touching, setTouching] = useState(false);
 
-  const handleTouchStart = () => setTouched(true);
-  const handleTouchEnd = () => setTouched(false);
+  const handleTouchStart = () => setTouching(true);
+  const handleTouchEnd = () => setTouching(false);
 
   const mapUrl = staticMapboxMapUrl({
     geometry,
@@ -114,9 +97,9 @@ export const SearchPlaceResult = ({
       onClick={() => select()}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      touched={touched}
+      touching={touching}
     >
-      <Map touched={touched} url={mapUrl} />
+      <Map style={{ width: 60, height: 60 }} touching={touching} src={mapUrl} />
       <Info>
         <Name>{name}</Name>
         <Address>{formatted_address}</Address>
