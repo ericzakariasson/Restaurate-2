@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   html, body, #root {
-    height: 100%;
+    min-height: 100%;
   }
 `;
 
@@ -24,6 +24,7 @@ export const theme = {
   colors: {
     primary: {
       hex: '#FF6666',
+      light: '#FFECEC',
       hues: ['#FF6666'],
       rgba: (opacity: number) => `rgba(255, 102, 102, ${opacity / 100})`
     },

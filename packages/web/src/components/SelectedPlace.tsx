@@ -5,7 +5,7 @@ import { X } from 'react-feather';
 import { staticMapboxMapUrl } from '../utils';
 import { MapMarker } from './MapMarker';
 import { SmallLabel } from './Label';
-import { PlaceTags } from './PlaceTags';
+import { SelectedPlaceTags } from './SelectedPlaceTags';
 import { PlacePriceLevels } from './PlacePriceLevels';
 
 import { PriceLevel, Tag } from '../types/places';
@@ -27,7 +27,9 @@ const MapWrapper = styled.article`
   margin-bottom: 40px;
 `;
 
-const Map = styled.img``;
+const Map = styled.img`
+  background: #eee;
+`;
 
 const MapOverlay = styled.div`
   display: flex;
@@ -97,7 +99,7 @@ export const SelectedPlace = ({
   addTag
 }: SelectedPlaceProps) => {
   const width = window.innerWidth - 30;
-  const height = Math.floor(width / 2);
+  const height = 150;
   const url = staticMapboxMapUrl({ geometry, width, height, zoom: 13 });
 
   return (
@@ -116,7 +118,11 @@ export const SelectedPlace = ({
         setPriceLevel={setPriceLevel}
       />
       <SmallLabel text="Taggar" />
-      <PlaceTags tags={tags} addTag={addTag} />
+      <SelectedPlaceTags
+        removeTag={(id: string) => {}}
+        tags={tags}
+        addTag={addTag}
+      />
     </Wrapper>
   );
 };

@@ -65,14 +65,12 @@ const ClearButton = styled.button`
 `;
 
 const NoResults = styled.p`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   font-size: 1rem;
   color: #ccc;
   width: 100%;
   padding: 0 15px;
   text-align: center;
+  margin-top: 50%;
 `;
 
 interface TextProps {

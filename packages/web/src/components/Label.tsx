@@ -28,18 +28,26 @@ export const Label = ({ text, marginBottom, htmlFor, as }: LabelProps) => (
   </Normal>
 );
 
-const Small = styled(Normal)`
+interface SmallLabelStyleProps {
+  textAlign: string;
+}
+
+const Small = styled(Normal)<SmallLabelStyleProps>`
   font-size: 1rem;
   font-weight: 500;
+  text-align: ${p => p.textAlign};
 `;
 
-interface SmallLabelProps extends LabelProps {}
+interface SmallLabelProps extends LabelProps {
+  textAlign?: string;
+}
 
 export const SmallLabel = ({
   text,
+  textAlign = 'center',
   marginBottom = '15px'
 }: SmallLabelProps) => (
-  <Small as="span" marginBottom={marginBottom}>
+  <Small as="span" marginBottom={marginBottom} textAlign={textAlign}>
     {text}
   </Small>
 );
