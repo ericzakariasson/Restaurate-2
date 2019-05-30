@@ -84,6 +84,7 @@ export function useGooglePlaces(
     setError(false);
     setPlaces({ ...initialState.places });
     setLoading(false);
+    setSearched(false);
   };
 
   const search = async () => {

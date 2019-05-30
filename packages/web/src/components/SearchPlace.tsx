@@ -1,12 +1,14 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
+import { X } from 'react-feather';
 import { SearchPlaceDropdown } from './SearchPlaceDropdown';
 import { useGooglePlaces } from '../hooks';
-import { PlaceType } from '../types/places';
-import { placeTypes } from '../constants';
 
-import { X, Search } from 'react-feather';
+import { placeTypes } from '../constants';
 import { Label } from './Label';
+import { Input } from './Input';
+
+import { PageTitle } from './PageTitle';
 
 interface WrapperProps {
   y: number;
@@ -44,29 +46,6 @@ const Form = styled.form<FormProps>`
     css`
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
     `}
-`;
-
-interface InputProps {
-  hasValue: boolean;
-  dropdownOpen: boolean;
-}
-
-const Input = styled.input<InputProps>`
-  display: block;
-  padding: 15px;
-  border-radius: 5px;
-  background: #eee;
-  border: none;
-  outline: none;
-  font-size: 1.125rem;
-  width: 100%;
-  transition: 0.15s ease-in-out;
-  height: 50px;
-
-  &:focus {
-    background: #f5f5f5;
-    transition: 0.15s ease-in-out;
-  }
 `;
 
 interface ClearButtonProps {
@@ -121,33 +100,10 @@ const pulse = keyframes`
   }
 `;
 
-interface IconProps {
-  hasValue: boolean;
-  loading: boolean;
-}
-
-const Icon = styled.div<IconProps>`
-  margin-top: 40px;
-  margin-bottom: 10px;
-  ${p =>
-    p.loading &&
-    css`
-      animation: ${pulse} 2s infinite linear;
-    `}
-
-  svg {
-    transition: 0.3s ease-in-out;
-    color: ${p => (p.hasValue ? p.theme.colors.main.hues[0] : '#eee')};
-  }
-`;
-
 interface SearchPlaceProps {
   selected: google.maps.places.PlaceResult | null;
   setSelected: (place: google.maps.places.PlaceResult) => void;
 }
-
-const BUTTON_HEIGHT = 40;
-const PADDING = 25;
 
 export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
   const [query, setQuery] = useState<string>('');
@@ -170,30 +126,22 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
     setQuery(e.target.value);
 
   const hasValue = query.length > 0;
-
   const noResults = !loading && searched && places.total === 0;
-
   const showDropdown = !selected && !noResults && places.total > 0;
-
   const showExtra = places.total === 0 && !searched;
-
   const searchTop = searched ? 0 : window.innerHeight / 4;
-
   const inputId = 'search-place-input';
-
-  const stickyInput = showDropdown;
 
   return (
     <Wrapper y={searchTop}>
+      <PageTitle large={!searched} text="Ställe" />
       <Label htmlFor={inputId}>Sök ställe</Label>
       <ResultsWrapper>
-        <Form onSubmit={handleSubmit} sticky={stickyInput}>
+        <Form onSubmit={handleSubmit} sticky={showDropdown}>
           <Input
             autoFocus
             id={inputId}
             value={query}
-            hasValue={hasValue}
-            dropdownOpen={showDropdown}
             onChange={handleChange}
             placeholder="Namn eller plats"
           />

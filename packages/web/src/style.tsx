@@ -20,11 +20,12 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 export const theme = {
+  transition: '0.2s ease-in-out',
   colors: {
     main: {
-      hex: '#FFD966',
-      hues: ['#FFD966'],
-      rgba: (opacity: number) => `rgba(69, 69, 69, ${opacity / 100})`
+      hex: '#FF6666',
+      hues: ['#FF6666'],
+      rgba: (opacity: number) => `rgba(255, 102, 102, ${opacity / 100})`
     },
     error: {
       hex: '#EA4335'

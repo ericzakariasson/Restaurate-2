@@ -10,7 +10,7 @@ interface ItemProps {
 
 const Item = styled.li`
   background: none;
-  padding: 5px;
+  padding: 10px;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -20,11 +20,11 @@ const Item = styled.li`
     p.touching &&
     css`
       transform: scale(1.02);
-      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
+      background: #f5f5f5;
     `}
 
   &:not(:last-of-type) {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 `;
 

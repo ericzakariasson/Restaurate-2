@@ -19,7 +19,7 @@ const TypeName = styled.h2`
 const ResultWrapper = styled.div``;
 
 const Results = styled.ul`
-  margin: 0 -5px;
+  margin: 0 -10px;
 `;
 
 const NoResults = styled.p`
