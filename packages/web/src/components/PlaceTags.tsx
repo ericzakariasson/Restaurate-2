@@ -16,7 +16,7 @@ const TagItem = styled.li`
   display: inline-block;
   padding: 6px 8px;
   border-radius: 3px;
-  background: ${p => p.theme.colors.main.rgba(40)};
+  background: ${p => p.theme.colors.primary.rgba(40)};
   margin-bottom: 5px;
   margin-right: 5px;
 `;
@@ -47,7 +47,7 @@ const AddTag = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${p => p.theme.colors.main.rgba(40)};
+  background: ${p => p.theme.colors.primary.rgba(40)};
 `;
 
 interface PlaceTagsProps {

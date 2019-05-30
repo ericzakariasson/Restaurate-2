@@ -20,7 +20,6 @@ const Wrapper = styled.div<WrapperProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
 `;
 
 const ResultsWrapper = styled.div`
@@ -40,6 +39,7 @@ const Form = styled.form<FormProps>`
   top: ${p => (p.sticky ? 15 : 0)}px;
   z-index: 1;
   transition: 0.2s ease-in-out;
+  border-radius: 5px;
 
   ${p =>
     p.sticky &&
@@ -76,7 +76,7 @@ const NoResults = styled.p`
 `;
 
 interface TextProps {
-  hasValue: boolean;
+  hasValue?: boolean;
 }
 
 const Text = styled.p<TextProps>`
@@ -86,18 +86,6 @@ const Text = styled.p<TextProps>`
   text-align: center;
   transition: 0.3s ease-in-out;
   margin-top: 20px;
-`;
-
-const pulse = keyframes`
-  0% {
-    opacity: 1
-  }
-  50% {
-    opacity: 0.5
-  }
-  100% {
-    opacity: 1;
-  }
 `;
 
 interface SearchPlaceProps {
@@ -128,14 +116,14 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
   const hasValue = query.length > 0;
   const noResults = !loading && searched && places.total === 0;
   const showDropdown = !selected && !noResults && places.total > 0;
-  const showExtra = places.total === 0 && !searched;
+  const showExtra = places.total === 0 && !searched && !loading;
   const searchTop = searched ? 0 : window.innerHeight / 4;
   const inputId = 'search-place-input';
 
   return (
     <Wrapper y={searchTop}>
       <PageTitle large={!searched} text="Ställe" />
-      <Label htmlFor={inputId}>Sök ställe</Label>
+      <Label htmlFor={inputId} text="Sök ställe" />
       <ResultsWrapper>
         <Form onSubmit={handleSubmit} sticky={showDropdown}>
           <Input
@@ -149,7 +137,9 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
             <X color="#AAA" />
           </ClearButton>
         </Form>
-        {showDropdown ? (
+        {loading ? (
+          <Text>Laddar...</Text>
+        ) : showDropdown ? (
           <SearchPlaceDropdown
             types={placeTypes}
             places={places}

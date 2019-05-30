@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { SearchPlace } from './SearchPlace';
 import { SelectedPlace } from './SelectedPlace';
 
+import { PageTitle } from './PageTitle';
 import { Tag } from '../types/places';
 
 const Wrapper = styled.div`
@@ -29,14 +30,17 @@ export const SelectPlace = () => {
   return (
     <Wrapper>
       {selected ? (
-        <SelectedPlace
-          place={selected}
-          deselect={deselect}
-          activePriceLevel={priceLevel}
-          setPriceLevel={setPriceLevel}
-          tags={tags}
-          addTag={addTag}
-        />
+        <>
+          <PageTitle text="Ställe" />
+          <SelectedPlace
+            place={selected}
+            deselect={deselect}
+            selectedPriceLevel={priceLevel}
+            setPriceLevel={setPriceLevel}
+            tags={tags}
+            addTag={addTag}
+          />
+        </>
       ) : (
         <SearchPlace selected={selected} setSelected={setSelected} />
       )}

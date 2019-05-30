@@ -7,16 +7,18 @@ interface TextProps {
 
 const Text = styled.h1<TextProps>`
   font-size: ${p => (p.large ? '2rem' : '1.5rem')};
-  margin: ${p => (p.large ? '-30px 0 30px' : '30px 0')};
+  margin: ${p => (p.large ? '-30px 0 30px' : '0 0 30px')};
+  padding-top: 15px;
   font-weight: 400;
   transition: ${p => p.theme.transition};
+  text-align: center;
 `;
 
 interface PageTitleProps {
   text: string;
-  large: boolean;
+  large?: boolean;
 }
 
-export const PageTitle = ({ text, large }: PageTitleProps) => (
+export const PageTitle = ({ text, large = false }: PageTitleProps) => (
   <Text large={large}>{text}</Text>
 );

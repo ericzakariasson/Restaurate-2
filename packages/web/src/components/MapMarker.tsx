@@ -20,7 +20,7 @@ const Marker = styled.div<MarkerProps>`
 const Head = styled.div`
   width: 16px;
   height: 16px;
-  background-color: ${p => p.theme.colors.main.hues[0]};
+  background-color: ${p => p.theme.colors.primary.hues[0]};
   border-radius: 100%;
   flex: 1 0 auto;
   position: relative;

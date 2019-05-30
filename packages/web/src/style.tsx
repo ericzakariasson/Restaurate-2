@@ -20,9 +20,9 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 export const theme = {
-  transition: '0.2s ease-in-out',
+  transition: '0.15s ease-in-out',
   colors: {
-    main: {
+    primary: {
       hex: '#FF6666',
       hues: ['#FF6666'],
       rgba: (opacity: number) => `rgba(255, 102, 102, ${opacity / 100})`

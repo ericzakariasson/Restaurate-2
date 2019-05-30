@@ -12,6 +12,7 @@ export const Input = styled.input`
   width: 100%;
   transition: ${p => p.theme.transition};
   height: 50px;
+  -webkit-appearance: none;
 
   &:focus {
     background: #fcfcfc;

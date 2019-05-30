@@ -44,7 +44,7 @@ export const SearchPlaceType = ({
         {type.label} – {results.length}
       </TypeName>
       <ResultWrapper>
-        <SmallLabel>Sökresultat</SmallLabel>
+        <SmallLabel text="Sökresultat" />
         <Results>
           {results.length > 0 ? (
             results.map((result: google.maps.places.PlaceResult) => (

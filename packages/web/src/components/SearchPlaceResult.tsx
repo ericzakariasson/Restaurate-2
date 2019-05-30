@@ -40,6 +40,7 @@ const Map = styled.img`
   transition: 0.15s ease-in-out;
   background-size: 100%;
   background-position: center;
+  background-color: #eee;
 
   ${(p: MapProps) =>
     p.touching &&

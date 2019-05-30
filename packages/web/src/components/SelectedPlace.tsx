@@ -13,31 +13,43 @@ import { priceLevels } from '../constants';
 
 interface ItemProps {}
 
-const Item = styled.article<ItemProps>`
+const Wrapper = styled.section<ItemProps>`
+  display: flex;
+  flex-direction: column;
+`;
+
+const MapWrapper = styled.article`
+  position: relative;
   border-radius: 5px;
   background: #fcfcfc;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-`;
-
-const MapWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
+  border-bottom: 3px solid ${p => p.theme.colors.primary.hex};
+  margin-bottom: 40px;
 `;
 
 const Map = styled.img``;
 
-const PlaceInfo = styled.div`
-  padding: 10px;
+const MapOverlay = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  border: 1px solid #ddd;
 `;
 
 const Name = styled.h3`
   margin-bottom: 5px;
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: 700;
+  text-align: center;
 `;
 
 const Deselect = styled.button`
@@ -62,12 +74,15 @@ const Deselect = styled.button`
 
 const Address = styled.p`
   margin-bottom: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
 `;
 
 interface SelectedPlaceProps {
   place: google.maps.places.PlaceResult;
   deselect: () => void;
-  activePriceLevel: number | null;
+  selectedPriceLevel: number | null;
   setPriceLevel: (level: number | null) => void;
   tags: Tag[];
   addTag: (tag: string) => void;
@@ -76,7 +91,7 @@ interface SelectedPlaceProps {
 export const SelectedPlace = ({
   place: { name, formatted_address, geometry },
   deselect,
-  activePriceLevel,
+  selectedPriceLevel,
   setPriceLevel,
   tags,
   addTag
@@ -86,28 +101,22 @@ export const SelectedPlace = ({
   const url = staticMapboxMapUrl({ geometry, width, height, zoom: 13 });
 
   return (
-    <Item>
-      <Deselect onClick={() => deselect()}>
-        <X />
-      </Deselect>
-      <MapWrapper>
-        <MapMarker title={`${name} – ${formatted_address}`} />
-        <Map style={{ width, height }} src={url} alt={`Karta över ${name}`} />
+    <Wrapper>
+      <MapWrapper style={{ height }}>
+        <MapOverlay>
+          <Name>{name}</Name>
+          <Address>{formatted_address}</Address>
+        </MapOverlay>
+        <Map src={url} alt={`Karta över ${name}`} />
       </MapWrapper>
-      <PlaceInfo>
-        <Name>{name}</Name>
-        <Address>{formatted_address}</Address>
-        <SmallLabel>
-          Prisklass {activePriceLevel === null && <>(Välj)</>}
-        </SmallLabel>
-        <PlacePriceLevels
-          priceLevels={priceLevels}
-          activePriceLevel={activePriceLevel}
-          setPriceLevel={setPriceLevel}
-        />
-        <SmallLabel>Taggar</SmallLabel>
-        <PlaceTags tags={tags} addTag={addTag} />
-      </PlaceInfo>
-    </Item>
+      <SmallLabel text="Prisklass" />
+      <PlacePriceLevels
+        priceLevels={priceLevels}
+        selectedPriceLevel={selectedPriceLevel}
+        setPriceLevel={setPriceLevel}
+      />
+      <SmallLabel text="Taggar" />
+      <PlaceTags tags={tags} addTag={addTag} />
+    </Wrapper>
   );
 };

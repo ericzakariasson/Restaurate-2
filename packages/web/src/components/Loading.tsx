@@ -14,7 +14,7 @@ const Background = styled.div`
 `;
 
 const Text = styled.h1`
-  color: ${p => p.theme.colors.main.hues[0]};
+  color: ${p => p.theme.colors.primary.hues[0]};
 `;
 
 export const Loading = () => {
