@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Helmet from 'react-helmet';
 
 import { GlobalStyle, theme } from './style';
 import { Loading } from './components';
@@ -23,18 +24,21 @@ const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <Wrapper>
-          {ready ? (
-            <Switch>
-              <Route path="/add-visit" component={AddVisitScene} />
-            </Switch>
-          ) : scriptError ? (
-            <h1>Ett fel har uppstått</h1>
-          ) : (
-            <Loading />
-          )}
-          <GlobalStyle />
-        </Wrapper>
+        <>
+          <Helmet defaultTitle="Restaurate" titleTemplate="Restaurate - %s" />
+          <Wrapper>
+            {ready ? (
+              <Switch>
+                <Route path="/add-visit" component={AddVisitScene} />
+              </Switch>
+            ) : scriptError ? (
+              <h1>Ett fel har uppstått</h1>
+            ) : (
+              <Loading />
+            )}
+            <GlobalStyle />
+          </Wrapper>
+        </>
       </ThemeProvider>
     </BrowserRouter>
   );
