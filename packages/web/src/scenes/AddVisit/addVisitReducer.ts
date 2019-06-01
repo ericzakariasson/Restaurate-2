@@ -6,13 +6,16 @@ import {
   SET_PRICE_LEVEL,
   RESET_PRICE_LEVEL,
   ADD_TAG,
-  REMOVE_TAG
+  REMOVE_TAG,
+  ADD_ORDER,
+  REMOVE_ORDER
 } from './addVisitActions';
 
 interface ReducerState {
   place: google.maps.places.PlaceResult | null;
   priceLevel: number | undefined;
   tags: string[];
+  orders: string[];
 }
 
 interface ReducerAction {
@@ -23,7 +26,8 @@ interface ReducerAction {
 export const initialState = {
   place: null,
   priceLevel: undefined,
-  tags: []
+  tags: [],
+  orders: []
 };
 
 export function addVisitReducer(state: ReducerState, action: ReducerAction) {
@@ -59,6 +63,18 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
       return {
         ...state,
         tags: state.tags.filter((tag: string) => tag !== action.payload)
+      };
+    case ADD_ORDER:
+      return {
+        ...state,
+        orders: state.orders.includes(action.payload.toLowerCase())
+          ? state.orders
+          : [...state.orders, action.payload.toLowerCase()]
+      };
+    case REMOVE_ORDER:
+      return {
+        ...state,
+        orders: state.orders.filter((order: string) => order !== action.payload)
       };
     default:
       throw new Error();

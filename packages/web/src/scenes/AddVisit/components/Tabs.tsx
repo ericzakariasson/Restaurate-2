@@ -32,6 +32,7 @@ const Tab = styled.li<TabProps>`
   font-weight: 700;
   letter-spacing: 0.08rem;
   opacity: ${p => (p.active ? 1 : 0.2)};
+  transition: ${p => p.theme.transition};
 `;
 
 export const Tabs = ({ tabs, index, setIndex }: TabsProps) => (

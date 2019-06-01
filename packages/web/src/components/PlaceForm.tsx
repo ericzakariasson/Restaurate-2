@@ -4,7 +4,7 @@ import { X } from 'react-feather';
 
 import { staticMapboxMapUrl } from '../utils';
 import { SmallLabel } from './Label';
-import { PlaceFormTags } from './PlaceFormTags';
+import { ListInput } from './ListInput';
 import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
 
 import { PriceLevel, Tag } from '../types/places';
@@ -125,8 +125,12 @@ export const PlaceForm = React.memo(
             setPriceLevel={setPriceLevel}
             resetPriceLevel={resetPriceLevel}
           />
-          <SmallLabel text="Taggar" />
-          <PlaceFormTags removeTag={removeTag} tags={tags} addTag={addTag} />
+          <ListInput
+            label="Taggar"
+            removeItem={removeTag}
+            items={tags}
+            addItem={addTag}
+          />
         </Wrapper>
       </>
     );

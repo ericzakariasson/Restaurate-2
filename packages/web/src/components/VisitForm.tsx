@@ -1,13 +1,27 @@
 import * as React from 'react';
 
-import { PageTitle } from './PageTitle';
+import { PageTitle, ListInput } from './';
 
-interface VisitFormProps {}
+interface VisitFormProps {
+  orders: string[];
+  addOrder: (order: string) => void;
+  removeOrder: (order: string) => void;
+}
 
-export const VisitForm = ({  }: VisitFormProps) => {
+export const VisitForm = ({
+  orders,
+  addOrder,
+  removeOrder
+}: VisitFormProps) => {
   return (
     <>
       <PageTitle text="Besök" />
+      <ListInput
+        label="Beställnigar"
+        items={orders}
+        addItem={addOrder}
+        removeItem={removeOrder}
+      />
     </>
   );
 };

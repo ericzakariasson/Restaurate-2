@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Plus } from 'react-feather';
-import { Tag } from '../types/places';
 
 import { Input } from './Input';
+import { SmallLabel } from './Label';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const TagList = styled.ul`
+const List = styled.ul`
   list-style: none;
 `;
 
-const TagItem = styled.li`
+const Item = styled.li`
   padding: 10px 15px;
   border-radius: 3px;
   background: #fff;
@@ -43,7 +43,7 @@ const Form = styled.form`
   margin-bottom: 10px;
 `;
 
-const TagInput = styled(Input)`
+const StyledInput = styled(Input)`
   padding-right: 50px;
 `;
 
@@ -51,7 +51,7 @@ interface AddButtonProps {
   active: boolean;
 }
 
-const AddTag = styled.button<AddButtonProps>`
+const AddItem = styled.button<AddButtonProps>`
   background: none;
   border: none;
   position: absolute;
@@ -69,17 +69,19 @@ const AddTag = styled.button<AddButtonProps>`
   }
 `;
 
-interface PlaceFormTagsProps {
-  tags: string[];
-  addTag: (tag: string) => void;
-  removeTag: (id: string) => void;
+interface ListInputProps {
+  label?: string;
+  items: string[];
+  addItem: (item: string) => void;
+  removeItem: (item: string) => void;
 }
 
-export const PlaceFormTags = ({
-  tags,
-  addTag,
-  removeTag
-}: PlaceFormTagsProps) => {
+export const ListInput = ({
+  items,
+  addItem,
+  removeItem,
+  label
+}: ListInputProps) => {
   const [value, setValue] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
@@ -87,8 +89,12 @@ export const PlaceFormTags = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (value.length) {
-      addTag(value);
+    const isValid =
+      value.length &&
+      !items.some(item => item.toLowerCase() === value.toLowerCase());
+
+    if (isValid) {
+      addItem(value);
       setValue('');
     }
   };
@@ -97,20 +103,21 @@ export const PlaceFormTags = ({
 
   return (
     <Wrapper>
+      {label && <SmallLabel text={label} />}
       <Form onSubmit={handleSubmit}>
-        <TagInput value={value} onChange={handleChange} />
-        <AddTag active={activeInput} type="submit">
+        <StyledInput value={value} onChange={handleChange} />
+        <AddItem active={activeInput} type="submit">
           <Plus size={28} color="#aaa" />
-        </AddTag>
+        </AddItem>
       </Form>
-      <TagList>
-        {tags.map(tag => (
-          <TagItem key={tag}>
-            {tag}
-            <Remove onClick={() => removeTag(tag)}>Ta bort</Remove>
-          </TagItem>
+      <List>
+        {items.map(item => (
+          <Item key={item}>
+            {item}
+            <Remove onClick={() => removeItem(item)}>Ta bort</Remove>
+          </Item>
         ))}
-      </TagList>
+      </List>
     </Wrapper>
   );
 };

@@ -29,11 +29,10 @@ export const AddVisitScene = () => {
     setPriceLevel,
     resetPriceLevel,
     addTag,
-    removeTag
+    removeTag,
+    addOrder,
+    removeOrder
   } = createActions(dispatch);
-
-  // const priceLevelIsSet = typeof statepriceLevel === 'number';
-  // const isValid = priceLevelIsSet && selected && place.id && place.place_id;
 
   return (
     <>
@@ -53,7 +52,11 @@ export const AddVisitScene = () => {
               addTag={addTag}
               removeTag={removeTag}
             />
-            <VisitForm />
+            <VisitForm
+              orders={state.orders}
+              addOrder={addOrder}
+              removeOrder={removeOrder}
+            />
           </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />
         </FormWrapper>
