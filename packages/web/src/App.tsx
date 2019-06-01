@@ -7,6 +7,8 @@ import { GlobalStyle, theme } from './style';
 import { Loading } from './components';
 import { AddVisitScene } from './scenes';
 import { useGoogleApi } from './hooks';
+import { RateNodes } from './components/RateNodes';
+import { rateNodes } from './constants';
 
 const Wrapper = styled.div`
   padding: 15px;
@@ -29,6 +31,10 @@ const App = () => {
           <Wrapper>
             {ready ? (
               <Switch>
+                <Route
+                  path="/"
+                  render={() => <RateNodes nodes={rateNodes} />}
+                />
                 <Route path="/add-visit" component={AddVisitScene} />
               </Switch>
             ) : scriptError ? (

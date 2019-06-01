@@ -31,7 +31,10 @@ export const AddVisitScene = () => {
     addTag,
     removeTag,
     addOrder,
-    removeOrder
+    removeOrder,
+    addRate,
+    enableRateNode,
+    disableRateNode
   } = createActions(dispatch);
 
   return (
@@ -56,6 +59,9 @@ export const AddVisitScene = () => {
               orders={state.orders}
               addOrder={addOrder}
               removeOrder={removeOrder}
+              addRate={addRate}
+              enableRateNode={enableRateNode}
+              disableRateNode={disableRateNode}
             />
           </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />

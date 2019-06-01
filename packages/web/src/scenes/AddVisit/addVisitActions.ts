@@ -12,6 +12,17 @@ export const REMOVE_TAG = 'REMOVE_TAG';
 export const ADD_ORDER = 'ADD_ORDER';
 export const REMOVE_ORDER = 'REMOVE_ORDER';
 
+export const ENABLE_RATE_NODE = 'ENABLE_RATE_NODE';
+export const DISABLE_RATE_NODE = 'DISABLE_RATE_NODE';
+
+export const ADD_RATE = 'ADD_RATE';
+
+export interface addRateParams {
+  name: string;
+  score: number;
+  parent?: string;
+}
+
 export const createActions = (dispatch: any) => {
   const selectPlace = (place: google.maps.places.PlaceResult) =>
     dispatch({ type: SET_PLACE, payload: place });
@@ -34,6 +45,15 @@ export const createActions = (dispatch: any) => {
   const removeOrder = (order: string) =>
     dispatch({ type: REMOVE_ORDER, payload: order });
 
+  const enableRateNode = (name: string) =>
+    dispatch({ type: ENABLE_RATE_NODE, payload: name });
+
+  const disableRateNode = (name: string) =>
+    dispatch({ type: DISABLE_RATE_NODE, payload: name });
+
+  const addRate = (rate: addRateParams) =>
+    dispatch({ type: REMOVE_ORDER, payload: rate });
+
   return {
     selectPlace,
     deselectPlace,
@@ -42,6 +62,9 @@ export const createActions = (dispatch: any) => {
     addTag,
     removeTag,
     addOrder,
-    removeOrder
+    removeOrder,
+    addRate,
+    enableRateNode,
+    disableRateNode
   };
 };

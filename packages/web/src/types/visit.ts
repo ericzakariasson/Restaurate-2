@@ -1,5 +1,7 @@
 export interface RateNode {
+  order: number;
   name: string;
-  score: number;
+  label: string;
+  score: number | null;
   children?: RateNode[];
 }
