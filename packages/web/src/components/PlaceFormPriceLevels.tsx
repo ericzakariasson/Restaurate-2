@@ -65,19 +65,19 @@ const Check = styled.span<CheckProps>`
   }
 `;
 
-interface PlacePriceLevelsProps {
+interface PlaceFormPriceLevelsProps {
   priceLevels: PriceLevel[];
   priceLevel: number | undefined;
   setPriceLevel: (level: number) => void;
   resetPriceLevel: () => void;
 }
 
-export const PlacePriceLevels = ({
+export const PlaceFormPriceLevels = ({
   priceLevels,
   priceLevel,
   setPriceLevel,
   resetPriceLevel
-}: PlacePriceLevelsProps) => {
+}: PlaceFormPriceLevelsProps) => {
   return (
     <List>
       {priceLevels.map((pl: PriceLevel) => (

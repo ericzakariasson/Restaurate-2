@@ -68,17 +68,17 @@ const AddTag = styled.button<AddButtonProps>`
   }
 `;
 
-interface SelectedPlaceTagsProps {
+interface PlaceFormTagsProps {
   tags: string[];
   addTag: (tag: string) => void;
   removeTag: (id: string) => void;
 }
 
-export const SelectedPlaceTags = ({
+export const PlaceFormTags = ({
   tags,
   addTag,
   removeTag
-}: SelectedPlaceTagsProps) => {
+}: PlaceFormTagsProps) => {
   const [value, setValue] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>

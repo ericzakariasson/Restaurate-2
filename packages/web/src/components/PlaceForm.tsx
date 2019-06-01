@@ -3,10 +3,9 @@ import styled from 'styled-components';
 import { X } from 'react-feather';
 
 import { staticMapboxMapUrl } from '../utils';
-import { MapMarker } from './MapMarker';
 import { SmallLabel } from './Label';
-import { SelectedPlaceTags } from './SelectedPlaceTags';
-import { PlacePriceLevels } from './PlacePriceLevels';
+import { PlaceFormTags } from './PlaceFormTags';
+import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
 
 import { PriceLevel, Tag } from '../types/places';
 import { priceLevels } from '../constants';
@@ -82,7 +81,7 @@ const Address = styled.p`
   text-align: center;
 `;
 
-interface SelectedPlaceProps {
+interface PlaceFormProps {
   place: google.maps.places.PlaceResult;
   deselect: () => void;
   priceLevel: number | undefined;
@@ -93,41 +92,43 @@ interface SelectedPlaceProps {
   removeTag: (tag: string) => void;
 }
 
-export const SelectedPlace = ({
-  place: { name, formatted_address, geometry },
-  deselect,
-  priceLevel,
-  setPriceLevel,
-  resetPriceLevel,
-  tags,
-  addTag,
-  removeTag
-}: SelectedPlaceProps) => {
-  const width = window.innerWidth - 30;
-  const height = 150;
-  const url = staticMapboxMapUrl({ geometry, width, height, zoom: 13 });
+export const PlaceForm = React.memo(
+  ({
+    place: { name, formatted_address, geometry },
+    deselect,
+    priceLevel,
+    setPriceLevel,
+    resetPriceLevel,
+    tags,
+    addTag,
+    removeTag
+  }: PlaceFormProps) => {
+    const width = window.innerWidth - 30;
+    const height = 150;
+    const url = staticMapboxMapUrl({ geometry, width, height, zoom: 13 });
 
-  return (
-    <>
-      <PageTitle text="Ställe" />
-      <Wrapper>
-        <MapWrapper style={{ height }}>
-          <MapOverlay>
-            <Name>{name}</Name>
-            <Address>{formatted_address}</Address>
-          </MapOverlay>
-          <Map src={url} alt={`Karta över ${name}`} />
-        </MapWrapper>
-        <SmallLabel text="Prisklass" />
-        <PlacePriceLevels
-          priceLevels={priceLevels}
-          priceLevel={priceLevel}
-          setPriceLevel={setPriceLevel}
-          resetPriceLevel={resetPriceLevel}
-        />
-        <SmallLabel text="Taggar" />
-        <SelectedPlaceTags removeTag={removeTag} tags={tags} addTag={addTag} />
-      </Wrapper>
-    </>
-  );
-};
+    return (
+      <>
+        <PageTitle text="Ställe" />
+        <Wrapper>
+          <MapWrapper style={{ height }}>
+            <MapOverlay>
+              <Name>{name}</Name>
+              <Address>{formatted_address}</Address>
+            </MapOverlay>
+            <Map src={url} alt={`Karta över ${name}`} />
+          </MapWrapper>
+          <SmallLabel text="Prisklass" />
+          <PlaceFormPriceLevels
+            priceLevels={priceLevels}
+            priceLevel={priceLevel}
+            setPriceLevel={setPriceLevel}
+            resetPriceLevel={resetPriceLevel}
+          />
+          <SmallLabel text="Taggar" />
+          <PlaceFormTags removeTag={removeTag} tags={tags} addTag={addTag} />
+        </Wrapper>
+      </>
+    );
+  }
+);
