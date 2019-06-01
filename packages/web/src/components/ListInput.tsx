@@ -36,6 +36,8 @@ const Remove = styled.button`
   color: ${p => p.theme.colors.primary.hex};
   font-size: 0.75rem;
   font-weight: 600;
+  white-space: pre;
+  margin-left: 5px;
 `;
 
 const Form = styled.form`
@@ -69,18 +71,31 @@ const AddItem = styled.button<AddButtonProps>`
   }
 `;
 
+const ItemText = styled.span`
+  word-break: break-all;
+`;
+
+const NoItems = styled.p`
+  margin-top: 5px;
+  font-size: 1rem;
+  color: #aaa;
+  text-align: center;
+`;
+
 interface ListInputProps {
   label?: string;
   items: string[];
   addItem: (item: string) => void;
   removeItem: (item: string) => void;
+  maxLength?: number;
 }
 
 export const ListInput = ({
   items,
   addItem,
   removeItem,
-  label
+  label,
+  maxLength = 50
 }: ListInputProps) => {
   const [value, setValue] = useState('');
 
@@ -90,7 +105,8 @@ export const ListInput = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const isValid =
-      value.length &&
+      value.length > 0 &&
+      value.length < maxLength &&
       !items.some(item => item.toLowerCase() === value.toLowerCase());
 
     if (isValid) {
@@ -113,11 +129,14 @@ export const ListInput = ({
       <List>
         {items.map(item => (
           <Item key={item}>
-            {item}
+            <ItemText>{item}</ItemText>
             <Remove onClick={() => removeItem(item)}>Ta bort</Remove>
           </Item>
         ))}
       </List>
+      {items.length === 0 && label && (
+        <NoItems>Inga {label.toLowerCase()}</NoItems>
+      )}
     </Wrapper>
   );
 };

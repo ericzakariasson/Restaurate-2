@@ -17,7 +17,7 @@ export const VisitForm = ({
     <>
       <PageTitle text="Besök" />
       <ListInput
-        label="Beställnigar"
+        label="Beställningar"
         items={orders}
         addItem={addOrder}
         removeItem={removeOrder}
