@@ -10,8 +10,13 @@ import { Tabs } from './components';
 
 import { addVisitReducer, initialState } from './addVisitReducer';
 import { createActions } from './addVisitActions';
+import styled from 'styled-components';
 
 const tabs = [{ index: 0, label: 'Ställe' }, { index: 1, label: 'Besök' }];
+
+const FormWrapper = styled.section`
+  padding-bottom: 40px;
+`;
 
 export const AddVisitScene = () => {
   const [state, dispatch] = React.useReducer(addVisitReducer, initialState);
@@ -32,7 +37,7 @@ export const AddVisitScene = () => {
   // const isValid = priceLevelIsSet && selected && place.id && place.place_id;
 
   return state.place ? (
-    <>
+    <FormWrapper>
       <SwipeableViews index={tabIndex} onChangeIndex={handleIndexChange}>
         <PlaceForm
           place={state.place}
@@ -47,7 +52,7 @@ export const AddVisitScene = () => {
         <VisitForm />
       </SwipeableViews>
       <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />
-    </>
+    </FormWrapper>
   ) : (
     <SearchPlace selected={state.place} setSelected={selectPlace} />
   );

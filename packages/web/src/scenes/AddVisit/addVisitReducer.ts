@@ -51,7 +51,9 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
     case ADD_TAG:
       return {
         ...state,
-        tags: [...state.tags, action.payload]
+        tags: state.tags.includes(action.payload.toLowerCase())
+          ? state.tags
+          : [...state.tags, action.payload.toLowerCase()]
       };
     case REMOVE_TAG:
       return {

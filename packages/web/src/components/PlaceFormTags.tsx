@@ -24,6 +24,7 @@ const TagItem = styled.li`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  text-transform: capitalize;
 `;
 
 const Remove = styled.button`
