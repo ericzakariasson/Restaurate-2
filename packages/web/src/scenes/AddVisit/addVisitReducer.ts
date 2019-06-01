@@ -1,4 +1,4 @@
-import { Tag } from '../../types/places';
+import { Tag } from '../../types/place';
 
 import {
   SET_PLACE,

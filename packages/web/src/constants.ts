@@ -1,4 +1,5 @@
-import { PlaceType, PriceLevel } from './types/places';
+import { PlaceType, PriceLevel } from './types/place';
+import { RateNode } from './types/visit';
 
 export const placeTypes: PlaceType[] = [
   {
@@ -27,5 +28,34 @@ export const priceLevels: PriceLevel[] = [
   {
     name: 'Exklusiv',
     level: 3
+  }
+];
+
+export const rateNodes: RateNode[] = [
+  {
+    name: 'Mat',
+    score: 0,
+    children: [
+      {
+        name: 'Smak',
+        score: 0
+      },
+      {
+        name: 'Kvalitet',
+        score: 0
+      }
+    ]
+  },
+  {
+    name: 'Service',
+    score: 0
+  },
+  {
+    name: 'Miljö',
+    score: 0
+  },
+  {
+    name: 'Upplevelse',
+    score: 0
   }
 ];

@@ -7,7 +7,7 @@ import { SmallLabel } from './Label';
 import { ListInput } from './ListInput';
 import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
 
-import { PriceLevel, Tag } from '../types/places';
+import { PriceLevel, Tag } from '../types/place';
 import { priceLevels } from '../constants';
 import { PageTitle } from './PageTitle';
 

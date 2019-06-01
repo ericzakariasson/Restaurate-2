@@ -1,4 +1,4 @@
-import { Tag } from '../../types/places';
+import { Tag } from '../../types/place';
 
 export const SET_PLACE = 'SET_PLACE';
 export const RESET_PLACE = 'RESET_PLACE';
