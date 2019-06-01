@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { SearchPlace } from './SearchPlace';
 import { SelectedPlace } from './SelectedPlace';
@@ -14,11 +14,11 @@ export const SelectPlace = () => {
   const [
     selected,
     setSelected
-  ] = useState<google.maps.places.PlaceResult | null>(null);
+  ] = React.useState<google.maps.places.PlaceResult | null>(null);
 
-  const [priceLevel, setPriceLevel] = useState<number | null>(null);
+  const [priceLevel, setPriceLevel] = React.useState<number | null>(null);
 
-  const [tags, setTags] = useState<Tag[] | []>([]);
+  const [tags, setTags] = React.useState<Tag[] | []>([]);
 
   const deselect = () => setSelected(null);
 

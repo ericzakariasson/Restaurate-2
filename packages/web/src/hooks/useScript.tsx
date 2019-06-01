@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 let cachedScripts: Array<string> = [];
 
-export function useScript(src: string): [Boolean, Boolean] {
+export function useScript(src: string): [boolean, boolean] {
   // Keeping track of script loaded and error state
   const [state, setState] = useState({
     loaded: false,

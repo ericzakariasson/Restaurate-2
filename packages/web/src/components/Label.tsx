@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled, { StyledComponentProps } from 'styled-components';
 
 interface LabelProps {
