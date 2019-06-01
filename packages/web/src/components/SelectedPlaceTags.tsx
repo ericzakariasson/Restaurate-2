@@ -69,7 +69,7 @@ const AddTag = styled.button<AddButtonProps>`
 `;
 
 interface SelectedPlaceTagsProps {
-  tags: Tag[];
+  tags: string[];
   addTag: (tag: string) => void;
   removeTag: (id: string) => void;
 }
@@ -104,9 +104,9 @@ export const SelectedPlaceTags = ({
       </Form>
       <TagList>
         {tags.map(tag => (
-          <TagItem key={tag.name}>
-            {tag.name}
-            <Remove onClick={() => removeTag(tag.id)}>Ta bort</Remove>
+          <TagItem key={tag}>
+            {tag}
+            <Remove onClick={() => removeTag(tag)}>Ta bort</Remove>
           </TagItem>
         ))}
       </TagList>

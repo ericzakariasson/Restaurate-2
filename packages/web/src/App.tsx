@@ -3,7 +3,8 @@ import styled, { ThemeProvider } from 'styled-components';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { GlobalStyle, theme } from './style';
-import { SelectPlace, Loading } from './components';
+import { Loading } from './components';
+import { AddVisitScene } from './scenes';
 import { useGoogleApi } from './hooks';
 
 const Wrapper = styled.div`
@@ -25,7 +26,7 @@ const App = () => {
         <Wrapper>
           {ready ? (
             <Switch>
-              <Route path="/" component={SelectPlace} />
+              <Route path="/add-visit" component={AddVisitScene} />
             </Switch>
           ) : scriptError ? (
             <h1>Ett fel har uppstått</h1>

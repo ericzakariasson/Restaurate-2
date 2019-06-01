@@ -67,31 +67,31 @@ const Check = styled.span<CheckProps>`
 
 interface PlacePriceLevelsProps {
   priceLevels: PriceLevel[];
-  selectedPriceLevel: number | null;
-  setPriceLevel: (level: number | null) => void;
+  priceLevel: number | undefined;
+  setPriceLevel: (level: number) => void;
+  resetPriceLevel: () => void;
 }
 
 export const PlacePriceLevels = ({
   priceLevels,
-  selectedPriceLevel,
-  setPriceLevel
+  priceLevel,
+  setPriceLevel,
+  resetPriceLevel
 }: PlacePriceLevelsProps) => {
   return (
     <List>
-      {priceLevels.map((priceLevel: PriceLevel) => (
-        <Item key={priceLevel.level}>
+      {priceLevels.map((pl: PriceLevel) => (
+        <Item key={pl.level}>
           <Button
-            selected={priceLevel.level === selectedPriceLevel}
-            onClick={() =>
-              setPriceLevel(
-                selectedPriceLevel === priceLevel.level
-                  ? null
-                  : priceLevel.level
-              )
+            selected={pl.level === priceLevel}
+            onClick={
+              priceLevel === pl.level
+                ? () => resetPriceLevel()
+                : () => setPriceLevel(pl.level)
             }
           >
-            <Name>{priceLevel.name}</Name>
-            <Check selected={selectedPriceLevel === priceLevel.level} />
+            <Name>{pl.name}</Name>
+            <Check selected={priceLevel === pl.level} />
           </Button>
         </Item>
       ))}

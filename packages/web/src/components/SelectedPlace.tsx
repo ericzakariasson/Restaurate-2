@@ -10,6 +10,7 @@ import { PlacePriceLevels } from './PlacePriceLevels';
 
 import { PriceLevel, Tag } from '../types/places';
 import { priceLevels } from '../constants';
+import { PageTitle } from './PageTitle';
 
 interface ItemProps {}
 
@@ -84,45 +85,49 @@ const Address = styled.p`
 interface SelectedPlaceProps {
   place: google.maps.places.PlaceResult;
   deselect: () => void;
-  selectedPriceLevel: number | null;
-  setPriceLevel: (level: number | null) => void;
-  tags: Tag[];
+  priceLevel: number | undefined;
+  setPriceLevel: (priceLevel: number) => void;
+  resetPriceLevel: () => void;
+  tags: string[];
   addTag: (tag: string) => void;
+  removeTag: (tag: string) => void;
 }
 
 export const SelectedPlace = ({
   place: { name, formatted_address, geometry },
   deselect,
-  selectedPriceLevel,
+  priceLevel,
   setPriceLevel,
+  resetPriceLevel,
   tags,
-  addTag
+  addTag,
+  removeTag
 }: SelectedPlaceProps) => {
   const width = window.innerWidth - 30;
   const height = 150;
   const url = staticMapboxMapUrl({ geometry, width, height, zoom: 13 });
 
   return (
-    <Wrapper>
-      <MapWrapper style={{ height }}>
-        <MapOverlay>
-          <Name>{name}</Name>
-          <Address>{formatted_address}</Address>
-        </MapOverlay>
-        <Map src={url} alt={`Karta över ${name}`} />
-      </MapWrapper>
-      <SmallLabel text="Prisklass" />
-      <PlacePriceLevels
-        priceLevels={priceLevels}
-        selectedPriceLevel={selectedPriceLevel}
-        setPriceLevel={setPriceLevel}
-      />
-      <SmallLabel text="Taggar" />
-      <SelectedPlaceTags
-        removeTag={(id: string) => {}}
-        tags={tags}
-        addTag={addTag}
-      />
-    </Wrapper>
+    <>
+      <PageTitle text="Ställe" />
+      <Wrapper>
+        <MapWrapper style={{ height }}>
+          <MapOverlay>
+            <Name>{name}</Name>
+            <Address>{formatted_address}</Address>
+          </MapOverlay>
+          <Map src={url} alt={`Karta över ${name}`} />
+        </MapWrapper>
+        <SmallLabel text="Prisklass" />
+        <PlacePriceLevels
+          priceLevels={priceLevels}
+          priceLevel={priceLevel}
+          setPriceLevel={setPriceLevel}
+          resetPriceLevel={resetPriceLevel}
+        />
+        <SmallLabel text="Taggar" />
+        <SelectedPlaceTags removeTag={removeTag} tags={tags} addTag={addTag} />
+      </Wrapper>
+    </>
   );
 };
