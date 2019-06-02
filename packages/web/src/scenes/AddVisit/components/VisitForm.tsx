@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { PageTitle, ListInput } from '../../../components';
 import { RateVisit } from './RateVisit';
+import { Comment } from './Comment';
 import { rateNodes } from '@restaurate/web/src/constants';
 
 import { Rate } from '../addVisitActions';
@@ -12,6 +13,8 @@ interface VisitFormProps {
   removeOrder: (order: string) => void;
   setRate: (rate: Rate) => void;
   setMoving: (value: boolean) => void;
+  averageScore: number | null;
+  setComment: (value: string) => void;
 }
 
 export const VisitForm = ({
@@ -19,7 +22,9 @@ export const VisitForm = ({
   addOrder,
   removeOrder,
   setRate,
-  setMoving
+  setMoving,
+  averageScore,
+  setComment
 }: VisitFormProps) => {
   return (
     <>
@@ -30,7 +35,13 @@ export const VisitForm = ({
         addItem={addOrder}
         removeItem={removeOrder}
       />
-      <RateVisit nodes={rateNodes} setRate={setRate} setMoving={setMoving} />
+      <RateVisit
+        nodes={rateNodes}
+        setRate={setRate}
+        setMoving={setMoving}
+        averageScore={averageScore}
+      />
+      <Comment setComment={setComment} />
     </>
   );
 };

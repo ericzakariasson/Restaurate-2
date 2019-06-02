@@ -10,7 +10,8 @@ import {
   REMOVE_TAG,
   ADD_ORDER,
   REMOVE_ORDER,
-  SET_RATE
+  SET_RATE,
+  SET_COMMENT
 } from './addVisitActions';
 
 export interface RateState {
@@ -28,6 +29,7 @@ export interface ReducerState {
   tags: string[];
   orders: string[];
   rate: RateNodeState;
+  comment: string;
 }
 
 interface ReducerAction {
@@ -40,7 +42,8 @@ export const initialState = {
   priceLevel: undefined,
   tags: [],
   orders: [],
-  rate: createInitialRateState(rateNodes)
+  rate: createInitialRateState(rateNodes),
+  comment: ''
 };
 
 export function addVisitReducer(state: ReducerState, action: ReducerAction) {
@@ -121,6 +124,11 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
             score
           }
         }
+      };
+    case SET_COMMENT:
+      return {
+        ...state,
+        comment: action.payload
       };
     default:
       throw new Error();

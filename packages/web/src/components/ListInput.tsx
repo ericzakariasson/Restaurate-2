@@ -103,6 +103,8 @@ export const ListInput = ({
 }: ListInputProps) => {
   const [value, setValue] = useState('');
 
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
     setValue(e.target.value);
 
@@ -116,6 +118,10 @@ export const ListInput = ({
     if (isValid) {
       addItem(value);
       setValue('');
+
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   };
 
@@ -125,7 +131,13 @@ export const ListInput = ({
     <Wrapper>
       {label && <SmallLabel text={label} />}
       <Form onSubmit={handleSubmit}>
-        <StyledInput value={value} onChange={handleChange} />
+        <StyledInput
+          value={value}
+          onChange={handleChange}
+          type="text"
+          maxLength={maxLength}
+          ref={inputRef}
+        />
         <AddItem active={activeInput} type="submit">
           <Plus size={28} color="#aaa" />
         </AddItem>

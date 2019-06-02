@@ -56,7 +56,6 @@ interface NodeProps {
 export const Node = ({ node, setMoving, setRate }: NodeProps) => {
   const [value, setValue] = React.useState<number>(0);
   const [open, setOpen] = React.useState<boolean>(false);
-  const [touched, setTouched] = React.useState<boolean>(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import { staticMapboxMapUrl } from '../utils';
+import { staticMapboxMapUrl } from '../../../utils';
 
 interface ItemProps {
   touching: boolean;

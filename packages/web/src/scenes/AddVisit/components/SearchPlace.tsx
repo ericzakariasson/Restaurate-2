@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { X } from 'react-feather';
 import { SearchPlaceDropdown } from './SearchPlaceDropdown';
-import { useGooglePlaces } from '../hooks';
+import { useGooglePlaces } from '../../../hooks';
 
-import { placeTypes } from '../constants';
-import { Label } from './Label';
-import { Input } from './Input';
+import { placeTypes } from '../../../constants';
+import { Label } from '../../../components/Label';
+import { Input } from '../../../components/Input';
 
-import { PageTitle } from './PageTitle';
+import { PageTitle } from '../../../components/PageTitle';
 
 interface WrapperProps {
   y: number;
@@ -130,6 +130,7 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
             value={query}
             onChange={handleChange}
             placeholder="Namn eller plats"
+            type="search"
           />
           <ClearButton type="button" onClick={handleClear} enabled={hasValue}>
             <X color="#AAA" />

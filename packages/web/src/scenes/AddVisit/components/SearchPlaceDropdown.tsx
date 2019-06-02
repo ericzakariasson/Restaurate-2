@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Places } from '../hooks/useGooglePlaces';
+import { Places } from '../../../hooks/useGooglePlaces';
 
-import { PlaceType } from '../types/place';
+import { PlaceType } from '../../../types/place';
 import { SearchPlaceType } from './SearchPlaceType';
 
 const Types = styled.section`

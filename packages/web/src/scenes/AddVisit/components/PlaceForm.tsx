@@ -5,7 +5,7 @@ import { X } from 'react-feather';
 import { staticMapboxMapUrl } from '../../../utils';
 import { SmallLabel } from '../../../components/Label';
 import { ListInput } from '../../../components/ListInput';
-import { PlaceFormPriceLevels } from '../../../components/PlaceFormPriceLevels';
+import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
 
 import { PriceLevel, Tag } from '../../../types/place';
 import { priceLevels } from '../../../constants';

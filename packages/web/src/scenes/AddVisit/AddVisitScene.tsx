@@ -5,12 +5,12 @@ import Helmet from 'react-helmet';
 
 import { PlaceForm } from './components/PlaceForm';
 import { VisitForm } from './components/VisitForm';
-import { SearchPlace } from '../../components/SearchPlace';
+import { SearchPlace } from './components/SearchPlace';
 import { Tabs } from './components';
 
 import { addVisitReducer, initialState } from './addVisitReducer';
 import { createActions } from './addVisitActions';
-import { calculateTotalScore } from './addVisitHelpers';
+import { calculateAverageScore } from './addVisitHelpers';
 
 const tabs = [{ index: 0, label: 'Ställe' }, { index: 1, label: 'Besök' }];
 
@@ -34,12 +34,13 @@ export const AddVisitScene = () => {
     removeTag,
     addOrder,
     removeOrder,
-    setRate
+    setRate,
+    setComment
   } = createActions(dispatch);
 
-  const totalScore = calculateTotalScore(state);
+  const averageScore = calculateAverageScore(state);
 
-  console.log(totalScore);
+  console.log(state);
 
   return (
     <>
@@ -69,6 +70,8 @@ export const AddVisitScene = () => {
               removeOrder={removeOrder}
               setRate={setRate}
               setMoving={setMovingSlider}
+              averageScore={averageScore}
+              setComment={setComment}
             />
           </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />

@@ -14,6 +14,8 @@ export const REMOVE_ORDER = 'REMOVE_ORDER';
 
 export const SET_RATE = 'SET_RATE';
 
+export const SET_COMMENT = 'SET_COMMENT';
+
 export interface Rate {
   name: string;
   score: number | null;
@@ -44,6 +46,9 @@ export const createActions = (dispatch: any) => {
 
   const setRate = (rate: Rate) => dispatch({ type: SET_RATE, payload: rate });
 
+  const setComment = (comment: string) =>
+    dispatch({ type: SET_COMMENT, payload: comment });
+
   return {
     selectPlace,
     deselectPlace,
@@ -53,6 +58,7 @@ export const createActions = (dispatch: any) => {
     removeTag,
     addOrder,
     removeOrder,
-    setRate
+    setRate,
+    setComment
   };
 };

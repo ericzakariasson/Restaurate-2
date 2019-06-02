@@ -11,7 +11,7 @@ interface Score {
   entries: number;
 }
 
-export function calculateTotalScore(state: ReducerState) {
+export function calculateAverageScore(state: ReducerState) {
   const score = Object.entries(state.rate).reduce(
     (score: Score, [key, value]: [string, RateState]) => {
       if (value.score) {

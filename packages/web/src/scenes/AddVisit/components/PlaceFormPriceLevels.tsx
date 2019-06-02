@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { PriceLevel } from '../types/place';
+import { PriceLevel } from '../../../types/place';
 
 const List = styled.ul`
   list-style: none;
