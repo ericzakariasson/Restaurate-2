@@ -35,7 +35,8 @@ export const AddVisitScene = () => {
     addOrder,
     removeOrder,
     setRate,
-    setComment
+    setComment,
+    setDate
   } = createActions(dispatch);
 
   const averageScore = calculateAverageScore(state);
@@ -72,6 +73,7 @@ export const AddVisitScene = () => {
               setMoving={setMovingSlider}
               averageScore={averageScore}
               setComment={setComment}
+              setDate={setDate}
             />
           </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />

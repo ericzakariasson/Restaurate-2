@@ -11,7 +11,8 @@ import {
   ADD_ORDER,
   REMOVE_ORDER,
   SET_RATE,
-  SET_COMMENT
+  SET_COMMENT,
+  SET_DATE
 } from './addVisitActions';
 
 export interface RateState {
@@ -30,6 +31,7 @@ export interface ReducerState {
   orders: string[];
   rate: RateNodeState;
   comment: string;
+  date: Date;
 }
 
 interface ReducerAction {
@@ -43,7 +45,8 @@ export const initialState = {
   tags: [],
   orders: [],
   rate: createInitialRateState(rateNodes),
-  comment: ''
+  comment: '',
+  date: new Date()
 };
 
 export function addVisitReducer(state: ReducerState, action: ReducerAction) {
@@ -129,6 +132,11 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
       return {
         ...state,
         comment: action.payload
+      };
+    case SET_DATE:
+      return {
+        ...state,
+        date: action.payload
       };
     default:
       throw new Error();
