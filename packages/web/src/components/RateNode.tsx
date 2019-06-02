@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { RateNode } from '../types/visit';
 import { InputSlider } from './Slider';
+import { SecondaryButton } from './Button';
 
 const Wrapper = styled.article`
   display: flex;
@@ -25,6 +26,12 @@ const Name = styled.h2`
   color: #333;
   font-size: 1.375rem;
   font-weight: 700;
+  margin-right: auto;
+`;
+
+const Value = styled(Name)`
+  margin: 0;
+  margin-left: 15px;
 `;
 
 const ParentArea = styled.div`
@@ -32,6 +39,10 @@ const ParentArea = styled.div`
   flex-direction: column;
   padding: 15px;
   background: #f9f9f9;
+`;
+
+const SliderWrapper = styled.div`
+  margin-top: 15px;
 `;
 
 interface NodeProps {
@@ -49,21 +60,30 @@ export const Node = ({
 NodeProps) => {
   const [value, setValue] = React.useState<number>(0);
   const [open, setOpen] = React.useState<boolean>(false);
+  const [touched, setTouched] = React.useState<boolean>(false);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setValue(0);
+  };
 
   return (
     <Wrapper key={node.name}>
       <ParentArea>
         <Info>
           <Name>{node.label}</Name>
-          {!open && <button onClick={handleOpen}>Lägg till</button>}
+          <SecondaryButton
+            size={open ? 'xsmall' : 'small'}
+            text={open ? 'Avbryt' : 'Lägg till'}
+            onClick={open ? handleClose : handleOpen}
+          />
+          {open && <Value>{value}</Value>}
         </Info>
         {open && (
-          <div style={{ marginTop: 15 }} onClick={handleClose}>
+          <SliderWrapper>
             <InputSlider value={value} setValue={setValue} />
-          </div>
+          </SliderWrapper>
         )}
       </ParentArea>
     </Wrapper>

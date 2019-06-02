@@ -49,20 +49,22 @@ export const InputSlider = ({
   domain = defaultDomain
 }: InputSliderProps) => {
   const handleChange = (values: readonly number[]) => setValue(values[0]);
+
   return (
     <StyledSlider
       step={1}
       values={[value]}
       domain={domain}
-      onChange={handleChange}
+      onUpdate={handleChange}
     >
       <Rail />
       <Handles>
-        {({ handles, getHandleProps }) => (
+        {({ handles, getHandleProps, activeHandleID }) => (
           <HandleTrack>
             {handles.map(handle => (
               <Handle
                 key={handle.id}
+                active={handle.id === activeHandleID}
                 handle={handle}
                 getHandleProps={getHandleProps}
               />
@@ -87,41 +89,61 @@ export const InputSlider = ({
   );
 };
 
-const StyledHandle = styled.div`
+interface StyledHandleProps {
+  active: boolean;
+}
+
+const StyledHandle = styled.div<StyledHandleProps>`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: red;
+  background: #fff;
+  border: 1px solid ${p => (p.active ? '#AAA' : '#EEE')};
   position: absolute;
   top: 0;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(${p => (p.active ? 1 : 1.2)});
+  transition: ${p => p.theme.transition} border,
+    ${p => p.theme.transition} transform;
   z-index: 2;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    background: ${p => p.theme.colors.primary.hex};
+    transform: translate(-50%, -50%);
+  }
 `;
 
 interface HandleProps {
   handle: SliderItem;
   getHandleProps: GetHandleProps;
+  active: boolean;
 }
 
 const Handle = ({
   handle: { id, value, percent },
-  getHandleProps
+  getHandleProps,
+  active
 }: HandleProps) => {
   return (
     <StyledHandle
       style={{
         left: `${percent}%`
       }}
+      active={active}
       {...getHandleProps(id)}
-    >
-      {value}
-    </StyledHandle>
+    />
   );
 };
 
 const StyledTrack = styled(Rail)`
   position: absolute;
-  background: blue;
+  background: ${p => p.theme.colors.primary.gradient};
   margin: 0;
   top: 0;
   z-index: 1;
