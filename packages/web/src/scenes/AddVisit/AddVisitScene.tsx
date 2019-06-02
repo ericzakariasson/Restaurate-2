@@ -10,6 +10,7 @@ import { Tabs } from './components';
 
 import { addVisitReducer, initialState } from './addVisitReducer';
 import { createActions } from './addVisitActions';
+import { calculateTotalScore } from './addVisitHelpers';
 
 const tabs = [{ index: 0, label: 'Ställe' }, { index: 1, label: 'Besök' }];
 
@@ -33,11 +34,12 @@ export const AddVisitScene = () => {
     removeTag,
     addOrder,
     removeOrder,
-    addRate,
-    removeRate
+    setRate
   } = createActions(dispatch);
 
-  console.log(state);
+  const totalScore = calculateTotalScore(state);
+
+  console.log(totalScore);
 
   return (
     <>
@@ -65,8 +67,7 @@ export const AddVisitScene = () => {
               orders={state.orders}
               addOrder={addOrder}
               removeOrder={removeOrder}
-              addRate={addRate}
-              removeRate={removeRate}
+              setRate={setRate}
               setMoving={setMovingSlider}
             />
           </SwipeableViews>

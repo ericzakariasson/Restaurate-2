@@ -8,6 +8,10 @@ import { SmallLabel } from './Label';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+
+  &:not(:last-child) {
+    margin-bottom: 40px;
+  }
 `;
 
 const List = styled.ul`

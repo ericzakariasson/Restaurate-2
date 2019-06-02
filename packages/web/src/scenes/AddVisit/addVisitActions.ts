@@ -12,12 +12,11 @@ export const REMOVE_TAG = 'REMOVE_TAG';
 export const ADD_ORDER = 'ADD_ORDER';
 export const REMOVE_ORDER = 'REMOVE_ORDER';
 
-export const ADD_RATE = 'ADD_RATE';
-export const REMOVE_RATE = 'REMOVE_RATE';
+export const SET_RATE = 'SET_RATE';
 
 export interface Rate {
   name: string;
-  score: number;
+  score: number | null;
   parent?: string;
 }
 
@@ -43,10 +42,7 @@ export const createActions = (dispatch: any) => {
   const removeOrder = (order: string) =>
     dispatch({ type: REMOVE_ORDER, payload: order });
 
-  const addRate = (rate: Rate) => dispatch({ type: ADD_RATE, payload: rate });
-
-  const removeRate = (rate: Rate) =>
-    dispatch({ type: REMOVE_RATE, payload: rate });
+  const setRate = (rate: Rate) => dispatch({ type: SET_RATE, payload: rate });
 
   return {
     selectPlace,
@@ -57,7 +53,6 @@ export const createActions = (dispatch: any) => {
     removeTag,
     addOrder,
     removeOrder,
-    addRate,
-    removeRate
+    setRate
   };
 };

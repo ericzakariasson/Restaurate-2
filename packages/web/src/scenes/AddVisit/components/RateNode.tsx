@@ -50,10 +50,10 @@ const SliderWrapper = styled.div`
 interface NodeProps {
   node: RateNode;
   setMoving: (moving: boolean) => void;
-  addRate: (rate: Rate) => void;
+  setRate: (rate: Rate) => void;
 }
 
-export const Node = ({ node, setMoving, addRate }: NodeProps) => {
+export const Node = ({ node, setMoving, setRate }: NodeProps) => {
   const [value, setValue] = React.useState<number>(0);
   const [open, setOpen] = React.useState<boolean>(false);
   const [touched, setTouched] = React.useState<boolean>(false);
@@ -62,6 +62,7 @@ export const Node = ({ node, setMoving, addRate }: NodeProps) => {
   const handleClose = () => {
     setOpen(false);
     setValue(0);
+    setRate({ name: node.name, score: null });
   };
 
   return (
@@ -81,7 +82,7 @@ export const Node = ({ node, setMoving, addRate }: NodeProps) => {
             <InputSlider
               value={value}
               setValue={setValue}
-              onChange={() => addRate({ name: node.name, score: value })}
+              onChange={() => setRate({ name: node.name, score: value })}
               onSlideStart={() => setMoving(true)}
               onSlideEnd={() => setMoving(false)}
             />

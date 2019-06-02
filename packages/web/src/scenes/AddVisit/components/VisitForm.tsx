@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { PageTitle, ListInput } from '../../../components';
-import { RateNodes } from './RateNodes';
+import { RateVisit } from './RateVisit';
 import { rateNodes } from '@restaurate/web/src/constants';
 
 import { Rate } from '../addVisitActions';
@@ -10,8 +10,7 @@ interface VisitFormProps {
   orders: string[];
   addOrder: (order: string) => void;
   removeOrder: (order: string) => void;
-  addRate: (rate: Rate) => void;
-  removeRate: (rate: Rate) => void;
+  setRate: (rate: Rate) => void;
   setMoving: (value: boolean) => void;
 }
 
@@ -19,8 +18,7 @@ export const VisitForm = ({
   orders,
   addOrder,
   removeOrder,
-  addRate,
-  removeRate,
+  setRate,
   setMoving
 }: VisitFormProps) => {
   return (
@@ -32,12 +30,7 @@ export const VisitForm = ({
         addItem={addOrder}
         removeItem={removeOrder}
       />
-      <RateNodes
-        nodes={rateNodes}
-        addRate={addRate}
-        removeRate={removeRate}
-        setMoving={setMoving}
-      />
+      <RateVisit nodes={rateNodes} setRate={setRate} setMoving={setMoving} />
     </>
   );
 };

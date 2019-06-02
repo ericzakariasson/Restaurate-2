@@ -7,8 +7,6 @@ import { GlobalStyle, theme } from './style';
 import { Loading } from './components';
 import { AddVisitScene } from './scenes';
 import { useGoogleApi } from './hooks';
-import { RateNodes } from './scenes/AddVisit/components/RateNodes';
-import { rateNodes } from './constants';
 
 const Wrapper = styled.div`
   padding: 15px;

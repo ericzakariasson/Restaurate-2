@@ -1,6 +1,5 @@
-import { Tag } from '../../types/place';
-import { RateNode } from '../../types/visit';
 import { rateNodes } from '../../constants';
+import { createInitialRateState } from './addVisitHelpers';
 
 import {
   SET_PLACE,
@@ -11,43 +10,24 @@ import {
   REMOVE_TAG,
   ADD_ORDER,
   REMOVE_ORDER,
-  ADD_RATE
+  SET_RATE
 } from './addVisitActions';
 
-const initialNodeState = (rest: any) => ({
-  score: null,
-  ...rest
-});
-
-function createInitialRateState(nodes: RateNode[]): RateInterface {
-  return nodes
-    .sort(node => node.order)
-    .reduce((tree: any, { name, children, ...rest }: RateNode) => {
-      if (!tree[name]) {
-        tree[name] = initialNodeState({
-          name,
-          children: children ? createInitialRateState(children) : undefined,
-          ...rest
-        });
-      }
-      return tree;
-    }, {});
+export interface RateState {
+  score: number | null;
+  children?: RateNodeState;
 }
 
-interface RateInterface {
-  [key: string]: {
-    open: boolean;
-    score: number | null;
-    children?: RateInterface;
-  };
+export interface RateNodeState {
+  [key: string]: RateState;
 }
 
-interface ReducerState {
+export interface ReducerState {
   place: google.maps.places.PlaceResult | null;
   priceLevel: number | undefined;
   tags: string[];
   orders: string[];
-  rate: RateInterface;
+  rate: RateNodeState;
 }
 
 interface ReducerAction {
@@ -109,7 +89,7 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
         ...state,
         orders: state.orders.filter((order: string) => order !== action.payload)
       };
-    case ADD_RATE:
+    case SET_RATE:
       const { name, score, parent } = action.payload;
 
       if (parent) {
