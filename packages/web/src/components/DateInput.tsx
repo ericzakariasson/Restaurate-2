@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   display: block;
   border-radius: 5px;
-  background: #f5f5f5;
+  background: #f9f9f9;
   border: 1px solid #eee;
   outline: none;
   font-size: 1.125rem;
@@ -23,7 +23,7 @@ const Readable = styled.label`
   border-radius: 0 3px 3px 0;
   /* border: 1px solid #eee; */
   color: ${p => p.theme.colors.primary.hues[0]};
-  background: #fff;
+  /* background: #fff; */
 
   &::first-letter {
     text-transform: uppercase;
@@ -37,11 +37,13 @@ const Input = styled.input`
   background: none;
   border: none;
   padding: 15px;
-  border-right: 1px solid #eee;
+  /* border-right: 1px solid #eee; */
   -webkit-appearance: none;
   appearance: none;
   text-align: center;
-  flex: 1;
+  /* flex: 1; */
+  width: 0;
+  margin-right: -30px;
 
   &::-webkit-clear-button {
     display: none;
@@ -63,7 +65,7 @@ const Input = styled.input`
 function toReadableDate(date: Date): string {
   return date.toLocaleDateString('sv-SE', {
     weekday: 'long',
-    month: 'short',
+    month: 'long',
     day: 'numeric'
   });
 }
