@@ -41,21 +41,30 @@ interface InputSliderProps {
   domain?: number[];
   value: number;
   setValue: (values: number) => void;
+  onChange?: (args: any) => void;
+  onSlideStart?: (args: any) => void;
+  onSlideEnd?: (args: any) => void;
 }
 
 export const InputSlider = ({
   value,
   setValue,
+  onChange,
+  onSlideStart,
+  onSlideEnd,
   domain = defaultDomain
 }: InputSliderProps) => {
-  const handleChange = (values: readonly number[]) => setValue(values[0]);
+  const handleUpdate = (values: readonly number[]) => setValue(values[0]);
 
   return (
     <StyledSlider
       step={1}
       values={[value]}
       domain={domain}
-      onUpdate={handleChange}
+      onUpdate={handleUpdate}
+      onChange={onChange}
+      onSlideStart={onSlideStart}
+      onSlideEnd={onSlideEnd}
     >
       <Rail />
       <Handles>
@@ -105,6 +114,7 @@ const StyledHandle = styled.div<StyledHandleProps>`
   transition: ${p => p.theme.transition} border,
     ${p => p.theme.transition} transform;
   z-index: 2;
+  cursor: pointer;
 
   &::before {
     content: '';

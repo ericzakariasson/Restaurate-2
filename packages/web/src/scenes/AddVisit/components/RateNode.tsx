@@ -1,9 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { RateNode } from '../types/visit';
-import { InputSlider } from './Slider';
-import { SecondaryButton } from './Button';
+import { RateNode } from '../../../types/visit';
+import { InputSlider } from '../../../components/Slider';
+import { SecondaryButton } from '../../../components/Button';
+
+import { Rate } from '../addVisitActions';
 
 const Wrapper = styled.article`
   display: flex;
@@ -47,17 +49,11 @@ const SliderWrapper = styled.div`
 
 interface NodeProps {
   node: RateNode;
-  // addRate: any;
-  // enableRateNode: (name: string) => void;
-  // disableRateNode: (name: string) => void;
+  setMoving: (moving: boolean) => void;
+  addRate: (rate: Rate) => void;
 }
 
-export const Node = ({
-  node
-}: // addRate,
-// enableRateNode,
-// disableRateNode
-NodeProps) => {
+export const Node = ({ node, setMoving, addRate }: NodeProps) => {
   const [value, setValue] = React.useState<number>(0);
   const [open, setOpen] = React.useState<boolean>(false);
   const [touched, setTouched] = React.useState<boolean>(false);
@@ -82,7 +78,13 @@ NodeProps) => {
         </Info>
         {open && (
           <SliderWrapper>
-            <InputSlider value={value} setValue={setValue} />
+            <InputSlider
+              value={value}
+              setValue={setValue}
+              onChange={() => addRate({ name: node.name, score: value })}
+              onSlideStart={() => setMoving(true)}
+              onSlideEnd={() => setMoving(false)}
+            />
           </SliderWrapper>
         )}
       </ParentArea>

@@ -2,14 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { X } from 'react-feather';
 
-import { staticMapboxMapUrl } from '../utils';
-import { SmallLabel } from './Label';
-import { ListInput } from './ListInput';
-import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
+import { staticMapboxMapUrl } from '../../../utils';
+import { SmallLabel } from '../../../components/Label';
+import { ListInput } from '../../../components/ListInput';
+import { PlaceFormPriceLevels } from '../../../components/PlaceFormPriceLevels';
 
-import { PriceLevel, Tag } from '../types/place';
-import { priceLevels } from '../constants';
-import { PageTitle } from './PageTitle';
+import { PriceLevel, Tag } from '../../../types/place';
+import { priceLevels } from '../../../constants';
+import { PageTitle } from '../../../components/PageTitle';
 
 interface ItemProps {}
 

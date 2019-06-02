@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 import Helmet from 'react-helmet';
 
-import { PlaceForm } from '../../components/PlaceForm';
-import { VisitForm } from '../../components/VisitForm';
+import { PlaceForm } from './components/PlaceForm';
+import { VisitForm } from './components/VisitForm';
 import { SearchPlace } from '../../components/SearchPlace';
 import { Tabs } from './components';
 
@@ -20,6 +20,7 @@ const FormWrapper = styled.section`
 export const AddVisitScene = () => {
   const [state, dispatch] = React.useReducer(addVisitReducer, initialState);
   const [tabIndex, setTabIndex] = React.useState(0);
+  const [movingSlider, setMovingSlider] = React.useState(false);
 
   const handleIndexChange = (index: number) => setTabIndex(index);
 
@@ -33,9 +34,10 @@ export const AddVisitScene = () => {
     addOrder,
     removeOrder,
     addRate,
-    enableRateNode,
-    disableRateNode
+    removeRate
   } = createActions(dispatch);
+
+  console.log(state);
 
   return (
     <>
@@ -44,7 +46,11 @@ export const AddVisitScene = () => {
       </Helmet>
       {state.place ? (
         <FormWrapper>
-          <SwipeableViews index={tabIndex} onChangeIndex={handleIndexChange}>
+          <SwipeableViews
+            index={tabIndex}
+            onChangeIndex={handleIndexChange}
+            disabled={movingSlider}
+          >
             <PlaceForm
               place={state.place}
               deselect={deselectPlace}
@@ -60,8 +66,8 @@ export const AddVisitScene = () => {
               addOrder={addOrder}
               removeOrder={removeOrder}
               addRate={addRate}
-              enableRateNode={enableRateNode}
-              disableRateNode={disableRateNode}
+              removeRate={removeRate}
+              setMoving={setMovingSlider}
             />
           </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />

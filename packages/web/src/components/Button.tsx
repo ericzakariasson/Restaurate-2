@@ -39,12 +39,17 @@ const StyledSecondaryButton = styled(BaseButton)<StyledButtonProps>`
   font-size: ${p => p.theme.fontSize[p.size]};
   font-weight: 700;
   color: ${p => p.theme.colors.primary.hex};
-  background: ${p => p.theme.colors.primary.light};
+  background: ${p => p.theme.colors.primary.hues[9]};
   padding: ${p => padding[p.size]};
-`;
+  transition: ${p => p.theme.transition} background;
 
-const StyledSecondarySmallButton = styled(StyledSecondaryButton)`
-  font-size: 0.75rem;
+  &:hover {
+    background: ${p => p.theme.colors.primary.hues[8]};
+  }
+
+  &:active {
+    background: ${p => p.theme.colors.primary.hues[7]};
+  }
 `;
 
 export const SecondaryButton = ({

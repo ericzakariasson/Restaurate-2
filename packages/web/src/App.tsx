@@ -7,7 +7,7 @@ import { GlobalStyle, theme } from './style';
 import { Loading } from './components';
 import { AddVisitScene } from './scenes';
 import { useGoogleApi } from './hooks';
-import { RateNodes } from './components/RateNodes';
+import { RateNodes } from './scenes/AddVisit/components/RateNodes';
 import { rateNodes } from './constants';
 
 const Wrapper = styled.div`
@@ -31,11 +31,7 @@ const App = () => {
           <Wrapper>
             {ready ? (
               <Switch>
-                <Route
-                  path="/"
-                  render={() => <RateNodes nodes={rateNodes} />}
-                />
-                <Route path="/add-visit" component={AddVisitScene} />
+                <Route path="/" component={AddVisitScene} />
               </Switch>
             ) : scriptError ? (
               <h1>Ett fel har uppstått</h1>

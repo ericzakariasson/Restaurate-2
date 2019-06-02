@@ -17,6 +17,10 @@ export const GlobalStyle = createGlobalStyle`
   html, body, #root {
     min-height: 100%;
   }
+
+  button {
+    cursor: pointer;
+  }
 `;
 
 export const theme = {
@@ -25,7 +29,18 @@ export const theme = {
     primary: {
       hex: '#FF6666',
       light: '#FFECEC',
-      hues: ['#FF6666'],
+      hues: [
+        '#ff6666',
+        '#ff7575',
+        '#ff8585',
+        '#ff9494',
+        '#ffa3a3',
+        '#ffb3b3',
+        '#ffc2c2',
+        '#ffd1d1',
+        '#ffe0e0',
+        '#fff0f0'
+      ],
       rgba: (opacity: number) => `rgba(255, 102, 102, ${opacity / 100})`,
       gradient: 'linear-gradient(105deg, #FF6666 15%, #FD7394 85%);'
     },

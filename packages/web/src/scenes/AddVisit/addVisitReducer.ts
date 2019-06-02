@@ -15,7 +15,6 @@ import {
 } from './addVisitActions';
 
 const initialNodeState = (rest: any) => ({
-  open: false,
   score: null,
   ...rest
 });
@@ -137,7 +136,10 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
         ...state,
         rate: {
           ...state.rate,
-          [name]: { score }
+          [name]: {
+            ...state.rate[name],
+            score
+          }
         }
       };
     default:

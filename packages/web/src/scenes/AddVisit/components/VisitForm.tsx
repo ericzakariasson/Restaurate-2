@@ -1,16 +1,18 @@
 import * as React from 'react';
 
-import { PageTitle, ListInput } from './';
+import { PageTitle, ListInput } from '../../../components';
 import { RateNodes } from './RateNodes';
-import { rateNodes } from '../constants';
+import { rateNodes } from '@restaurate/web/src/constants';
+
+import { Rate } from '../addVisitActions';
 
 interface VisitFormProps {
   orders: string[];
   addOrder: (order: string) => void;
   removeOrder: (order: string) => void;
-  addRate: (rate: { name: string; score: number; parent?: string }) => void;
-  enableRateNode: (name: string) => void;
-  disableRateNode: (name: string) => void;
+  addRate: (rate: Rate) => void;
+  removeRate: (rate: Rate) => void;
+  setMoving: (value: boolean) => void;
 }
 
 export const VisitForm = ({
@@ -18,8 +20,8 @@ export const VisitForm = ({
   addOrder,
   removeOrder,
   addRate,
-  enableRateNode,
-  disableRateNode
+  removeRate,
+  setMoving
 }: VisitFormProps) => {
   return (
     <>
@@ -32,9 +34,9 @@ export const VisitForm = ({
       />
       <RateNodes
         nodes={rateNodes}
-        // addRate={addRate}
-        // enableRateNode={enableRateNode}
-        // disableRateNode={disableRateNode}
+        addRate={addRate}
+        removeRate={removeRate}
+        setMoving={setMoving}
       />
     </>
   );

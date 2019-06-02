@@ -12,12 +12,10 @@ export const REMOVE_TAG = 'REMOVE_TAG';
 export const ADD_ORDER = 'ADD_ORDER';
 export const REMOVE_ORDER = 'REMOVE_ORDER';
 
-export const ENABLE_RATE_NODE = 'ENABLE_RATE_NODE';
-export const DISABLE_RATE_NODE = 'DISABLE_RATE_NODE';
-
 export const ADD_RATE = 'ADD_RATE';
+export const REMOVE_RATE = 'REMOVE_RATE';
 
-export interface addRateParams {
+export interface Rate {
   name: string;
   score: number;
   parent?: string;
@@ -45,14 +43,10 @@ export const createActions = (dispatch: any) => {
   const removeOrder = (order: string) =>
     dispatch({ type: REMOVE_ORDER, payload: order });
 
-  const enableRateNode = (name: string) =>
-    dispatch({ type: ENABLE_RATE_NODE, payload: name });
+  const addRate = (rate: Rate) => dispatch({ type: ADD_RATE, payload: rate });
 
-  const disableRateNode = (name: string) =>
-    dispatch({ type: DISABLE_RATE_NODE, payload: name });
-
-  const addRate = (rate: addRateParams) =>
-    dispatch({ type: REMOVE_ORDER, payload: rate });
+  const removeRate = (rate: Rate) =>
+    dispatch({ type: REMOVE_RATE, payload: rate });
 
   return {
     selectPlace,
@@ -64,7 +58,6 @@ export const createActions = (dispatch: any) => {
     addOrder,
     removeOrder,
     addRate,
-    enableRateNode,
-    disableRateNode
+    removeRate
   };
 };
