@@ -8,10 +8,10 @@ import { client } from './apollo';
 
 import { GlobalStyle, theme } from './style';
 import { Loading } from './components';
-import { AddVisitScene } from './scenes';
 import { useGoogleApi } from './hooks';
-
 import { routes } from './routes';
+
+import { AddVisitScene, DashboardScene, VisitsScene } from './scenes';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -34,7 +34,9 @@ const App = () => {
             <Wrapper>
               {ready ? (
                 <Switch>
-                  <Route path={routes.default} component={AddVisitScene} />
+                  <Route path={routes.default} component={DashboardScene} />
+                  <Route path={routes.visits} component={VisitsScene} />
+                  <Route path={routes.addVisit} component={AddVisitScene} />
                 </Switch>
               ) : scriptError ? (
                 <h1>Ett fel har uppstått</h1>

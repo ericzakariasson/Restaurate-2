@@ -17,6 +17,8 @@ import { addVisitReducer, initialState } from './addVisitReducer';
 import { createActions } from './addVisitActions';
 import { calculateAverageScore } from './addVisitHelpers';
 
+import { tabs } from './tabs';
+
 const SAVE_VISIT = gql`
   mutation SaveVisit($input: Input) {
     saveVisit(input: $input) {
@@ -24,8 +26,6 @@ const SAVE_VISIT = gql`
     }
   }
 `;
-
-const tabs = [{ index: 0, label: 'Ställe' }, { index: 1, label: 'Besök' }];
 
 const slideStyle = {
   padding: 15,
