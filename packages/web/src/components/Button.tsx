@@ -5,6 +5,7 @@ interface ButtonProps {
   text: string;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   size?: 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
+  disabled?: boolean;
 }
 
 interface StyledButtonProps {
@@ -24,7 +25,7 @@ const padding: Padding = {
   xsmall: '4px 8px',
   small: '5px 10px',
   normal: '6px 12px',
-  large: '6px 12px'
+  large: '14px 16px'
 };
 
 const BaseButton = styled.button<StyledButtonProps>`
@@ -40,7 +41,7 @@ const BaseButton = styled.button<StyledButtonProps>`
 const StyledSecondaryButton = styled(BaseButton)`
   font-weight: 700;
   color: ${p => p.theme.colors.primary.hex};
-  background: ${p => p.theme.colors.primary.hues[9]};
+  background-color: ${p => p.theme.colors.primary.hues[9]};
   transition: ${p => p.theme.transition} background;
 
   &:hover {
@@ -71,4 +72,23 @@ export const TextButton = ({ text, onClick, size = 'normal' }: ButtonProps) => (
   <StyledTextButton size={size} onClick={onClick}>
     {text}
   </StyledTextButton>
+);
+
+const StyledButton = styled(BaseButton)<StyledButtonProps>`
+  background-color: ${p =>
+    p.disabled ? '#AAA' : p.theme.colors.primary.hues[0]};
+  color: #fff;
+  width: 100%;
+  font-weight: 700;
+`;
+
+export const Button = ({
+  text,
+  onClick,
+  size = 'large',
+  disabled = false
+}: ButtonProps) => (
+  <StyledButton size={size} onClick={onClick} disabled={disabled}>
+    {text}
+  </StyledButton>
 );

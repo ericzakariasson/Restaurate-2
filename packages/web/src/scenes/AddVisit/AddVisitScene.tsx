@@ -16,9 +16,8 @@ const tabs = [{ index: 0, label: 'Ställe' }, { index: 1, label: 'Besök' }];
 
 const slideStyle = {
   padding: 15,
-  paddingBottom: 70,
-  maxHeight: '100vh'
-};
+  paddingBottom: 70
+} as React.CSSProperties;
 
 const FormWrapper = styled.section``;
 
@@ -30,6 +29,8 @@ export const AddVisitScene = () => {
   const handleIndexChange = (index: number) => setTabIndex(index);
 
   const goToVisitForm = () => setTabIndex(1);
+
+  const saveVisit = () => {};
 
   const {
     selectPlace,
@@ -80,6 +81,7 @@ export const AddVisitScene = () => {
               averageScore={averageScore}
               setComment={setComment}
               setDate={setDate}
+              saveVisit={saveVisit}
             />
           </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />

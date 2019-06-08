@@ -53,6 +53,7 @@ export const theme = {
     xxsmall: '0.625rem',
     xsmall: '0.75rem',
     small: '0.875rem',
-    normal: '1rem'
+    normal: '1rem',
+    large: '1.1rem'
   }
 };

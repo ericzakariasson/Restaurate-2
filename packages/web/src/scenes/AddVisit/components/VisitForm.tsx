@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { rateNodes } from '../../../constants';
 
-import { PageTitle, ListInput } from '../../../components';
+import { PageTitle, ListInput, Button } from '../../../components';
 import { RateVisit } from './RateVisit';
 import { Comment } from './Comment';
 import { VisitDate } from './VisitDate';
@@ -17,6 +17,7 @@ interface VisitFormProps {
   averageScore: number | null;
   setComment: (value: string) => void;
   setDate: (date: Date) => void;
+  saveVisit: () => void;
 }
 
 export const VisitForm = ({
@@ -27,7 +28,8 @@ export const VisitForm = ({
   setMoving,
   averageScore,
   setComment,
-  setDate
+  setDate,
+  saveVisit
 }: VisitFormProps) => {
   return (
     <>
@@ -46,6 +48,11 @@ export const VisitForm = ({
       />
       <Comment setComment={setComment} />
       <VisitDate setDate={setDate} />
+      <Button
+        text="Spara besök"
+        onClick={saveVisit}
+        disabled={averageScore === null}
+      />
     </>
   );
 };

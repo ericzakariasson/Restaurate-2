@@ -49,7 +49,7 @@ export const SearchPlaceType = ({
           {results.length > 0 ? (
             results.map((result: google.maps.places.PlaceResult) => (
               <SearchPlaceResult
-                key={result.id}
+                key={result.place_id}
                 result={result}
                 select={() => select(result)}
               />

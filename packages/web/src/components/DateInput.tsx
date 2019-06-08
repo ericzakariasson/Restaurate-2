@@ -37,25 +37,17 @@ const Input = styled.input`
   background: none;
   border: none;
   padding: 15px;
-  /* border-right: 1px solid #eee; */
-  -webkit-appearance: none;
-  appearance: none;
   text-align: center;
-  /* flex: 1; */
-  width: 0;
   margin-right: -30px;
 
-  &::-webkit-clear-button {
-    display: none;
-  }
-  &::-webkit-calendar-picker-indicator {
-    display: none;
-  }
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  opacity: 0;
 
-  &::-webkit-inner-spin-button {
-    display: none;
-  }
-
+  &::-webkit-clear-button,
+  &::-webkit-calendar-picker-indicator,
+  &::-webkit-inner-spin-button,
   &::-webkit-inner-spin-button,
   &::-webkit-calendar-picker-indicato {
     display: none;
