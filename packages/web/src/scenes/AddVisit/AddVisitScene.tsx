@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 import Helmet from 'react-helmet';
 
+import { useMutation } from 'react-apollo-hooks';
+import gql from 'graphql-tag';
+
 import { PlaceForm } from './components/PlaceForm';
 import { VisitForm } from './components/VisitForm';
 import { SearchPlace } from './components/SearchPlace';
@@ -11,6 +14,14 @@ import { Tabs } from './components';
 import { addVisitReducer, initialState } from './addVisitReducer';
 import { createActions } from './addVisitActions';
 import { calculateAverageScore } from './addVisitHelpers';
+
+const SAVE_VISIT = gql`
+  mutation SaveVisit($input: Input) {
+    saveVisit(input: $input) {
+      saved
+    }
+  }
+`;
 
 const tabs = [{ index: 0, label: 'Ställe' }, { index: 1, label: 'Besök' }];
 
@@ -30,7 +41,15 @@ export const AddVisitScene = () => {
 
   const goToVisitForm = () => setTabIndex(1);
 
-  const saveVisit = () => {};
+  const [saveVisit, { loading, error }] = useMutation(SAVE_VISIT, {
+    variables: {
+      input: state
+    }
+  });
+
+  const handleSave = async () => {
+    await saveVisit();
+  };
 
   const {
     selectPlace,
@@ -47,6 +66,14 @@ export const AddVisitScene = () => {
   } = createActions(dispatch);
 
   const averageScore = calculateAverageScore(state);
+
+  if (loading) {
+    return <h1>Sparar...</h1>;
+  }
+
+  if (error) {
+    return <h1>Fel!</h1>;
+  }
 
   return (
     <>
