@@ -34,9 +34,21 @@ const App = () => {
             <Wrapper>
               {ready ? (
                 <Switch>
-                  <Route path={routes.default} component={DashboardScene} />
-                  <Route path={routes.visits} component={VisitsScene} />
-                  <Route path={routes.addVisit} component={AddVisitScene} />
+                  <Route
+                    path={routes.default}
+                    component={DashboardScene}
+                    exact={true}
+                  />
+                  <Route
+                    path={routes.visits}
+                    component={VisitsScene}
+                    exact={true}
+                  />
+                  <Route
+                    path={routes.addVisit}
+                    component={AddVisitScene}
+                    exact={true}
+                  />
                 </Switch>
               ) : scriptError ? (
                 <h1>Ett fel har uppstått</h1>
