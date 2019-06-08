@@ -7,6 +7,7 @@ import { priceLevels } from '../../../constants';
 
 import { staticMapboxMapUrl } from '../../../utils';
 import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
+import { FieldArray } from 'formik';
 
 import {
   SmallLabel,
@@ -86,14 +87,15 @@ const Address = styled.p`
 `;
 
 interface PlaceFormProps {
+  handleChange: (x: any) => void;
   place: google.maps.places.PlaceResult;
   deselect: () => void;
   priceLevel: number | undefined;
-  setPriceLevel: (priceLevel: number) => void;
-  resetPriceLevel: () => void;
+  // setPriceLevel: (priceLevel: number) => void;
+  // resetPriceLevel: () => void;
   tags: string[];
-  addTag: (tag: string) => void;
-  removeTag: (tag: string) => void;
+  // addTag: (tag: string) => void;
+  // removeTag: (tag: string) => void;
   goToVisitForm: () => void;
 }
 
@@ -102,11 +104,12 @@ export const PlaceForm = React.memo(
     place: { name, formatted_address, geometry },
     deselect,
     priceLevel,
-    setPriceLevel,
-    resetPriceLevel,
+    // setPriceLevel,
+    // resetPriceLevel,
     tags,
-    addTag,
-    removeTag,
+    handleChange,
+    // addTag,
+    // removeTag,
     goToVisitForm
   }: PlaceFormProps) => {
     const width = window.innerWidth - 30;
@@ -128,15 +131,18 @@ export const PlaceForm = React.memo(
           <PlaceFormPriceLevels
             priceLevels={priceLevels}
             priceLevel={priceLevel}
-            setPriceLevel={setPriceLevel}
-            resetPriceLevel={resetPriceLevel}
+            handleChange={handleChange}
           />
-          <ListInput
-            label="Taggar"
-            removeItem={removeTag}
-            items={tags}
-            addItem={addTag}
-          />
+          <FieldArray name="tags">
+            {({ push, remove }) => (
+              <ListInput
+                label="Taggar"
+                removeItem={remove}
+                items={tags}
+                addItem={push}
+              />
+            )}
+          </FieldArray>
           <TextButton onClick={goToVisitForm} text="Gå vidare till besök" />
         </Wrapper>
       </>

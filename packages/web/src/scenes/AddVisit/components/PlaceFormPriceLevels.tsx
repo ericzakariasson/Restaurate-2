@@ -11,15 +11,12 @@ const List = styled.ul`
   column-gap: 10px;
 `;
 
-const Item = styled.li`
-  margin-bottom: 10px;
-`;
-
-interface PriceLevelButtonProps {
+interface ItemProps {
   selected: boolean;
 }
 
-const Button = styled.button<PriceLevelButtonProps>`
+const Item = styled.li<ItemProps>`
+  margin-bottom: 10px;
   border-radius: 3px;
   border: 1px solid ${p => (p.selected ? '#bbb' : '#eee')};
   outline: none;
@@ -33,9 +30,15 @@ const Button = styled.button<PriceLevelButtonProps>`
   transition: ${p => p.theme.transition};
 `;
 
+const Label = styled.label``;
+
 const Name = styled.span`
   font-size: 1rem;
   font-weight: 600;
+`;
+
+const Input = styled.input`
+  display: none;
 `;
 
 interface CheckProps {
@@ -68,31 +71,30 @@ const Check = styled.span<CheckProps>`
 interface PlaceFormPriceLevelsProps {
   priceLevels: PriceLevel[];
   priceLevel: number | undefined;
-  setPriceLevel: (level: number) => void;
-  resetPriceLevel: () => void;
+  handleChange: (e: any) => void;
 }
 
 export const PlaceFormPriceLevels = ({
   priceLevels,
   priceLevel,
-  setPriceLevel,
-  resetPriceLevel
+  handleChange
 }: PlaceFormPriceLevelsProps) => {
   return (
     <List>
       {priceLevels.map((pl: PriceLevel) => (
-        <Item key={pl.level}>
-          <Button
-            selected={pl.level === priceLevel}
-            onClick={
-              priceLevel === pl.level
-                ? () => resetPriceLevel()
-                : () => setPriceLevel(pl.level)
-            }
-          >
+        <Item key={pl.level} selected={priceLevel === pl.level}>
+          <Input
+            name="priceLevel"
+            type="radio"
+            id={`price-level-${pl.level}`}
+            value={pl.level}
+            onChange={handleChange}
+            checked={pl.level === priceLevel}
+          />
+          <Label htmlFor={`price-level-${pl.level}`}>
             <Name>{pl.name}</Name>
             <Check selected={priceLevel === pl.level} />
-          </Button>
+          </Label>
         </Item>
       ))}
     </List>
