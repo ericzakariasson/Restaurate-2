@@ -2,14 +2,18 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { X } from 'react-feather';
 
-import { staticMapboxMapUrl } from '../../../utils';
-import { SmallLabel } from '../../../components/Label';
-import { ListInput } from '../../../components/ListInput';
-import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
-
 import { PriceLevel, Tag } from '../../../types/place';
 import { priceLevels } from '../../../constants';
-import { PageTitle } from '../../../components/PageTitle';
+
+import { staticMapboxMapUrl } from '../../../utils';
+import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
+
+import {
+  SmallLabel,
+  ListInput,
+  PageTitle,
+  TextButton
+} from '../../../components';
 
 interface ItemProps {}
 
@@ -90,6 +94,7 @@ interface PlaceFormProps {
   tags: string[];
   addTag: (tag: string) => void;
   removeTag: (tag: string) => void;
+  goToVisitForm: () => void;
 }
 
 export const PlaceForm = React.memo(
@@ -101,7 +106,8 @@ export const PlaceForm = React.memo(
     resetPriceLevel,
     tags,
     addTag,
-    removeTag
+    removeTag,
+    goToVisitForm
   }: PlaceFormProps) => {
     const width = window.innerWidth - 30;
     const height = 150;
@@ -131,6 +137,7 @@ export const PlaceForm = React.memo(
             items={tags}
             addItem={addTag}
           />
+          <TextButton onClick={goToVisitForm} text="Gå vidare till besök" />
         </Wrapper>
       </>
     );

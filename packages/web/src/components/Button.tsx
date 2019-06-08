@@ -27,20 +27,20 @@ const padding: Padding = {
   large: '6px 12px'
 };
 
-const BaseButton = styled.button`
+const BaseButton = styled.button<StyledButtonProps>`
   border-radius: 3px;
   margin: 0;
   border: none;
   background: none;
   text-align: center;
+  font-size: ${p => p.theme.fontSize[p.size]};
+  padding: ${p => padding[p.size]};
 `;
 
-const StyledSecondaryButton = styled(BaseButton)<StyledButtonProps>`
-  font-size: ${p => p.theme.fontSize[p.size]};
+const StyledSecondaryButton = styled(BaseButton)`
   font-weight: 700;
   color: ${p => p.theme.colors.primary.hex};
   background: ${p => p.theme.colors.primary.hues[9]};
-  padding: ${p => padding[p.size]};
   transition: ${p => p.theme.transition} background;
 
   &:hover {
@@ -60,4 +60,15 @@ export const SecondaryButton = ({
   <StyledSecondaryButton size={size} onClick={onClick}>
     {text}
   </StyledSecondaryButton>
+);
+
+const StyledTextButton = styled(BaseButton)<StyledButtonProps>`
+  background: none;
+  color: ${p => p.theme.colors.primary.hex};
+`;
+
+export const TextButton = ({ text, onClick, size = 'normal' }: ButtonProps) => (
+  <StyledTextButton size={size} onClick={onClick}>
+    {text}
+  </StyledTextButton>
 );

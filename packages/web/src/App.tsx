@@ -9,7 +9,6 @@ import { AddVisitScene } from './scenes';
 import { useGoogleApi } from './hooks';
 
 const Wrapper = styled.div`
-  padding: 15px;
   height: 100%;
 `;
 

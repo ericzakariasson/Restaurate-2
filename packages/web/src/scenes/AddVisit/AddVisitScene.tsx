@@ -14,9 +14,13 @@ import { calculateAverageScore } from './addVisitHelpers';
 
 const tabs = [{ index: 0, label: 'Ställe' }, { index: 1, label: 'Besök' }];
 
-const FormWrapper = styled.section`
-  padding-bottom: 40px;
-`;
+const slideStyle = {
+  padding: 15,
+  paddingBottom: 70,
+  maxHeight: '100vh'
+};
+
+const FormWrapper = styled.section``;
 
 export const AddVisitScene = () => {
   const [state, dispatch] = React.useReducer(addVisitReducer, initialState);
@@ -24,6 +28,8 @@ export const AddVisitScene = () => {
   const [movingSlider, setMovingSlider] = React.useState(false);
 
   const handleIndexChange = (index: number) => setTabIndex(index);
+
+  const goToVisitForm = () => setTabIndex(1);
 
   const {
     selectPlace,
@@ -41,8 +47,6 @@ export const AddVisitScene = () => {
 
   const averageScore = calculateAverageScore(state);
 
-  console.log(state);
-
   return (
     <>
       <Helmet>
@@ -54,6 +58,7 @@ export const AddVisitScene = () => {
             index={tabIndex}
             onChangeIndex={handleIndexChange}
             disabled={movingSlider}
+            slideStyle={slideStyle}
           >
             <PlaceForm
               place={state.place}
@@ -64,6 +69,7 @@ export const AddVisitScene = () => {
               tags={state.tags}
               addTag={addTag}
               removeTag={removeTag}
+              goToVisitForm={goToVisitForm}
             />
             <VisitForm
               orders={state.orders}
