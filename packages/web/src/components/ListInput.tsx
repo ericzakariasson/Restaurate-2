@@ -90,7 +90,7 @@ interface ListInputProps {
   label?: string;
   items: string[];
   addItem: (item: string) => void;
-  removeItem: (index: number) => void;
+  removeItem: (item: string) => void;
   maxLength?: number;
 }
 
@@ -143,10 +143,10 @@ export const ListInput = ({
         </AddItem>
       </Form>
       <List>
-        {items.map((item, i) => (
+        {items.map(item => (
           <Item key={item}>
             <ItemText>{item}</ItemText>
-            <Remove onClick={() => removeItem(i)}>Ta bort</Remove>
+            <Remove onClick={() => removeItem(item)}>Ta bort</Remove>
           </Item>
         ))}
       </List>

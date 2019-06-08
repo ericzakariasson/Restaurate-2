@@ -2,14 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 import Helmet from 'react-helmet';
-import { Formik } from 'formik';
 
 import { PlaceForm } from './components/PlaceForm';
 import { VisitForm } from './components/VisitForm';
 import { SearchPlace } from './components/SearchPlace';
 import { Tabs } from './components';
 
-import { initialState } from './formState';
+import { addVisitReducer, initialState } from './addVisitReducer';
+import { createActions } from './addVisitActions';
 import { calculateAverageScore } from './addVisitHelpers';
 
 const tabs = [{ index: 0, label: 'Ställe' }, { index: 1, label: 'Besök' }];
@@ -23,14 +23,7 @@ const slideStyle = {
 const FormWrapper = styled.section``;
 
 export const AddVisitScene = () => {
-  const [
-    place,
-    setPlace
-  ] = React.useState<google.maps.places.PlaceResult | null>(null);
-  const selectPlace = (place: google.maps.places.PlaceResult) =>
-    setPlace(place);
-  const deselectPlace = () => setPlace(null);
-
+  const [state, dispatch] = React.useReducer(addVisitReducer, initialState);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [movingSlider, setMovingSlider] = React.useState(false);
 
@@ -38,53 +31,61 @@ export const AddVisitScene = () => {
 
   const goToVisitForm = () => setTabIndex(1);
 
+  const {
+    selectPlace,
+    deselectPlace,
+    setPriceLevel,
+    resetPriceLevel,
+    addTag,
+    removeTag,
+    addOrder,
+    removeOrder,
+    setRate,
+    setComment,
+    setDate
+  } = createActions(dispatch);
+
+  const averageScore = calculateAverageScore(state);
+
   return (
     <>
       <Helmet>
         <title>Nytt besök</title>
       </Helmet>
-      {place ? (
+      {state.place ? (
         <FormWrapper>
-          <Formik
-            initialValues={initialState}
-            onSubmit={() => {
-              console.log('submit');
-            }}
+          <SwipeableViews
+            index={tabIndex}
+            onChangeIndex={handleIndexChange}
+            disabled={movingSlider}
+            slideStyle={slideStyle}
           >
-            {({ values, handleChange }) => {
-              console.log(values);
-
-              return (
-                <SwipeableViews
-                  index={tabIndex}
-                  onChangeIndex={handleIndexChange}
-                  disabled={movingSlider}
-                  slideStyle={slideStyle}
-                >
-                  <PlaceForm
-                    place={place}
-                    deselect={deselectPlace}
-                    priceLevel={values.priceLevel}
-                    tags={values.tags}
-                    handleChange={handleChange}
-                    goToVisitForm={goToVisitForm}
-                  />
-                  <VisitForm
-                    orders={values.orders}
-                    setRate={(a: any) => {}}
-                    setMoving={setMovingSlider}
-                    averageScore={0}
-                    setComment={(a: any) => {}}
-                    setDate={(a: any) => {}}
-                  />
-                </SwipeableViews>
-              );
-            }}
-          </Formik>
+            <PlaceForm
+              place={state.place}
+              deselect={deselectPlace}
+              priceLevel={state.priceLevel}
+              setPriceLevel={setPriceLevel}
+              resetPriceLevel={resetPriceLevel}
+              tags={state.tags}
+              addTag={addTag}
+              removeTag={removeTag}
+              goToVisitForm={goToVisitForm}
+            />
+            <VisitForm
+              orders={state.orders}
+              addOrder={addOrder}
+              removeOrder={removeOrder}
+              setRate={setRate}
+              setMoving={setMovingSlider}
+              averageScore={averageScore}
+              setComment={setComment}
+              setDate={setDate}
+            />
+          </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />
         </FormWrapper>
       ) : (
-        <SearchPlace selected={place} setSelected={selectPlace} />
+        <SearchPlace selected={state.place} setSelected={selectPlace} />
       )}
     </>
   );

@@ -6,12 +6,12 @@ import { RateVisit } from './RateVisit';
 import { Comment } from './Comment';
 import { VisitDate } from './VisitDate';
 
-import { FieldArray } from 'formik';
-
 import { Rate } from '../addVisitActions';
 
 interface VisitFormProps {
   orders: string[];
+  addOrder: (order: string) => void;
+  removeOrder: (order: string) => void;
   setRate: (rate: Rate) => void;
   setMoving: (value: boolean) => void;
   averageScore: number | null;
@@ -21,6 +21,8 @@ interface VisitFormProps {
 
 export const VisitForm = ({
   orders,
+  addOrder,
+  removeOrder,
   setRate,
   setMoving,
   averageScore,
@@ -30,16 +32,12 @@ export const VisitForm = ({
   return (
     <>
       <PageTitle text="Besök" />
-      <FieldArray name="orders">
-        {({ push, remove }) => (
-          <ListInput
-            label="Beställningar"
-            removeItem={remove}
-            items={orders}
-            addItem={push}
-          />
-        )}
-      </FieldArray>
+      <ListInput
+        label="Beställningar"
+        items={orders}
+        addItem={addOrder}
+        removeItem={removeOrder}
+      />
       <RateVisit
         nodes={rateNodes}
         setRate={setRate}

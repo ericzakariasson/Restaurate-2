@@ -1,5 +1,5 @@
 import { RateNode } from '../../types/visit';
-import { ReducerState, RateState, RateNodeState } from './formState';
+import { ReducerState, RateState, RateNodeState } from './addVisitReducer';
 
 function round(value: number, precision = 1) {
   var multiplier = Math.pow(10, precision || 0);

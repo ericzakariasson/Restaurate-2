@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { X } from 'react-feather';
 import { SearchPlaceDropdown } from './SearchPlaceDropdown';
 import { useGooglePlaces } from '../../../hooks';
 
 import { placeTypes } from '../../../constants';
-import { PageTitle, Input, Label } from '../../../components';
+import { Label } from '../../../components/Label';
+import { Input } from '../../../components/Input';
+
+import { PageTitle } from '../../../components/PageTitle';
 
 interface WrapperProps {
   y: number;
