@@ -11,6 +11,8 @@ import { Loading } from './components';
 import { AddVisitScene } from './scenes';
 import { useGoogleApi } from './hooks';
 
+import { routes } from './routes';
+
 const Wrapper = styled.div`
   height: 100%;
 `;
@@ -32,7 +34,7 @@ const App = () => {
             <Wrapper>
               {ready ? (
                 <Switch>
-                  <Route path="/" component={AddVisitScene} />
+                  <Route path={routes.default} component={AddVisitScene} />
                 </Switch>
               ) : scriptError ? (
                 <h1>Ett fel har uppstått</h1>

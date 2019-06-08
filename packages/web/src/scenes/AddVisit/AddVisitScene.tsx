@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 import Helmet from 'react-helmet';
+import { routes } from '../../routes';
 
 import { useMutation } from 'react-apollo-hooks';
 import gql from 'graphql-tag';
@@ -32,7 +34,7 @@ const slideStyle = {
 
 const FormWrapper = styled.section``;
 
-export const AddVisitScene = () => {
+export const AddVisitScene = ({ history }: RouteComponentProps) => {
   const [state, dispatch] = React.useReducer(addVisitReducer, initialState);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [movingSlider, setMovingSlider] = React.useState(false);
@@ -49,6 +51,7 @@ export const AddVisitScene = () => {
 
   const handleSave = async () => {
     await saveVisit();
+    history.push(routes.visits);
   };
 
   const {
@@ -108,7 +111,7 @@ export const AddVisitScene = () => {
               averageScore={averageScore}
               setComment={setComment}
               setDate={setDate}
-              saveVisit={saveVisit}
+              saveVisit={handleSave}
             />
           </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />
