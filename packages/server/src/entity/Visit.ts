@@ -28,13 +28,15 @@ export class Visit extends BaseEntity {
 
   @Field(() => [Order])
   @OneToMany(() => Order, order => order.visit, {
-    cascade: true
+    cascade: true,
+    eager: true
   })
   orders: Order[];
 
   @Field(() => Rating)
   @OneToOne(() => Rating, rating => rating.visit, {
-    cascade: true
+    cascade: true,
+    eager: true
   })
   @JoinColumn()
   rating: Rating;

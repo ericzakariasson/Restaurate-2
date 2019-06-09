@@ -1,11 +1,20 @@
-import { Resolver, Mutation, Arg, Ctx } from 'type-graphql';
+import { Resolver, Mutation, Arg, Ctx, Query } from 'type-graphql';
 import { Visit, AddVisitInput } from '../../entity/Visit';
 import { Order } from '../../entity/Order';
 import { Context } from 'src/types/graphql-utils';
 import { Rating } from '../../entity/Rating';
+import { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
 
 @Resolver(Visit)
 export class VisitResolver {
+  @Query(() => Visit)
+  async visit(
+    @Arg('id') id: PrimaryGeneratedColumnType
+  ): Promise<Visit | undefined> {
+    const visit = await Visit.findOne({ where: { id } });
+    return visit;
+  }
+
   @Mutation(() => Visit)
   async addVisit(
     @Arg('data') input: AddVisitInput,
