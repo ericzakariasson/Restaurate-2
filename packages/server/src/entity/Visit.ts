@@ -5,11 +5,13 @@ import {
   BaseEntity,
   OneToMany,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  ManyToOne
 } from 'typeorm';
 import { Order } from './Order';
 import { Rating, RatingInput } from './Rating';
 import { Field, ID, ObjectType, InputType } from 'type-graphql';
+import { Place, PlaceInput } from './Place';
 
 @ObjectType()
 @Entity()
@@ -40,6 +42,10 @@ export class Visit extends BaseEntity {
   })
   @JoinColumn()
   rating: Rating;
+
+  @Field(() => Place)
+  @ManyToOne(() => Place, place => place.visits)
+  place: Place;
 }
 
 @InputType({ description: 'New visit data' })
@@ -55,4 +61,7 @@ export class AddVisitInput {
 
   @Field(() => RatingInput)
   rating: RatingInput;
+
+  @Field(() => PlaceInput)
+  place: PlaceInput;
 }
