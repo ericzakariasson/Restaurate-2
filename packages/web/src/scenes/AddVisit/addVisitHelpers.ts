@@ -12,10 +12,10 @@ interface Score {
 }
 
 export function calculateAverageScore(state: ReducerState) {
-  const score = Object.entries(state.rate).reduce(
-    (score: Score, [key, value]: [string, RateState]) => {
-      if (value.score) {
-        score.totalScore += value.score;
+  const score = Object.entries(state.rating).reduce(
+    (score: Score, [key, value]: [string, number]) => {
+      if (value) {
+        score.totalScore += value;
         score.entries += 1;
       }
 
@@ -33,10 +33,10 @@ export function calculateAverageScore(state: ReducerState) {
   return null;
 }
 
-const initialNodeState = (rest: any) => ({
+const initialNodeState = (rest: any) => null; /* ({
   score: null,
   ...rest
-});
+}); */
 
 export function createInitialRateState(nodes: RateNode[]): RateNodeState {
   return nodes

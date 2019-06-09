@@ -21,7 +21,11 @@ export interface RateState {
 }
 
 export interface RateNodeState {
-  [key: string]: RateState;
+  food: number;
+  service: number;
+  environment: number;
+  experience: number;
+  [key: string]: number;
 }
 
 export interface ReducerState {
@@ -98,34 +102,31 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
     case SET_RATE:
       const { name, score, parent } = action.payload;
 
-      if (parent) {
-        const oldParentValue = state.rating[parent];
+      // if (parent) {
+      //   const oldParentValue = state.rating[parent];
 
-        const newParentValue = {
-          ...oldParentValue,
-          children: {
-            ...oldParentValue.children,
-            [name]: { score }
-          }
-        };
+      //   const newParentValue = {
+      //     ...oldParentValue,
+      //     children: {
+      //       ...oldParentValue.children,
+      //       [name]: { score }
+      //     }
+      //   };
 
-        return {
-          ...state,
-          rating: {
-            ...state.rating,
-            [parent]: newParentValue
-          }
-        };
-      }
+      //   return {
+      //     ...state,
+      //     rating: {
+      //       ...state.rating,
+      //       [parent]: newParentValue
+      //     }
+      //   };
+      // }
 
       return {
         ...state,
-        rate: {
-          ...state.rate,
-          [name]: {
-            ...state.rate[name],
-            score
-          }
+        rating: {
+          ...state.rating,
+          [name]: score
         }
       };
     case SET_COMMENT:
