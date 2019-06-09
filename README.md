@@ -10,3 +10,7 @@ App to rate your visited resturants and cafés.
 - [ ] Option to publish anonymously
 - [ ] Admin dashboard
 - [ ] Custom tags
+
+## Todo
+
+- [ ] Use Formik in add visit form

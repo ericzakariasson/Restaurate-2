@@ -18,6 +18,7 @@ interface Padding {
   small: string;
   normal: string;
   large: string;
+  [key: string]: string;
 }
 
 const padding: Padding = {
