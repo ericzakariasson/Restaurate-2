@@ -6,6 +6,7 @@ export const config = {
   password: 'postgres',
   database: 'restaurate',
   synchronize: true,
+  dropSchema: true,
   logging: false,
   entities: ['src/entity/**/*.ts'],
   migrations: ['src/migration/**/*.ts'],

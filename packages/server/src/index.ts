@@ -17,7 +17,7 @@ const startServer = async (): Promise<void> => {
   const app = express();
 
   const server = new ApolloServer({
-    schema,
+    schema: await schema,
     context: ({ req }: { req: Request }) => ({ req })
   });
 
@@ -28,4 +28,8 @@ const startServer = async (): Promise<void> => {
   );
 };
 
-startServer();
+try {
+  startServer();
+} catch (e) {
+  console.error(e);
+}
