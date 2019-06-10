@@ -28,4 +28,31 @@ export class UserResolver {
       return false;
     }
   }
+
+  @Mutation(() => User, { nullable: true })
+  async login(
+    @Arg('email') email: string,
+    @Arg('password') password: string,
+    @Ctx() ctx: Context
+  ): Promise<User | null> {
+    try {
+      const user = await User.findOne({ where: { email } });
+
+      if (!user) {
+        return null;
+      }
+
+      const valid = await bcrypt.compare(password, user.password);
+
+      if (!valid) {
+        return null;
+      }
+
+      ctx.req.session!.userId = user.id;
+
+      return user;
+    } catch {
+      return null;
+    }
+  }
 }

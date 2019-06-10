@@ -5,9 +5,10 @@ import {
   BaseEntity,
   OneToMany
 } from 'typeorm';
-import { Field, ID, InputType, Root } from 'type-graphql';
+import { Field, ID, InputType, ObjectType, Root } from 'type-graphql';
 import { Visit } from './Visit';
 
+@ObjectType()
 @Entity()
 export class User extends BaseEntity {
   @Field(() => ID)
@@ -34,9 +35,9 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @Field(() => [Visit])
+  @Field(() => [Visit], { nullable: true })
   @OneToMany(() => Visit, visit => visit.user)
-  visits: Visit[];
+  visits?: Visit[];
 }
 
 @InputType()

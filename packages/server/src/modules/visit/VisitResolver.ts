@@ -3,23 +3,31 @@ import { Visit, AddVisitInput } from '../../entity/Visit';
 import { Order } from '../../entity/Order';
 import { Context } from 'src/types/context';
 import { Rating } from '../../entity/Rating';
+import { User } from '../../entity/User';
 import { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
 
 @Resolver(Visit)
 export class VisitResolver {
-  @Query(() => Visit)
+  @Query(() => Visit, { nullable: true })
   async visit(
     @Arg('id') id: PrimaryGeneratedColumnType
-  ): Promise<Visit | undefined> {
+  ): Promise<Visit | null> {
     const visit = await Visit.findOne({ where: { id } });
+
+    if (!visit) {
+      return null;
+    }
+
     return visit;
   }
 
   @Mutation(() => Visit)
   async addVisit(
     @Arg('data') input: AddVisitInput,
-    @Ctx() _ctx: Context
+    @Ctx() ctx: Context
   ): Promise<Visit> {
+    const user = await User.findOne({ where: { id: ctx.req.session!.userId } });
+
     const orders = input.orders
       ? input.orders.map(title => Order.create({ title }))
       : [];
@@ -36,7 +44,8 @@ export class VisitResolver {
     const visit = Visit.create({
       ...input,
       orders,
-      rating
+      rating,
+      user
     });
 
     await visit.save();
