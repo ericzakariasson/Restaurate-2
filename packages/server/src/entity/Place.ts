@@ -38,7 +38,7 @@ export class Place extends BaseEntity {
   name: string;
 
   @Field(() => PriceLevel)
-  @Column({ type: 'int' })
+  @Column({ enum: PriceLevel })
   priceLevel: PriceLevel;
 
   @Field(() => [Visit])

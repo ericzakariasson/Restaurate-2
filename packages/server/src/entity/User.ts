@@ -8,12 +8,24 @@ import {
 import { Field, ID, InputType, ObjectType, Root } from 'type-graphql';
 import { Visit } from './Visit';
 
+enum UserRoles {
+  ADMIN = 'ADMIN',
+  DEFAULT = 'DEFAULT'
+}
+
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Field()
+  @Column({
+    enum: UserRoles,
+    default: UserRoles.DEFAULT
+  })
+  role: UserRoles;
 
   @Field()
   @Column()
