@@ -12,6 +12,7 @@ import { Order } from './Order';
 import { Rating, RatingInput } from './Rating';
 import { Field, ID, ObjectType, InputType } from 'type-graphql';
 import { Place, PlaceInput } from './Place';
+import { User } from './User';
 
 @ObjectType()
 @Entity()
@@ -19,6 +20,9 @@ export class Visit extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ManyToOne(() => User, user => user.visits)
+  user: User;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

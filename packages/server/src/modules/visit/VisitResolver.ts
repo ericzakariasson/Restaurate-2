@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Arg, Ctx, Query } from 'type-graphql';
 import { Visit, AddVisitInput } from '../../entity/Visit';
 import { Order } from '../../entity/Order';
-import { Context } from 'src/types/graphql-utils';
+import { Context } from 'src/types/context';
 import { Rating } from '../../entity/Rating';
 import { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
 
