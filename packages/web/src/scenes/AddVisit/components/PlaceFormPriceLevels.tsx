@@ -21,7 +21,7 @@ interface PriceLevelButtonProps {
 
 const Button = styled.button<PriceLevelButtonProps>`
   border-radius: 3px;
-  border: 1px solid ${p => (p.selected ? '#bbb' : '#eee')};
+  border: 1px solid ${p => (p.selected ? '#bbb' : '#CCC')};
   outline: none;
   width: 100%;
   padding: 15px;
@@ -31,6 +31,7 @@ const Button = styled.button<PriceLevelButtonProps>`
   align-items: center;
   justify-content: space-between;
   transition: ${p => p.theme.transition};
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 const Name = styled.span`
@@ -47,7 +48,7 @@ const Check = styled.span<CheckProps>`
   height: 1rem;
   width: 1rem;
   border-radius: 1rem;
-  background: ${p => (p.selected ? p.theme.colors.primary.hex : '#eee')};
+  background: ${p => (p.selected ? '#222' : '#DDD')};
   position: relative;
 
   &::before {
@@ -59,7 +60,7 @@ const Check = styled.span<CheckProps>`
     width: 0.25rem;
     height: 0.25rem;
     border-radius: 0.25rem;
-    background: #fff;
+    background: ${p => p.theme.colors.primary.hex};
     opacity: ${p => (p.selected ? 1 : 0)};
     transition: ${p => p.theme.transition};
   }

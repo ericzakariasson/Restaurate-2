@@ -4,8 +4,8 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   display: block;
   border-radius: 5px;
-  background: #f9f9f9;
-  border: 1px solid #eee;
+  background: #fcfcfc;
+  border: 1px solid #ccc;
   outline: none;
   font-size: 1.125rem;
   width: 100%;
@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 const Readable = styled.label`
@@ -22,7 +23,7 @@ const Readable = styled.label`
   height: 50px;
   border-radius: 0 3px 3px 0;
   /* border: 1px solid #eee; */
-  color: ${p => p.theme.colors.primary.hues[0]};
+  color: #222;
   /* background: #fff; */
 
   &::first-letter {

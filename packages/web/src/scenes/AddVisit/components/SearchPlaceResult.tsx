@@ -8,23 +8,25 @@ interface ItemProps {
   theme: any;
 }
 
-const Item = styled.li`
+const Item = styled.li<ItemProps>`
   background: none;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 5px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   transition: 0.15s ease-in-out;
+  box-shadow: ${p => p.theme.boxShadow};
+  border: 1px solid #eee;
 
-  ${(p: ItemProps) =>
+  ${p =>
     p.touching &&
     css`
       transform: scale(1.02);
-      background: #f5f5f5;
+      border-color: #aaa;
     `}
 
   &:not(:last-of-type) {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 `;
 
@@ -32,9 +34,9 @@ interface MapProps {
   touching: boolean;
 }
 
-const Map = styled.img`
+const Map = styled.img<MapProps>`
   margin-right: 10px;
-  border-radius: 10px;
+  border-radius: 3px;
   position: relative;
   flex-shrink: 0;
   transition: 0.15s ease-in-out;
@@ -42,7 +44,7 @@ const Map = styled.img`
   background-position: center;
   background-color: #eee;
 
-  ${(p: MapProps) =>
+  ${p =>
     p.touching &&
     css`
       background-size: 120%;
@@ -83,11 +85,15 @@ export const SearchPlaceResult = ({
   const handleTouchStart = () => setTouching(true);
   const handleTouchEnd = () => setTouching(false);
 
+  const size = {
+    width: 70,
+    height: 70
+  };
+
   const mapUrl = staticMapboxMapUrl({
+    ...size,
     geometry,
     zoom: 12,
-    width: 60,
-    height: 60,
     options: {
       logo: false
     }
@@ -100,7 +106,7 @@ export const SearchPlaceResult = ({
       onTouchEnd={handleTouchEnd}
       touching={touching}
     >
-      <Map style={{ width: 60, height: 60 }} touching={touching} src={mapUrl} />
+      <Map style={{ ...size }} touching={touching} src={mapUrl} />
       <Info>
         <Name>{name}</Name>
         <Address>{formatted_address}</Address>

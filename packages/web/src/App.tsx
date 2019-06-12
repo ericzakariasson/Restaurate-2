@@ -11,10 +11,20 @@ import { Loading } from './components';
 import { useGoogleApi } from './hooks';
 import { routes } from './routes';
 
-import { AddVisitScene, DashboardScene, VisitsScene } from './scenes';
+import {
+  AddVisitScene,
+  DashboardScene,
+  VisitsScene,
+  GeneralError
+} from './scenes';
 
 const Wrapper = styled.div`
   height: 100%;
+`;
+
+const Fullscreen = styled.div`
+  height: 100vh;
+  width: 100vw;
 `;
 
 const App = () => {
@@ -51,9 +61,11 @@ const App = () => {
                   />
                 </Switch>
               ) : scriptError ? (
-                <h1>Ett fel har uppstått</h1>
+                <GeneralError />
               ) : (
-                <Loading />
+                <Fullscreen>
+                  <Loading />
+                </Fullscreen>
               )}
               <GlobalStyle />
             </Wrapper>

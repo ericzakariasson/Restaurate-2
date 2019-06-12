@@ -23,7 +23,8 @@ const Item = styled.li`
   border-radius: 3px;
   background: #fff;
   margin-bottom: 5px;
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
+  box-shadow: ${p => p.theme.boxShadow};
 
   display: flex;
   align-items: center;
@@ -37,7 +38,7 @@ const Remove = styled.button`
   outline: none;
   padding: 0;
   margin: 0;
-  color: ${p => p.theme.colors.primary.hex};
+  color: ${p => p.theme.colors.error.hex};
   font-size: 0.75rem;
   font-weight: 600;
   white-space: pre;
@@ -92,6 +93,7 @@ interface ListInputProps {
   addItem: (item: string) => void;
   removeItem: (item: string) => void;
   maxLength?: number;
+  placeholder?: string;
 }
 
 export const ListInput = ({
@@ -99,7 +101,8 @@ export const ListInput = ({
   addItem,
   removeItem,
   label,
-  maxLength = 50
+  maxLength = 50,
+  placeholder
 }: ListInputProps) => {
   const [value, setValue] = useState('');
 
@@ -137,6 +140,7 @@ export const ListInput = ({
           type="text"
           maxLength={maxLength}
           ref={inputRef}
+          placeholder={placeholder}
         />
         <AddItem active={activeInput} type="submit">
           <Plus size={28} color="#aaa" />

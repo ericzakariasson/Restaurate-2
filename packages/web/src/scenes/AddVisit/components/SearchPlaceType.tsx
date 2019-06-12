@@ -6,7 +6,7 @@ import { SmallLabel } from '../../../components/Label';
 
 const Wrapper = styled.article`
   &:not(:last-of-type) {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 `;
 

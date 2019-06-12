@@ -1,13 +1,13 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css?family=Muli:400,600,700');
+  @import url('https://fonts.googleapis.com/css?family=Karla:400,700|Overpass+Mono:400,600&display=swap');
 
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Muli', sans-serif;
+    font-family: 'Karla', sans-serif;
   }
 
   html {
@@ -27,19 +27,19 @@ export const theme = {
   transition: '0.15s ease-in-out',
   colors: {
     primary: {
-      hex: '#FF6666',
-      light: '#FFECEC',
+      hex: '#FFD966',
       hues: [
-        '#ff6666',
-        '#ff7575',
-        '#ff8585',
-        '#ff9494',
-        '#ffa3a3',
-        '#ffb3b3',
-        '#ffc2c2',
-        '#ffd1d1',
-        '#ffe0e0',
-        '#fff0f0'
+        '#ffd966',
+        '#ffdd75',
+        '#ffe185',
+        '#ffe494',
+        '#ffe8a3',
+        '#ffecb3',
+        '#fff0c2',
+        '#fff4d1',
+        '#fff7e0',
+        '#fffbf0',
+        '#ffffff'
       ],
       rgba: (opacity: number) => `rgba(255, 102, 102, ${opacity / 100})`,
       gradient: 'linear-gradient(105deg, #FF6666 15%, #FD7394 85%);'
@@ -49,6 +49,11 @@ export const theme = {
     }
     // rgba: (opacity: number): string => `rgba(140, 116, 228, ${opacity / 100})`
   },
+  fonts: {
+    default: 'Karla, sans-serif',
+    monospace: '"Overpass Mono", monospace'
+  },
+  boxShadow: '0px 4px 2px rgba(0, 0, 0, 0.04)',
   fontSize: {
     xxsmall: '0.625rem',
     xsmall: '0.75rem',

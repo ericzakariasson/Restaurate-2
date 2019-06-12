@@ -20,6 +20,7 @@ const Normal = styled.label<LabelStyleProps>`
   color: #ccc;
   font-weight: 400;
   margin-bottom: ${p => p.marginBottom};
+  font-family: ${p => p.theme.fonts.monospace};
 `;
 
 export const Label = ({ text, marginBottom, htmlFor, as }: LabelProps) => (
@@ -45,9 +46,10 @@ interface SmallLabelProps extends LabelProps {
 export const SmallLabel = ({
   text,
   textAlign = 'center',
-  marginBottom = '15px'
+  marginBottom = '10px',
+  htmlFor
 }: SmallLabelProps) => (
-  <Small as="span" marginBottom={marginBottom} textAlign={textAlign}>
+  <Small htmlFor={htmlFor} marginBottom={marginBottom} textAlign={textAlign}>
     {text}
   </Small>
 );

@@ -39,6 +39,7 @@ export const VisitForm = ({
         items={orders}
         addItem={addOrder}
         removeItem={removeOrder}
+        placeholder="Tikka Masala, nr. 5 ..."
       />
       <RateVisit
         nodes={rateNodes}
