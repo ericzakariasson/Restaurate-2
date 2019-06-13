@@ -55,39 +55,17 @@ interface NodeProps {
 
 export const Node = ({ node, setMoving, setRate }: NodeProps) => {
   const [value, setValue] = React.useState<number>(0);
-  const [open, setOpen] = React.useState<boolean>(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-    setValue(0);
-    setRate({ name: node.name, score: null });
-  };
 
   return (
-    <Wrapper key={node.name}>
-      <ParentArea>
-        <Info>
-          <Name>{node.label}</Name>
-          <SecondaryButton
-            size={open ? 'xsmall' : 'small'}
-            text={open ? 'Avbryt' : 'Lägg till'}
-            onClick={open ? handleClose : handleOpen}
-          />
-          {open && <Value>{value}</Value>}
-        </Info>
-        {open && (
-          <SliderWrapper>
-            <InputSlider
-              value={value}
-              setValue={setValue}
-              onChange={() => setRate({ name: node.name, score: value })}
-              onSlideStart={() => setMoving(true)}
-              onSlideEnd={() => setMoving(false)}
-            />
-          </SliderWrapper>
-        )}
-      </ParentArea>
+    <Wrapper>
+      <InputSlider
+        value={value}
+        onInput={setValue}
+        label={node.label}
+        onChange={() => setRate({ name: node.name, score: value })}
+        onSlideStart={() => setMoving(true)}
+        onSlideEnd={() => setMoving(false)}
+      />
     </Wrapper>
   );
 };

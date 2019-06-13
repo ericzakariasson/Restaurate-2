@@ -15,46 +15,76 @@ const StyledSlider = styled(Slider)`
 `;
 
 const Rail = styled.div`
-  width: 100%;
-  height: 8px;
-  margin: 12px 0;
+  height: 58px;
   /* 9 * 2 + 6 = 24 = handle height */
-  border-radius: 5px;
-  background-color: #eee;
+  border-radius: 3px;
+  background-color: #FFF;
+  border: 1px solid #CCC;
   position: relative;
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 const HandleTrack = styled.div`
   /* Cancel out the handle width */
-  width: calc(100% - 32px);
+  width: calc(100% - 12px);
+  height: 100%;
   margin: 0 auto;
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
-  transform: translateY(-50%);
+  z-index: 3;
+`;
+
+const Label = styled.span`
+  position: relative;
+  font-size: 1.25rem;
   z-index: 2;
+  mix-blend-mode: difference;
+  color: #FFF;
+`;
+
+const Value = styled(Label)`
+  font-size: 1.35rem;
+`
+
+const Text = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+
+  /* mix-blend-mode: difference; */
+  color: #222;
+  font-weight: 400;
 `;
 
 const defaultDomain = [1, 10];
 
 interface InputSliderProps {
-  domain?: number[];
   value: number;
-  setValue: (values: number) => void;
-  onChange?: (args: any) => void;
-  onSlideStart?: (args: any) => void;
-  onSlideEnd?: (args: any) => void;
+  onInput: (value: number) => void;
+  label?: string;
+  domain?: number[];
+  onChange?: (values: readonly number[]) => void;
+  onSlideStart?: (values: readonly number[]) => void;
+  onSlideEnd?: (values: readonly number[]) => void;
 }
 
 export const InputSlider = ({
   value,
-  setValue,
+  onInput,
+  label,
+  domain = defaultDomain,
   onChange,
   onSlideStart,
   onSlideEnd,
-  domain = defaultDomain
 }: InputSliderProps) => {
-  const handleUpdate = (values: readonly number[]) => setValue(values[0]);
+  const handleUpdate = (values: readonly number[]) => onInput(values[0]);
 
   return (
     <StyledSlider
@@ -66,7 +96,6 @@ export const InputSlider = ({
       onSlideStart={onSlideStart}
       onSlideEnd={onSlideEnd}
     >
-      <Rail />
       <Handles>
         {({ handles, getHandleProps, activeHandleID }) => (
           <HandleTrack>
@@ -81,6 +110,10 @@ export const InputSlider = ({
           </HandleTrack>
         )}
       </Handles>
+      <Text>
+        <Label>{label}</Label>
+        <Value>{value}</Value>
+      </Text>
       <Tracks right={false}>
         {({ tracks, getTrackProps }) => (
           <>
@@ -94,6 +127,7 @@ export const InputSlider = ({
           </>
         )}
       </Tracks>
+      <Rail />
     </StyledSlider>
   );
 };
@@ -103,29 +137,38 @@ interface StyledHandleProps {
 }
 
 const StyledHandle = styled.div<StyledHandleProps>`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #fff;
-  border: 1px solid ${p => (p.active ? '#AAA' : '#EEE')};
   position: absolute;
   top: 0;
-  transform: translateY(-50%) scale(${p => (p.active ? 1 : 1.2)});
-  transition: ${p => p.theme.transition} border,
-    ${p => p.theme.transition} transform;
   z-index: 2;
   cursor: pointer;
+  transform: translateX(-24px);
+  padding: 29px 30px;
+  user-select: none;
 
   &::before {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+    width: 2px;
+    height: 48px;
+    border-radius: 2px;
     top: 50%;
     left: 50%;
-    background: ${p => p.theme.colors.primary.hex};
     transform: translate(-50%, -50%);
+    background: ${p => p.theme.colors.primary.hex};
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 3px;
+    background: #fff;
+    border: 1px solid #222;
+    width: 12px;
+    height: 58px;
+    z-index: -1;
   }
 `;
 
@@ -138,7 +181,7 @@ interface HandleProps {
 const Handle = ({
   handle: { id, value, percent },
   getHandleProps,
-  active
+  active,
 }: HandleProps) => {
   return (
     <StyledHandle
@@ -151,12 +194,15 @@ const Handle = ({
   );
 };
 
-const StyledTrack = styled(Rail)`
+const StyledTrack = styled.div`
   position: absolute;
-  background: ${p => p.theme.colors.primary.gradient};
+  background: #222;
   margin: 0;
   top: 0;
+  height: 100%;
   z-index: 1;
+  box-shadow: none;
+  border-radius: 3px;
 `;
 
 interface TrackProps {

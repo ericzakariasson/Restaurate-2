@@ -12,17 +12,18 @@ const Wrapper = styled.div`
 
 const AverageScore = styled.article`
   border-radius: 3px;
-  padding: 15px;
+  padding: 15px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #222;
+  border: 1px solid #222;
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 const Score = styled.h2`
   font-size: 1.375rem;
   font-weight: 600;
-  color: #fff;
+  color: #222;
 `;
 
 const Label = styled(Score)``;
