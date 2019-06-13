@@ -30,6 +30,10 @@ export class VisitResolver {
 
     console.log(input);
 
+    const place = (await ctx.client
+      .place({ placeid: input.providerPlaceId })
+      .asPromise()).json.result;
+
     const orders = input.orders
       ? input.orders.map(title => Order.create({ title }))
       : [];

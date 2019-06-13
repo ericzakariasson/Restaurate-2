@@ -8,11 +8,14 @@ import { ApolloServer } from 'apollo-server-express';
 import { config } from './ormconfig';
 
 import { schema } from './schema';
+import { initGoogleClient } from './googleClient';
 
 dotenv.config();
 
 const startServer = async (): Promise<void> => {
   const connection = await createConnection(config as any);
+
+  const client = initGoogleClient();
 
   if (connection) {
     console.log('Established connection');
@@ -36,7 +39,7 @@ const startServer = async (): Promise<void> => {
 
   const server = new ApolloServer({
     schema: await schema,
-    context: ({ req }: { req: Request }) => ({ req })
+    context: ({ req }: { req: Request }) => ({ req, client })
   });
 
   server.applyMiddleware({ app });
