@@ -5,13 +5,7 @@ import {
   BaseEntity,
   OneToMany
 } from 'typeorm';
-import {
-  Field,
-  ID,
-  ObjectType,
-  InputType,
-  registerEnumType
-} from 'type-graphql';
+import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
 import { Visit } from './Visit';
 
 export enum PriceLevel {
@@ -44,16 +38,4 @@ export class Place extends BaseEntity {
   @Field(() => [Visit])
   @OneToMany(() => Visit, visit => visit.place)
   visits: Visit[];
-}
-
-@InputType({ description: 'New place data' })
-export class PlaceInput implements Partial<Place> {
-  @Field()
-  placeId: string;
-
-  @Field(() => [String])
-  tags: string[];
-
-  @Field(() => PriceLevel)
-  priceLevel: PriceLevel;
 }

@@ -6,11 +6,11 @@
     "apollo-cache-inmemory": "^1.6.2",
     "apollo-client": "^2.6.2",
     "apollo-link-http": "^1.5.14",
-    "graphql": "^14.3.1",
-    "graphql-tag": "^2.10.1",
+    "graphql": "14.2.1",
+    "graphql.macro": "^1.4.2",
     "query-string": "^6.4.2",
     "react": "^16.8.6",
-    "react-apollo-hooks": "^0.5.0-alpha.0",
+    "react-apollo-hooks": "^0.4.5",
     "react-compound-slider": "^2.0.0",
     "react-dom": "^16.8.6",
     "react-feather": "^1.1.6",
@@ -29,7 +29,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "apollo:download": "apollo schema:download --endpoint=http://localhost:4000/graphql graphql-schema.json",
+    "apollo:generate": "apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --includes=src/**/*.gql --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types",
+    "graphql:schema": "yarn run apollo:download & yarn run apollo:generate"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -55,6 +58,10 @@
     "@types/react-helmet": "^5.0.8",
     "@types/react-router-dom": "^4.3.3",
     "@types/react-swipeable-views": "^0.13.0",
-    "@types/styled-components": "^4.1.15"
+    "@types/styled-components": "^4.1.15",
+    "apollo": "^2.13.1"
+  },
+  "resolutions": {
+    "graphql": "14.2.1"
   }
 }

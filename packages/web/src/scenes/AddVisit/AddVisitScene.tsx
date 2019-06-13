@@ -3,10 +3,10 @@ import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 import Helmet from 'react-helmet';
-import { routes } from '../../routes';
-
 import { useMutation } from 'react-apollo-hooks';
-import gql from 'graphql-tag';
+
+import { routes } from '../../routes';
+import { loader } from 'graphql.macro';
 
 import { PlaceForm } from './components/PlaceForm';
 import { VisitForm } from './components/VisitForm';
@@ -16,16 +16,10 @@ import { Tabs } from './components';
 import { addVisitReducer, initialState } from './addVisitReducer';
 import { createActions } from './addVisitActions';
 import { calculateAverageScore } from './addVisitHelpers';
-
+import { toInputData } from './stateToInputData';
 import { tabs } from './tabs';
 
-const SAVE_VISIT = gql`
-  mutation SaveVisit($input: Input) {
-    saveVisit(input: $input) {
-      saved
-    }
-  }
-`;
+const addVisitMutation = loader('../../mutations/addVisit.gql');
 
 const slideStyle = {
   padding: 15,
@@ -34,24 +28,39 @@ const slideStyle = {
 
 const FormWrapper = styled.section``;
 
+interface AddVisitResponse {
+  saved: boolean;
+}
+
 export const AddVisitScene = ({ history }: RouteComponentProps) => {
   const [state, dispatch] = React.useReducer(addVisitReducer, initialState);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [movingSlider, setMovingSlider] = React.useState(false);
 
+  const [loading, setLoading] = React.useState(false);
+
   const handleIndexChange = (index: number) => setTabIndex(index);
 
   const goToVisitForm = () => setTabIndex(1);
 
-  const [saveVisit, { loading, error }] = useMutation(SAVE_VISIT, {
-    variables: {
-      input: state
-    }
-  });
+  const addVisit = useMutation<AddVisitResponse>(addVisitMutation);
 
   const handleSave = async () => {
-    await saveVisit();
-    history.push(routes.visits);
+    setLoading(true);
+
+    const { data, errors } = await addVisit({
+      variables: {
+        data: toInputData(state)
+      }
+    });
+
+    if (data && data.saved) {
+      history.push(routes.visits);
+    } else {
+      console.error('Could not save visit');
+    }
+
+    setLoading(false);
   };
 
   const {
@@ -72,10 +81,6 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
 
   if (loading) {
     return <h1>Sparar...</h1>;
-  }
-
-  if (error) {
-    return <h1>Fel!</h1>;
   }
 
   return (

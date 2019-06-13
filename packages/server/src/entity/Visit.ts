@@ -11,7 +11,7 @@ import {
 import { Order } from './Order';
 import { Rating, RatingInput } from './Rating';
 import { Field, ID, ObjectType, InputType } from 'type-graphql';
-import { Place, PlaceInput } from './Place';
+import { Place } from './Place';
 import { User } from './User';
 
 @ObjectType()
@@ -55,17 +55,29 @@ export class Visit extends BaseEntity {
 @InputType({ description: 'New visit data' })
 export class AddVisitInput {
   @Field({ nullable: true })
-  comment: string;
+  comment?: string;
 
   @Field()
   visitDate: Date;
 
   @Field(() => [String], { nullable: true })
-  orders: string[];
+  orders?: string[];
 
   @Field(() => RatingInput)
   rating: RatingInput;
 
-  @Field(() => PlaceInput)
-  place: PlaceInput;
+  @Field(() => Number, { nullable: true })
+  priceLevel?: number;
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
+
+  @Field(() => ID)
+  providerPlaceId: string;
+}
+
+@ObjectType()
+export class AddVisitResponse {
+  @Field(() => Boolean)
+  saved: boolean;
 }

@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Arg, Ctx, Query } from 'type-graphql';
-import { Visit, AddVisitInput } from '../../entity/Visit';
+import { Visit, AddVisitInput, AddVisitResponse } from '../../entity/Visit';
 import { Order } from '../../entity/Order';
 import { Context } from 'src/types/context';
 import { Rating } from '../../entity/Rating';
@@ -21,12 +21,14 @@ export class VisitResolver {
     return visit;
   }
 
-  @Mutation(() => Visit)
+  @Mutation(() => AddVisitResponse)
   async addVisit(
     @Arg('data') input: AddVisitInput,
     @Ctx() ctx: Context
-  ): Promise<Visit> {
+  ): Promise<AddVisitResponse> {
     const user = await User.findOne({ where: { id: ctx.req.session!.userId } });
+
+    console.log(input);
 
     const orders = input.orders
       ? input.orders.map(title => Order.create({ title }))
@@ -50,6 +52,6 @@ export class VisitResolver {
 
     await visit.save();
 
-    return visit;
+    return { saved: true };
   }
 }
