@@ -77,10 +77,11 @@ export const TextButton = ({ text, onClick, size = 'normal' }: ButtonProps) => (
 
 const StyledButton = styled(BaseButton)<StyledButtonProps>`
   background-color: ${p =>
-    p.disabled ? '#AAA' : p.theme.colors.primary.hues[0]};
-  color: #fff;
+    p.disabled ? '#CCC' : p.theme.colors.primary.hues[0]};
+  color: #222;
   width: 100%;
   font-weight: 700;
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 export const Button = ({
