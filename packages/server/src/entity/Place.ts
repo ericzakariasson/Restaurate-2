@@ -52,11 +52,11 @@ export class Place extends BaseEntity {
 
   @Field()
   @Column()
-  lat: string;
+  lat: number;
 
   @Field()
   @Column()
-  lng: string;
+  lng: number;
 
   @Field()
   @Column()
