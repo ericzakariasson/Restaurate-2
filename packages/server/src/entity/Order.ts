@@ -5,8 +5,9 @@ import {
   BaseEntity,
   ManyToOne
 } from 'typeorm';
-import { Visit } from './Visit';
 import { ObjectType, Field, ID } from 'type-graphql';
+import { Visit } from './Visit';
+import { User } from './User';
 
 @ObjectType()
 @Entity()
@@ -21,4 +22,6 @@ export class Order extends BaseEntity {
 
   @ManyToOne(() => Visit, visit => visit.orders)
   visit: Visit;
+
+  author: User;
 }

@@ -32,10 +32,11 @@ export class Visit extends BaseEntity {
   @Column()
   visitDate: Date;
 
-  @Field(() => [Order])
+  @Field(() => [Order], { nullable: true })
   @OneToMany(() => Order, order => order.visit, {
     cascade: true,
-    eager: true
+    eager: true,
+    nullable: true
   })
   orders: Order[];
 
