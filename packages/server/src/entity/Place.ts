@@ -21,6 +21,15 @@ export enum PriceLevel {
   Exclusive = 3
 }
 
+type PriceLevelMap = { [key: number]: PriceLevel };
+
+export const priceLevelMap: PriceLevelMap = {
+  0: PriceLevel.Cheap,
+  1: PriceLevel.Medium,
+  2: PriceLevel.Expensive,
+  3: PriceLevel.Exclusive
+};
+
 registerEnumType(PriceLevel, {
   name: 'PriceLevel',
   description: 'Price level of place'
@@ -46,16 +55,19 @@ export class Place extends BaseEntity {
   slug: string;
 
   @Field(() => Address)
-  @OneToOne(() => Address, address => address.place, { eager: true })
+  @OneToOne(() => Address, address => address.place, {
+    eager: true,
+    cascade: true
+  })
   @JoinColumn()
   address: Address;
 
   @Field()
-  @Column()
+  @Column({ type: 'float' })
   lat: number;
 
   @Field()
-  @Column()
+  @Column({ type: 'float' })
   lng: number;
 
   @Field()
@@ -68,8 +80,8 @@ export class Place extends BaseEntity {
 
   @Field(() => [Tag], { nullable: true })
   @OneToMany(() => Tag, tag => tag.place, {
-    cascade: true,
     eager: true,
+    cascade: true,
     nullable: true
   })
   tags: Tag[];
@@ -80,9 +92,8 @@ export class Place extends BaseEntity {
 
   @BeforeInsert()
   slugify() {
-    this.slug = `
-      ${slugify(this.name)}-
-      ${slugify(this.address.street)}-
-      ${slugify(this.address.city)}`;
+    this.slug = `${slugify(this.name)}-${slugify(
+      this.address.street
+    )}-${slugify(this.address.city)}`.trim();
   }
 }

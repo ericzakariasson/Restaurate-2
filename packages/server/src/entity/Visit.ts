@@ -81,4 +81,10 @@ export class AddVisitInput {
 export class AddVisitResponse {
   @Field(() => Boolean)
   saved: boolean;
+
+  @Field(() => Visit, { nullable: true })
+  visit?: Visit;
+
+  @Field(() => Place, { nullable: true })
+  place?: Place;
 }
