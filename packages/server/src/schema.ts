@@ -1,6 +1,7 @@
 import { buildSchema } from 'type-graphql';
 import { UserResolver } from './modules/user/UserResolver';
 import { LoginResolver } from './modules/user/LoginResolver';
+import { LogoutResolver } from './modules/user/LogoutResolver';
 import { RegisterResolver } from './modules/user/RegisterResolver';
 import { VisitResolver } from './modules/visit/VisitResolver';
 import { AddVisitResolver } from './modules/visit/AddVisitResolver';
@@ -11,6 +12,7 @@ export const schema = buildSchema({
     UserResolver,
     RegisterResolver,
     LoginResolver,
+    LogoutResolver,
     VisitResolver,
     AddVisitResolver,
     PlaceResolver
