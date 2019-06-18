@@ -65,13 +65,13 @@ const App = () => {
                     exact={true}
                   />
                   <Route
-                    path={routes.visits}
-                    component={VisitsScene}
-                    exact={true}
-                  />
-                  <Route
                     path={routes.login}
                     component={LoginScene}
+                    exact={true}
+                  />
+                  <AuthRoute
+                    path={routes.visits}
+                    component={VisitsScene}
                     exact={true}
                   />
                   <AuthRoute

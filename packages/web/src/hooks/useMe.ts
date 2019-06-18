@@ -12,19 +12,11 @@ interface UseMe {
 export function useMe(): UseMe {
   const { data, loading } = useQuery<Me>(meQuery);
 
-  const isAuthenticated = !loading && data && data.me !== null;
-
-  if (loading || !data) {
-    return {
-      isAuthenticated: false,
-      loading: true,
-      me: null
-    };
-  }
+  const isAuthenticated = data && data.me !== null;
 
   return {
     isAuthenticated: Boolean(isAuthenticated),
-    me: isAuthenticated ? data.me : null,
+    me: data ? data.me : null,
     loading
   };
 }

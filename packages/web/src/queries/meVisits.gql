@@ -23,6 +23,7 @@ query MeVisits {
           formatted
         }
         slug
+        visitCount
       }
     }
   }

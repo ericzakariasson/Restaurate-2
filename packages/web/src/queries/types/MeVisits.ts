@@ -12,8 +12,8 @@ export interface MeVisits_me_visits_orders {
   title: string;
 }
 
-export interface MeVisits_me_visits_rating {
-  __typename: "Rating";
+export interface MeVisits_me_visits_rate {
+  __typename: "Rate";
   score: number;
   food: number | null;
   service: number | null;
@@ -32,6 +32,7 @@ export interface MeVisits_me_visits_place {
   name: string;
   address: MeVisits_me_visits_place_address;
   slug: string;
+  visitCount: number;
 }
 
 export interface MeVisits_me_visits {
@@ -40,7 +41,7 @@ export interface MeVisits_me_visits {
   comment: string | null;
   visitDate: any;
   orders: MeVisits_me_visits_orders[] | null;
-  rating: MeVisits_me_visits_rating;
+  rate: MeVisits_me_visits_rate;
   place: MeVisits_me_visits_place;
 }
 

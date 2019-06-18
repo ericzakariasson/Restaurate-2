@@ -934,7 +934,7 @@
             "deprecationReason": null
           },
           {
-            "name": "rating",
+            "name": "rate",
             "description": null,
             "args": [],
             "type": {
@@ -942,7 +942,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Rating",
+                "name": "Rate",
                 "ofType": null
               }
             },
@@ -1096,7 +1096,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "Rating",
+        "name": "Rate",
         "description": null,
         "fields": [
           {
@@ -1457,14 +1457,14 @@
             "defaultValue": null
           },
           {
-            "name": "rating",
+            "name": "rate",
             "description": null,
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "RatingInput",
+                "name": "RateInput",
                 "ofType": null
               }
             },
@@ -1519,7 +1519,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "RatingInput",
+        "name": "RateInput",
         "description": null,
         "fields": null,
         "inputFields": [

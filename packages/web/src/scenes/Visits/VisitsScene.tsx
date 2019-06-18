@@ -13,14 +13,14 @@ const Page = styled.article`
   padding: 20px;
 `;
 
+const VisitList = styled.ul`
+  list-style: none;
+`;
+
 const NoResult = styled.h2``;
 
 export const VisitsScene = () => {
-  const { data, loading, error } = useQuery<MeVisits>(meVisitsQuery);
-
-  console.log(data);
-  console.log(loading);
-  console.log(error);
+  const { data, loading } = useQuery<MeVisits>(meVisitsQuery);
 
   if (loading || !data || !data.me) {
     return <Loading />;
@@ -34,7 +34,11 @@ export const VisitsScene = () => {
       {visitCount === 0 ? (
         <NoResult>Inga besök</NoResult>
       ) : (
-        visits.map(visit => <VisitItem {...visit} />)
+        <VisitList>
+          {visits.map(visit => (
+            <VisitItem key={visit.id} {...visit} />
+          ))}
+        </VisitList>
       )}
     </Page>
   );

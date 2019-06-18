@@ -10,10 +10,10 @@
  * Price level of place
  */
 export enum PriceLevel {
-  Cheap = 'Cheap',
-  Exclusive = 'Exclusive',
-  Expensive = 'Expensive',
-  Medium = 'Medium'
+  Cheap = "Cheap",
+  Exclusive = "Exclusive",
+  Expensive = "Expensive",
+  Medium = "Medium",
 }
 
 /**

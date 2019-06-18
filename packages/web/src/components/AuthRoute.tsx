@@ -17,9 +17,9 @@ export const AuthRoute = ({
     return null;
   }
 
-  if (isAuthenticated) {
-    return <Route {...props} />;
+  if (!isAuthenticated) {
+    return <Redirect to={fallbackRoute} />;
   }
 
-  return <Redirect to={fallbackRoute} />;
+  return <Route {...props} />;
 };
