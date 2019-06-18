@@ -7,6 +7,8 @@ import { PageTitle, Button, InputField } from '../../components';
 import { loader } from 'graphql.macro';
 
 import { Register, RegisterVariables } from '../../mutations/types/Register';
+import { RouteComponentProps } from 'react-router';
+import { routes } from '../../routes';
 
 const registerMutation = loader('../../mutations/register.gql');
 
@@ -41,7 +43,7 @@ const validationSchema = object().shape({
     .required('Lösenord måste vara samma')
 });
 
-export const RegisterScene = () => {
+export const RegisterScene = ({ history }: RouteComponentProps) => {
   const register = useMutation<Register, RegisterVariables>(registerMutation);
 
   return (
@@ -60,7 +62,7 @@ export const RegisterScene = () => {
           });
 
           if (data && data.register) {
-            console.log('Register success. Redirect...');
+            history.push(routes.dashboard);
           }
         }}
       >
