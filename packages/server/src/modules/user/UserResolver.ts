@@ -42,4 +42,23 @@ export class UserResolver {
 
     return visits;
   }
+
+  @FieldResolver(() => Number)
+  async placeCount(@Root() user: User): Promise<number> {
+    const placeCount = await createQueryBuilder(Place, 'place')
+      .innerJoin('place.visits', 'visit')
+      .where('visit.user = :userId', { userId: user.id })
+      .getCount();
+
+    return placeCount;
+  }
+
+  @FieldResolver(() => Number)
+  async visitCount(@Root() user: User): Promise<number> {
+    const visitCount = await Visit.count({
+      where: { userId: user.id }
+    });
+
+    return visitCount;
+  }
 }
