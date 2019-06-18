@@ -1,6 +1,6 @@
 export const routes = {
   default: '/',
-  dashboard: '/',
+  dashboard: '/dashboard',
   visits: '/visits',
   addVisit: '/add-visit',
   places: '/places',

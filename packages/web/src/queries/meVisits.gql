@@ -1,0 +1,29 @@
+query MeVisits {
+  me {
+    visitCount
+    visits {
+      id
+      comment
+      visitDate
+      orders {
+        id
+        title
+      }
+      rating {
+        score
+        food
+        service
+        environment
+        experience
+      }
+      place {
+        id
+        name
+        address {
+          formatted
+        }
+        slug
+      }
+    }
+  }
+}

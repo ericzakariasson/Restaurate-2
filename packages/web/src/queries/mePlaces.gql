@@ -1,0 +1,27 @@
+query MePlaces {
+  me {
+    places {
+      id
+      googlePlaceId
+      name
+      slug
+      address {
+        streetNumber
+        street
+        formatted
+        sublocality
+        city
+        country
+      }
+      url
+      lat
+      lng
+      priceLevel
+      tags {
+        id
+        title
+      }
+      visitCount
+    }
+  }
+}

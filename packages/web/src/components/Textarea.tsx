@@ -15,6 +15,7 @@ export const Textarea = styled.textarea`
   resize: vertical;
   box-shadow: ${p => p.theme.boxShadow};
   color: #222;
+  line-height: 1.5;
 
   &:focus {
     border-color: #aaa;

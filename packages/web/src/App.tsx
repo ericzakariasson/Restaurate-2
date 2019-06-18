@@ -16,7 +16,8 @@ import {
   DashboardScene,
   VisitsScene,
   GeneralError,
-  RegisterScene
+  RegisterScene,
+  DefaultScene
 } from './scenes';
 import { AuthRoute } from './components/AuthRoute';
 
@@ -47,13 +48,18 @@ const App = () => {
               {ready ? (
                 <Switch>
                   <Route
-                    path={routes.register}
-                    component={RegisterScene}
+                    path={routes.default}
+                    component={DefaultScene}
+                    exact={true}
+                  />
+                  <AuthRoute
+                    path={routes.dashboard}
+                    component={DashboardScene}
                     exact={true}
                   />
                   <Route
-                    path={routes.default}
-                    component={DashboardScene}
+                    path={routes.register}
+                    component={RegisterScene}
                     exact={true}
                   />
                   <Route
