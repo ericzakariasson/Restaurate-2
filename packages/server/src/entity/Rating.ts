@@ -3,7 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToOne,
-  BaseEntity
+  BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { Visit } from './Visit';
 import { ObjectType, Field, InputType } from 'type-graphql';
@@ -39,6 +41,14 @@ export class Rating extends BaseEntity {
 
   @Column()
   rawData: string;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: string;
+
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt: string;
 }
 
 @InputType('RatingInput')

@@ -6,7 +6,9 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
-  BeforeInsert
+  BeforeInsert,
+  CreateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
 import { Visit } from './Visit';
@@ -96,4 +98,12 @@ export class Place extends BaseEntity {
       this.address.street
     )}-${slugify(this.address.city)}`.trim();
   }
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: string;
+
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt: string;
 }

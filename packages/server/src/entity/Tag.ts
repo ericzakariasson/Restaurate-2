@@ -3,7 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
-  ManyToOne
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { Place } from './Place';
 import { ObjectType, Field, ID } from 'type-graphql';
@@ -24,4 +26,12 @@ export class Tag extends BaseEntity {
   place: Place;
 
   author: User;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: string;
+
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt: string;
 }

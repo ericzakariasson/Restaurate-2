@@ -3,7 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
-  ManyToOne
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
 import { Visit } from './Visit';
@@ -24,4 +26,12 @@ export class Order extends BaseEntity {
   visit: Visit;
 
   author: User;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: string;
+
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt: string;
 }

@@ -1,5 +1,12 @@
 import { ObjectType, Field, ID, Root } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, OneToOne, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { Place } from './Place';
 import { PlaceDetailsResult } from '@google/maps';
 
@@ -41,6 +48,14 @@ export class Address {
   @Field()
   @Column()
   country: string;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: string;
+
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt: string;
 
   static createFromPlaceData(placeData: PlaceDetailsResult): Address {
     const address = new Address();

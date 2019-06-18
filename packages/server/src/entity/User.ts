@@ -3,11 +3,13 @@ import {
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
-  OneToMany
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { Field, ID, InputType, ObjectType, Root } from 'type-graphql';
 import { Visit } from './Visit';
-import { IsEmail, Min, Max } from 'class-validator';
+import { IsEmail, Length } from 'class-validator';
 
 enum UserRoles {
   ADMIN = 'ADMIN',
@@ -52,6 +54,14 @@ export class User extends BaseEntity {
   visits: Visit[];
 
   // places - See UserResolver
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: string;
+
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt: string;
 }
 
 @InputType()
@@ -66,8 +76,7 @@ export class UserRegisterInput {
   @Field()
   email: string;
 
-  @Min(6)
-  @Max(64)
+  @Length(6, 64)
   @Field()
   password: string;
 }

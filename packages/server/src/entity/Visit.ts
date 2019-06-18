@@ -6,7 +6,9 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
-  ManyToOne
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { Order } from './Order';
 import { Rating, RatingInput } from './Rating';
@@ -35,6 +37,9 @@ export class Visit extends BaseEntity {
   @Column()
   visitDate: Date;
 
+  @Column({ default: false })
+  deleted: boolean;
+
   @Field(() => [Order], { nullable: true })
   @OneToMany(() => Order, order => order.visit, {
     cascade: true,
@@ -55,6 +60,14 @@ export class Visit extends BaseEntity {
   place: Place;
   @RelationColumn()
   placeId: number;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt: string;
+
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt: string;
 }
 
 @InputType({ description: 'New visit data' })
