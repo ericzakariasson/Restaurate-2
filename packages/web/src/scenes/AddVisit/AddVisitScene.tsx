@@ -21,6 +21,9 @@ import { tabs } from './tabs';
 
 const addVisitMutation = loader('../../mutations/addVisit.gql');
 
+const meVisitsQuery = loader('../../queries/meVisits.gql');
+const mePlacesQuery = loader('../../queries/mePlaces.gql');
+
 import { AddVisit, AddVisitVariables } from '../../mutations/types/AddVisit';
 
 const slideStyle = {
@@ -41,7 +44,9 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
 
   const goToVisitForm = () => setTabIndex(1);
 
-  const addVisit = useMutation<AddVisit, AddVisitVariables>(addVisitMutation);
+  const addVisit = useMutation<AddVisit, AddVisitVariables>(addVisitMutation, {
+    refetchQueries: [{ query: meVisitsQuery }, { query: mePlacesQuery }]
+  });
 
   const handleSave = async () => {
     setLoading(true);
