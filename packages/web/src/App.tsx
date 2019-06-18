@@ -15,7 +15,8 @@ import {
   AddVisitScene,
   DashboardScene,
   VisitsScene,
-  GeneralError
+  GeneralError,
+  RegisterScene
 } from './scenes';
 
 const Wrapper = styled.div`
@@ -44,6 +45,11 @@ const App = () => {
             <Wrapper>
               {ready ? (
                 <Switch>
+                  <Route
+                    path={routes.register}
+                    component={RegisterScene}
+                    exact={true}
+                  />
                   <Route
                     path={routes.default}
                     component={DashboardScene}

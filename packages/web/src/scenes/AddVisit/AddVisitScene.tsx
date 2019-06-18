@@ -21,16 +21,14 @@ import { tabs } from './tabs';
 
 const addVisitMutation = loader('../../mutations/addVisit.gql');
 
+import { AddVisit, AddVisitVariables } from '../../mutations/types/AddVisit';
+
 const slideStyle = {
   padding: 15,
   paddingBottom: 70
 } as React.CSSProperties;
 
 const FormWrapper = styled.section``;
-
-interface AddVisitResponse {
-  saved: boolean;
-}
 
 export const AddVisitScene = ({ history }: RouteComponentProps) => {
   const [state, dispatch] = React.useReducer(addVisitReducer, initialState);
@@ -43,7 +41,7 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
 
   const goToVisitForm = () => setTabIndex(1);
 
-  const addVisit = useMutation<AddVisitResponse>(addVisitMutation);
+  const addVisit = useMutation<AddVisit, AddVisitVariables>(addVisitMutation);
 
   const handleSave = async () => {
     setLoading(true);
@@ -54,7 +52,7 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
       }
     });
 
-    if (data && data.saved) {
+    if (data && data.addVisit.saved) {
       history.push(routes.visits);
     } else {
       console.error('Could not save visit');

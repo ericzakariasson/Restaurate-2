@@ -26,6 +26,13 @@ export interface RatingInput {
   experience?: number | null;
 }
 
+export interface UserRegisterInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { FieldProps } from 'formik';
 import styled from 'styled-components';
+
+import { SmallLabel } from './Label';
 
 export const Input = styled.input`
   display: block;
@@ -26,3 +29,29 @@ export const Input = styled.input`
     display: none;
   }
 `;
+
+interface InputFieldProps extends FieldProps {
+  label: string;
+}
+
+const Wrapper = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const InputField = ({
+  field,
+  form,
+  label,
+  ...props
+}: InputFieldProps) => (
+  <Wrapper>
+    <SmallLabel
+      error={
+        Boolean(form.touched[field.name]) && Boolean(form.errors[field.name])
+      }
+      text={label}
+      htmlFor={field.name}
+    />
+    <Input {...field} {...props} id={field.name} />
+  </Wrapper>
+);
