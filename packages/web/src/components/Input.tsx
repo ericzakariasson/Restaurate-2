@@ -31,7 +31,7 @@ export const Input = styled.input`
 `;
 
 interface InputFieldProps extends FieldProps {
-  label: string;
+  label?: string;
 }
 
 const Wrapper = styled.div`
@@ -45,13 +45,15 @@ export const InputField = ({
   ...props
 }: InputFieldProps) => (
   <Wrapper>
-    <SmallLabel
-      error={
-        Boolean(form.touched[field.name]) && Boolean(form.errors[field.name])
-      }
-      text={label}
-      htmlFor={field.name}
-    />
+    {label && (
+      <SmallLabel
+        error={
+          Boolean(form.touched[field.name]) && Boolean(form.errors[field.name])
+        }
+        text={label}
+        htmlFor={field.name}
+      />
+    )}
     <Input {...field} {...props} id={field.name} />
   </Wrapper>
 );

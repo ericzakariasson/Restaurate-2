@@ -38,6 +38,7 @@ const BaseButton = styled.button<StyledButtonProps>`
   text-align: center;
   font-size: ${p => p.theme.fontSize[p.size]};
   padding: ${p => padding[p.size]};
+  transition: ${p => p.theme.transition};
 `;
 
 const StyledSecondaryButton = styled(BaseButton)`
@@ -84,10 +85,12 @@ export const TextButton = ({
 
 const StyledButton = styled(BaseButton)<StyledButtonProps>`
   background-color: ${p =>
-    p.disabled ? '#CCC' : p.theme.colors.primary.hues[0]};
+    p.disabled ? '#EEE' : p.theme.colors.primary.hues[0]};
   color: #222;
   width: 100%;
   font-weight: 700;
+  border: 1px solid
+    ${p => (p.disabled ? '#CCC' : p.theme.colors.primary.hues[0])};
   box-shadow: ${p => p.theme.boxShadow};
 `;
 

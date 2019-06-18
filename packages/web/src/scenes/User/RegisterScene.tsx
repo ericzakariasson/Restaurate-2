@@ -9,6 +9,7 @@ import { loader } from 'graphql.macro';
 import { Register, RegisterVariables } from '../../mutations/types/Register';
 import { RouteComponentProps } from 'react-router';
 import { routes } from '../../routes';
+import { Link } from 'react-router-dom';
 
 const registerMutation = loader('../../mutations/register.gql');
 
@@ -18,6 +19,16 @@ const Page = styled.section`
 
 const Fields = styled.div`
   margin-bottom: 30px;
+`;
+
+const LoginText = styled.p`
+  text-align: center;
+  color: #222;
+  margin-top: 40px;
+`;
+
+const Login = styled(Link)`
+  color: #222;
 `;
 
 const initialValues = {
@@ -109,6 +120,10 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
               />
             </Fields>
             <Button disabled={!isValid} type="submit" text="Registrera" />
+            <LoginText>
+              Har du redan ett konto?{' '}
+              <Login to={routes.login}>Logga in här</Login>
+            </LoginText>
           </Form>
         )}
       </Formik>

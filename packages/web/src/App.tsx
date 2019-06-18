@@ -11,15 +11,17 @@ import { Loading } from './components';
 import { useGoogleApi } from './hooks';
 import { routes } from './routes';
 
+import { AuthRoute } from './components/AuthRoute';
+
 import {
   AddVisitScene,
   DashboardScene,
   VisitsScene,
   GeneralError,
   RegisterScene,
-  DefaultScene
+  DefaultScene,
+  LoginScene
 } from './scenes';
-import { AuthRoute } from './components/AuthRoute';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -65,6 +67,11 @@ const App = () => {
                   <Route
                     path={routes.visits}
                     component={VisitsScene}
+                    exact={true}
+                  />
+                  <Route
+                    path={routes.login}
+                    component={LoginScene}
                     exact={true}
                   />
                   <AuthRoute
