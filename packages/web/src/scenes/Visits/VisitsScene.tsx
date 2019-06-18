@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import { useQuery } from 'react-apollo-hooks';
 import { MeVisits } from '../../queries/types/MeVisits';
 import { loader } from 'graphql.macro';
-import { Loading, VisitItem } from '../../components';
+import { Loading, VisitItem, PageTitle } from '../../components';
+import { Redirect } from 'react-router';
+import { routes } from '../../routes';
 
 const meVisitsQuery = loader('../../queries/meVisits.gql');
 
@@ -14,27 +16,26 @@ const Page = styled.article`
 const NoResult = styled.h2``;
 
 export const VisitsScene = () => {
-  const { data, loading } = useQuery<MeVisits>(meVisitsQuery);
+  const { data, loading, error } = useQuery<MeVisits>(meVisitsQuery);
 
-  if (loading || !data) {
+  console.log(data);
+  console.log(loading);
+  console.log(error);
+
+  if (loading || !data || !data.me) {
     return <Loading />;
-  }
-
-  if (!data.me) {
-    return null;
   }
 
   const { visits, visitCount } = data.me;
 
-  if (visitCount === 0) {
-    return <NoResult>Inga besök</NoResult>;
-  }
-
   return (
     <Page>
-      {visits.map(visit => (
-        <VisitItem {...visit} />
-      ))}
+      <PageTitle text="Besök" />
+      {visitCount === 0 ? (
+        <NoResult>Inga besök</NoResult>
+      ) : (
+        visits.map(visit => <VisitItem {...visit} />)
+      )}
     </Page>
   );
 };

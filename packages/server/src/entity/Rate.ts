@@ -12,11 +12,11 @@ import { ObjectType, Field, InputType } from 'type-graphql';
 
 @ObjectType()
 @Entity()
-export class Rating extends BaseEntity {
+export class Rate extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Visit, visit => visit.rating)
+  @OneToOne(() => Visit, visit => visit.rate)
   visit: Visit;
 
   @Field()
@@ -51,8 +51,8 @@ export class Rating extends BaseEntity {
   updatedAt: string;
 }
 
-@InputType('RatingInput')
-export class RatingInput implements Partial<Rating> {
+@InputType('RateInput')
+export class RateInput implements Partial<Rate> {
   @Field({ nullable: true })
   food: number;
 

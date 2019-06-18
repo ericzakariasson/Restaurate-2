@@ -11,7 +11,7 @@ export function toInputData(state: ReducerState): AddVisitInput {
     priceLevel: state.priceLevel,
     tags: state.tags,
     orders: state.orders,
-    rating: state.rating,
+    rate: state.rate,
     comment: state.comment,
     visitDate: state.date
   };

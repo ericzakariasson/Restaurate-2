@@ -3,6 +3,7 @@ import { Visit } from '../../entity/Visit';
 import { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
 import { Place } from '../../entity/Place';
 import { User } from '../../entity/User';
+import { Rate } from '../../entity/Rate';
 
 @Resolver(Visit)
 export class VisitResolver {
@@ -17,6 +18,17 @@ export class VisitResolver {
     }
 
     return visit;
+  }
+
+  @FieldResolver(() => Rate)
+  async rate(@Root() visit: Visit): Promise<Rate> {
+    const rate = await Rate.findOne(visit.placeId);
+
+    if (!rate) {
+      throw new Error('No rate found');
+    }
+
+    return rate;
   }
 
   @FieldResolver(() => Place)

@@ -10,10 +10,10 @@
  * Price level of place
  */
 export enum PriceLevel {
-  Cheap = "Cheap",
-  Exclusive = "Exclusive",
-  Expensive = "Expensive",
-  Medium = "Medium",
+  Cheap = 'Cheap',
+  Exclusive = 'Exclusive',
+  Expensive = 'Expensive',
+  Medium = 'Medium'
 }
 
 /**
@@ -23,13 +23,13 @@ export interface AddVisitInput {
   comment?: string | null;
   visitDate: any;
   orders?: string[] | null;
-  rating: RatingInput;
+  rate: RateInput;
   priceLevel?: number | null;
   tags?: string[] | null;
   providerPlaceId: string;
 }
 
-export interface RatingInput {
+export interface RateInput {
   food?: number | null;
   service?: number | null;
   environment?: number | null;

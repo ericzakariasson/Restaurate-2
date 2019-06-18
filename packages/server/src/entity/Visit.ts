@@ -11,7 +11,7 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 import { Order } from './Order';
-import { Rating, RatingInput } from './Rating';
+import { Rate, RateInput } from './Rate';
 import { Field, ID, ObjectType, InputType } from 'type-graphql';
 import { Place } from './Place';
 import { User } from './User';
@@ -48,13 +48,13 @@ export class Visit extends BaseEntity {
   })
   orders: Order[];
 
-  @Field(() => Rating)
-  @OneToOne(() => Rating, rating => rating.visit, {
+  @Field(() => Rate)
+  @OneToOne(() => Rate, rate => rate.visit, {
     cascade: true,
     eager: true
   })
   @JoinColumn()
-  rating: Rating;
+  rate: Rate;
 
   @ManyToOne(() => Place, place => place.visits)
   place: Place;
@@ -81,8 +81,8 @@ export class AddVisitInput {
   @Field(() => [String], { nullable: true })
   orders?: string[];
 
-  @Field(() => RatingInput)
-  rating: RatingInput;
+  @Field(() => RateInput)
+  rate: RateInput;
 
   @Field(() => Number, { nullable: true })
   priceLevel?: number;

@@ -9,7 +9,7 @@ query MeVisits {
         id
         title
       }
-      rating {
+      rate {
         score
         food
         service

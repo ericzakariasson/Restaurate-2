@@ -2,7 +2,7 @@ import { Resolver, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
 import { Visit, AddVisitInput, AddVisitResponse } from '../../entity/Visit';
 import { Order } from '../../entity/Order';
 import { Context } from '../../types/graphql-utils';
-import { Rating } from '../../entity/Rating';
+import { Rate } from '../../entity/Rate';
 import { User } from '../../entity/User';
 import { Place, priceLevelMap } from '../../entity/Place';
 import { Address } from '../../entity/Address';
@@ -61,19 +61,19 @@ export class AddVisitResolver {
         ? input.orders.map(title => Order.create({ title, author: user }))
         : [];
 
-      const ratings = Object.values(input.rating).filter(Boolean);
+      const ratings = Object.values(input.rate).filter(Boolean);
       const ratingSum = ratings.reduce((total, score) => total + score, 0);
 
-      const rating = Rating.create({
-        ...input.rating,
+      const rate = Rate.create({
+        ...input.rate,
         score: ratingSum / ratings.length,
-        rawData: JSON.stringify(input.rating)
+        rawData: JSON.stringify(input.rate)
       });
 
       const visit = await Visit.create({
         ...input,
         orders,
-        rating,
+        rate,
         user,
         place
       }).save();

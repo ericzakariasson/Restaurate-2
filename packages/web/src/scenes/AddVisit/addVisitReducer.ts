@@ -33,7 +33,7 @@ export interface ReducerState {
   priceLevel: number | undefined;
   tags: string[];
   orders: string[];
-  rating: RateNodeState;
+  rate: RateNodeState;
   comment: string;
   date: Date;
 }
@@ -48,7 +48,7 @@ export const initialState = {
   priceLevel: undefined,
   tags: [],
   orders: [],
-  rating: createInitialRateState(rateNodes),
+  rate: createInitialRateState(rateNodes),
   comment: '',
   date: new Date()
 };
@@ -103,7 +103,7 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
       const { name, score, parent } = action.payload;
 
       // if (parent) {
-      //   const oldParentValue = state.rating[parent];
+      //   const oldParentValue = state.rate[parent];
 
       //   const newParentValue = {
       //     ...oldParentValue,
@@ -115,8 +115,8 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
 
       //   return {
       //     ...state,
-      //     rating: {
-      //       ...state.rating,
+      //     rate: {
+      //       ...state.rate,
       //       [parent]: newParentValue
       //     }
       //   };
@@ -124,8 +124,8 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
 
       return {
         ...state,
-        rating: {
-          ...state.rating,
+        rate: {
+          ...state.rate,
           [name]: score
         }
       };
