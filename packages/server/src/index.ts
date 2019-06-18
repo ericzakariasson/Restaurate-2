@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as dotenv from 'dotenv';
+import * as cors from 'cors';
 import { createConnection } from 'typeorm';
 import { ApolloServer } from 'apollo-server-express';
 
@@ -23,6 +24,13 @@ const startServer = async (): Promise<void> => {
 
   const app = express();
 
+  const corsOptions = {
+    credentials: true,
+    origin: 'http://localhost:3000'
+  };
+
+  app.use(cors(corsOptions));
+
   app.use(
     session({
       name: 'access_token',
@@ -42,7 +50,7 @@ const startServer = async (): Promise<void> => {
     context: ({ req }: { req: Request }) => ({ req, client })
   });
 
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, cors: corsOptions });
 
   app.listen({ port: 4000 }, () =>
     console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)

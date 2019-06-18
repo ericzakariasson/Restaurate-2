@@ -1,0 +1,10 @@
+query Me {
+  me {
+    name
+    firstName
+    lastName
+    email
+    visitCount
+    placeCount
+  }
+}

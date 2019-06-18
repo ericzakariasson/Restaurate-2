@@ -18,6 +18,7 @@ import {
   GeneralError,
   RegisterScene
 } from './scenes';
+import { AuthRoute } from './components/AuthRoute';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -60,7 +61,7 @@ const App = () => {
                     component={VisitsScene}
                     exact={true}
                   />
-                  <Route
+                  <AuthRoute
                     path={routes.addVisit}
                     component={AddVisitScene}
                     exact={true}

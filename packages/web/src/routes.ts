@@ -4,5 +4,6 @@ export const routes = {
   visits: '/visits',
   addVisit: '/add-visit',
   places: '/places',
-  register: '/register'
+  register: '/register',
+  login: '/login'
 };

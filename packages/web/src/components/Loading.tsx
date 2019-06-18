@@ -1,7 +1,11 @@
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const Wrapper = styled.div`
+interface WrapperProps {
+  fullscreen: boolean;
+}
+
+const Wrapper = styled.div<WrapperProps>`
   width: 100%;
   height: 100%;
   display: flex;
@@ -9,6 +13,13 @@ const Wrapper = styled.div`
   justify-content: center;
   padding: 20px;
   flex: 1;
+
+  ${p =>
+    p.fullscreen &&
+    `
+    width: 100vw;
+    height: 100vh;
+  `}
 `;
 
 const spin = keyframes`
@@ -122,11 +133,12 @@ const Handle = styled.span`
 
 interface LoaderProps {
   size?: number;
+  fullscreen?: boolean;
 }
 
-export const Loading = ({ size = 48 }: LoaderProps) => {
+export const Loading = ({ size = 48, fullscreen = true }: LoaderProps) => {
   return (
-    <Wrapper>
+    <Wrapper fullscreen={fullscreen}>
       <Track size={size}>
         <Handle />
         <Box size={size} />
