@@ -7,6 +7,8 @@ import { VisitResolver } from './modules/visit/VisitResolver';
 import { AddVisitResolver } from './modules/visit/AddVisitResolver';
 import { PlaceResolver } from './modules/place/PlaceResolver';
 
+import { authChecker } from './modules/middleware/authorization';
+
 export const schema = buildSchema({
   resolvers: [
     UserResolver,
@@ -17,5 +19,5 @@ export const schema = buildSchema({
     AddVisitResolver,
     PlaceResolver
   ],
-  validate: false
+  authChecker
 });

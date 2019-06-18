@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Arg, Ctx } from 'type-graphql';
+import { Resolver, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
 import { Visit, AddVisitInput, AddVisitResponse } from '../../entity/Visit';
 import { Order } from '../../entity/Order';
 import { Context } from '../../types/graphql-utils';
@@ -10,6 +10,7 @@ import { Tag } from '../../entity/Tag';
 
 @Resolver(Visit)
 export class AddVisitResolver {
+  @Authorized()
   @Mutation(() => AddVisitResponse)
   async addVisit(
     @Arg('data') input: AddVisitInput,
