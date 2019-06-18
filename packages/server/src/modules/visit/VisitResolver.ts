@@ -1,13 +1,8 @@
-import { Resolver, Mutation, Arg, Ctx, Query } from 'type-graphql';
-import { Visit, AddVisitInput, AddVisitResponse } from '../../entity/Visit';
-import { Order } from '../../entity/Order';
-import { Context } from 'src/types/context';
-import { Rating } from '../../entity/Rating';
-import { User } from '../../entity/User';
+import { Resolver, Arg, Query, FieldResolver, Root } from 'type-graphql';
+import { Visit } from '../../entity/Visit';
 import { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
-import { Place, priceLevelMap } from '../../entity/Place';
-import { Address } from '../../entity/Address';
-import { Tag } from '../../entity/Tag';
+import { Place } from '../../entity/Place';
+import { User } from '../../entity/User';
 
 @Resolver(Visit)
 export class VisitResolver {
@@ -15,7 +10,7 @@ export class VisitResolver {
   async visit(
     @Arg('id') id: PrimaryGeneratedColumnType
   ): Promise<Visit | null> {
-    const visit = await Visit.findOne({ where: { id } });
+    const visit = await Visit.findOne(id);
 
     if (!visit) {
       return null;
@@ -24,77 +19,25 @@ export class VisitResolver {
     return visit;
   }
 
-  @Mutation(() => AddVisitResponse)
-  async addVisit(
-    @Arg('data') input: AddVisitInput,
-    @Ctx() ctx: Context
-  ): Promise<AddVisitResponse> {
-    try {
-      const user = await User.findOne({
-        where: { id: ctx.req.session!.userId }
-      });
+  @FieldResolver(() => Place)
+  async place(@Root() visit: Visit): Promise<Place> {
+    const place = await Place.findOne(visit.placeId);
 
-      let place = await Place.findOne({
-        where: {
-          googlePlaceId: input.providerPlaceId
-        }
-      });
-
-      if (!place) {
-        const placeData = (await ctx.client
-          .place({ placeid: input.providerPlaceId })
-          .asPromise()).json.result;
-
-        const address = Address.createFromPlaceData(placeData);
-
-        place = await Place.create({
-          googlePlaceId: placeData.place_id,
-          address,
-          name: placeData.name,
-          lat: placeData.geometry.location.lat,
-          lng: placeData.geometry.location.lng,
-          url: placeData.website,
-          priceLevel: input.priceLevel
-            ? priceLevelMap[input.priceLevel]
-            : priceLevelMap[placeData.price_level]
-        });
-
-        place.slugify();
-      }
-
-      const tags = input.tags
-        ? input.tags.map(title => Tag.create({ title, author: user }))
-        : [];
-
-      place.tags = place.tags ? place.tags.concat(tags) : tags;
-
-      await place.save();
-
-      const orders = input.orders
-        ? input.orders.map(title => Order.create({ title, author: user }))
-        : [];
-
-      const ratings = Object.values(input.rating).filter(Boolean);
-      const ratingSum = ratings.reduce((total, score) => total + score, 0);
-
-      const rating = Rating.create({
-        ...input.rating,
-        score: ratingSum / ratings.length,
-        rawData: JSON.stringify(input.rating)
-      });
-
-      const visit = await Visit.create({
-        ...input,
-        orders,
-        rating,
-        user,
-        place
-      }).save();
-
-      return { saved: true, place, visit };
-    } catch (e) {
-      console.error(e);
-      return { saved: false };
+    if (!place) {
+      throw new Error('No place found');
     }
+
+    return place;
+  }
+
+  @FieldResolver(() => User)
+  async user(@Root() visit: Visit): Promise<User> {
+    const user = await User.findOne(visit.userId);
+
+    if (!user) {
+      throw new Error('No user found');
+    }
+
+    return user;
   }
 }

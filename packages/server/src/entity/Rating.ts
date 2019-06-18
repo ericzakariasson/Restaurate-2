@@ -37,7 +37,6 @@ export class Rating extends BaseEntity {
   @Column({ nullable: true })
   experience: number;
 
-  @Field(() => String)
   @Column()
   rawData: string;
 }

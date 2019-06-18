@@ -7,10 +7,11 @@ import {
 } from 'typeorm';
 import { Field, ID, InputType, ObjectType, Root } from 'type-graphql';
 import { Visit } from './Visit';
+import { IsEmail, Min, Max } from 'class-validator';
 
 enum UserRoles {
   ADMIN = 'ADMIN',
-  DEFAULT = 'DEFAULT'
+  USER = 'USER'
 }
 
 @ObjectType()
@@ -23,7 +24,7 @@ export class User extends BaseEntity {
   @Field()
   @Column({
     enum: UserRoles,
-    default: UserRoles.DEFAULT
+    default: UserRoles.USER
   })
   role: UserRoles;
 
@@ -36,8 +37,8 @@ export class User extends BaseEntity {
   lastName: string;
 
   @Field()
-  name(@Root() parent: User): string {
-    return `${parent.firstName} ${parent.lastName}`;
+  name(@Root() user: User): string {
+    return `${user.firstName} ${user.lastName}`;
   }
 
   @Field()
@@ -47,9 +48,10 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @Field(() => [Visit], { nullable: true })
   @OneToMany(() => Visit, visit => visit.user)
-  visits?: Visit[];
+  visits: Visit[];
+
+  // places - See UserResolver
 }
 
 @InputType()
@@ -60,9 +62,12 @@ export class UserRegisterInput {
   @Field()
   lastName: string;
 
+  @IsEmail()
   @Field()
   email: string;
 
+  @Min(6)
+  @Max(64)
   @Field()
   password: string;
 }

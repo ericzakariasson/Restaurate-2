@@ -13,6 +13,7 @@ import { Rating, RatingInput } from './Rating';
 import { Field, ID, ObjectType, InputType } from 'type-graphql';
 import { Place } from './Place';
 import { User } from './User';
+import { RelationColumn } from '../types/graphql-utils';
 
 @ObjectType()
 @Entity()
@@ -23,6 +24,8 @@ export class Visit extends BaseEntity {
 
   @ManyToOne(() => User, user => user.visits)
   user: User;
+  @RelationColumn()
+  userId: number;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
@@ -48,9 +51,10 @@ export class Visit extends BaseEntity {
   @JoinColumn()
   rating: Rating;
 
-  @Field(() => Place)
   @ManyToOne(() => Place, place => place.visits)
   place: Place;
+  @RelationColumn()
+  placeId: number;
 }
 
 @InputType({ description: 'New visit data' })

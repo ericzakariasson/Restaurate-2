@@ -70,12 +70,12 @@ export class Place extends BaseEntity {
   @Column({ type: 'float' })
   lng: number;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   url: string;
 
-  @Field(() => PriceLevel)
-  @Column({ enum: PriceLevel })
+  @Field(() => PriceLevel, { nullable: true })
+  @Column({ enum: PriceLevel, nullable: true })
   priceLevel: PriceLevel;
 
   @Field(() => [Tag], { nullable: true })

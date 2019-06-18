@@ -1,7 +1,9 @@
-import * as bcrypt from 'bcrypt';
-import { Resolver, Mutation, Arg, Ctx, Query } from 'type-graphql';
-import { User, UserRegisterInput } from '../../entity/User';
-import { Context } from '../../types/context';
+import { Resolver, Ctx, Query, FieldResolver, Root } from 'type-graphql';
+import { User } from '../../entity/User';
+import { Context } from '../../types/graphql-utils';
+import { Place } from '../../entity/Place';
+import { createQueryBuilder } from 'typeorm';
+import { Visit } from '../../entity/Visit';
 
 @Resolver(User)
 export class UserResolver {
@@ -22,54 +24,22 @@ export class UserResolver {
     }
   }
 
-  @Mutation(() => Boolean)
-  async register(
-    @Arg('data')
-    { firstName, lastName, email, password }: UserRegisterInput,
-    @Ctx() ctx: Context
-  ): Promise<boolean> {
-    try {
-      const hashedPassword = await bcrypt.hash(password, 12);
+  @FieldResolver(() => [Place])
+  async places(@Root() user: User): Promise<Place[]> {
+    const places = await createQueryBuilder(Place, 'place')
+      .innerJoin('place.visits', 'visit')
+      .where('visit.user = :userId', { userId: user.id })
+      .getMany();
 
-      const user = await User.create({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword
-      }).save();
-
-      ctx.req.session!.userId = user.id;
-
-      return true;
-    } catch {
-      return false;
-    }
+    return places;
   }
 
-  @Mutation(() => User, { nullable: true })
-  async login(
-    @Arg('email') email: string,
-    @Arg('password') password: string,
-    @Ctx() ctx: Context
-  ): Promise<User | null> {
-    try {
-      const user = await User.findOne({ where: { email } });
+  @FieldResolver(() => [Visit])
+  async visits(@Root() user: User): Promise<Visit[]> {
+    const visits = await createQueryBuilder(Visit, 'visit')
+      .where('visit.user = :userId', { userId: user.id })
+      .getMany();
 
-      if (!user) {
-        return null;
-      }
-
-      const valid = await bcrypt.compare(password, user.password);
-
-      if (!valid) {
-        return null;
-      }
-
-      ctx.req.session!.userId = user.id;
-
-      return user;
-    } catch {
-      return null;
-    }
+    return visits;
   }
 }
