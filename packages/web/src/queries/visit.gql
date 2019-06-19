@@ -1,0 +1,26 @@
+query Visit($id: String!) {
+  visit(id: $id) {
+    id
+    comment
+    visitDate
+    orders {
+      id
+      title
+    }
+    rate {
+      score
+      food
+      service
+      environment
+      experience
+    }
+    place {
+      id
+      name
+      address {
+        formatted
+      }
+      slug
+    }
+  }
+}

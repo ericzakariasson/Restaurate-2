@@ -1,16 +1,23 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { Link } from 'react-router-dom';
+
 import { MeVisits_me_visits } from '../queries/types/MeVisits';
 
 const Item = styled.li`
-  display: flex;
-  justify-content: space-between;
   padding: 15px;
   background: #fefefe;
   border: 1px solid #999;
   box-shadow: ${p => p.theme.boxShadow};
   border-radius: 4px;
+`;
+
+const StyledLink = styled(Link)`
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #222;
 `;
 
 const Place = styled.div``;
@@ -39,14 +46,16 @@ export const VisitItem = ({
   orders
 }: VisitItemProps) => (
   <Item>
-    <Place>
-      <Name>{place.name}</Name>
-      <Address>{place.address.formatted}</Address>
-    </Place>
-    <Score>{rate.score}</Score>
-    {orders &&
-      orders
-        .slice(0, 3)
-        .map(order => <Order key={order.id}>{order.title}</Order>)}
+    <StyledLink to={`/visit/${id}`}>
+      <Place>
+        <Name>{place.name}</Name>
+        <Address>{place.address.formatted}</Address>
+      </Place>
+      <Score>{rate.score}</Score>
+      {orders &&
+        orders
+          .slice(0, 3)
+          .map(order => <Order key={order.id}>{order.title}</Order>)}
+    </StyledLink>
   </Item>
 );

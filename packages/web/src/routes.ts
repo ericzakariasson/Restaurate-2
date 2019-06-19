@@ -5,5 +5,6 @@ export const routes = {
   addVisit: '/add-visit',
   places: '/places',
   register: '/register',
-  login: '/login'
+  login: '/login',
+  visit: '/visit/:id'
 };

@@ -17,6 +17,7 @@ import {
   AddVisitScene,
   DashboardScene,
   VisitsScene,
+  VisitScene,
   GeneralError,
   RegisterScene,
   DefaultScene,
@@ -72,6 +73,11 @@ const App = () => {
                   <AuthRoute
                     path={routes.visits}
                     component={VisitsScene}
+                    exact={true}
+                  />
+                  <AuthRoute
+                    path={routes.visit}
+                    component={VisitScene}
                     exact={true}
                   />
                   <AuthRoute

@@ -2,11 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-apollo-hooks';
 import { MeVisits } from '../../queries/types/MeVisits';
-import { loader } from 'graphql.macro';
 import { Loading, VisitItem, PageTitle } from '../../components';
-import { Redirect } from 'react-router';
-import { routes } from '../../routes';
 
+import { loader } from 'graphql.macro';
 const meVisitsQuery = loader('../../queries/meVisits.gql');
 
 const Page = styled.article`
