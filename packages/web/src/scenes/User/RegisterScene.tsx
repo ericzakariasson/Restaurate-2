@@ -12,6 +12,7 @@ import { routes } from '../../routes';
 import { Link } from 'react-router-dom';
 
 const registerMutation = loader('../../mutations/register.gql');
+const meQuery = loader('../../queries/me.gql');
 
 const Page = styled.section`
   padding: 60px 20px 40px;
@@ -31,7 +32,15 @@ const Login = styled(Link)`
   color: #222;
 `;
 
-const initialValues = {
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  password2: string;
+}
+
+const initialValues: FormValues = {
   firstName: '',
   lastName: '',
   email: '',
@@ -55,7 +64,9 @@ const validationSchema = object().shape({
 });
 
 export const RegisterScene = ({ history }: RouteComponentProps) => {
-  const register = useMutation<Register, RegisterVariables>(registerMutation);
+  const register = useMutation<Register, RegisterVariables>(registerMutation, {
+    refetchQueries: [{ query: meQuery }]
+  });
 
   return (
     <Page>

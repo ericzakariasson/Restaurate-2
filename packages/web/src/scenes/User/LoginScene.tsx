@@ -12,6 +12,7 @@ import { Login, LoginVariables } from '../../mutations/types/Login';
 import { routes } from '../../routes';
 
 const loginMutation = loader('../../mutations/login.gql');
+const meQuery = loader('../../queries/me.gql');
 
 const Page = styled.section`
   padding: 60px 20px 40px;
@@ -51,7 +52,9 @@ const validationSchema = object().shape({
 });
 
 export const LoginScene = ({ history }: RouteComponentProps) => {
-  const login = useMutation<Login, LoginVariables>(loginMutation);
+  const login = useMutation<Login, LoginVariables>(loginMutation, {
+    refetchQueries: [{ query: meQuery }]
+  });
 
   return (
     <Page>
