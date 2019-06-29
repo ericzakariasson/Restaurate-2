@@ -2,6 +2,7 @@ import { Resolver, Arg, Query, FieldResolver, Root, Ctx } from 'type-graphql';
 import { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
 import { Place } from '../../entity/Place';
 import { Visit } from '../../entity/Visit';
+import { Address } from '../../entity/Address';
 import { Context } from '../../types/graphql-utils';
 
 @Resolver(Place)
@@ -35,5 +36,16 @@ export class PlaceResolver {
     });
 
     return visitCount;
+  }
+
+  @FieldResolver(() => Address, { nullable: true })
+  async address(@Root() place: Place): Promise<Address | null> {
+    const address = await Address.findOne(place.addressId);
+
+    if (!address) {
+      return null;
+    }
+
+    return address;
   }
 }

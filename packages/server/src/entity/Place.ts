@@ -15,6 +15,7 @@ import { Visit } from './Visit';
 import { Tag } from './Tag';
 import { Address } from './Address';
 import { slugify } from '../utils/slugify';
+import { RelationColumn } from '../types/graphql-utils';
 
 export enum PriceLevel {
   Cheap = 0,
@@ -63,6 +64,8 @@ export class Place extends BaseEntity {
   })
   @JoinColumn()
   address: Address;
+  @RelationColumn()
+  addressId: number;
 
   @Field()
   @Column({ type: 'float' })

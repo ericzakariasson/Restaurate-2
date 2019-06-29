@@ -5,14 +5,15 @@ import {
   OneToOne,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  BaseEntity
 } from 'typeorm';
 import { Place } from './Place';
 import { PlaceDetailsResult } from '@google/maps';
 
 @ObjectType()
 @Entity()
-export class Address {
+export class Address extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
