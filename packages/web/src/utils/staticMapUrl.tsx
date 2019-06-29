@@ -9,7 +9,7 @@ interface Marker {
 
 interface StaticMapParameters {
   geometry?: google.maps.places.PlaceGeometry;
-  zoom: number;
+  zoom?: number;
 }
 
 interface staticGoogleMapUrlParameters extends StaticMapParameters {
@@ -48,6 +48,8 @@ interface MapboxOptions {
 interface staticMapboxMapUrlParameters extends StaticMapParameters {
   width: number;
   height: number;
+  lat?: number;
+  lng?: number;
   options?: MapboxOptions;
 }
 
@@ -55,21 +57,20 @@ const MAPBOX_STATIC_MAPS_BASE =
   'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static';
 
 export const staticMapboxMapUrl = ({
+  zoom = 12,
+  lat,
+  lng,
   geometry,
-  zoom,
   width,
   height,
   options
 }: staticMapboxMapUrlParameters): string => {
-  if (geometry === undefined) {
-    console.warn('No geometry found');
-    return '';
-  }
+  const latitude = geometry ? geometry!.location.lat() : lat;
+  const longitude = geometry ? geometry!.location.lng() : lng;
 
-  const { lat, lng } = geometry.location;
   const optionsQuery = options ? qs.stringify(options) : '';
 
-  return `${MAPBOX_STATIC_MAPS_BASE}/${lng()},${lat()},${zoom},0,0/${width}x${height}?access_token=${
+  return `${MAPBOX_STATIC_MAPS_BASE}/${longitude},${latitude},${zoom},0,0/${width}x${height}?access_token=${
     process.env.REACT_APP_MAPBOX_API_KEY
   }&${optionsQuery}`;
 };

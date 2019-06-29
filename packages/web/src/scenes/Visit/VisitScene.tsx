@@ -33,18 +33,22 @@ export const VisitScene = ({
     variables: { id }
   });
 
-  if (loading || !data || !data.visit) {
+  if (loading) {
     return <Loading />;
   }
 
-  const { visit } = data;
+  if (data && data.visit) {
+    const { visit } = data;
 
-  return (
-    <Page>
-      <Place>
-        <Name>{visit.place.name}</Name>
-        <Address>{visit.place.address.formatted}</Address>
-      </Place>
-    </Page>
-  );
+    return (
+      <Page>
+        <Place>
+          <Name>{visit.place.name}</Name>
+          <Address>{visit.place.address.formatted}</Address>
+        </Place>
+      </Page>
+    );
+  }
+
+  return <span>Ej hitta</span>;
 };
