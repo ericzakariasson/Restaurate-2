@@ -10,6 +10,7 @@ import { PriceLevel } from "./../../types/graphql-global-types";
 
 export interface MePlaces_me_places_address {
   __typename: "Address";
+  id: string;
   streetNumber: string;
   street: string;
   formatted: string;
@@ -22,6 +23,18 @@ export interface MePlaces_me_places_tags {
   __typename: "Tag";
   id: string;
   title: string;
+}
+
+export interface MePlaces_me_places_visits_rate {
+  __typename: "Rate";
+  score: number;
+}
+
+export interface MePlaces_me_places_visits {
+  __typename: "Visit";
+  id: string;
+  visitDate: any;
+  rate: MePlaces_me_places_visits_rate;
 }
 
 export interface MePlaces_me_places {
@@ -38,6 +51,7 @@ export interface MePlaces_me_places {
   priceLevel: PriceLevel | null;
   tags: MePlaces_me_places_tags[] | null;
   visitCount: number;
+  visits: MePlaces_me_places_visits[];
 }
 
 export interface MePlaces_me {

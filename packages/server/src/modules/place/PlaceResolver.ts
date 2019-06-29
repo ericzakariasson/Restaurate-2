@@ -21,9 +21,14 @@ export class PlaceResolver {
   }
 
   @FieldResolver()
-  async visits(@Root() place: Place, @Ctx() ctx: Context): Promise<Visit[]> {
+  async visits(
+    @Root() place: Place,
+    @Ctx() ctx: Context,
+    @Arg('limit', { nullable: true }) limit?: number
+  ): Promise<Visit[]> {
     const visits = await Visit.find({
-      where: { placeId: place.id, userId: ctx.req.session!.userId }
+      where: { placeId: place.id, userId: ctx.req.session!.userId },
+      take: limit
     });
 
     return visits;

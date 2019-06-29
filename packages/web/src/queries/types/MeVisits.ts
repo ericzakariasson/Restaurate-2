@@ -14,6 +14,7 @@ export interface MeVisits_me_visits_orders {
 
 export interface MeVisits_me_visits_rate {
   __typename: "Rate";
+  id: string;
   score: number;
   food: number | null;
   service: number | null;
@@ -23,6 +24,7 @@ export interface MeVisits_me_visits_rate {
 
 export interface MeVisits_me_visits_place_address {
   __typename: "Address";
+  id: string;
   formatted: string;
 }
 

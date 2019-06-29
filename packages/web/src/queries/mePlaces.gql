@@ -25,6 +25,13 @@ query MePlaces {
         title
       }
       visitCount
+      visits(limit: 3) {
+        id
+        visitDate
+        rate {
+          score
+        }
+      }
     }
   }
 }
