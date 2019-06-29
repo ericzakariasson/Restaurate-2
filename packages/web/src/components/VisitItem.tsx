@@ -12,6 +12,10 @@ const Item = styled.li`
   border: 1px solid #999;
   box-shadow: ${p => p.theme.boxShadow};
   border-radius: 4px;
+
+  &:not(:last-of-type) {
+    margin-bottom: 20px;
+  }
 `;
 
 const StyledLink = styled(Link)`

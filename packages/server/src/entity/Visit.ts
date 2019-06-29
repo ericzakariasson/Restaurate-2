@@ -55,6 +55,8 @@ export class Visit extends BaseEntity {
   })
   @JoinColumn()
   rate: Rate;
+  @RelationColumn()
+  rateId: number;
 
   @ManyToOne(() => Place, place => place.visits)
   place: Place;

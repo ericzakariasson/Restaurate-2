@@ -8,11 +8,12 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 import { Visit } from './Visit';
-import { ObjectType, Field, InputType } from 'type-graphql';
+import { ObjectType, Field, InputType, ID } from 'type-graphql';
 
 @ObjectType()
 @Entity()
 export class Rate extends BaseEntity {
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 

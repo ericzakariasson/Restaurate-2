@@ -5,8 +5,10 @@ query MePlaces {
       id
       googlePlaceId
       name
+      averageScore
       slug
       address {
+        id
         streetNumber
         street
         formatted

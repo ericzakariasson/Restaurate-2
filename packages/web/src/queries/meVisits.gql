@@ -10,6 +10,7 @@ query MeVisits {
         title
       }
       rate {
+        id
         score
         food
         service
@@ -20,6 +21,7 @@ query MeVisits {
         id
         name
         address {
+          id
           formatted
         }
         slug

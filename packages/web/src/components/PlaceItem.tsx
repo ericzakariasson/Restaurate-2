@@ -17,6 +17,7 @@ const Item = styled.li`
 const StyledLink = styled(Link)`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   text-decoration: none;
   color: #222;
 `;
@@ -30,20 +31,35 @@ const Name = styled.h3`
 
 const Address = styled.p``;
 
+const Numbers = styled.div``;
+
 const Score = styled.h4`
   font-size: 2.4rem;
   font-weight: 400;
+  margin-top: -5px;
 `;
 
-const Order = styled.li``;
+const VisitCount = styled.h5``;
 
 interface PlaceItemProps extends MePlaces_me_places {}
 
-export const PlaceItem = ({ id, name, address }: PlaceItemProps) => (
+export const PlaceItem = ({
+  id,
+  name,
+  address,
+  averageScore,
+  visitCount
+}: PlaceItemProps) => (
   <Item>
     <StyledLink to={placeRoute(id)}>
-      <Name>{name}</Name>
-      <Address>{address.formatted}</Address>
+      <Place>
+        <Name>{name}</Name>
+        <Address>{address.formatted}</Address>
+      </Place>
+      <Numbers>
+        <VisitCount>{visitCount} besök</VisitCount>
+        <Score>{averageScore}</Score>
+      </Numbers>
     </StyledLink>
   </Item>
 );

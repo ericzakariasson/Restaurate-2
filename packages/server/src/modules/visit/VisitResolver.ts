@@ -22,7 +22,7 @@ export class VisitResolver {
 
   @FieldResolver(() => Rate)
   async rate(@Root() visit: Visit): Promise<Rate> {
-    const rate = await Rate.findOne(visit.placeId);
+    const rate = await Rate.findOne(visit.rateId);
 
     if (!rate) {
       throw new Error('No rate found');

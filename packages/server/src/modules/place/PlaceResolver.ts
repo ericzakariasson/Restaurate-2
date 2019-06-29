@@ -48,4 +48,26 @@ export class PlaceResolver {
 
     return address;
   }
+
+  @FieldResolver(() => Number)
+  async averageScore(
+    @Root() place: Place,
+    @Ctx() ctx: Context
+  ): Promise<number> {
+    const visits = await Visit.find({
+      where: { placeId: place.id, userId: ctx.req.session!.userId }
+    });
+
+    if (!visits.length) {
+      return 0;
+    }
+
+    const averageScore =
+      visits.reduce((score, visit) => score + visit.rate.score, 0) /
+      visits.length;
+
+    const rounded = Math.round(averageScore * 10) / 10;
+
+    return rounded;
+  }
 }

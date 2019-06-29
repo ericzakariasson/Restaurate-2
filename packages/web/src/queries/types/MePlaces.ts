@@ -29,6 +29,7 @@ export interface MePlaces_me_places {
   id: string;
   googlePlaceId: string;
   name: string;
+  averageScore: number;
   slug: string;
   address: MePlaces_me_places_address;
   url: string | null;
