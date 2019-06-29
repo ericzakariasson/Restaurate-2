@@ -82,7 +82,7 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
                 name="email"
                 autoComplete="email"
                 component={InputField}
-                placeholder="mackan@mail.se"
+                placeholder="email@exempel.se"
                 label="E-post"
               />
               <Field
@@ -90,7 +90,7 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
                 name="password"
                 autoComplete="password"
                 component={InputField}
-                placeholder="Lösenord"
+                placeholder="lösenord1"
                 label="Lösenord"
               />
             </Fields>

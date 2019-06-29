@@ -95,7 +95,7 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
                 type="text"
                 name="firstName"
                 component={InputField}
-                placeholder="Mackan"
+                placeholder="Anders"
                 label="Förnamn"
               />
               <Field
@@ -110,7 +110,7 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
                 name="email"
                 autoComplete="email"
                 component={InputField}
-                placeholder="mackan@mail.se"
+                placeholder="anders.s@exempel.se"
                 label="E-post"
               />
               <Field
@@ -118,7 +118,7 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
                 name="password"
                 autoComplete="password"
                 component={InputField}
-                placeholder="M4CK4N"
+                placeholder="lösenord1"
                 label="Lösenord (minst 6 tecken)"
               />
               <Field
@@ -126,7 +126,7 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
                 name="password2"
                 autoComplete="password"
                 component={InputField}
-                placeholder="M4CK4N"
+                placeholder="lösenord1"
                 label="Bekräfta lösenord"
               />
             </Fields>

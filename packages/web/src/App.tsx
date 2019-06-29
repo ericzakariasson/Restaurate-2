@@ -16,12 +16,12 @@ import { AuthRoute } from './components/AuthRoute';
 import {
   AddVisitScene,
   DashboardScene,
-  VisitsScene,
   VisitScene,
   GeneralError,
   RegisterScene,
   DefaultScene,
-  LoginScene
+  LoginScene,
+  MeVisitsScene
 } from './scenes';
 
 const Wrapper = styled.div`
@@ -72,7 +72,7 @@ const App = () => {
                   />
                   <AuthRoute
                     path={routes.visits}
-                    component={VisitsScene}
+                    component={MeVisitsScene}
                     exact={true}
                   />
                   <AuthRoute

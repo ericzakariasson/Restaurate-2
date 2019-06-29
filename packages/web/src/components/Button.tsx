@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { Link, LinkProps } from 'react-router-dom';
 
 interface ButtonProps {
   text: string;
@@ -9,8 +10,16 @@ interface ButtonProps {
   type?: 'submit' | 'reset' | 'button';
 }
 
+interface NavButtonProps extends ButtonProps {
+  to: string;
+}
+
 interface StyledButtonProps {
   size: 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
+}
+
+interface StyledNavButtonProps extends StyledButtonProps {
+  to: string;
 }
 
 interface Padding {
@@ -104,4 +113,27 @@ export const Button = ({
   <StyledButton type={type} size={size} onClick={onClick} disabled={disabled}>
     {text}
   </StyledButton>
+);
+
+const StyledNavButton = styled(StyledButton)<StyledNavButtonProps>`
+  text-decoration: none;
+  display: block;
+`;
+
+export const NavButton = ({
+  text,
+  size = 'large',
+  disabled = false,
+  type = 'button',
+  to
+}: NavButtonProps) => (
+  <StyledNavButton
+    as={Link}
+    to={to}
+    type={type}
+    size={size}
+    disabled={disabled}
+  >
+    {text}
+  </StyledNavButton>
 );

@@ -17,7 +17,7 @@ const VisitList = styled.ul`
 
 const NoResult = styled.h2``;
 
-export const VisitsScene = () => {
+export const MeVisitsScene = () => {
   const { data, loading } = useQuery<MeVisits>(meVisitsQuery);
 
   if (loading || !data || !data.me) {
