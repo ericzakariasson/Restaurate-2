@@ -22,7 +22,8 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   color: #222;
   border: 1px solid #999;
-  border-radius: 4px 4px 0 0;
+  /* border-radius: 4px 4px 0 0; */
+  border-radius: 4px;
 `;
 
 const Place = styled.div``;
@@ -69,6 +70,7 @@ interface PlaceItemProps extends MePlaces_me_places {}
 
 export const PlaceItem = ({
   id,
+  slug,
   name,
   address,
   averageScore,
@@ -76,7 +78,7 @@ export const PlaceItem = ({
   visits
 }: PlaceItemProps) => (
   <Item>
-    <StyledLink to={placeRoute(id)}>
+    <StyledLink to={placeRoute(slug)}>
       <Place>
         <Name>{name}</Name>
         <Address>{address.formatted}</Address>
@@ -86,13 +88,13 @@ export const PlaceItem = ({
         <Score>{averageScore}</Score>
       </Numbers>
     </StyledLink>
-    <VisitList>
+    {/* <VisitList>
       {visits.map(visit => (
         <VisitItem>
           <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
           <VisitScore>{visit.rate.score}</VisitScore>
         </VisitItem>
       ))}
-    </VisitList>
+    </VisitList> */}
   </Item>
 );

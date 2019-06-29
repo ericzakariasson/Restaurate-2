@@ -5,6 +5,7 @@ import { MeVisits } from '../../queries/types/MeVisits';
 import { Loading, VisitItem, PageTitle } from '../../components';
 
 import { loader } from 'graphql.macro';
+import { NoResult } from '../../components/NoResult';
 const meVisitsQuery = loader('../../queries/meVisits.gql');
 
 const Page = styled.article`
@@ -14,8 +15,6 @@ const Page = styled.article`
 const VisitList = styled.ul`
   list-style: none;
 `;
-
-const NoResult = styled.h2``;
 
 export const MeVisitsScene = () => {
   const { data, loading } = useQuery<MeVisits>(meVisitsQuery);
@@ -30,7 +29,7 @@ export const MeVisitsScene = () => {
     <Page>
       <PageTitle text="Besök" />
       {visitCount === 0 ? (
-        <NoResult>Inga besök</NoResult>
+        <NoResult label="besök" />
       ) : (
         <VisitList>
           {visits.map(visit => (

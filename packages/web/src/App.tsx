@@ -22,7 +22,8 @@ import {
   DefaultScene,
   LoginScene,
   MeVisitsScene,
-  MePlacesScene
+  MePlacesScene,
+  PlaceScene
 } from './scenes';
 
 const Wrapper = styled.div`
@@ -84,6 +85,11 @@ const App = () => {
                   <AuthRoute
                     path={routes.visit}
                     component={VisitScene}
+                    exact={true}
+                  />
+                  <AuthRoute
+                    path={routes.place}
+                    component={PlaceScene}
                     exact={true}
                   />
                   <AuthRoute
