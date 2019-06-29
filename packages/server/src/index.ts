@@ -10,11 +10,14 @@ import { config } from './ormconfig';
 
 import { schema } from './schema';
 import { initGoogleClient } from './googleClient';
+import { insertUser } from './seed';
 
 dotenv.config();
 
 const startServer = async (): Promise<void> => {
   const connection = await createConnection(config as any);
+
+  await insertUser();
 
   const client = initGoogleClient();
 
