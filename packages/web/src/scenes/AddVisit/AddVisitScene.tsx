@@ -27,7 +27,7 @@ const mePlacesQuery = loader('../../queries/mePlaces.gql');
 import { AddVisit, AddVisitVariables } from '../../mutations/types/AddVisit';
 
 const slideStyle = {
-  padding: 15,
+  padding: 30,
   paddingBottom: 70
 } as React.CSSProperties;
 

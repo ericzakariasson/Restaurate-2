@@ -6,21 +6,91 @@ import { useQuery } from 'react-apollo-hooks';
 import { Visit, VisitVariables } from '../../queries/types/Visit';
 
 import { loader } from 'graphql.macro';
-import { Loading } from '../../components';
+import { Loading, PageTitle } from '../../components';
+import { formatDate, formatRate } from '../../utils/format';
 const visitQuery = loader('../../queries/visit.gql');
 
 const Page = styled.section`
-  padding: 20px;
+  padding: 20px 30px;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
 `;
 
-const Place = styled.article``;
-
-const Name = styled.h1`
-  font-size: 1.5rem;
-  font-weight: 400;
+const Label = styled.span`
+  font-family: ${p => p.theme.fonts.monospace};
+  display: block;
+  color: #ccc;
+  margin-bottom: 10px;
 `;
 
-const Address = styled.p``;
+const Block = styled.article`
+  &:not(:last-child) {
+    margin-bottom: 40px;
+  }
+`;
+
+const OrderList = styled.ol`
+  /* list-style: none; */
+  padding-left: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const OrderItem = styled.li`
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+`;
+
+const OrderTitle = styled.span`
+  margin-left: 10px;
+  display: block;
+  padding: 10px 13px;
+  border-radius: 3px;
+  border: 1px solid #eee;
+  box-shadow: ${p => p.theme.boxShadow};
+`;
+
+const Comment = styled.p`
+  line-height: 1.5;
+`;
+
+const RateList = styled.ul`
+  list-style: none;
+`;
+
+const RateItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #eee;
+  box-shadow: ${p => p.theme.boxShadow};
+  font-size: 1.25rem;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+`;
+
+const RateLabel = styled.span``;
+
+const RateScore = styled.span`
+  font-weight: 700;
+`;
+
+const ScoreItem = styled(RateItem)`
+  color: #fff;
+  background: #222;
+
+  ${RateScore} {
+    font-size: 1.5rem;
+    color: ${p => p.theme.colors.primary.hues[0]};
+  }
+`;
 
 type WithVisitId = { id: string };
 
@@ -33,6 +103,8 @@ export const VisitScene = ({
     variables: { id }
   });
 
+  console.log(id, data);
+
   if (loading) {
     return <Loading />;
   }
@@ -40,12 +112,44 @@ export const VisitScene = ({
   if (data && data.visit) {
     const { visit } = data;
 
+    const formattedRate = formatRate(visit.rate);
+
     return (
       <Page>
-        <Place>
-          <Name>{visit.place.name}</Name>
-          <Address>{visit.place.address.formatted}</Address>
-        </Place>
+        <PageTitle
+          text={visit.place.name}
+          subTitle={formatDate(visit.visitDate)}
+        />
+        <Block>
+          <Label>Beställningar</Label>
+          <OrderList>
+            {visit.orders &&
+              visit.orders.map(order => (
+                <OrderItem key={order.id}>
+                  <OrderTitle>{order.title}</OrderTitle>
+                </OrderItem>
+              ))}
+          </OrderList>
+        </Block>
+        <Block>
+          <Label>Betyg</Label>
+          <RateList>
+            {formattedRate.map(rate => (
+              <RateItem key={rate.label}>
+                <RateLabel>{rate.label}</RateLabel>
+                <RateScore>{rate.score || '-'}</RateScore>
+              </RateItem>
+            ))}
+            <ScoreItem>
+              <RateLabel>Total</RateLabel>
+              <RateScore>{visit.rate.score}</RateScore>
+            </ScoreItem>
+          </RateList>
+        </Block>
+        <Block>
+          <Label>Kommentar</Label>
+          <Comment>{visit.comment || '-'}</Comment>
+        </Block>
       </Page>
     );
   }

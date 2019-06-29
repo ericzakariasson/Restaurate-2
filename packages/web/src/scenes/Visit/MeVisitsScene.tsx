@@ -9,7 +9,7 @@ import { NoResult } from '../../components/NoResult';
 const meVisitsQuery = loader('../../queries/meVisits.gql');
 
 const Page = styled.article`
-  padding: 20px;
+  padding: 20px 30px;
 `;
 
 const VisitList = styled.ul`

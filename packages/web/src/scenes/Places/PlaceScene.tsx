@@ -13,11 +13,11 @@ import { visitRoute } from '../../routes';
 const placeQuery = loader('../../queries/place.gql');
 
 const Page = styled.section`
-  padding: 20px;
+  padding: 20px 30px;
 `;
 
 const Info = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const Text = styled.p``;
@@ -35,7 +35,7 @@ const MapCard = styled.div<MapCardProps>`
   border-radius: 4px;
   box-shadow: ${p => p.theme.boxShadow};
   border: 1px solid #aaa;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 `;
 
 const TagList = styled.ul``;
@@ -110,11 +110,7 @@ export const PlaceScene = ({
             place.tags.map(tag => <TagItem id={tag.id}>{tag.title}</TagItem>)}
         </TagList>
         <Info>
-          <Text>
-            Du har besökt detta stället {place.visitCount}{' '}
-            {place.visitCount === 1 ? 'gång' : 'gånger'} tidigare. Se alla besök
-            nedan.
-          </Text>
+          <Text>Se {place.visitCount} besök nedan.</Text>
         </Info>
         <VisitList>
           {place.visits.map(visit => (
