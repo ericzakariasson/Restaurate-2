@@ -9,9 +9,16 @@ import { Context } from '../../types/graphql-utils';
 export class PlaceResolver {
   @Query(() => Place, { nullable: true })
   async place(
-    @Arg('id') id: PrimaryGeneratedColumnType
+    @Arg('id', { nullable: true }) id?: PrimaryGeneratedColumnType,
+    @Arg('slug', { nullable: true }) slug?: string
   ): Promise<Place | null> {
-    const place = await Place.findOne(id);
+    if (!id && !slug) {
+      throw new Error('At least one argument is required');
+    }
+
+    const place = await Place.findOne({
+      where: [{ id }, { slug }]
+    });
 
     if (!place) {
       return null;

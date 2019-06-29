@@ -8,8 +8,9 @@ export const routes: Routes = {
   places: '/places',
   register: '/register',
   login: '/login',
-  visit: '/visit/:id'
+  visit: '/visit/:id',
+  place: '/place/:slug'
 };
 
 export const visitRoute = (id: string) => `/visit/${id}`;
-export const placeRoute = (id: string) => `/place/${id}`;
+export const placeRoute = (slug: string) => `/place/${slug}`;

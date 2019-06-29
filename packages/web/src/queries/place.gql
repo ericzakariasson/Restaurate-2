@@ -1,0 +1,38 @@
+query Place($slug: String) {
+  place(slug: $slug) {
+    id
+    googlePlaceId
+    name
+    slug
+    address {
+      id
+      street
+      streetNumber
+      sublocality
+      city
+      country
+    }
+    lat
+    lng
+    url
+    priceLevel
+    visitCount
+    averageScore
+    tags {
+      id
+      title
+    }
+    visits {
+      id
+      visitDate
+      rate {
+        id
+        score
+      }
+      orders {
+        id
+        title
+      }
+    }
+  }
+}
