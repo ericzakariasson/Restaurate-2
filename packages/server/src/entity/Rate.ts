@@ -20,7 +20,7 @@ export class Rate extends BaseEntity {
   visit: Visit;
 
   @Field()
-  @Column()
+  @Column({ type: 'float' })
   score: number;
 
   @Field({ nullable: true })
@@ -38,9 +38,6 @@ export class Rate extends BaseEntity {
   @Field({ nullable: true })
   @Column({ nullable: true })
   experience: number;
-
-  @Column()
-  rawData: string;
 
   @Field(() => Date)
   @CreateDateColumn()

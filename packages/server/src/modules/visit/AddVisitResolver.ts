@@ -66,8 +66,7 @@ export class AddVisitResolver {
 
       const rate = Rate.create({
         ...input.rate,
-        score: ratingSum / ratings.length,
-        rawData: JSON.stringify(input.rate)
+        score: Math.round((ratingSum / ratings.length) * 10) / 10
       });
 
       const visit = await Visit.create({
