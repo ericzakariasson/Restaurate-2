@@ -15,7 +15,7 @@ const loginMutation = loader('../../mutations/login.gql');
 const meQuery = loader('../../queries/me.gql');
 
 const Page = styled.section`
-  padding: 60px 20px 40px;
+  padding: ${p => p.theme.page.padding};
   height: 100vh;
   display: flex;
   flex-direction: column;

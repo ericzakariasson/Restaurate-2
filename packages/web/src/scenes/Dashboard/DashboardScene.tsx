@@ -8,7 +8,8 @@ import { routes } from '../../routes';
 import { PlacesAndVisits } from './components/PlacesAndVisits';
 
 const Page = styled.article`
-  padding: 40px 20px;
+  padding: ${p => p.theme.page.padding};
+  padding-top: 40px;
 `;
 
 const Name = styled.h1`

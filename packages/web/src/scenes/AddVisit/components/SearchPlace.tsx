@@ -20,7 +20,7 @@ const Wrapper = styled.div<WrapperProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 30px;
+  padding: ${p => p.theme.page.padding};
 `;
 
 const ResultsWrapper = styled.div`

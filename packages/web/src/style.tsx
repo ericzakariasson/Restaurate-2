@@ -25,6 +25,9 @@ export const GlobalStyle = createGlobalStyle`
 
 export const theme = {
   transition: '0.15s ease-in-out',
+  page: {
+    padding: '20px 20px'
+  },
   colors: {
     primary: {
       hex: '#FFD966',

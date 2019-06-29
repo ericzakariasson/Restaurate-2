@@ -15,7 +15,7 @@ const registerMutation = loader('../../mutations/register.gql');
 const meQuery = loader('../../queries/me.gql');
 
 const Page = styled.section`
-  padding: 60px 20px 40px;
+  padding: ${p => p.theme.page.padding};
 `;
 
 const Fields = styled.div`

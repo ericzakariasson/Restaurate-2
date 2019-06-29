@@ -13,7 +13,7 @@ import { visitRoute } from '../../routes';
 const placeQuery = loader('../../queries/place.gql');
 
 const Page = styled.section`
-  padding: 20px 30px;
+  padding: ${p => p.theme.page.padding};
 `;
 
 const Info = styled.div`

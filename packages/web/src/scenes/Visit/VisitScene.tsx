@@ -11,7 +11,7 @@ import { formatDate, formatRate } from '../../utils/format';
 const visitQuery = loader('../../queries/visit.gql');
 
 const Page = styled.section`
-  padding: 20px 30px;
+  padding: ${p => p.theme.page.padding};
   /* display: flex;
   flex-direction: column;
   align-items: center; */

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-const Wrapper = styled.div<TextProps>`
-  margin: ${p => (p.large ? '-30px 0 30px' : '0 0 30px')};
+const Wrapper = styled.div`
+  margin-bottom: 30px;
   padding-top: 15px;
 `;
 
@@ -34,7 +34,7 @@ export const PageTitle = ({
   large = false,
   subTitle
 }: PageTitleProps) => (
-  <Wrapper large={large}>
+  <Wrapper>
     <Text large={large}>{text}</Text>
     {subTitle && <SubTitle>{subTitle}</SubTitle>}
   </Wrapper>
