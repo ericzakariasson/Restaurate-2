@@ -6,3 +6,4 @@ export * from './Error/GeneralError';
 export * from './User/RegisterScene';
 export * from './User/LoginScene';
 export * from './Default/DefaultScene';
+export * from './Places/MePlacesScene';

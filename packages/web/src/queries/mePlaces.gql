@@ -1,5 +1,6 @@
 query MePlaces {
   me {
+    placeCount
     places {
       id
       googlePlaceId

@@ -1,4 +1,6 @@
-export const routes = {
+type Routes = { [key: string]: string };
+
+export const routes: Routes = {
   default: '/',
   dashboard: '/dashboard',
   visits: '/visits',
@@ -8,3 +10,6 @@ export const routes = {
   login: '/login',
   visit: '/visit/:id'
 };
+
+export const visitRoute = (id: string) => `/visit/${id}`;
+export const placeRoute = (id: string) => `/place/${id}`;

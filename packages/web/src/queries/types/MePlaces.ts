@@ -41,6 +41,7 @@ export interface MePlaces_me_places {
 
 export interface MePlaces_me {
   __typename: "User";
+  placeCount: number;
   places: MePlaces_me_places[];
 }
 

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
 
-import { MeVisits_me_visits } from '../queries/types/MeVisits';
-import { visitRoute } from '../routes';
+import { MePlaces_me_places } from '../queries/types/MePlaces';
+import { placeRoute } from '../routes';
 
 const Item = styled.li`
   padding: 15px;
@@ -37,26 +37,13 @@ const Score = styled.h4`
 
 const Order = styled.li``;
 
-interface VisitItemProps extends MeVisits_me_visits {}
+interface PlaceItemProps extends MePlaces_me_places {}
 
-export const VisitItem = ({
-  id,
-  visitDate,
-  place,
-  rate,
-  orders
-}: VisitItemProps) => (
+export const PlaceItem = ({ id, name, address }: PlaceItemProps) => (
   <Item>
-    <StyledLink to={visitRoute(id)}>
-      <Place>
-        <Name>{place.name}</Name>
-        <Address>{place.address.formatted}</Address>
-      </Place>
-      <Score>{rate.score}</Score>
-      {orders &&
-        orders
-          .slice(0, 3)
-          .map(order => <Order key={order.id}>{order.title}</Order>)}
+    <StyledLink to={placeRoute(id)}>
+      <Name>{name}</Name>
+      <Address>{address.formatted}</Address>
     </StyledLink>
   </Item>
 );

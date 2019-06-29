@@ -38,14 +38,17 @@ interface BoxProps {
 
 const Box = styled.h2<BoxProps>`
   width: 100%;
-  background: ${p => (p.disabled ? '#DDD' : p.theme.colors.primary.hues[0])};
+  background: ${p => (p.disabled ? '#FCFCFC' : '#FFF')};
   color: #222;
   border-radius: 3px;
+  border: 1px solid;
+  border-color: ${p => (p.disabled ? '#DDD' : '#222')};
   box-shadow: ${p => p.theme.boxShadow};
   padding: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-shadow: 3px 3px 0 #eee;
 `;
 
 interface PlacesAndVisitsProps {
@@ -66,7 +69,7 @@ export const PlacesAndVisits = ({
         </StyledLink>
       </Item>
       <Item>
-        <StyledLink to={routes.visit}>
+        <StyledLink to={routes.visits}>
           <Label>Besök</Label>
           <Box disabled={visitCount === 0}>{visitCount}</Box>
         </StyledLink>
