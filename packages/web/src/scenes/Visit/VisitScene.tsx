@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 import { useQuery } from 'react-apollo-hooks';
 
 import { Visit, VisitVariables } from '../../queries/types/Visit';
@@ -8,6 +8,7 @@ import { Visit, VisitVariables } from '../../queries/types/Visit';
 import { loader } from 'graphql.macro';
 import { Loading, PageTitle } from '../../components';
 import { formatDate, formatRate } from '../../utils/format';
+import { placeRoute } from '../../routes';
 const visitQuery = loader('../../queries/visit.gql');
 
 const Page = styled.section`
@@ -15,6 +16,21 @@ const Page = styled.section`
   /* display: flex;
   flex-direction: column;
   align-items: center; */
+`;
+
+const PlaceLink = styled(Link)`
+  padding: 15px;
+  display: block;
+  margin-bottom: 20px;
+  background: ${p => p.theme.colors.primary.hues[9]};
+  border: 1px solid #ccc;
+  text-align: center;
+  color: #222;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 1.125rem;
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 const Label = styled.span`
@@ -69,7 +85,7 @@ const RateItem = styled.li`
   border-radius: 5px;
   border: 1px solid #eee;
   box-shadow: ${p => p.theme.boxShadow};
-  font-size: 1.25rem;
+  font-size: 1.125rem;
 
   &:not(:last-child) {
     margin-bottom: 15px;
@@ -103,8 +119,6 @@ export const VisitScene = ({
     variables: { id }
   });
 
-  console.log(id, data);
-
   if (loading) {
     return <Loading />;
   }
@@ -120,16 +134,20 @@ export const VisitScene = ({
           text={visit.place.name}
           subTitle={formatDate(visit.visitDate)}
         />
+
         <Block>
           <Label>Beställningar</Label>
-          <OrderList>
-            {visit.orders &&
-              visit.orders.map(order => (
+          {visit.orders && visit.orders.length > 0 ? (
+            <OrderList>
+              {visit.orders.map(order => (
                 <OrderItem key={order.id}>
                   <OrderTitle>{order.title}</OrderTitle>
                 </OrderItem>
               ))}
-          </OrderList>
+            </OrderList>
+          ) : (
+            'Inga beställningar'
+          )}
         </Block>
         <Block>
           <Label>Betyg</Label>
@@ -148,8 +166,11 @@ export const VisitScene = ({
         </Block>
         <Block>
           <Label>Kommentar</Label>
-          <Comment>{visit.comment || '-'}</Comment>
+          <Comment>{visit.comment || 'Ingen kommentar'}</Comment>
         </Block>
+        <PlaceLink to={placeRoute(visit.place.slug)}>
+          Gå till {visit.place.name}
+        </PlaceLink>
       </Page>
     );
   }

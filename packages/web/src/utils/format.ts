@@ -1,4 +1,4 @@
-import { PriceLevel } from '../types/graphql-global-types';
+import { PriceLevel, PlaceType } from '../types/graphql-global-types';
 import { Visit_visit_rate } from '../queries/types/Visit';
 
 export function formatDate(date: Date | string) {
@@ -10,8 +10,9 @@ export function formatDate(date: Date | string) {
 }
 
 const priceLevelMap = {
-  [PriceLevel.Cheap]: 'Billig',
-  [PriceLevel.Medium]: 'Mellan',
+  [PriceLevel.Free]: 'Gratis',
+  [PriceLevel.Inexpensive]: 'Billig',
+  [PriceLevel.Moderate]: 'Mellan',
   [PriceLevel.Expensive]: 'Dyr',
   [PriceLevel.Exclusive]: 'Exklusiv'
 };
@@ -44,4 +45,19 @@ export function formatRate(rate: Visit_visit_rate) {
       label: rateMap[key].label,
       score
     }));
+}
+
+type PlaceTypeMap = { [key in PlaceType]: string };
+
+const placeTypeMap: PlaceTypeMap = {
+  [PlaceType.Cafe]: 'Café',
+  [PlaceType.Restaurant]: 'Restaurang'
+};
+
+export function formatPlaceType(type: PlaceType) {
+  return placeTypeMap[type];
+}
+
+export function formatURL(url: string): string {
+  return new URL(url).hostname;
 }
