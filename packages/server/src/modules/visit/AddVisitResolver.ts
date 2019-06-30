@@ -4,7 +4,7 @@ import { Order } from '../../entity/Order';
 import { Context } from '../../types/graphql-utils';
 import { Rate } from '../../entity/Rate';
 import { User } from '../../entity/User';
-import { Place, priceLevelMap } from '../../entity/Place';
+import { Place, priceLevelMap, placeTypeMap } from '../../entity/Place';
 import { Address } from '../../entity/Address';
 import { Tag } from '../../entity/Tag';
 
@@ -34,9 +34,14 @@ export class AddVisitResolver {
 
         const address = Address.createFromPlaceData(placeData);
 
+        const types = input.types
+          .filter(type => type in placeTypeMap)
+          .map(type => placeTypeMap[type]);
+
         place = await Place.create({
           googlePlaceId: placeData.place_id,
           address,
+          types,
           name: placeData.name,
           lat: placeData.geometry.location.lat,
           lng: placeData.geometry.location.lng,

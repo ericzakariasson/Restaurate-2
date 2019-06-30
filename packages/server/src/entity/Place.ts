@@ -18,25 +18,44 @@ import { slugify } from '../utils/slugify';
 import { RelationColumn } from '../types/graphql-utils';
 
 export enum PriceLevel {
-  Cheap = 0,
-  Medium = 1,
-  Expensive = 2,
-  Exclusive = 3
+  Free = 0,
+  Inexpensive = 1,
+  Moderate = 2,
+  Expensive = 3,
+  Exclusive = 4
 }
-
-type PriceLevelMap = { [key: number]: PriceLevel };
-
-export const priceLevelMap: PriceLevelMap = {
-  0: PriceLevel.Cheap,
-  1: PriceLevel.Medium,
-  2: PriceLevel.Expensive,
-  3: PriceLevel.Exclusive
-};
 
 registerEnumType(PriceLevel, {
   name: 'PriceLevel',
   description: 'Price level of place'
 });
+
+type PriceLevelMap = { [key: number]: PriceLevel };
+
+export const priceLevelMap: PriceLevelMap = {
+  0: PriceLevel.Free,
+  1: PriceLevel.Inexpensive,
+  2: PriceLevel.Moderate,
+  3: PriceLevel.Expensive,
+  4: PriceLevel.Exclusive
+};
+
+export enum PlaceType {
+  Restaurant = 'RESTAURANT',
+  Cafe = 'CAFE'
+}
+
+registerEnumType(PlaceType, {
+  name: 'PlaceType',
+  description: 'Type of place'
+});
+
+type PlaceTypeMap = { [key: string]: PlaceType };
+
+export const placeTypeMap: PlaceTypeMap = {
+  restaurant: PlaceType.Restaurant,
+  cafe: PlaceType.Cafe
+};
 
 @ObjectType()
 @Entity()
@@ -52,6 +71,10 @@ export class Place extends BaseEntity {
   @Field()
   @Column()
   name: string;
+
+  @Field(() => [PlaceType])
+  @Column({ type: 'enum', enum: PlaceType, array: true })
+  types: PlaceType[];
 
   @Field()
   @Column()

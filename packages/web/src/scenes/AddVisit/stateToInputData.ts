@@ -13,6 +13,7 @@ export function toInputData(state: ReducerState): AddVisitInput {
     orders: state.orders,
     rate: state.rate,
     comment: state.comment,
-    visitDate: state.date
+    visitDate: state.date,
+    types: state.place!.types!
   };
 }

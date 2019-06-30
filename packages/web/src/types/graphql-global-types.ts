@@ -10,10 +10,11 @@
  * Price level of place
  */
 export enum PriceLevel {
-  Cheap = "Cheap",
   Exclusive = "Exclusive",
   Expensive = "Expensive",
-  Medium = "Medium",
+  Free = "Free",
+  Inexpensive = "Inexpensive",
+  Moderate = "Moderate",
 }
 
 /**
@@ -26,6 +27,7 @@ export interface AddVisitInput {
   rate: RateInput;
   priceLevel?: number | null;
   tags?: string[] | null;
+  types: string[];
   providerPlaceId: string;
 }
 

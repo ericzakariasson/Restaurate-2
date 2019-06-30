@@ -16,6 +16,7 @@ import { Field, ID, ObjectType, InputType } from 'type-graphql';
 import { Place } from './Place';
 import { User } from './User';
 import { RelationColumn } from '../types/graphql-utils';
+import { PlaceType1, PlaceType2 } from '@google/maps';
 
 @ObjectType()
 @Entity()
@@ -91,6 +92,9 @@ export class AddVisitInput {
 
   @Field(() => [String], { nullable: true })
   tags?: string[];
+
+  @Field(() => [String])
+  types: Array<PlaceType1 | PlaceType2>;
 
   @Field(() => ID)
   providerPlaceId: string;
