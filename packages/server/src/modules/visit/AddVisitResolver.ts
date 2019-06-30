@@ -9,9 +9,6 @@ import { Context } from '../../types/graphql-utils';
 import { Rate } from '../../entity/Rate/Rate';
 import { User } from '../../entity/User/User';
 import { Place } from '../../entity/Place/Place';
-import { placeTypeMap } from '../../entity/Place/PlaceType';
-import { priceLevelMap } from '../../entity/Place/PriceLevel';
-import { Address } from '../../entity/Address/Address';
 import { Tag } from '../../entity/Tag/Tag';
 
 @Resolver(Visit)
@@ -34,30 +31,7 @@ export class AddVisitResolver {
       });
 
       if (!place) {
-        const placeData = (await ctx.client
-          .place({ placeid: input.providerPlaceId })
-          .asPromise()).json.result;
-
-        const address = Address.createFromPlaceData(placeData);
-
-        const types = input.types
-          .filter(type => type in placeTypeMap)
-          .map(type => placeTypeMap[type]);
-
-        place = await Place.create({
-          googlePlaceId: placeData.place_id,
-          address,
-          types,
-          name: placeData.name,
-          lat: placeData.geometry.location.lat,
-          lng: placeData.geometry.location.lng,
-          url: placeData.website,
-          priceLevel: input.priceLevel
-            ? priceLevelMap[input.priceLevel]
-            : priceLevelMap[placeData.price_level]
-        });
-
-        place.slugify();
+        place = await Place.createPlace(input, ctx.client);
       }
 
       const tags = input.tags

@@ -9,7 +9,7 @@ import {
   BaseEntity
 } from 'typeorm';
 import { Place } from '../Place/Place';
-import { createFromPlaceData } from './addressHelper';
+import { createFromPlaceData } from './addressHelpers';
 
 @ObjectType()
 @Entity()

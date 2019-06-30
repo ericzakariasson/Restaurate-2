@@ -18,6 +18,7 @@ import { slugify } from '../../utils/slugify';
 import { RelationColumn } from '../../types/graphql-utils';
 import { PlaceType } from './PlaceType';
 import { PriceLevel } from './PriceLevel';
+import { createPlace } from './placeHelpers';
 
 @ObjectType()
 @Entity()
@@ -94,4 +95,6 @@ export class Place extends BaseEntity {
   @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: string;
+
+  static createPlace = createPlace;
 }
