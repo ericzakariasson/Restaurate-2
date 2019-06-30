@@ -79,6 +79,10 @@ const VisitItem = styled.li`
   border-radius: 4px;
   box-shadow: ${p => p.theme.boxShadow};
   border: 1px solid #ccc;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
 `;
 
 const VisitLink = styled(Link)`

@@ -2,18 +2,23 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-apollo-hooks';
 import { MePlaces } from '../../queries/types/MePlaces';
-import { Loading, PlaceItem, PageTitle } from '../../components';
+import { Loading, PageTitle, CardWithScore } from '../../components';
 
 import { loader } from 'graphql.macro';
 import { NoResult } from '../../components/NoResult';
+import { placeRoute } from '../../routes';
 const mePlacesQuery = loader('../../queries/mePlaces.gql');
 
 const Page = styled.article`
   padding: ${p => p.theme.page.padding};
 `;
 
-const VisitList = styled.ul`
+const PlaceList = styled.ul`
   list-style: none;
+`;
+
+const VisitCount = styled.h5`
+  margin-bottom: -5px;
 `;
 
 export const MePlacesScene = () => {
@@ -39,11 +44,19 @@ export const MePlacesScene = () => {
         {placeCount === 0 ? (
           <NoResult label="ställen" />
         ) : (
-          <VisitList>
+          <PlaceList>
             {places.map(place => (
-              <PlaceItem key={place.id} {...place} />
+              <CardWithScore
+                key={place.id}
+                name={place.name}
+                address={place.address.formatted}
+                to={placeRoute(place.slug)}
+                score={place.averageScore}
+              >
+                <VisitCount>{place.visitCount} besök</VisitCount>
+              </CardWithScore>
             ))}
-          </VisitList>
+          </PlaceList>
         )}
       </Page>
     );

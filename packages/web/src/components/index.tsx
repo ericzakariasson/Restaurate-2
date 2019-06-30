@@ -6,5 +6,4 @@ export * from './Button';
 export * from './Input';
 export * from './Textarea';
 export * from './DateInput';
-export * from './VisitItem';
-export * from './PlaceItem';
+export * from './Card';
