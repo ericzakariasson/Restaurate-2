@@ -19,24 +19,31 @@ const VisitList = styled.ul`
 export const MeVisitsScene = () => {
   const { data, loading } = useQuery<MeVisits>(meVisitsQuery);
 
-  if (loading || !data || !data.me) {
+  if (loading) {
     return <Loading />;
   }
 
-  const { visits, visitCount } = data.me;
+  if (data && data.me) {
+    const { visits, visitCount } = data.me;
 
-  return (
-    <Page>
-      <PageTitle text="Besök" />
-      {visitCount === 0 ? (
-        <NoResult label="besök" />
-      ) : (
-        <VisitList>
-          {visits.map(visit => (
-            <VisitItem key={visit.id} {...visit} />
-          ))}
-        </VisitList>
-      )}
-    </Page>
-  );
+    return (
+      <Page>
+        <PageTitle
+          text="Besök"
+          subTitle={visitCount ? `${visitCount} besök` : undefined}
+        />
+        {visitCount === 0 ? (
+          <NoResult label="besök" />
+        ) : (
+          <VisitList>
+            {visits.map(visit => (
+              <VisitItem key={visit.id} {...visit} />
+            ))}
+          </VisitList>
+        )}
+      </Page>
+    );
+  }
+
+  return <span>No result</span>;
 };

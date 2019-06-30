@@ -17,13 +17,14 @@ const Name = styled.h1`
 `;
 
 export const DashboardScene = () => {
-  const { me, loading } = useMe();
+  const { data, loading } = useMe();
 
   if (loading) {
     return <Loading />;
   }
 
-  if (me) {
+  if (data && data.me) {
+    const { me } = data;
     return (
       <Page>
         <Name>{me.firstName}</Name>

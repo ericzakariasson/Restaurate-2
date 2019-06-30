@@ -4,9 +4,13 @@ import { useMe } from '../../hooks';
 import { routes } from '../../routes';
 
 export const DefaultScene = () => {
-  const { isAuthenticated } = useMe();
+  const { data, loading } = useMe();
 
-  if (isAuthenticated) {
+  if (loading) {
+    return null;
+  }
+
+  if (data && data.me) {
     return <Redirect to={routes.dashboard} />;
   }
 

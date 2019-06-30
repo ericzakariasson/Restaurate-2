@@ -19,24 +19,35 @@ const VisitList = styled.ul`
 export const MePlacesScene = () => {
   const { data, loading } = useQuery<MePlaces>(mePlacesQuery);
 
-  if (loading || !data || !data.me) {
+  if (loading) {
     return <Loading />;
   }
 
-  const { places, placeCount } = data.me;
+  if (data && data.me) {
+    const { places, placeCount } = data.me;
 
-  return (
-    <Page>
-      <PageTitle text="Ställen" />
-      {placeCount === 0 ? (
-        <NoResult label="ställen" />
-      ) : (
-        <VisitList>
-          {places.map(place => (
-            <PlaceItem key={place.id} {...place} />
-          ))}
-        </VisitList>
-      )}
-    </Page>
-  );
+    return (
+      <Page>
+        <PageTitle
+          text="Ställen"
+          subTitle={
+            placeCount
+              ? `${placeCount} ställe${placeCount > 1 ? 'n' : ''}`
+              : undefined
+          }
+        />
+        {placeCount === 0 ? (
+          <NoResult label="ställen" />
+        ) : (
+          <VisitList>
+            {places.map(place => (
+              <PlaceItem key={place.id} {...place} />
+            ))}
+          </VisitList>
+        )}
+      </Page>
+    );
+  }
+
+  return <span>No</span>;
 };

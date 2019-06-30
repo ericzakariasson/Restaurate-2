@@ -11,15 +11,15 @@ export const AuthRoute = ({
   fallbackRoute = routes.login,
   ...props
 }: AuthRouteProps) => {
-  const { isAuthenticated, loading } = useMe();
+  const { data, loading } = useMe();
 
   if (loading) {
     return null;
   }
 
-  if (!isAuthenticated) {
-    return <Redirect to={fallbackRoute} />;
+  if (data && data.me) {
+    return <Route {...props} />;
   }
 
-  return <Route {...props} />;
+  return <Redirect to={fallbackRoute} />;
 };
