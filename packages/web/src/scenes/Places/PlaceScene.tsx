@@ -50,6 +50,10 @@ const Website = styled.a`
   text-decoration: none;
 `;
 
+const MapWrapper = styled.div`
+  position: relative;
+`;
+
 interface MapCardProps {
   url: string;
 }
@@ -74,8 +78,24 @@ const VisitList = styled.ul`
   list-style: none;
 `;
 
+const GetDirections = styled.a`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 8px 12px;
+  text-decoration: none;
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  color: #222;
+  background: #fff;
+  box-shadow: ${p => p.theme.boxShadow};
+`;
+
 const VisitItem = styled.li`
-  padding: 15px;
   border-radius: 4px;
   box-shadow: ${p => p.theme.boxShadow};
   border: 1px solid #ccc;
@@ -89,6 +109,7 @@ const VisitLink = styled(Link)`
   text-decoration: none;
   color: #222;
   display: flex;
+  padding: 15px;
   justify-content: space-between;
   align-items: center;
 `;
@@ -99,6 +120,9 @@ const VisitScore = styled.span`
   font-size: 1.125rem;
   font-weight: 700;
 `;
+
+const mapsUrlFromPlaceId = (placeId: string) =>
+  `https://www.google.com/maps/place/?q=place_id:${placeId}`;
 
 type WithPlaceSlug = { slug: string };
 
@@ -146,7 +170,15 @@ export const PlaceScene = ({
             {formatURL(place.url)}
           </Website>
         )}
-        <MapCard url={mapUrl} />
+        <MapWrapper>
+          <GetDirections
+            href={mapsUrlFromPlaceId(place.googlePlaceId)}
+            target="_blank"
+          >
+            Hitta hit
+          </GetDirections>
+          <MapCard url={mapUrl} />
+        </MapWrapper>
         <TagList>
           {place.tags &&
             place.tags.map(tag => <TagItem id={tag.id}>{tag.title}</TagItem>)}

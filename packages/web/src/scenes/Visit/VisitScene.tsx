@@ -169,7 +169,7 @@ export const VisitScene = ({
           <Comment>{visit.comment || 'Ingen kommentar'}</Comment>
         </Block>
         <PlaceLink to={placeRoute(visit.place.slug)}>
-          Gå till {visit.place.name}
+          Visa stället {visit.place.name}
         </PlaceLink>
       </Page>
     );
