@@ -7,6 +7,14 @@
 //==============================================================
 
 /**
+ * Type of place
+ */
+export enum PlaceType {
+  Cafe = "Cafe",
+  Restaurant = "Restaurant",
+}
+
+/**
  * Price level of place
  */
 export enum PriceLevel {

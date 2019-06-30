@@ -7,7 +7,12 @@ import { Place, PlaceVariables } from '../../queries/types/Place';
 
 import { loader } from 'graphql.macro';
 import { Loading, PageTitle } from '../../components';
-import { formatPriceLevel, formatDate } from '../../utils/format';
+import {
+  formatPriceLevel,
+  formatDate,
+  formatPlaceType,
+  formatURL
+} from '../../utils/format';
 import { staticMapboxMapUrl } from '../../utils';
 import { visitRoute } from '../../routes';
 const placeQuery = loader('../../queries/place.gql');
@@ -20,7 +25,30 @@ const Info = styled.div`
   margin-bottom: 20px;
 `;
 
-const Text = styled.p``;
+const Text = styled.p`
+  text-align: center;
+`;
+
+const PlaceText = styled(Text)`
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #222;
+  margin-bottom: 20px;
+`;
+
+const Website = styled.a`
+  text-align: center;
+  padding: 10px;
+  display: block;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 1rem;
+  color: #222;
+  font-weight: 700;
+  text-decoration: none;
+`;
 
 interface MapCardProps {
   url: string;
@@ -102,8 +130,18 @@ export const PlaceScene = ({
           text={place.name}
           subTitle={`${place.address.street} ${place.address.streetNumber}, ${
             place.address.city
-          } — ${formatPriceLevel(place.priceLevel)}`}
+          } `}
         />
+        <PlaceText>
+          {place.types.map(formatPlaceType).join(',')}
+          {` `}—{` `}
+          {formatPriceLevel(place.priceLevel)}
+        </PlaceText>
+        {place.url && (
+          <Website href={place.url} target="_blank">
+            {formatURL(place.url)}
+          </Website>
+        )}
         <MapCard url={mapUrl} />
         <TagList>
           {place.tags &&

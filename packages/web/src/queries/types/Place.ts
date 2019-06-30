@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { PriceLevel } from "./../../types/graphql-global-types";
+import { PlaceType, PriceLevel } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: Place
@@ -50,6 +50,7 @@ export interface Place_place {
   googlePlaceId: string;
   name: string;
   slug: string;
+  types: PlaceType[];
   address: Place_place_address;
   lat: number;
   lng: number;

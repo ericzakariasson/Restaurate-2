@@ -4,6 +4,7 @@ query Place($slug: String) {
     googlePlaceId
     name
     slug
+    types
     address {
       id
       street
