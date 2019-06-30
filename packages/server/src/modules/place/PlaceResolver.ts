@@ -1,8 +1,8 @@
 import { Resolver, Arg, Query, FieldResolver, Root, Ctx } from 'type-graphql';
 import { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
-import { Place } from '../../entity/Place';
-import { Visit } from '../../entity/Visit';
-import { Address } from '../../entity/Address';
+import { Place } from '../../entity/Place/Place';
+import { Visit } from '../../entity/Visit/Visit';
+import { Address } from '../../entity/Address/Address';
 import { Context } from '../../types/graphql-utils';
 
 @Resolver(Place)

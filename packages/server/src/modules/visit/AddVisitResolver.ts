@@ -1,12 +1,18 @@
 import { Resolver, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
-import { Visit, AddVisitInput, AddVisitResponse } from '../../entity/Visit';
-import { Order } from '../../entity/Order';
+import { Visit } from '../../entity/Visit/Visit';
+import {
+  AddVisitInput,
+  AddVisitResponse
+} from '../../entity/Visit/AddVisitInput';
+import { Order } from '../../entity/Order/Order';
 import { Context } from '../../types/graphql-utils';
-import { Rate } from '../../entity/Rate';
-import { User } from '../../entity/User';
-import { Place, priceLevelMap, placeTypeMap } from '../../entity/Place';
-import { Address } from '../../entity/Address';
-import { Tag } from '../../entity/Tag';
+import { Rate } from '../../entity/Rate/Rate';
+import { User } from '../../entity/User/User';
+import { Place } from '../../entity/Place/Place';
+import { placeTypeMap } from '../../entity/Place/PlaceType';
+import { priceLevelMap } from '../../entity/Place/PriceLevel';
+import { Address } from '../../entity/Address/Address';
+import { Tag } from '../../entity/Tag/Tag';
 
 @Resolver(Visit)
 export class AddVisitResolver {

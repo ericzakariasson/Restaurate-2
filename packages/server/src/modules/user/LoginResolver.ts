@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { User } from '../../entity/User';
+import { User } from '../../entity/User/User';
 import { Mutation, Arg, Ctx, Resolver } from 'type-graphql';
 import { Context } from '../../types/graphql-utils';
 

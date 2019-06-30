@@ -1,4 +1,4 @@
-import { User } from './entity/User';
+import { User } from './entity/User/User';
 import * as bcrypt from 'bcrypt';
 
 export async function insertUser() {

@@ -1,9 +1,9 @@
 import { Resolver, Ctx, Query, FieldResolver, Root } from 'type-graphql';
-import { User } from '../../entity/User';
+import { User } from '../../entity/User/User';
 import { Context } from '../../types/graphql-utils';
-import { Place } from '../../entity/Place';
+import { Place } from '../../entity/Place/Place';
 import { createQueryBuilder } from 'typeorm';
-import { Visit } from '../../entity/Visit';
+import { Visit } from '../../entity/Visit/Visit';
 
 @Resolver(User)
 export class UserResolver {

@@ -1,9 +1,9 @@
 import { Resolver, Arg, Query, FieldResolver, Root } from 'type-graphql';
-import { Visit } from '../../entity/Visit';
+import { Visit } from '../../entity/Visit/Visit';
 import { PrimaryGeneratedColumnType } from 'typeorm/driver/types/ColumnTypes';
-import { Place } from '../../entity/Place';
-import { User } from '../../entity/User';
-import { Rate } from '../../entity/Rate';
+import { Place } from '../../entity/Place/Place';
+import { User } from '../../entity/User/User';
+import { Rate } from '../../entity/Rate/Rate';
 
 @Resolver(Visit)
 export class VisitResolver {

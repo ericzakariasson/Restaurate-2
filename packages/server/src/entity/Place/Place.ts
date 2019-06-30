@@ -10,52 +10,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
-import { Visit } from './Visit';
-import { Tag } from './Tag';
-import { Address } from './Address';
-import { slugify } from '../utils/slugify';
-import { RelationColumn } from '../types/graphql-utils';
-
-export enum PriceLevel {
-  Free = 0,
-  Inexpensive = 1,
-  Moderate = 2,
-  Expensive = 3,
-  Exclusive = 4
-}
-
-registerEnumType(PriceLevel, {
-  name: 'PriceLevel',
-  description: 'Price level of place'
-});
-
-type PriceLevelMap = { [key: number]: PriceLevel };
-
-export const priceLevelMap: PriceLevelMap = {
-  0: PriceLevel.Free,
-  1: PriceLevel.Inexpensive,
-  2: PriceLevel.Moderate,
-  3: PriceLevel.Expensive,
-  4: PriceLevel.Exclusive
-};
-
-export enum PlaceType {
-  Restaurant = 'RESTAURANT',
-  Cafe = 'CAFE'
-}
-
-registerEnumType(PlaceType, {
-  name: 'PlaceType',
-  description: 'Type of place'
-});
-
-type PlaceTypeMap = { [key: string]: PlaceType };
-
-export const placeTypeMap: PlaceTypeMap = {
-  restaurant: PlaceType.Restaurant,
-  cafe: PlaceType.Cafe
-};
+import { Field, ID, ObjectType } from 'type-graphql';
+import { Visit } from '../Visit/Visit';
+import { Tag } from '../Tag/Tag';
+import { Address } from '../Address/Address';
+import { slugify } from '../../utils/slugify';
+import { RelationColumn } from '../../types/graphql-utils';
+import { PlaceType } from './PlaceType';
+import { PriceLevel } from './PriceLevel';
 
 @ObjectType()
 @Entity()

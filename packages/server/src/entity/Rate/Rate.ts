@@ -7,8 +7,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { Visit } from './Visit';
-import { ObjectType, Field, InputType, ID } from 'type-graphql';
+import { Visit } from '../Visit/Visit';
+import { ObjectType, Field, ID } from 'type-graphql';
 
 @ObjectType()
 @Entity()
@@ -47,19 +47,4 @@ export class Rate extends BaseEntity {
   @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: string;
-}
-
-@InputType('RateInput')
-export class RateInput implements Partial<Rate> {
-  @Field({ nullable: true })
-  food: number;
-
-  @Field({ nullable: true })
-  service: number;
-
-  @Field({ nullable: true })
-  environment: number;
-
-  @Field({ nullable: true })
-  experience: number;
 }

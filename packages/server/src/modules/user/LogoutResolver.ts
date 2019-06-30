@@ -1,5 +1,5 @@
 import { Mutation, Ctx, Resolver } from 'type-graphql';
-import { User } from '../../entity/User';
+import { User } from '../../entity/User/User';
 import { Context } from '../../types/graphql-utils';
 
 @Resolver(User)

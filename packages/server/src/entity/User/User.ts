@@ -7,14 +7,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { Field, ID, InputType, ObjectType, Root } from 'type-graphql';
-import { Visit } from './Visit';
-import { IsEmail, Length } from 'class-validator';
-
-enum UserRoles {
-  ADMIN = 'ADMIN',
-  USER = 'USER'
-}
+import { Field, ID, ObjectType, Root } from 'type-graphql';
+import { Visit } from '../Visit/Visit';
+import { UserRole } from './UserRoles';
 
 @ObjectType()
 @Entity()
@@ -25,10 +20,10 @@ export class User extends BaseEntity {
 
   @Field()
   @Column({
-    enum: UserRoles,
-    default: UserRoles.USER
+    enum: UserRole,
+    default: UserRole.USER
   })
-  role: UserRoles;
+  role: UserRole;
 
   @Field()
   @Column()
@@ -62,21 +57,4 @@ export class User extends BaseEntity {
   @Field(() => Date)
   @UpdateDateColumn()
   updatedAt: string;
-}
-
-@InputType()
-export class UserRegisterInput {
-  @Field()
-  firstName: string;
-
-  @Field()
-  lastName: string;
-
-  @IsEmail()
-  @Field()
-  email: string;
-
-  @Length(6, 64)
-  @Field()
-  password: string;
 }
