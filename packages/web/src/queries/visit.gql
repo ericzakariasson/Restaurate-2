@@ -8,6 +8,7 @@ query Visit($id: String!) {
       title
     }
     rate {
+      id
       score
       food
       service
@@ -18,6 +19,7 @@ query Visit($id: String!) {
       id
       name
       address {
+        id
         formatted
       }
       slug
