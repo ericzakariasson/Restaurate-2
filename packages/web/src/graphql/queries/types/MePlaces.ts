@@ -2,14 +2,14 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { PriceLevel } from "./../../types/graphql-global-types";
+import { PriceLevel } from '../../../types/graphql-global-types';
 
 // ====================================================
 // GraphQL query operation: MePlaces
 // ====================================================
 
 export interface MePlaces_me_places_address {
-  __typename: "Address";
+  __typename: 'Address';
   id: string;
   streetNumber: string;
   street: string;
@@ -20,25 +20,25 @@ export interface MePlaces_me_places_address {
 }
 
 export interface MePlaces_me_places_tags {
-  __typename: "Tag";
+  __typename: 'Tag';
   id: string;
   title: string;
 }
 
 export interface MePlaces_me_places_visits_rate {
-  __typename: "Rate";
+  __typename: 'Rate';
   score: number;
 }
 
 export interface MePlaces_me_places_visits {
-  __typename: "Visit";
+  __typename: 'Visit';
   id: string;
   visitDate: any;
   rate: MePlaces_me_places_visits_rate;
 }
 
 export interface MePlaces_me_places {
-  __typename: "Place";
+  __typename: 'Place';
   id: string;
   googlePlaceId: string;
   name: string;
@@ -55,7 +55,7 @@ export interface MePlaces_me_places {
 }
 
 export interface MePlaces_me {
-  __typename: "User";
+  __typename: 'User';
   placeCount: number;
   places: MePlaces_me_places[];
 }

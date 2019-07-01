@@ -8,6 +8,7 @@
     "apollo-link-http": "^1.5.14",
     "formik": "^1.5.7",
     "graphql": "14.2.1",
+    "graphql-tag": "^2.10.1",
     "graphql.macro": "^1.4.2",
     "query-string": "^6.4.2",
     "react": "^16.8.6",

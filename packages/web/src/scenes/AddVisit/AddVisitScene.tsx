@@ -24,7 +24,10 @@ const addVisitMutation = loader('../../mutations/addVisit.gql');
 const meVisitsQuery = loader('../../queries/meVisits.gql');
 const mePlacesQuery = loader('../../queries/mePlaces.gql');
 
-import { AddVisit, AddVisitVariables } from '../../mutations/types/AddVisit';
+import {
+  AddVisit,
+  AddVisitVariables
+} from '../../graphql/mutations/types/AddVisit';
 
 const slideStyle = {
   padding: 20,

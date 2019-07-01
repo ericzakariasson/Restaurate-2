@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { MeVisits_me_visits } from '../queries/types/MeVisits';
+import { MeVisits_me_visits } from '../graphql/queries/types/MeVisits';
 import { formatDate } from '../utils/format';
 import { CardWithScore } from '.';
 import { visitRoute } from '../routes';

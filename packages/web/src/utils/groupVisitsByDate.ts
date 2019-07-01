@@ -1,4 +1,4 @@
-import { MeVisits_me_visits } from '../queries/types/MeVisits';
+import { MeVisits_me_visits } from '../graphql/queries/types/MeVisits';
 
 type Groups = { [key: string]: MeVisits_me_visits[] };
 

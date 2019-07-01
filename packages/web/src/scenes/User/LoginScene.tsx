@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { PageTitle, Button, InputField } from '../../components';
 import { loader } from 'graphql.macro';
 
-import { Login, LoginVariables } from '../../mutations/types/Login';
+import { Login, LoginVariables } from '../../graphql/mutations/types/Login';
 import { routes } from '../../routes';
 
 const loginMutation = loader('../../mutations/login.gql');

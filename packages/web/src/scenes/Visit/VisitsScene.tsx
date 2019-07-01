@@ -1,7 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-apollo-hooks';
-import { MeVisits, MeVisits_me_visits } from '../../queries/types/MeVisits';
+import {
+  MeVisits,
+  MeVisits_me_visits
+} from '../../graphql/queries/types/MeVisits';
 import { Loading, PageTitle } from '../../components';
 
 import { loader } from 'graphql.macro';

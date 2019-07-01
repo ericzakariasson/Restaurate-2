@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import { useQuery } from 'react-apollo-hooks';
 
-import { Place, PlaceVariables } from '../../queries/types/Place';
+import { Place, PlaceVariables } from '../../graphql/queries/types/Place';
 
 import { loader } from 'graphql.macro';
 import { Loading, PageTitle } from '../../components';

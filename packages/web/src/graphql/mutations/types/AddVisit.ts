@@ -2,14 +2,14 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { AddVisitInput } from "./../../types/graphql-global-types";
+import { AddVisitInput } from '../../../types/graphql-global-types';
 
 // ====================================================
 // GraphQL mutation operation: AddVisit
 // ====================================================
 
 export interface AddVisit_addVisit {
-  __typename: "AddVisitResponse";
+  __typename: 'AddVisitResponse';
   saved: boolean;
 }
 

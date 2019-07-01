@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-apollo-hooks';
-import { MePlaces } from '../../queries/types/MePlaces';
+import { MePlaces } from '../../graphql/queries/types/MePlaces';
 import { Loading, PageTitle, CardWithScore } from '../../components';
 
 import { loader } from 'graphql.macro';

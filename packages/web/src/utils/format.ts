@@ -1,5 +1,5 @@
 import { PriceLevel, PlaceType } from '../types/graphql-global-types';
-import { Visit_visit_rate } from '../queries/types/Visit';
+import { Visit_visit_rate } from '../graphql/queries/types/Visit';
 
 export function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString('sv-SE', {

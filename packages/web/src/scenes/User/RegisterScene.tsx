@@ -6,7 +6,10 @@ import { useMutation } from 'react-apollo-hooks';
 import { PageTitle, Button, InputField } from '../../components';
 import { loader } from 'graphql.macro';
 
-import { Register, RegisterVariables } from '../../mutations/types/Register';
+import {
+  Register,
+  RegisterVariables
+} from '../../graphql/mutations/types/Register';
 import { RouteComponentProps } from 'react-router';
 import { routes } from '../../routes';
 import { Link } from 'react-router-dom';

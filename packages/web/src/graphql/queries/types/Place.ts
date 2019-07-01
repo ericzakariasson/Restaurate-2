@@ -2,14 +2,14 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { PlaceType, PriceLevel } from "./../../types/graphql-global-types";
+import { PlaceType, PriceLevel } from '../../../types/graphql-global-types';
 
 // ====================================================
 // GraphQL query operation: Place
 // ====================================================
 
 export interface Place_place_address {
-  __typename: "Address";
+  __typename: 'Address';
   id: string;
   street: string;
   streetNumber: string;
@@ -19,25 +19,25 @@ export interface Place_place_address {
 }
 
 export interface Place_place_tags {
-  __typename: "Tag";
+  __typename: 'Tag';
   id: string;
   title: string;
 }
 
 export interface Place_place_visits_rate {
-  __typename: "Rate";
+  __typename: 'Rate';
   id: string;
   score: number;
 }
 
 export interface Place_place_visits_orders {
-  __typename: "Order";
+  __typename: 'Order';
   id: string;
   title: string;
 }
 
 export interface Place_place_visits {
-  __typename: "Visit";
+  __typename: 'Visit';
   id: string;
   visitDate: any;
   rate: Place_place_visits_rate;
@@ -45,7 +45,7 @@ export interface Place_place_visits {
 }
 
 export interface Place_place {
-  __typename: "Place";
+  __typename: 'Place';
   id: string;
   googlePlaceId: string;
   name: string;
