@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const visitOrderFragment = gql`
+export default gql`
   fragment VisitOrder on Order {
     id
     createdAt

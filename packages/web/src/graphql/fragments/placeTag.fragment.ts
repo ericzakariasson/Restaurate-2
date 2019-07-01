@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const placeTagFragment = gql`
+export default gql`
   fragment PlaceTag on Tag {
     id
     title

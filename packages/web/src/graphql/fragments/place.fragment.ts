@@ -1,9 +1,8 @@
 import gql from 'graphql-tag';
 
-import { placeAddressFragment } from './placeAddress.fragment';
-import { placeTagFragment } from './placeTag.fragment';
+import * as fragments from './';
 
-export const placeFragment = gql`
+export default gql`
   fragment Place on Place {
     id
     googlePlaceId
@@ -14,14 +13,16 @@ export const placeFragment = gql`
     priceLevel
     url
     address {
-      ${placeAddressFragment}
+      ...PlaceAddress
     }
     tags {
-      ${placeTagFragment}
+      ...PlaceTag
     }
     createdAt
     updatedAt
     averageScore
     visitCount
   }
+  ${fragments.placeAddress}
+  ${fragments.placeTag}
 `;

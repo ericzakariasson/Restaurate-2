@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const placeAddressFragment = gql`
+export default gql`
   fragment PlaceAddress on Address {
     id
     formatted

@@ -1,5 +1,0 @@
-mutation AddVisit($data: AddVisitInput!) {
-  addVisit(data: $data) {
-    saved
-  }
-}

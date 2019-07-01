@@ -1,25 +1,29 @@
 import gql from 'graphql-tag';
 
-import { userFragment } from './user.fragment';
-import { placeFragment } from './place.fragment';
-import { visitOrderFragment } from './visitOrder.fragment';
+import * as fragments from './';
 
-export const visitFragment = gql`
+export default gql`
   fragment Visit on Visit {
     id
     comment
     visitDate
     orders {
-      ${visitOrderFragment}
+      ...VisitOrder
     }
-    rate
+    rate {
+      ...VisitRate
+    }
     user {
-      ${userFragment}
+      ...User
     }
     place {
-      ${placeFragment}
+      ...Place
     }
     createdAt
     updatedAt
   }
+  ${fragments.visitOrder}
+  ${fragments.visitRate}
+  ${fragments.user}
+  ${fragments.place}
 `;
