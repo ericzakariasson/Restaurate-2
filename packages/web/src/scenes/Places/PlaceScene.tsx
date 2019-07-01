@@ -15,6 +15,7 @@ import {
 } from '../../utils/format';
 import { staticMapboxMapUrl } from '../../utils';
 import { visitRoute } from '../../routes';
+import { GeneralError } from '../Error/GeneralError';
 const placeQuery = loader('../../queries/place.gql');
 
 const Page = styled.section`
@@ -131,7 +132,7 @@ export const PlaceScene = ({
     params: { slug }
   }
 }: RouteComponentProps<WithPlaceSlug>) => {
-  const { data, loading } = useQuery<Place, PlaceVariables>(placeQuery, {
+  const { data, loading, error } = useQuery<Place, PlaceVariables>(placeQuery, {
     variables: { slug }
   });
 
@@ -139,66 +140,72 @@ export const PlaceScene = ({
     return <Loading />;
   }
 
-  if (data && data.place) {
-    const { place } = data;
-
-    const { lat, lng } = place;
-
-    const mapUrl = staticMapboxMapUrl({
-      lat,
-      lng,
-      zoom: 14,
-      width: window.innerWidth - 40,
-      height: window.innerHeight / 2
-    });
-
-    return (
-      <Page>
-        <PageTitle
-          text={place.name}
-          subTitle={`${place.address.street} ${place.address.streetNumber}, ${
-            place.address.city
-          } `}
-        />
-        <PlaceText>
-          {place.types.map(formatPlaceType).join(',')}
-          {` `}—{` `}
-          {formatPriceLevel(place.priceLevel)}
-        </PlaceText>
-        {place.url && (
-          <Website href={place.url} target="_blank">
-            {formatURL(place.url)}
-          </Website>
-        )}
-        <MapWrapper>
-          <GetDirections
-            href={mapsUrlFromPlaceId(place.googlePlaceId)}
-            target="_blank"
-          >
-            Hitta hit
-          </GetDirections>
-          <MapCard url={mapUrl} />
-        </MapWrapper>
-        <TagList>
-          {place.tags &&
-            place.tags.map(tag => <TagItem id={tag.id}>{tag.title}</TagItem>)}
-        </TagList>
-        <Info>
-          <Text>Se {place.visitCount} besök nedan.</Text>
-        </Info>
-        <VisitList>
-          {place.visits.map(visit => (
-            <VisitItem key={visit.id}>
-              <VisitLink to={visitRoute(visit.id)}>
-                <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
-                <VisitScore>{visit.rate.score}</VisitScore>
-              </VisitLink>
-            </VisitItem>
-          ))}
-        </VisitList>
-      </Page>
-    );
+  if (error) {
+    return <GeneralError />;
   }
 
-  return <span>Hitta ej</span>;
+  const place = data && data.place;
+
+  const {
+    name,
+    address,
+    lat,
+    lng,
+    priceLevel,
+    url,
+    types,
+    googlePlaceId,
+    tags,
+    visitCount,
+    visits
+  } = place!;
+
+  const mapUrl = staticMapboxMapUrl({
+    lat,
+    lng,
+    zoom: 14,
+    width: window.innerWidth - 40,
+    height: window.innerHeight / 2
+  });
+
+  return (
+    <Page>
+      <PageTitle
+        text={name}
+        subTitle={`${address.street} ${address.streetNumber}, ${address.city} `}
+      />
+      <PlaceText>
+        {types.map(formatPlaceType).join(',')}
+        {` `}—{` `}
+        {formatPriceLevel(priceLevel)}
+      </PlaceText>
+      {url && (
+        <Website href={url} target="_blank">
+          {formatURL(url)}
+        </Website>
+      )}
+      <MapWrapper>
+        <GetDirections href={mapsUrlFromPlaceId(googlePlaceId)} target="_blank">
+          Hitta hit
+        </GetDirections>
+        <MapCard url={mapUrl} />
+      </MapWrapper>
+      <TagList>
+        {tags && tags.map(tag => <TagItem id={tag.id}>{tag.title}</TagItem>)}
+      </TagList>
+      <Info>
+        <Text>Se {visitCount} besök nedan.</Text>
+      </Info>
+      <VisitList>
+        {visits.map(visit => (
+          <VisitItem key={visit.id}>
+            <VisitLink to={visitRoute(visit.id)}>
+              <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
+              <VisitScore>{visit.rate.score}</VisitScore>
+            </VisitLink>
+          </VisitItem>
+        ))}
+      </VisitList>
+    </Page>
+  );
 };

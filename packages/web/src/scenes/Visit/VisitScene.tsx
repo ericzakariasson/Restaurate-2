@@ -9,6 +9,7 @@ import { loader } from 'graphql.macro';
 import { Loading, PageTitle } from '../../components';
 import { formatDate, formatRate } from '../../utils/format';
 import { placeRoute } from '../../routes';
+import { GeneralError } from '..';
 const visitQuery = loader('../../queries/visit.gql');
 
 const Page = styled.section`
@@ -115,7 +116,7 @@ export const VisitScene = ({
     params: { id }
   }
 }: RouteComponentProps<WithVisitId>) => {
-  const { data, loading } = useQuery<Visit, VisitVariables>(visitQuery, {
+  const { data, loading, error } = useQuery<Visit, VisitVariables>(visitQuery, {
     variables: { id }
   });
 
@@ -123,57 +124,55 @@ export const VisitScene = ({
     return <Loading />;
   }
 
-  if (data && data.visit) {
-    const { visit } = data;
-
-    const formattedRate = formatRate(visit.rate);
-
-    return (
-      <Page>
-        <PageTitle
-          text={visit.place.name}
-          subTitle={formatDate(visit.visitDate)}
-        />
-
-        <Block>
-          <Label>Beställningar</Label>
-          {visit.orders && visit.orders.length > 0 ? (
-            <OrderList>
-              {visit.orders.map(order => (
-                <OrderItem key={order.id}>
-                  <OrderTitle>{order.title}</OrderTitle>
-                </OrderItem>
-              ))}
-            </OrderList>
-          ) : (
-            'Inga beställningar'
-          )}
-        </Block>
-        <Block>
-          <Label>Betyg</Label>
-          <RateList>
-            {formattedRate.map(rate => (
-              <RateItem key={rate.label}>
-                <RateLabel>{rate.label}</RateLabel>
-                <RateScore>{rate.score || '-'}</RateScore>
-              </RateItem>
-            ))}
-            <ScoreItem>
-              <RateLabel>Total</RateLabel>
-              <RateScore>{visit.rate.score}</RateScore>
-            </ScoreItem>
-          </RateList>
-        </Block>
-        <Block>
-          <Label>Kommentar</Label>
-          <Comment>{visit.comment || 'Ingen kommentar'}</Comment>
-        </Block>
-        <PlaceLink to={placeRoute(visit.place.slug)}>
-          Visa stället {visit.place.name}
-        </PlaceLink>
-      </Page>
-    );
+  if (error) {
+    return <GeneralError />;
   }
 
-  return <span>Ej hitta</span>;
+  const visit = data && data.visit;
+  const { place, rate, visitDate, orders, comment } = visit!;
+
+  const formattedRate = formatRate(rate);
+
+  return (
+    <Page>
+      <PageTitle text={place.name} subTitle={formatDate(visitDate)} />
+
+      <Block>
+        <Label>Beställningar</Label>
+        {orders && orders.length > 0 ? (
+          <OrderList>
+            {orders.map(order => (
+              <OrderItem key={order.id}>
+                <OrderTitle>{order.title}</OrderTitle>
+              </OrderItem>
+            ))}
+          </OrderList>
+        ) : (
+          'Inga beställningar'
+        )}
+      </Block>
+      <Block>
+        <Label>Betyg</Label>
+        <RateList>
+          {formattedRate.map(rate => (
+            <RateItem key={rate.label}>
+              <RateLabel>{rate.label}</RateLabel>
+              <RateScore>{rate.score || '-'}</RateScore>
+            </RateItem>
+          ))}
+          <ScoreItem>
+            <RateLabel>Total</RateLabel>
+            <RateScore>{rate.score}</RateScore>
+          </ScoreItem>
+        </RateList>
+      </Block>
+      <Block>
+        <Label>Kommentar</Label>
+        <Comment>{comment || 'Ingen kommentar'}</Comment>
+      </Block>
+      <PlaceLink to={placeRoute(place.slug)}>
+        Visa stället {place.name}
+      </PlaceLink>
+    </Page>
+  );
 };
