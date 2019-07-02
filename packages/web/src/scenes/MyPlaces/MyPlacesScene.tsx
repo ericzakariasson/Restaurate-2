@@ -6,6 +6,7 @@ import { NoResult } from '../../components/NoResult';
 import { placeRoute } from '../../routes';
 import { GeneralError } from '../Error/GeneralError';
 import { useMePlacesQuery } from '../../graphql/types';
+import { SkeletonCards } from '../../components/Skeleton';
 
 const PlaceList = styled.ul`
   list-style: none;
@@ -18,12 +19,16 @@ const VisitCount = styled.h5`
 export const MyPlacesScene = () => {
   const { data, loading, error } = useMePlacesQuery();
 
-  if (loading) {
-    return <Loading />;
-  }
-
   if (error) {
     return <GeneralError />;
+  }
+
+  if (loading) {
+    return (
+      <Page title="Besök" subTitle="- besök">
+        <SkeletonCards count={5} />
+      </Page>
+    );
   }
 
   const me = data && data.me!;

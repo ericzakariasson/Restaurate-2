@@ -7,6 +7,7 @@ import { groupVisitsByDay } from '../../utils/groupVisitsByDay';
 import { VisitGroup } from '../../components/VisitGroup';
 import { GeneralError } from '../Error/GeneralError';
 import { useMeVisitsQuery, Visit, VisitFragment } from '../../graphql/types';
+import { SkeletonCard, SkeletonCards } from '../../components/Skeleton';
 
 export const MyVisitsScene = () => {
   const { data, loading, error } = useMeVisitsQuery();
@@ -16,7 +17,11 @@ export const MyVisitsScene = () => {
   }
 
   if (loading) {
-    return <Loading />;
+    return (
+      <Page title="Besök" subTitle="- besök">
+        <SkeletonCards count={5} />
+      </Page>
+    );
   }
 
   const me = data && data.me;
