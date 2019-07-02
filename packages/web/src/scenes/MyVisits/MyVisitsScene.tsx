@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Loading, PageTitle } from '../../components';
 
 import { NoResult } from '../../components/NoResult';
-import { groupVisitsByDate } from '../../utils/groupVisitsByDate';
+import { groupVisitsByDay } from '../../utils/groupVisitsByDay';
 import { VisitGroup } from '../../components/VisitGroup';
 import { GeneralError } from '../Error/GeneralError';
 import { useMeVisitsQuery, Visit, VisitFragment } from '../../graphql/types';
@@ -26,7 +26,7 @@ export const MyVisitsScene = () => {
   const me = data && data.me;
   const { visits, visitCount } = me!;
 
-  const groupedVisits = groupVisitsByDate(visits);
+  const groupedVisits = groupVisitsByDay(visits);
 
   return (
     <Page>
