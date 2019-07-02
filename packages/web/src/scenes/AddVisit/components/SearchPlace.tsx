@@ -8,7 +8,7 @@ import { placeTypes } from '../constants';
 import { Label } from '../../../components/Label';
 import { Input } from '../../../components/Input';
 
-import { PageTitle } from '../../../components/PageTitle';
+import { PageTitle } from '../../../components';
 
 interface WrapperProps {
   y: number;
@@ -121,7 +121,7 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
 
   return (
     <Wrapper y={searchTop}>
-      <PageTitle large={!searched} text="Ställe" />
+      <PageTitle large={!searched} title="Ställe" />
       <Label htmlFor={inputId} text="Sök ställe" />
       <ResultsWrapper>
         <Form onSubmit={handleSubmit} sticky={showDropdown}>

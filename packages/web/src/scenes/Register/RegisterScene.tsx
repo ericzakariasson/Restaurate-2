@@ -48,7 +48,7 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
 
   return (
     <Page>
-      <PageTitle text="Registrera" large />
+      <PageTitle title="Registrera" large />
       <Formik
         initialValues={initialValues}
         validationSchema={registerValidationSchema}

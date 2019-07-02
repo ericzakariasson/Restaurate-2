@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Loading, PageTitle } from '../../components';
+import { Loading, Page } from '../../components';
 
 import { NoResult } from '../../components/NoResult';
 import { groupVisitsByDay } from '../../utils/groupVisitsByDay';
@@ -8,19 +8,15 @@ import { VisitGroup } from '../../components/VisitGroup';
 import { GeneralError } from '../Error/GeneralError';
 import { useMeVisitsQuery, Visit, VisitFragment } from '../../graphql/types';
 
-const Page = styled.article`
-  padding: ${p => p.theme.page.padding};
-`;
-
 export const MyVisitsScene = () => {
   const { data, loading, error } = useMeVisitsQuery();
 
-  if (loading) {
-    return <Loading />;
-  }
-
   if (error) {
     return <GeneralError />;
+  }
+
+  if (loading) {
+    return <Loading />;
   }
 
   const me = data && data.me;
@@ -29,11 +25,10 @@ export const MyVisitsScene = () => {
   const groupedVisits = groupVisitsByDay(visits);
 
   return (
-    <Page>
-      <PageTitle
-        text="Besök"
-        subTitle={visitCount ? `${visitCount} besök` : undefined}
-      />
+    <Page
+      title="Besök"
+      subTitle={visitCount ? `${visitCount} besök` : undefined}
+    >
       {visitCount === 0 ? (
         <NoResult label="besök" />
       ) : (

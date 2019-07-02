@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps, Link } from 'react-router-dom';
-import { Loading, PageTitle } from '../../components';
+import { Loading, Page } from '../../components';
 import { GeneralError } from '../Error/GeneralError';
 import {
   formatPriceLevel,
@@ -12,10 +12,6 @@ import {
 import { staticMapboxMapUrl } from '../../utils';
 import { visitRoute } from '../../routes';
 import { usePlaceQuery } from '../../graphql/types';
-
-const Page = styled.section`
-  padding: ${p => p.theme.page.padding};
-`;
 
 const Info = styled.div`
   margin-bottom: 20px;
@@ -164,11 +160,10 @@ export const PlaceScene = ({
   });
 
   return (
-    <Page>
-      <PageTitle
-        text={name}
-        subTitle={`${address.street} ${address.streetNumber}, ${address.city} `}
-      />
+    <Page
+      title={name}
+      subTitle={`${address.street} ${address.streetNumber}, ${address.city} `}
+    >
       <PlaceText>
         {types.map(formatPlaceType).join(',')}
         {` `}—{` `}

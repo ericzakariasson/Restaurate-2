@@ -2,18 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps, Link } from 'react-router-dom';
 
-import { Loading, PageTitle } from '../../components';
+import { Loading, PageTitle, Page } from '../../components';
 import { formatDate, formatRate } from '../../utils/format';
 import { placeRoute } from '../../routes';
 import { GeneralError } from '..';
 import { useVisitQuery } from '../../graphql/types';
-
-const Page = styled.section`
-  padding: ${p => p.theme.page.padding};
-  /* display: flex;
-  flex-direction: column;
-  align-items: center; */
-`;
 
 const PlaceLink = styled(Link)`
   padding: 15px;
@@ -130,9 +123,7 @@ export const VisitScene = ({
   const formattedRate = formatRate(rate);
 
   return (
-    <Page>
-      <PageTitle text={place.name} subTitle={formatDate(visitDate)} />
-
+    <Page title={place.name} subTitle={formatDate(visitDate)}>
       <Block>
         <Label>Beställningar</Label>
         {orders && orders.length > 0 ? (

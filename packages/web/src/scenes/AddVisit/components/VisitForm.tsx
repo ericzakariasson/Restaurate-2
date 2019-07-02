@@ -33,7 +33,7 @@ export const VisitForm = ({
 }: VisitFormProps) => {
   return (
     <>
-      <PageTitle text="Besök" />
+      <PageTitle title="Besök" />
       <ListInput
         label="Beställningar"
         items={orders}

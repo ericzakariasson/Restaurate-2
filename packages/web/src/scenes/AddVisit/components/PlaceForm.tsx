@@ -11,8 +11,8 @@ import { PriceLevelList } from './PriceLevelsList';
 import {
   SmallLabel,
   ListInput,
-  PageTitle,
-  TextButton
+  TextButton,
+  PageTitle
 } from '../../../components';
 
 interface ItemProps {}
@@ -100,7 +100,7 @@ export const PlaceForm = React.memo(
 
     return (
       <>
-        <PageTitle text="Ställe" />
+        <PageTitle title="Ställe" />
         <Wrapper>
           <MapWrapper url={url}>
             <MapOverlay>

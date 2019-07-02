@@ -42,7 +42,7 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
 
   return (
     <Page>
-      <PageTitle text="Logga in" large />
+      <PageTitle title="Logga in" large />
       <Formik
         initialValues={initialValues}
         validationSchema={loginValidationSchema}
