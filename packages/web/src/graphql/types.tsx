@@ -279,7 +279,7 @@ export type MePlacesQueryVariables = {};
 
 export type MePlacesQuery = { __typename?: 'Query' } & {
   me: Maybe<
-    { __typename?: 'User' } & Pick<User, 'placeCount'> & {
+    { __typename?: 'User' } & Pick<User, 'id' | 'placeCount'> & {
         places: Array<
           { __typename?: 'Place' } & {
             visits: Array<{ __typename?: 'Visit' } & VisitFragment>;
@@ -293,7 +293,7 @@ export type MeVisitsQueryVariables = {};
 
 export type MeVisitsQuery = { __typename?: 'Query' } & {
   me: Maybe<
-    { __typename?: 'User' } & Pick<User, 'visitCount'> & {
+    { __typename?: 'User' } & Pick<User, 'id' | 'visitCount'> & {
         visits: Array<{ __typename?: 'Visit' } & VisitFragment>;
       }
   >;
@@ -328,7 +328,10 @@ export type AddVisitMutation = { __typename?: 'Mutation' } & {
   addVisit: { __typename?: 'AddVisitResponse' } & Pick<
     AddVisitResponse,
     'saved'
-  >;
+  > & {
+      visit: Maybe<{ __typename?: 'Visit' } & VisitFragment>;
+      place: Maybe<{ __typename?: 'Place' } & PlaceFragment>;
+    };
 };
 
 export type LoginMutationVariables = {
@@ -469,6 +472,7 @@ export function useMeQuery(
 export const MePlacesDocument = gql`
   query MePlaces {
     me {
+      id
       placeCount
       places {
         ...Place
@@ -493,6 +497,7 @@ export function useMePlacesQuery(
 export const MeVisitsDocument = gql`
   query MeVisits {
     me {
+      id
       visitCount
       visits {
         ...Visit
@@ -552,8 +557,16 @@ export const AddVisitDocument = gql`
   mutation AddVisit($data: AddVisitInput!) {
     addVisit(data: $data) {
       saved
+      visit {
+        ...Visit
+      }
+      place {
+        ...Place
+      }
     }
   }
+  ${VisitFragmentDoc}
+  ${PlaceFragmentDoc}
 `;
 export type AddVisitMutationFn = ReactApollo.MutationFn<
   AddVisitMutation,

@@ -17,7 +17,11 @@ import { createActions } from './addVisitActions';
 import { calculateAverageScore } from './addVisitHelpers';
 import { toInputData } from './stateToInputData';
 import { tabs } from './tabs';
-import { useAddVisitMutation } from '../../graphql/types';
+import {
+  useAddVisitMutation,
+  MePlacesDocument,
+  MeVisitsDocument
+} from '../../graphql/types';
 
 const slideStyle = {
   padding: 20,
@@ -45,15 +49,20 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
     const { data } = await addVisit({
       variables: {
         data: toInputData(state)
-      }
+      },
+      refetchQueries: [
+        { query: MeVisitsDocument },
+        { query: MePlacesDocument }
+      ],
+      awaitRefetchQueries: true
     });
 
     if (data && data.addVisit.saved) {
       history.push(routes.visits);
+    } else {
+      console.error('Could not save visit');
+      setLoading(false);
     }
-
-    console.error('Could not save visit');
-    setLoading(false);
   };
 
   const actions = createActions(dispatch);

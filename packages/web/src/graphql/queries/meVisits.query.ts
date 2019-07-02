@@ -4,6 +4,7 @@ import * as fragments from '../fragments';
 export default gql`
   query MeVisits {
     me {
+      id
       visitCount
       visits {
         ...Visit
