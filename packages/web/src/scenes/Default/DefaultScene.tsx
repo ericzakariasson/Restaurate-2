@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import { useMe } from '../../hooks';
 import { routes } from '../../routes';
+import { useMeQuery } from '../../graphql/types';
+import { GeneralError } from '../Error/GeneralError';
 
 export const DefaultScene = () => {
-  const { data, loading } = useMe();
+  const { data, loading, error } = useMeQuery();
 
   if (loading) {
     return null;
+  }
+
+  if (error) {
+    return <GeneralError />;
   }
 
   if (data && data.me) {

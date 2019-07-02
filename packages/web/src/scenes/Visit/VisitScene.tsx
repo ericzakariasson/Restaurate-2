@@ -1,16 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps, Link } from 'react-router-dom';
-import { useQuery } from 'react-apollo-hooks';
 
-import { Visit, VisitVariables } from '../../graphql/queries/types/Visit';
-
-import { loader } from 'graphql.macro';
 import { Loading, PageTitle } from '../../components';
 import { formatDate, formatRate } from '../../utils/format';
 import { placeRoute } from '../../routes';
 import { GeneralError } from '..';
-const visitQuery = loader('../../queries/visit.gql');
+import { useVisitQuery } from '../../graphql/types';
 
 const Page = styled.section`
   padding: ${p => p.theme.page.padding};
@@ -116,7 +112,7 @@ export const VisitScene = ({
     params: { id }
   }
 }: RouteComponentProps<WithVisitId>) => {
-  const { data, loading, error } = useQuery<Visit, VisitVariables>(visitQuery, {
+  const { data, loading, error } = useVisitQuery({
     variables: { id }
   });
 

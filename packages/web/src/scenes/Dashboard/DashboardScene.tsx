@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { useMe } from '../../hooks';
 import { Loading, NavButton } from '../../components';
 import { routes } from '../../routes';
 
 import { PlacesAndVisits } from './components/PlacesAndVisits';
+import { useMeQuery } from '../../graphql/types';
+import { GeneralError } from '../Error/GeneralError';
 
 const Page = styled.article`
   padding: ${p => p.theme.page.padding};
@@ -17,25 +17,25 @@ const Name = styled.h1`
 `;
 
 export const DashboardScene = () => {
-  const { data, loading } = useMe();
+  const { data, loading, error } = useMeQuery();
 
   if (loading) {
     return <Loading />;
   }
 
-  if (data && data.me) {
-    const { me } = data;
-    return (
-      <Page>
-        <Name>{me.firstName}</Name>
-        <PlacesAndVisits
-          placeCount={me.placeCount}
-          visitCount={me.visitCount}
-        />
-        <NavButton to={routes.addVisit} text="Nytt besök" />
-      </Page>
-    );
+  if (error) {
+    return <GeneralError />;
   }
 
-  return null;
+  const me = data && data.me;
+
+  const { firstName, placeCount, visitCount } = me!;
+
+  return (
+    <Page>
+      <Name>{firstName}</Name>
+      <PlacesAndVisits placeCount={placeCount} visitCount={visitCount} />
+      <NavButton to={routes.addVisit} text="Nytt besök" />
+    </Page>
+  );
 };

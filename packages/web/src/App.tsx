@@ -21,8 +21,8 @@ import {
   RegisterScene,
   DefaultScene,
   LoginScene,
-  VisitsScene,
-  PlacesScene,
+  MyVisitsScene,
+  MyPlacesScene,
   PlaceScene
 } from './scenes';
 
@@ -74,12 +74,12 @@ const App = () => {
                   />
                   <AuthRoute
                     path={routes.visits}
-                    component={VisitsScene}
+                    component={MyVisitsScene}
                     exact={true}
                   />
                   <AuthRoute
                     path={routes.places}
-                    component={PlacesScene}
+                    component={MyPlacesScene}
                     exact={true}
                   />
                   <AuthRoute
