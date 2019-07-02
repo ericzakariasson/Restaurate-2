@@ -1,4 +1,4 @@
-import { RateNode } from '../../types/visit';
+import { RateNode } from './types/visit';
 import { ReducerState, RateState, RateNodeState } from './addVisitReducer';
 
 function round(value: number, precision = 1) {

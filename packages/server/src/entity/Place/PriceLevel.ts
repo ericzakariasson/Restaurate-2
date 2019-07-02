@@ -1,7 +1,6 @@
 import { registerEnumType } from 'type-graphql';
 
 export enum PriceLevel {
-  Free = 0,
   Inexpensive = 1,
   Moderate = 2,
   Expensive = 3,
@@ -16,7 +15,6 @@ registerEnumType(PriceLevel, {
 type PriceLevelMap = { [key: number]: PriceLevel };
 
 export const priceLevelMap: PriceLevelMap = {
-  0: PriceLevel.Free,
   1: PriceLevel.Inexpensive,
   2: PriceLevel.Moderate,
   3: PriceLevel.Expensive,

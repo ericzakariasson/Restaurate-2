@@ -50,26 +50,13 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
 
     if (data && data.addVisit.saved) {
       history.push(routes.visits);
-    } else {
-      console.error('Could not save visit');
     }
 
+    console.error('Could not save visit');
     setLoading(false);
   };
 
-  const {
-    selectPlace,
-    deselectPlace,
-    setPriceLevel,
-    resetPriceLevel,
-    addTag,
-    removeTag,
-    addOrder,
-    removeOrder,
-    setRate,
-    setComment,
-    setDate
-  } = createActions(dispatch);
+  const actions = createActions(dispatch);
 
   const averageScore = calculateAverageScore(state);
 
@@ -92,31 +79,31 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
           >
             <PlaceForm
               place={state.place}
-              deselect={deselectPlace}
+              deselect={actions.deselectPlace}
               priceLevel={state.priceLevel}
-              setPriceLevel={setPriceLevel}
-              resetPriceLevel={resetPriceLevel}
+              setPriceLevel={actions.setPriceLevel}
+              resetPriceLevel={actions.resetPriceLevel}
               tags={state.tags}
-              addTag={addTag}
-              removeTag={removeTag}
+              addTag={actions.addTag}
+              removeTag={actions.removeTag}
               goToVisitForm={goToVisitForm}
             />
             <VisitForm
               orders={state.orders}
-              addOrder={addOrder}
-              removeOrder={removeOrder}
-              setRate={setRate}
+              addOrder={actions.addOrder}
+              removeOrder={actions.removeOrder}
+              setRate={actions.setRate}
               setMoving={setMovingSlider}
               averageScore={averageScore}
-              setComment={setComment}
-              setDate={setDate}
+              setComment={actions.setComment}
+              setDate={actions.setDate}
               saveVisit={handleSave}
             />
           </SwipeableViews>
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />
         </FormWrapper>
       ) : (
-        <SearchPlace selected={state.place} setSelected={selectPlace} />
+        <SearchPlace selected={state.place} setSelected={actions.selectPlace} />
       )}
     </>
   );

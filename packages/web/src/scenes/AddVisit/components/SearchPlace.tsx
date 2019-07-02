@@ -4,7 +4,7 @@ import { X } from 'react-feather';
 import { SearchPlaceDropdown } from './SearchPlaceDropdown';
 import { useGooglePlaces } from '../../../hooks';
 
-import { placeTypes } from '../../../constants';
+import { placeTypes } from '../constants';
 import { Label } from '../../../components/Label';
 import { Input } from '../../../components/Input';
 

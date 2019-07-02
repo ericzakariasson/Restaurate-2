@@ -108,7 +108,6 @@ export enum PlaceType {
 
 /** Price level of place */
 export enum PriceLevel {
-  Free = 'Free',
   Inexpensive = 'Inexpensive',
   Moderate = 'Moderate',
   Expensive = 'Expensive',

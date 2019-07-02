@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { PlaceType, SearchTypeData } from '../../../types/place';
+import { PlaceType, SearchTypeData } from '../types/place';
 import { SearchPlaceResult } from './SearchPlaceResult';
 import { SmallLabel } from '../../../components/Label';
 

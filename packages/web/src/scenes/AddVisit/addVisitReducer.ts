@@ -1,4 +1,4 @@
-import { rateNodes } from '../../constants';
+import { rateNodes } from './constants';
 import { createInitialRateState } from './addVisitHelpers';
 
 import {

@@ -2,11 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { X } from 'react-feather';
 
-import { PriceLevel, Tag } from '../../../types/place';
-import { priceLevels } from '../../../constants';
+import { PriceLevel, Tag } from '../types/place';
+import { priceLevels } from '../constants';
 
 import { staticMapboxMapUrl } from '../../../utils';
-import { PlaceFormPriceLevels } from './PlaceFormPriceLevels';
+import { PriceLevelList } from './PriceLevelsList';
 
 import {
   SmallLabel,
@@ -63,26 +63,6 @@ const Name = styled.h3`
   font-family: ${p => p.theme.fonts.monospace};
 `;
 
-const Deselect = styled.button`
-  background: #fff7f6;
-  border-radius: 0 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 32px;
-  width: 32px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  border: none;
-  outline: none;
-  z-index: 1;
-
-  svg {
-    color: ${p => p.theme.colors.error.hex};
-  }
-`;
-
 const Address = styled.p`
   font-size: 1rem;
   font-weight: 400;
@@ -129,9 +109,8 @@ export const PlaceForm = React.memo(
             </MapOverlay>
           </MapWrapper>
           <SmallLabel text="Prisklass" />
-          <PlaceFormPriceLevels
-            priceLevels={priceLevels}
-            priceLevel={priceLevel}
+          <PriceLevelList
+            selectedPriceLevel={priceLevel}
             setPriceLevel={setPriceLevel}
             resetPriceLevel={resetPriceLevel}
           />

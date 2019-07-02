@@ -1,25 +1,16 @@
 import * as React from 'react';
 import styled from 'styled-components';
-
-import { PriceLevel } from '../../../types/place';
-
-const List = styled.ul`
-  list-style: none;
-  margin-bottom: 30px;
-
-  column-count: 2;
-  column-gap: 10px;
-`;
+import { PriceLevelProps } from '../../../utils/priceLevelHelpers';
 
 const Item = styled.li`
   margin-bottom: 10px;
 `;
 
-interface PriceLevelButtonProps {
+interface ButtonProps {
   selected: boolean;
 }
 
-const Button = styled.button<PriceLevelButtonProps>`
+const Button = styled.button<ButtonProps>`
   border-radius: 3px;
   border: 1px solid ${p => (p.selected ? '#bbb' : '#CCC')};
   outline: none;
@@ -66,36 +57,21 @@ const Check = styled.span<CheckProps>`
   }
 `;
 
-interface PlaceFormPriceLevelsProps {
-  priceLevels: PriceLevel[];
-  priceLevel: number | undefined;
-  setPriceLevel: (level: number) => void;
-  resetPriceLevel: () => void;
+interface PriceLevelButtonProps {
+  priceLevel: PriceLevelProps;
+  selected: boolean;
+  onClick: () => void;
 }
 
-export const PlaceFormPriceLevels = ({
-  priceLevels,
+export const PriceLevelButton = ({
   priceLevel,
-  setPriceLevel,
-  resetPriceLevel
-}: PlaceFormPriceLevelsProps) => {
-  return (
-    <List>
-      {priceLevels.map((pl: PriceLevel) => (
-        <Item key={pl.level}>
-          <Button
-            selected={pl.level === priceLevel}
-            onClick={
-              priceLevel === pl.level
-                ? () => resetPriceLevel()
-                : () => setPriceLevel(pl.level)
-            }
-          >
-            <Name>{pl.name}</Name>
-            <Check selected={priceLevel === pl.level} />
-          </Button>
-        </Item>
-      ))}
-    </List>
-  );
-};
+  selected,
+  onClick
+}: PriceLevelButtonProps) => (
+  <Item>
+    <Button selected={selected} onClick={onClick}>
+      <Name>{priceLevel.label}</Name>
+      <Check selected={selected} />
+    </Button>
+  </Item>
+);

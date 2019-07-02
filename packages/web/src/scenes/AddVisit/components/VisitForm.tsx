@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { rateNodes } from '../../../constants';
+import { rateNodes } from '../constants';
 
 import { PageTitle, ListInput, Button } from '../../../components';
 import { RateVisit } from './RateVisit';

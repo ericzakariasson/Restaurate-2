@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { RateNode } from '../../../types/visit';
+import { RateNode } from '../types/visit';
 import { InputSlider } from '../../../components/Slider';
 import { SecondaryButton } from '../../../components/Button';
 

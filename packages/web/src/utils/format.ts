@@ -9,7 +9,6 @@ export function formatDate(date: Date | string) {
 }
 
 const priceLevelMap = {
-  [PriceLevel.Free]: 'Gratis',
   [PriceLevel.Inexpensive]: 'Billig',
   [PriceLevel.Moderate]: 'Mellan',
   [PriceLevel.Expensive]: 'Dyr',

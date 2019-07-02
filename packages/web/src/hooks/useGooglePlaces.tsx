@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import { PlaceType, SearchTypeData } from '../types/place';
+import { PlaceType, SearchTypeData } from '../scenes/AddVisit/types/place';
 
 declare global {
   interface Window {
