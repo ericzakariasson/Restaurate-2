@@ -4,10 +4,9 @@ import * as fragments from '../fragments';
 export default gql`
   query Place($slug: String, $id: String) {
     place(slug: $slug, id: $id) {
-      ... on Place {
-        visits {
-          ...Visit
-        }
+      ...Place
+      visits {
+        ...Visit
       }
     }
   }

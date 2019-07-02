@@ -12,16 +12,17 @@ export default gql`
     lng
     priceLevel
     url
+    types
     address {
       ...PlaceAddress
     }
     tags {
       ...PlaceTag
     }
-    createdAt
-    updatedAt
     averageScore
     visitCount
+    createdAt
+    updatedAt
   }
   ${fragments.placeAddress}
   ${fragments.placeTag}

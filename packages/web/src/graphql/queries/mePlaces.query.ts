@@ -6,10 +6,9 @@ export default gql`
     me {
       placeCount
       places {
-        ... on Place {
-          visits {
-            ...Visit
-          }
+        ...Place
+        visits {
+          ...Visit
         }
       }
     }

@@ -5,8 +5,6 @@ import * as fragments from './';
 export default gql`
   fragment Visit on Visit {
     id
-    comment
-    visitDate
     orders {
       ...VisitOrder
     }
@@ -16,6 +14,8 @@ export default gql`
     user {
       ...User
     }
+    comment
+    visitDate
     place {
       ...Place
     }
