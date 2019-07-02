@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { PageTitle, Button, InputField } from '../../components';
 
 import { routes } from '../../routes';
-import { useLoginMutation } from '../../graphql/types';
+import { useLoginMutation, MeDocument } from '../../graphql/types';
 import { loginValidationSchema } from './loginValidationSchema';
 
 const Page = styled.section`
@@ -48,7 +48,9 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
         validationSchema={loginValidationSchema}
         onSubmit={async values => {
           const { data } = await login({
-            variables: { ...values }
+            variables: { ...values },
+            refetchQueries: [{ query: MeDocument }],
+            awaitRefetchQueries: true
           });
 
           if (data && data.login && data.login.id) {

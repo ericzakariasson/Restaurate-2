@@ -7,7 +7,7 @@ import { RouteComponentProps } from 'react-router';
 import { routes } from '../../routes';
 import { Link } from 'react-router-dom';
 import { registerValidationSchema } from './registerValidationSchema';
-import { useRegisterMutation } from '../../graphql/types';
+import { useRegisterMutation, MeDocument } from '../../graphql/types';
 
 const Page = styled.section`
   padding: ${p => p.theme.page.padding};
@@ -58,7 +58,9 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
           const { data } = await register({
             variables: {
               data: inputData
-            }
+            },
+            refetchQueries: [{ query: MeDocument }],
+            awaitRefetchQueries: true
           });
 
           if (data && data.register && data.register.id) {
