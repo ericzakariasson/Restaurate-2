@@ -6,12 +6,12 @@ import { Context } from 'src/types/graphql-utils';
 
 @Resolver(User)
 export class RegisterResolver {
-  @Mutation(() => Boolean)
+  @Mutation(() => User, { nullable: true })
   async register(
     @Arg('data')
     { firstName, lastName, email, password }: UserRegisterInput,
     @Ctx() ctx: Context
-  ): Promise<boolean> {
+  ): Promise<User | null> {
     try {
       const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -24,9 +24,9 @@ export class RegisterResolver {
 
       ctx.req.session!.userId = user.id;
 
-      return true;
+      return user;
     } catch {
-      return false;
+      return null;
     }
   }
 }
