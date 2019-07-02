@@ -1,5 +1,5 @@
-import { AddVisitInput } from '../../types/graphql-global-types';
 import { ReducerState } from './addVisitReducer';
+import { AddVisitInput } from '../../graphql/types';
 
 export function toInputData(state: ReducerState): AddVisitInput {
   if (state.place === null || state.place.place_id === undefined) {

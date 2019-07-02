@@ -51,7 +51,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   login?: Maybe<User>;
   logout: Scalars['Boolean'];
-  register: Scalars['Boolean'];
+  register?: Maybe<User>;
   addVisit: AddVisitResponse;
 };
 
@@ -203,10 +203,11 @@ export type PlaceFragment = { __typename?: 'Place' } & Pick<
   | 'lng'
   | 'priceLevel'
   | 'url'
-  | 'createdAt'
-  | 'updatedAt'
+  | 'types'
   | 'averageScore'
   | 'visitCount'
+  | 'createdAt'
+  | 'updatedAt'
 > & {
     address: { __typename?: 'Address' } & PlaceAddressFragment;
     tags: Maybe<Array<{ __typename?: 'Tag' } & PlaceTagFragment>>;
@@ -254,7 +255,7 @@ export type VisitFragment = { __typename?: 'Visit' } & Pick<
 
 export type VisitOrderFragment = { __typename?: 'Order' } & Pick<
   Order,
-  'id' | 'createdAt' | 'createdAt'
+  'id' | 'title' | 'createdAt' | 'updatedAt'
 >;
 
 export type VisitRateFragment = { __typename?: 'Rate' } & Pick<
@@ -281,9 +282,9 @@ export type MePlacesQuery = { __typename?: 'Query' } & {
   me: Maybe<
     { __typename?: 'User' } & Pick<User, 'placeCount'> & {
         places: Array<
-          { __typename?: 'Place' } & ({ __typename?: 'Place' } & {
+          { __typename?: 'Place' } & {
             visits: Array<{ __typename?: 'Visit' } & VisitFragment>;
-          })
+          } & PlaceFragment
         >;
       }
   >;
@@ -306,9 +307,9 @@ export type PlaceQueryVariables = {
 
 export type PlaceQuery = { __typename?: 'Query' } & {
   place: Maybe<
-    { __typename?: 'Place' } & ({ __typename?: 'Place' } & {
+    { __typename?: 'Place' } & {
       visits: Array<{ __typename?: 'Visit' } & VisitFragment>;
-    })
+    } & PlaceFragment
   >;
 };
 
@@ -320,6 +321,17 @@ export type VisitQuery = { __typename?: 'Query' } & {
   visit: Maybe<{ __typename?: 'Visit' } & VisitFragment>;
 };
 
+export type AddVisitMutationVariables = {
+  data: AddVisitInput;
+};
+
+export type AddVisitMutation = { __typename?: 'Mutation' } & {
+  addVisit: { __typename?: 'AddVisitResponse' } & Pick<
+    AddVisitResponse,
+    'saved'
+  >;
+};
+
 export type LoginMutationVariables = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -328,11 +340,20 @@ export type LoginMutationVariables = {
 export type LoginMutation = { __typename?: 'Mutation' } & {
   login: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>;
 };
+
+export type RegisterMutationVariables = {
+  data: UserRegisterInput;
+};
+
+export type RegisterMutation = { __typename?: 'Mutation' } & {
+  register: Maybe<{ __typename?: 'User' } & Pick<User, 'id'>>;
+};
 export const VisitOrderFragmentDoc = gql`
   fragment VisitOrder on Order {
     id
+    title
     createdAt
-    createdAt
+    updatedAt
   }
 `;
 export const VisitRateFragmentDoc = gql`
@@ -389,16 +410,17 @@ export const PlaceFragmentDoc = gql`
     lng
     priceLevel
     url
+    types
     address {
       ...PlaceAddress
     }
     tags {
       ...PlaceTag
     }
-    createdAt
-    updatedAt
     averageScore
     visitCount
+    createdAt
+    updatedAt
   }
   ${PlaceAddressFragmentDoc}
   ${PlaceTagFragmentDoc}
@@ -406,8 +428,6 @@ export const PlaceFragmentDoc = gql`
 export const VisitFragmentDoc = gql`
   fragment Visit on Visit {
     id
-    comment
-    visitDate
     orders {
       ...VisitOrder
     }
@@ -417,6 +437,8 @@ export const VisitFragmentDoc = gql`
     user {
       ...User
     }
+    comment
+    visitDate
     place {
       ...Place
     }
@@ -450,14 +472,14 @@ export const MePlacesDocument = gql`
     me {
       placeCount
       places {
-        ... on Place {
-          visits {
-            ...Visit
-          }
+        ...Place
+        visits {
+          ...Visit
         }
       }
     }
   }
+  ${PlaceFragmentDoc}
   ${VisitFragmentDoc}
 `;
 
@@ -492,13 +514,13 @@ export function useMeVisitsQuery(
 export const PlaceDocument = gql`
   query Place($slug: String, $id: String) {
     place(slug: $slug, id: $id) {
-      ... on Place {
-        visits {
-          ...Visit
-        }
+      ...Place
+      visits {
+        ...Visit
       }
     }
   }
+  ${PlaceFragmentDoc}
   ${VisitFragmentDoc}
 `;
 
@@ -527,6 +549,29 @@ export function useVisitQuery(
     baseOptions
   );
 }
+export const AddVisitDocument = gql`
+  mutation AddVisit($data: AddVisitInput!) {
+    addVisit(data: $data) {
+      saved
+    }
+  }
+`;
+export type AddVisitMutationFn = ReactApollo.MutationFn<
+  AddVisitMutation,
+  AddVisitMutationVariables
+>;
+
+export function useAddVisitMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    AddVisitMutation,
+    AddVisitMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    AddVisitMutation,
+    AddVisitMutationVariables
+  >(AddVisitDocument, baseOptions);
+}
 export const LoginDocument = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -549,4 +594,27 @@ export function useLoginMutation(
     LoginDocument,
     baseOptions
   );
+}
+export const RegisterDocument = gql`
+  mutation Register($data: UserRegisterInput!) {
+    register(data: $data) {
+      id
+    }
+  }
+`;
+export type RegisterMutationFn = ReactApollo.MutationFn<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
+
+export function useRegisterMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    RegisterMutation,
+    RegisterMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    RegisterMutation,
+    RegisterMutationVariables
+  >(RegisterDocument, baseOptions);
 }

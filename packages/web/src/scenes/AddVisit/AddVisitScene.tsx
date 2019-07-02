@@ -6,7 +6,6 @@ import Helmet from 'react-helmet';
 import { useMutation } from 'react-apollo-hooks';
 
 import { routes } from '../../routes';
-import { loader } from 'graphql.macro';
 
 import { PlaceForm } from './components/PlaceForm';
 import { VisitForm } from './components/VisitForm';
@@ -18,16 +17,7 @@ import { createActions } from './addVisitActions';
 import { calculateAverageScore } from './addVisitHelpers';
 import { toInputData } from './stateToInputData';
 import { tabs } from './tabs';
-
-const addVisitMutation = loader('../../mutations/addVisit.gql');
-
-const meVisitsQuery = loader('../../queries/meVisits.gql');
-const mePlacesQuery = loader('../../queries/mePlaces.gql');
-
-import {
-  AddVisit,
-  AddVisitVariables
-} from '../../graphql/mutations/types/AddVisit';
+import { useAddVisitMutation } from '../../graphql/types';
 
 const slideStyle = {
   padding: 20,
@@ -47,14 +37,12 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
 
   const goToVisitForm = () => setTabIndex(1);
 
-  const addVisit = useMutation<AddVisit, AddVisitVariables>(addVisitMutation, {
-    refetchQueries: [{ query: meVisitsQuery }, { query: mePlacesQuery }]
-  });
+  const addVisit = useAddVisitMutation();
 
   const handleSave = async () => {
     setLoading(true);
 
-    const { data, errors } = await addVisit({
+    const { data } = await addVisit({
       variables: {
         data: toInputData(state)
       }

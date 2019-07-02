@@ -1,5 +1,4 @@
-import { PriceLevel, PlaceType } from '../types/graphql-global-types';
-import { Visit_visit_rate } from '../graphql/queries/types/Visit';
+import { Rate, PriceLevel, PlaceType } from '../graphql/types';
 
 export function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString('sv-SE', {
@@ -17,8 +16,8 @@ const priceLevelMap = {
   [PriceLevel.Exclusive]: 'Exklusiv'
 };
 
-export function formatPriceLevel(priceLevel: PriceLevel | null) {
-  return priceLevel ? priceLevelMap[priceLevel] : null;
+export function formatPriceLevel(priceLevel: PriceLevel | null): string {
+  return priceLevel ? priceLevelMap[priceLevel] : '';
 }
 
 type RateMap = { [key: string]: { label: string } };
@@ -38,7 +37,12 @@ const rateMap: RateMap = {
   }
 };
 
-export function formatRate(rate: Visit_visit_rate) {
+interface FormattedRate {
+  label: string;
+  score: number;
+}
+
+export function formatRate(rate: Rate): FormattedRate[] {
   return Object.entries(rate)
     .filter(([key]) => key in rateMap)
     .map(([key, score]: [string, number]) => ({

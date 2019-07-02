@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { MeVisits_me_visits } from '../graphql/queries/types/MeVisits';
-import { formatDate } from '../utils/format';
 import { CardWithScore } from '.';
 import { visitRoute } from '../routes';
+import { Visit, VisitFragment } from '../graphql/types';
+import { formatDate } from '../utils/format';
 
 const Group = styled.article`
   &:not(:last-of-type) {
@@ -30,8 +30,8 @@ const VisitCount = styled.span`
 `;
 
 interface VisitGroupProps {
-  date: string;
-  visits: MeVisits_me_visits[];
+  date: Date;
+  visits: VisitFragment[];
 }
 
 export const VisitGroup = ({ date, visits }: VisitGroupProps) => {

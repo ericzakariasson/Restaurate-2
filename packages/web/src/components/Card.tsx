@@ -1,9 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { visitRoute, placeRoute } from '../routes';
-import { MeVisits_me_visits } from '../graphql/queries/types/MeVisits';
-import { MePlaces_me_places_address } from '../graphql/queries/types/MePlaces';
 
 export const Card = styled.div`
   padding: 15px;
@@ -47,7 +44,7 @@ interface PlaceCardProps {
   score: number;
   to: string;
   children?: React.ReactNode;
-  as?: keyof JSX.IntrinsicElements | React.ComponentType<any>; // From SC source
+  as?: keyof JSX.IntrinsicElements | React.ComponentType<any>; // From Styled Component source
 }
 
 export const CardWithScore = ({
