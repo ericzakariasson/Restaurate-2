@@ -2,15 +2,15 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Places } from '../../../hooks/useGooglePlaces';
 
-import { PlaceType } from '../types/place';
 import { SearchPlaceType } from './SearchPlaceType';
+import { PlaceType } from '../../../graphql/types';
 
 const Types = styled.section`
   padding: 20px 5px;
 `;
 
 interface SearchPlaceDropdownProps {
-  types: PlaceType[];
+  types: string[];
   places: Places;
   loading: boolean;
   setSelected: (place: google.maps.places.PlaceResult) => void;
@@ -24,11 +24,11 @@ export const SearchPlaceDropdown = ({
 }: SearchPlaceDropdownProps) => {
   return (
     <Types>
-      {types.map((type: PlaceType) => (
+      {types.map(type => (
         <SearchPlaceType
-          key={type.value}
+          key={type}
           type={type}
-          data={places.data[type.value]}
+          data={places.data[type]}
           select={setSelected}
         />
       ))}

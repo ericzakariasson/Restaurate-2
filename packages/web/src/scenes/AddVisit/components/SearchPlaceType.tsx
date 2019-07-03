@@ -1,8 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { PlaceType, SearchTypeData } from '../types/place';
+import { SearchTypeData } from '../types/place';
 import { SearchPlaceResult } from './SearchPlaceResult';
 import { SmallLabel } from '../../../components/Label';
+import { formatPlaceType } from '../../../utils/format';
+import { PlaceType } from '../../../graphql/types';
 
 const Wrapper = styled.article`
   &:not(:last-of-type) {
@@ -27,7 +29,7 @@ const NoResults = styled.p`
 `;
 
 interface SearchPlaceTypeProps {
-  type: PlaceType;
+  type: string;
   data: SearchTypeData;
   select: (place: any) => void;
 }
@@ -41,7 +43,7 @@ export const SearchPlaceType = ({
   return (
     <Wrapper>
       <TypeName>
-        {type.label} – {results.length}
+        {formatPlaceType(type as PlaceType)} – {results.length}
       </TypeName>
       <ResultWrapper>
         <SmallLabel textAlign="left" text="Sökresultat" marginBottom="5px" />
@@ -55,7 +57,10 @@ export const SearchPlaceType = ({
               />
             ))
           ) : (
-            <NoResults>Inga resultat för {type.label.toLowerCase()}</NoResults>
+            <NoResults>
+              Inga resultat för{' '}
+              {formatPlaceType(type as PlaceType).toLowerCase()}
+            </NoResults>
           )}
         </Results>
       </ResultWrapper>

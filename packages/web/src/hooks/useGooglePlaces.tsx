@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import { PlaceType, SearchTypeData } from '../scenes/AddVisit/types/place';
+import { SearchTypeData } from '../scenes/AddVisit/types/place';
 
 declare global {
   interface Window {
@@ -33,7 +33,7 @@ const initialState = {
 
 export function useGooglePlaces(
   query: string,
-  placeTypes: PlaceType[]
+  placeTypes: string[]
 ): UseGooglePlaces {
   const [mounted, setMounted] = useState<boolean>(false);
   const [searched, setSearched] = useState<boolean>(false);
@@ -98,15 +98,13 @@ export function useGooglePlaces(
     }
 
     setLoading(true);
-    const promises = placeTypes.map(type =>
-      SearchedType(debouncedQuery, type.value)
-    );
+    const promises = placeTypes.map(type => SearchedType(debouncedQuery, type));
 
     const results = await Promise.all(promises);
 
     const reducedResults = placeTypes.reduce(
-      (acc: Places, type: PlaceType, idx: number) => {
-        acc.data[type.value] = results[idx];
+      (acc: Places, type: string, idx: number) => {
+        acc.data[type] = results[idx];
         acc.total += results[idx].results ? results[idx].results.length : 0;
         return acc;
       },

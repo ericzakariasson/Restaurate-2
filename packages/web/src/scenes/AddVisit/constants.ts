@@ -1,16 +1,5 @@
-import { PlaceType, PriceLevel } from './types/place';
+import { PriceLevel } from './types/place';
 import { RateNode } from './types/visit';
-
-export const placeTypes: PlaceType[] = [
-  {
-    label: 'Restauranger',
-    value: 'restaurant'
-  },
-  {
-    label: 'Caféer',
-    value: 'cafe'
-  }
-];
 
 export const priceLevels: PriceLevel[] = [
   {
