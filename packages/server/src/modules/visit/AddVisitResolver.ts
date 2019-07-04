@@ -35,7 +35,7 @@ export class AddVisitResolver {
       }
 
       const tags = input.tags
-        ? input.tags.map(title => Tag.create({ title, author: user }))
+        ? input.tags.map(name => Tag.create({ name, user }))
         : [];
 
       place.tags = place.tags ? place.tags.concat(tags) : tags;
@@ -43,7 +43,7 @@ export class AddVisitResolver {
       await place.save();
 
       const orders = input.orders
-        ? input.orders.map(title => Order.create({ title, author: user }))
+        ? input.orders.map(title => Order.create({ title, user }))
         : [];
 
       const ratings = Object.values(input.rate).filter(Boolean);

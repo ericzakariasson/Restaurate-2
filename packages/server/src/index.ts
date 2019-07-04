@@ -8,6 +8,8 @@ import { ApolloServer } from 'apollo-server-express';
 
 import { config } from './ormconfig';
 
+import { FoursquareService } from './services/foursquare/foursquare.service';
+
 import { schema } from './schema';
 import { initGoogleClient } from './googleClient';
 import { insertUser } from './seed';
@@ -31,6 +33,15 @@ const startServer = async (): Promise<void> => {
     credentials: true,
     origin: 'http://localhost:3000'
   };
+
+  const foursquareService = new FoursquareService();
+
+  const venues = await foursquareService.venue.search({
+    query: '2112',
+    near: 'Göteborg'
+  });
+
+  console.log(venues);
 
   app.use(cors(corsOptions));
 
