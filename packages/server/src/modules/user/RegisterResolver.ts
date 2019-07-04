@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt';
-import { User } from '../../entity/User/User';
-import { UserRegisterInput } from '../../entity/User/UserRegisterInput';
 import { Mutation, Arg, Ctx, Resolver } from 'type-graphql';
-import { Context } from 'src/types/graphql-utils';
+import { UserRegisterInput } from '../../graphql/user/UserRegisterInput';
+import { User } from './user.entity';
+import { Context } from '../../graphql/types';
 
 @Resolver(User)
 export class RegisterResolver {

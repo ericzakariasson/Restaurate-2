@@ -7,9 +7,18 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { Field, ID, ObjectType, Root } from 'type-graphql';
-import { Visit } from '../Visit/Visit';
-import { UserRole } from './UserRoles';
+import { Field, ID, ObjectType, Root, registerEnumType } from 'type-graphql';
+import { Visit } from '../visit/visit.entity';
+
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  USER = 'USER'
+}
+
+registerEnumType(UserRole, {
+  name: 'UserRole',
+  description: 'User role'
+});
 
 @ObjectType()
 @Entity()

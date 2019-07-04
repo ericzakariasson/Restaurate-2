@@ -7,9 +7,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { Place } from '../Place/Place';
 import { ObjectType, Field, ID } from 'type-graphql';
-import { User } from '../User/User';
+import { Place } from './place.entity';
+import { User } from '../user/user.entity';
 
 @ObjectType()
 @Entity()

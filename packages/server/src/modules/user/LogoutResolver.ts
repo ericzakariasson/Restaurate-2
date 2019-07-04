@@ -1,6 +1,6 @@
 import { Mutation, Ctx, Resolver } from 'type-graphql';
-import { User } from '../../entity/User/User';
-import { Context } from '../../types/graphql-utils';
+import { User } from './user.entity';
+import { Context } from '../../graphql/types';
 
 @Resolver(User)
 export class LogoutResolver {

@@ -1,8 +1,8 @@
 import { InputType, ID, ObjectType, Field } from 'type-graphql';
-import { RateInput } from '../Rate/RateInput';
+import { RateInput } from './RateInput';
+import { Visit } from '../../modules/visit/visit.entity';
+import { Place } from '../../modules/place/place.entity';
 import { PlaceType1, PlaceType2 } from '@google/maps';
-import { Visit } from './Visit';
-import { Place } from '../Place/Place';
 
 @InputType({ description: 'New visit data' })
 export class AddVisitInput {
@@ -21,11 +21,11 @@ export class AddVisitInput {
   @Field(() => Number, { nullable: true })
   priceLevel?: number;
 
-  @Field(() => [String], { nullable: true })
-  tags?: string[];
-
   @Field(() => [String])
   types: Array<PlaceType1 | PlaceType2>;
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
 
   @Field(() => ID)
   providerPlaceId: string;

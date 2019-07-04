@@ -8,8 +8,8 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
-import { Visit } from '../Visit/Visit';
-import { User } from '../User/User';
+import { Visit } from './visit.entity';
+import { User } from '../user/user.entity';
 
 @ObjectType()
 @Entity()

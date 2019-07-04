@@ -10,12 +10,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { Order } from '../Order/Order';
-import { Rate } from '../Rate/Rate';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Place } from '../Place/Place';
-import { User } from '../User/User';
-import { RelationColumn } from '../../types/graphql-utils';
+import { User } from '../user/user.entity';
+import { Order } from './order.entity';
+import { RelationColumn } from '../utils';
+import { Rate } from './rate.entity';
+import { Place } from '../place/place.entity';
 
 @ObjectType()
 @Entity()

@@ -1,13 +1,30 @@
-import { User } from './entity/User/User';
 import * as bcrypt from 'bcrypt';
+import { User } from './modules/user/user.entity';
+
+const users = [
+  {
+    firstName: 'A',
+    lastName: 'Lastname',
+    email: 'a@a.se',
+    password: '123456'
+  },
+  {
+    firstName: 'B',
+    lastName: 'Lastname',
+    email: 'b@b.se',
+    password: '123456'
+  }
+];
 
 export async function insertUser() {
-  const hashedPassword = await bcrypt.hash('123456', 12);
+  const promises = users.map(async user => {
+    const hashedPassword = await bcrypt.hash(user.password, 1);
 
-  await User.create({
-    firstName: 'Eric',
-    lastName: 'Zakariasson',
-    email: 'ez@mail.com',
-    password: hashedPassword
-  }).save();
+    await User.create({
+      ...user,
+      password: hashedPassword
+    }).save();
+  });
+
+  await Promise.all(promises);
 }

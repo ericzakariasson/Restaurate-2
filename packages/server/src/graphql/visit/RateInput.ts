@@ -1,8 +1,7 @@
 import { InputType, Field } from 'type-graphql';
-import { Rate } from './Rate';
 
 @InputType('RateInput')
-export class RateInput implements Partial<Rate> {
+export class RateInput {
   @Field({ nullable: true })
   food: number;
 

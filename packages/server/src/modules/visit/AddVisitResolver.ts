@@ -1,15 +1,15 @@
 import { Resolver, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
-import { Visit } from '../../entity/Visit/Visit';
 import {
   AddVisitInput,
   AddVisitResponse
-} from '../../entity/Visit/AddVisitInput';
-import { Order } from '../../entity/Order/Order';
-import { Context } from '../../types/graphql-utils';
-import { Rate } from '../../entity/Rate/Rate';
-import { User } from '../../entity/User/User';
-import { Place } from '../../entity/Place/Place';
-import { Tag } from '../../entity/Tag/Tag';
+} from '../../graphql/visit/AddVisitInput';
+import { Tag } from '../place/tag.entity';
+import { Visit } from './visit.entity';
+import { User } from '../user/user.entity';
+import { Place } from '../place/place.entity';
+import { Order } from './order.entity';
+import { Rate } from './rate.entity';
+import { Context } from '../../graphql/types';
 
 @Resolver(Visit)
 export class AddVisitResolver {
@@ -31,7 +31,7 @@ export class AddVisitResolver {
       });
 
       if (!place) {
-        place = await Place.createPlace(input, ctx.client);
+        place = await Place.create();
       }
 
       const tags = input.tags

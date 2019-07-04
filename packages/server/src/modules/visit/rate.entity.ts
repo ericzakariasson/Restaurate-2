@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { Visit } from '../Visit/Visit';
+import { Visit } from './visit.entity';
 import { ObjectType, Field, ID } from 'type-graphql';
 
 @ObjectType()
