@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Field, ID, ObjectType, Root, registerEnumType } from 'type-graphql';
 import { Visit } from '../visit/visit.entity';
+import { Place } from '../place/place.entity';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -57,7 +58,8 @@ export class User extends BaseEntity {
   @OneToMany(() => Visit, visit => visit.user)
   visits: Visit[];
 
-  // places - See UserResolver
+  @OneToMany(() => Place, place => place.user)
+  places: Visit[];
 
   @Field(() => Date)
   @CreateDateColumn()

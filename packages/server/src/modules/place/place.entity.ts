@@ -5,11 +5,15 @@ import {
   BaseEntity,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+  ManyToOne
 } from 'typeorm';
 import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
 import { Visit } from '../visit/visit.entity';
 import { Tag } from './tag.entity';
+import { User } from '../user/user.entity';
 
 export enum PlaceType {
   Restaurant = 'RESTAURANT',
@@ -40,24 +44,27 @@ export class Place extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field(() => [PlaceType])
-  @Column({ type: 'enum', enum: PlaceType, array: true })
-  types: PlaceType[];
+  @ManyToOne(() => User, user => user.places)
+  user: User;
 
   @Field()
   @Column()
   slug: string;
+
+  @Field(() => [PlaceType])
+  @Column({ type: 'enum', enum: PlaceType, array: true })
+  types: PlaceType[];
 
   @Field(() => PriceLevel, { nullable: true })
   @Column({ enum: PriceLevel, nullable: true })
   priceLevel: PriceLevel;
 
   @Field(() => [Tag], { nullable: true })
-  @OneToMany(() => Tag, tag => tag.place, {
+  @ManyToMany(() => Tag, tag => tag.place, {
     eager: true,
-    cascade: true,
     nullable: true
   })
+  @JoinTable()
   tags: Tag[];
 
   @Field(() => [Visit])

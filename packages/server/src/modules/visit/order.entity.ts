@@ -25,7 +25,7 @@ export class Order extends BaseEntity {
   @ManyToOne(() => Visit, visit => visit.orders)
   visit: Visit;
 
-  author: User;
+  user: User;
 
   @Field(() => Date)
   @CreateDateColumn()
