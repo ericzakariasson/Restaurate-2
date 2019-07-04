@@ -8,6 +8,7 @@ import { AddVisitResolver } from './modules/visit/AddVisitResolver';
 import { PlaceResolver } from './modules/place/place.resolver';
 
 import { authChecker } from './modules/middleware/authorization';
+import { Container } from 'typedi';
 
 export const schema = buildSchema({
   resolvers: [
@@ -19,5 +20,6 @@ export const schema = buildSchema({
     AddVisitResolver,
     PlaceResolver
   ],
-  authChecker
+  authChecker,
+  container: Container
 });

@@ -14,6 +14,7 @@ import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
 import { Visit } from '../visit/visit.entity';
 import { Tag } from './tag.entity';
 import { User } from '../user/user.entity';
+import { RelationColumn } from '../utils';
 
 export enum PlaceType {
   Restaurant = 'RESTAURANT',
@@ -44,8 +45,15 @@ export class Place extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
+  @Column()
+  foursquareId: string;
+
+  @Field(() => User)
   @ManyToOne(() => User, user => user.places)
   user: User;
+  @RelationColumn()
+  userId: number;
 
   @Field()
   @Column()

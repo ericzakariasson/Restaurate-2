@@ -49,7 +49,7 @@ export class PlaceService {
     return visits;
   }
 
-  async findByIdOrSlug(id?: string, slug?: string): Promise<Place | null> {
+  async findByIdOrSlug(id?: number, slug?: string): Promise<Place | null> {
     if (!id && !slug) {
       throw new Error('At least one argument is required');
     }
