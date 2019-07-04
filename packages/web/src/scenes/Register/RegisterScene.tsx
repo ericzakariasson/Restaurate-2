@@ -3,11 +3,15 @@ import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
 import { PageTitle, Button, InputField } from '../../components';
 
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, Redirect } from 'react-router';
 import { routes } from '../../routes';
 import { Link } from 'react-router-dom';
 import { registerValidationSchema } from './registerValidationSchema';
-import { useRegisterMutation, MeDocument } from '../../graphql/types';
+import {
+  useRegisterMutation,
+  MeDocument,
+  useMeQuery
+} from '../../graphql/types';
 
 const Page = styled.section`
   padding: ${p => p.theme.page.padding};
@@ -44,6 +48,12 @@ const initialValues: FormValues = {
 };
 
 export const RegisterScene = ({ history }: RouteComponentProps) => {
+  const { data } = useMeQuery();
+
+  if (data && data.me) {
+    return <Redirect to={routes.dashboard} />;
+  }
+
   const register = useRegisterMutation();
 
   return (

@@ -2,12 +2,12 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
 import { string, object } from 'yup';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { PageTitle, Button, InputField } from '../../components';
 
 import { routes } from '../../routes';
-import { useLoginMutation, MeDocument } from '../../graphql/types';
+import { useLoginMutation, MeDocument, useMeQuery } from '../../graphql/types';
 import { loginValidationSchema } from './loginValidationSchema';
 
 const Page = styled.section`
@@ -38,6 +38,12 @@ const initialValues = {
 };
 
 export const LoginScene = ({ history }: RouteComponentProps) => {
+  const { data } = useMeQuery();
+
+  if (data && data.me) {
+    return <Redirect to={routes.dashboard} />;
+  }
+
   const login = useLoginMutation();
 
   return (

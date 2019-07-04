@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Route, RouteProps, Redirect } from 'react-router-dom';
 import { routes } from '../routes';
 import { useMeQuery } from '../graphql/types';
+import { GeneralError } from '../scenes';
 
 interface AuthRouteProps extends RouteProps {
   fallbackRoute?: string;
@@ -13,17 +14,17 @@ export const AuthRoute = ({
 }: AuthRouteProps) => {
   const { data, loading, error } = useMeQuery();
 
-  if (loading) {
+  if (loading || !data) {
     return null;
   }
 
   if (error) {
-    return null;
+    return <GeneralError />;
   }
 
-  if (data && data.me) {
-    return <Route {...props} />;
+  if (!data.me) {
+    return <Redirect to={fallbackRoute} />;
   }
 
-  return <Redirect to={fallbackRoute} />;
+  return <Route {...props} />;
 };
