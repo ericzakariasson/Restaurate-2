@@ -9,7 +9,6 @@ import {
   Ctx
 } from 'type-graphql';
 import { Visit } from './visit.entity';
-import { Rate } from './rate.entity';
 import { Place } from '../place/place.entity';
 import { User } from '../user/user.entity';
 import { Service } from 'typedi';
@@ -18,6 +17,8 @@ import { UserService } from '../user/user.service';
 import { VisitService } from './visit.service';
 import { AddVisitResponse, AddVisitInput } from './visit.types';
 import { Context } from '../../graphql/types';
+// import { Rate } from './rate/rate.entity';
+// import { RateService } from './rate/rate.service';
 
 @Service()
 @Resolver(Visit)
@@ -25,7 +26,7 @@ export class VisitResolver {
   constructor(
     private readonly placeService: PlaceService,
     private readonly userService: UserService,
-    private readonly visitService: VisitService
+    private readonly visitService: VisitService // private readonly rateService: RateService
   ) {}
 
   @Query(() => Visit, { nullable: true })
@@ -42,37 +43,19 @@ export class VisitResolver {
     const user = await this.userService.findById(ctx.req.session!.userId);
 
     if (!user) {
-      throw new Error('No user');
+      throw new Error('No user found');
     }
 
     const place = await this.placeService.findByInputOrCreate(
       input.place,
       user
     );
+
     const visit = await this.visitService.createVisit(input.visit, place, user);
-
-    // const ratings = Object.values(input.rate).filter(Boolean);
-    // const ratingSum = ratings.reduce((total, score) => total + score, 0);
-
-    // const rate = Rate.create({
-    //   ...input.rate,
-    //   score: Math.round((ratingSum / ratings.length) * 10) / 10
-    // });
 
     return {
       saved: true
     };
-  }
-
-  @FieldResolver(() => Rate)
-  async rate(@Root() visit: Visit): Promise<Rate> {
-    const rate = await Rate.findOne(visit.rateId);
-
-    if (!rate) {
-      throw new Error('No rate found');
-    }
-
-    return rate;
   }
 
   @FieldResolver(() => Place)

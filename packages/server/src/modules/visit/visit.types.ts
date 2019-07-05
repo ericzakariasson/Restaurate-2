@@ -1,5 +1,6 @@
 import { InputType, Field, ObjectType } from 'type-graphql';
 import { PlaceInput } from '../place/place.types';
+import { RateInput } from './rate/rate.types';
 
 @InputType()
 export class VisitInput {
@@ -12,7 +13,8 @@ export class VisitInput {
   @Field(() => [String], { nullable: true })
   orders?: string[];
 
-  rate: any;
+  @Field(() => [RateInput])
+  ratings: RateInput[];
 }
 
 @InputType()

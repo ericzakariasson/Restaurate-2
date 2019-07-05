@@ -7,7 +7,6 @@ import {
   Mutation,
   Arg
 } from 'type-graphql';
-import { createQueryBuilder } from 'typeorm';
 import { User } from './user.entity';
 import { Place } from '../place/place.entity';
 import { Visit } from '../visit/visit.entity';

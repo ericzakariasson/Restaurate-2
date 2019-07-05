@@ -29,11 +29,11 @@ export class PlaceService {
       return 0;
     }
 
-    const averageScore =
-      visits.reduce((score, visit) => score + visit.rate.score, 0) /
-      visits.length;
+    // const averageScore =
+    //   visits.reduce((score, visit) => score + visit.ratings.score, 0) /
+    //   visits.length;
 
-    const rounded = round(averageScore);
+    const rounded = round(5.5);
 
     return rounded;
   }

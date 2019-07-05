@@ -4,17 +4,15 @@ import {
   Column,
   BaseEntity,
   OneToMany,
-  OneToOne,
-  JoinColumn,
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
 import { Field, ID, ObjectType } from 'type-graphql';
 import { User } from '../user/user.entity';
-import { Order } from './order.entity';
+import { Order } from './order/order.entity';
 import { RelationColumn } from '../utils';
-import { Rate } from './rate.entity';
+import { Rate } from './rate/rate.entity';
 import { Place } from '../place/place.entity';
 
 @ObjectType()
@@ -45,15 +43,12 @@ export class Visit extends BaseEntity {
   })
   orders: Order[];
 
-  @Field(() => Rate)
-  @OneToOne(() => Rate, rate => rate.visit, {
+  @Field(() => [Rate])
+  @OneToMany(() => Rate, rate => rate.visit, {
     cascade: true,
     eager: true
   })
-  @JoinColumn()
-  rate: Rate;
-  @RelationColumn()
-  rateId: number;
+  ratings: Rate[];
 
   @ManyToOne(() => Place, place => place.visits)
   place: Place;

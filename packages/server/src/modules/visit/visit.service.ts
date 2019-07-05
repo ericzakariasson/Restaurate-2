@@ -5,7 +5,8 @@ import { Visit } from './visit.entity';
 import { VisitInput } from './visit.types';
 import { Place } from '../place/place.entity';
 import { User } from '../user/user.entity';
-import { Order } from './order.entity';
+import { Order } from './order/order.entity';
+import { Rate } from './rate/rate.entity';
 
 @Service()
 export class VisitService {
@@ -13,7 +14,9 @@ export class VisitService {
     @InjectRepository(Visit)
     private readonly visitRepository: Repository<Visit>,
     @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>
+    private readonly orderRepository: Repository<Order>,
+    @InjectRepository(Rate)
+    private readonly rateRepository: Repository<Rate>
   ) {}
 
   async findById(id: number) {
@@ -29,13 +32,37 @@ export class VisitService {
         )
       : [];
 
+    const ratings = await Promise.all(
+      input.ratings.map(async rating => {
+        const parent = await this.rateRepository.create({ ...rating });
+
+        await this.rateRepository.save(parent);
+
+        if (rating.children) {
+          await Promise.all(
+            rating.children.map(async child => {
+              const createdChild = this.rateRepository.create({
+                ...child,
+                parentId: parent.id
+              });
+
+              await this.rateRepository.save(createdChild);
+            })
+          );
+        }
+
+        return parent;
+      })
+    );
+
     const visit = this.visitRepository.create({
       ...input,
       orders,
       place,
       placeId: place.id,
       user,
-      userId: user.id
+      userId: user.id,
+      ratings
     });
 
     return await this.visitRepository.save(visit);
