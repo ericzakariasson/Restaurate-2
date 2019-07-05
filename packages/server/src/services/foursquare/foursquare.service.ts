@@ -44,8 +44,8 @@ class FoursquareRepository {
     return parameters;
   }
 
-  async fetch<T>(url: string, options: object) {
-    const parameters = this.getParameters(options);
+  async fetch<T>(url: string, options?: object) {
+    const parameters = this.getParameters(options || {});
 
     const endpoint = `${this.baseUrl}/${url}?${parameters}`;
 
@@ -59,8 +59,8 @@ class FoursquareRepository {
 class VenueService {
   private repository: FoursquareRepository;
 
-  constructor(serviceCore: FoursquareRepository) {
-    this.repository = serviceCore;
+  constructor(repository: FoursquareRepository) {
+    this.repository = repository;
   }
 
   async search(options: SearchOptions): Promise<Venue[]> {
@@ -72,9 +72,9 @@ class VenueService {
     return response.venues;
   }
 
-  async details(options: DetailOptions): Promise<VenueDetails> {
+  async details(id: string, options?: DetailOptions): Promise<VenueDetails> {
     const { response } = await this.repository.fetch<VenueDetailsResponse>(
-      '/venues/search',
+      `/venues/${id}`,
       options
     );
 
