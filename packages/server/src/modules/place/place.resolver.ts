@@ -1,9 +1,8 @@
 import { Resolver, Arg, Query, FieldResolver, Root } from 'type-graphql';
 import { Place } from './place.entity';
 import { Visit } from '../visit/visit.entity';
-// import { Context } from '../../graphql/types';
 import { PlaceService } from './place.service';
-import { VenueDetails } from '../../graphql/place/data.object';
+import { VenueDetails } from '../../graphql/placeData';
 import { Service, Container } from 'typedi';
 import { useContainer } from 'typeorm';
 

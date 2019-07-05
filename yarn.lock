@@ -1203,13 +1203,6 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.2.tgz#63985d3d8b02530e0869962f4da09142ee8e200e"
   integrity sha512-n/VQ4mbfr81aqkx/XmVicOLjviMuy02eenSdJY33SVA7S2J42EU0P1H0mOogfYedb3wXA0d/LVtBrgTSm04WEA==
 
-"@google/maps@^0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@google/maps/-/maps-0.5.5.tgz#478a5791e3b8d444be966462daec3ee43eb331e0"
-  integrity sha512-RSZriyE2XViVhXgdEcQaEu3jMYh2A/jS0VahLHXqGO0VfPyEbDac4PAn7/hBJiTavWpxchKfe5OI9inJofFWxA==
-  dependencies:
-    uuid ">=2.2.1"
-
 "@graphql-codegen/add@^1.3.1":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-1.3.1.tgz#728005ee15dc1561d315aeed9e99bac63d43150e"
@@ -1938,11 +1931,6 @@
     "@types/events" "*"
     "@types/minimatch" "*"
     "@types/node" "*"
-
-"@types/google__maps@^0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@types/google__maps/-/google__maps-0.5.5.tgz#e3dad3ee96195d3d97fdcc20c24f1be279671e0a"
-  integrity sha512-KfTC1mt5gyoCKFG7xM+tTp5ZALBUxpsKd1KnrpZPtBXXQRsXqNh+/1j5lmDu/SFqwBENQrm28+4wX/oeJlF6Zg==
 
 "@types/googlemaps@^3.30.19":
   version "3.36.4"
@@ -14148,7 +14136,7 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid@>=2.2.1, uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2:
+uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
