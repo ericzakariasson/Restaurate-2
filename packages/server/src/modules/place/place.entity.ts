@@ -12,31 +12,10 @@ import {
 } from 'typeorm';
 import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
 import { Visit } from '../visit/visit.entity';
-import { Tag } from './tag.entity';
+import { Tag } from './tag/tag.entity';
 import { User } from '../user/user.entity';
 import { RelationColumn } from '../utils';
-
-export enum PlaceType {
-  Restaurant = 'RESTAURANT',
-  Cafe = 'CAFE'
-}
-
-registerEnumType(PlaceType, {
-  name: 'PlaceType',
-  description: 'Type of place'
-});
-
-export enum PriceLevel {
-  Inexpensive = 1,
-  Moderate = 2,
-  Expensive = 3,
-  Exclusive = 4
-}
-
-registerEnumType(PriceLevel, {
-  name: 'PriceLevel',
-  description: 'Price level of place'
-});
+import { PlaceType, PriceLevel } from './place.types';
 
 @ObjectType()
 @Entity()
@@ -87,3 +66,13 @@ export class Place extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: string;
 }
+
+registerEnumType(PlaceType, {
+  name: 'PlaceType',
+  description: 'Type of place'
+});
+
+registerEnumType(PriceLevel, {
+  name: 'PriceLevel',
+  description: 'Price level of place'
+});

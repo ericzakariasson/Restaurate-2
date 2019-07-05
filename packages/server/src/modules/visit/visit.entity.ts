@@ -37,9 +37,6 @@ export class Visit extends BaseEntity {
   @Column()
   visitDate: Date;
 
-  @Column({ default: false })
-  deleted: boolean;
-
   @Field(() => [Order], { nullable: true })
   @OneToMany(() => Order, order => order.visit, {
     cascade: true,

@@ -8,40 +8,40 @@ export class VenueDetails {
   @Field()
   name: string;
 
-  @Field(() => Contact)
+  @Field(() => Contact, { nullable: true })
   contact: Contact;
 
-  @Field(() => Location)
+  @Field(() => Location, { nullable: true })
   location: Location;
 
-  @Field()
+  @Field({ nullable: true })
   url: string;
 
-  @Field()
+  @Field({ nullable: true })
   description: string;
 }
 
 @ObjectType()
 class Location {
-  @Field()
+  @Field({ nullable: true })
   address: string;
-  @Field()
+  @Field({ nullable: true })
   crossStreet: string;
-  @Field()
+  @Field({ nullable: true })
   lat: number;
-  @Field()
+  @Field({ nullable: true })
   lng: number;
-  @Field()
+  @Field({ nullable: true })
   distance: number;
-  @Field()
+  @Field({ nullable: true })
   postalCode: string;
-  @Field()
+  @Field({ nullable: true })
   cc: string;
-  @Field()
+  @Field({ nullable: true })
   city: string;
-  @Field()
+  @Field({ nullable: true })
   state: string;
-  @Field()
+  @Field({ nullable: true })
   country: string;
   @Field(() => [String])
   formattedAddress: string[];
@@ -49,18 +49,18 @@ class Location {
 
 @ObjectType()
 class Contact {
-  @Field()
+  @Field({ nullable: true })
   phone: string;
-  @Field()
+  @Field({ nullable: true })
   formattedPhone: string;
-  @Field()
+  @Field({ nullable: true })
   twitter: string;
-  @Field()
+  @Field({ nullable: true })
   instagram: string;
-  @Field()
+  @Field({ nullable: true })
   facebook: string;
-  @Field()
+  @Field({ nullable: true })
   facebookUsername: string;
-  @Field()
+  @Field({ nullable: true })
   facebookName: string;
 }

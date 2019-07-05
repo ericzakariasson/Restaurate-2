@@ -1,64 +1,69 @@
-import { Resolver, Ctx, Query, FieldResolver, Root } from 'type-graphql';
+import {
+  Resolver,
+  Ctx,
+  Query,
+  FieldResolver,
+  Root,
+  Mutation,
+  Arg
+} from 'type-graphql';
 import { createQueryBuilder } from 'typeorm';
 import { User } from './user.entity';
 import { Place } from '../place/place.entity';
 import { Visit } from '../visit/visit.entity';
 import { Context } from '../../graphql/types';
+import { Service } from 'typedi';
+import { UserService } from './user.service';
+import { UserRegisterInput } from './user.types';
 
+@Service()
 @Resolver(User)
 export class UserResolver {
+  constructor(private readonly userService: UserService) {}
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: Context): Promise<User | null> {
-    try {
-      const user = await User.findOne({
-        where: { id: ctx.req.session!.userId }
-      });
+    return this.userService.getMe(ctx.req.session!.userId);
+  }
 
-      if (!user) {
-        return null;
-      }
+  @Mutation(() => User, { nullable: true })
+  async login(
+    @Arg('email') email: string,
+    @Arg('password') password: string,
+    @Ctx() ctx: Context
+  ): Promise<User | null> {
+    return this.userService.login(email, password, ctx.req);
+  }
 
-      return user;
-    } catch {
-      return null;
-    }
+  @Mutation(() => User, { nullable: true })
+  async register(
+    @Arg('data') data: UserRegisterInput,
+    @Ctx() ctx: Context
+  ): Promise<User | null> {
+    return this.userService.register(data, ctx.req);
+  }
+
+  @Mutation(() => Boolean, { nullable: true })
+  async logout(@Ctx() ctx: Context): Promise<boolean> {
+    return this.userService.logout(ctx.req);
   }
 
   @FieldResolver(() => [Place])
   async places(@Root() user: User): Promise<Place[]> {
-    const places = await createQueryBuilder(Place, 'place')
-      .innerJoin('place.visits', 'visit')
-      .where('visit.user = :userId', { userId: user.id })
-      .getMany();
-
-    return places;
+    return this.userService.getUserPlaces(user.id);
   }
 
   @FieldResolver(() => [Visit])
   async visits(@Root() user: User): Promise<Visit[]> {
-    const visits = await createQueryBuilder(Visit, 'visit')
-      .where('visit.user = :userId', { userId: user.id })
-      .getMany();
-
-    return visits;
+    return this.userService.getUserVisits(user.id);
   }
 
   @FieldResolver(() => Number)
   async placeCount(@Root() user: User): Promise<number> {
-    const placeCount = await createQueryBuilder(Place, 'place')
-      .innerJoin('place.visits', 'visit')
-      .where('visit.user = :userId', { userId: user.id })
-      .getCount();
-
-    return placeCount;
+    return this.userService.getUserPlaceCount(user.id);
   }
 
   @FieldResolver(() => Number)
   async visitCount(@Root() user: User): Promise<number> {
-    const visitCount = await Visit.count({
-      where: { userId: user.id }
-    });
-
-    return visitCount;
+    return this.userService.getUserVisitCount(user.id);
   }
 }

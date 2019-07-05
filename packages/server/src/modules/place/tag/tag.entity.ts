@@ -2,18 +2,18 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany
 } from 'typeorm';
 import { ObjectType, Field, ID } from 'type-graphql';
-import { Place } from './place.entity';
-import { User } from '../user/user.entity';
+import { Place } from '../place.entity';
+import { User } from '../../user/user.entity';
+import { RelationColumn } from '../../utils';
 
 @ObjectType()
 @Entity()
-export class Tag extends BaseEntity {
+export class Tag {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,12 +26,14 @@ export class Tag extends BaseEntity {
   place: Place;
 
   user: User;
+  @RelationColumn()
+  userId: number;
 
-  @Field(() => Date)
+  @Field(() => String)
   @CreateDateColumn()
   createdAt: string;
 
-  @Field(() => Date)
+  @Field(() => String)
   @UpdateDateColumn()
   updatedAt: string;
 }
