@@ -140,7 +140,7 @@ export type Query = {
 };
 
 export type QueryVisitArgs = {
-  id: Scalars['Float'];
+  id: Scalars['String'];
 };
 
 export type QueryPlaceArgs = {
@@ -354,7 +354,7 @@ export type PlaceQuery = { __typename?: 'Query' } & {
 };
 
 export type VisitQueryVariables = {
-  id: Scalars['Float'];
+  id: Scalars['String'];
 };
 
 export type VisitQuery = { __typename?: 'Query' } & {
@@ -607,7 +607,7 @@ export function usePlaceQuery(
   );
 }
 export const VisitDocument = gql`
-  query Visit($id: Float!) {
+  query Visit($id: String!) {
     visit(id: $id) {
       ...Visit
     }

@@ -118,12 +118,12 @@ export const VisitScene = ({
   }
 
   const visit = data && data.visit;
-  const { place, rate, visitDate, orders, comment } = visit!;
+  const { place, ratings, visitDate, orders, comment } = visit!;
 
-  const formattedRate = formatRate(rate);
+  // const formattedRate = formatRate(rate);
 
   return (
-    <Page title={place.name} subTitle={formatDate(visitDate)}>
+    <Page title={place.data.name} subTitle={formatDate(visitDate)}>
       <Block>
         <Label>Beställningar</Label>
         {orders && orders.length > 0 ? (
@@ -140,7 +140,7 @@ export const VisitScene = ({
       </Block>
       <Block>
         <Label>Betyg</Label>
-        <RateList>
+        {/* <RateList>
           {formattedRate.map(rate => (
             <RateItem key={rate.label}>
               <RateLabel>{rate.label}</RateLabel>
@@ -151,14 +151,14 @@ export const VisitScene = ({
             <RateLabel>Total</RateLabel>
             <RateScore>{rate.score}</RateScore>
           </ScoreItem>
-        </RateList>
+        </RateList> */}
       </Block>
       <Block>
         <Label>Kommentar</Label>
         <Comment>{comment || 'Ingen kommentar'}</Comment>
       </Block>
       <PlaceLink to={placeRoute(place.slug)}>
-        Visa stället {place.name}
+        Visa stället {place.data.name}
       </PlaceLink>
     </Page>
   );

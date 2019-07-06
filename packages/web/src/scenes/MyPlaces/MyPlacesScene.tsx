@@ -50,8 +50,8 @@ export const MyPlacesScene = () => {
           {places.map(place => (
             <CardWithScore
               key={place.id}
-              name={place.name}
-              address={place.address.formatted}
+              name={place.data.name}
+              address={place.data.location.address}
               to={placeRoute(place.slug)}
               score={place.averageScore}
             >

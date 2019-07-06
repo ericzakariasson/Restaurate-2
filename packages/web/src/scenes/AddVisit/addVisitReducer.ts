@@ -14,6 +14,7 @@ import {
   SET_COMMENT,
   SET_DATE
 } from './addVisitActions';
+import { PriceLevel, PlaceType } from '../../graphql/types';
 
 export interface RateState {
   score: number | null;
@@ -30,7 +31,9 @@ export interface RateNodeState {
 
 export interface ReducerState {
   place: google.maps.places.PlaceResult | null;
-  priceLevel: number | undefined;
+  foursquareId: string;
+  priceLevel: PriceLevel | null;
+  types: PlaceType[];
   tags: string[];
   orders: string[];
   rate: RateNodeState;
@@ -45,9 +48,11 @@ interface ReducerAction {
 
 export const initialState = {
   place: null,
-  priceLevel: undefined,
+  priceLevel: null,
+  foursquareId: '',
   tags: [],
   orders: [],
+  types: [],
   rate: createInitialRateState(rateNodes),
   comment: '',
   date: new Date()

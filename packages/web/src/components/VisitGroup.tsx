@@ -45,10 +45,10 @@ export const VisitGroup = ({ date, visits }: VisitGroupProps) => {
         {visits.map(visit => (
           <CardWithScore
             key={visit.id}
-            name={visit.place.name}
-            address={visit.place.address.formatted}
+            name={visit.place.data.name}
+            address={visit.place.data.location.address}
             to={visitRoute(visit.id)}
-            score={visit.rate.score}
+            score={5}
           />
         ))}
       </VisitList>

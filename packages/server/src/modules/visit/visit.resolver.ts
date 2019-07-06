@@ -30,7 +30,7 @@ export class VisitResolver {
   ) {}
 
   @Query(() => Visit, { nullable: true })
-  async visit(@Arg('id') id: number): Promise<Visit | undefined> {
+  async visit(@Arg('id') id: string): Promise<Visit | undefined> {
     return this.visitService.findById(id);
   }
 

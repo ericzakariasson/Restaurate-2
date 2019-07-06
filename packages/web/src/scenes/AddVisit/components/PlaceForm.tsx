@@ -1,10 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { X } from 'react-feather';
-
-import { PriceLevel, Tag } from '../types/place';
-import { priceLevels } from '../constants';
-
 import { staticMapboxMapUrl } from '../../../utils';
 import { PriceLevelList } from './PriceLevelsList';
 
@@ -14,6 +9,7 @@ import {
   TextButton,
   PageTitle
 } from '../../../components';
+import { PriceLevel } from '../../../graphql/types';
 
 interface ItemProps {}
 
@@ -73,8 +69,8 @@ const Address = styled.p`
 interface PlaceFormProps {
   place: google.maps.places.PlaceResult;
   deselect: () => void;
-  priceLevel: number | undefined;
-  setPriceLevel: (priceLevel: number) => void;
+  priceLevel: PriceLevel | null;
+  setPriceLevel: (priceLevel: PriceLevel) => void;
   resetPriceLevel: () => void;
   tags: string[];
   addTag: (tag: string) => void;

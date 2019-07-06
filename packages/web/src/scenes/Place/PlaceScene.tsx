@@ -138,32 +138,25 @@ export const PlaceScene = ({
   const place = data && data.place;
 
   const {
-    name,
-    address,
-    lat,
-    lng,
+    foursquareId,
+    data: { name, location, url },
     priceLevel,
-    url,
     types,
-    googlePlaceId,
     tags,
     visitCount,
     visits
   } = place!;
 
   const mapUrl = staticMapboxMapUrl({
-    lat,
-    lng,
+    lat: location.lat!,
+    lng: location.lng!,
     zoom: 14,
     width: window.innerWidth - 40,
     height: window.innerHeight / 2
   });
 
   return (
-    <Page
-      title={name}
-      subTitle={`${address.street} ${address.streetNumber}, ${address.city} `}
-    >
+    <Page title={name} subTitle={`${location.address}, ${location.city} `}>
       <PlaceText>
         {types.map(formatPlaceType).join(',')}
         {` `}—{` `}
@@ -175,13 +168,11 @@ export const PlaceScene = ({
         </Website>
       )}
       <MapWrapper>
-        <GetDirections href={mapsUrlFromPlaceId(googlePlaceId)} target="_blank">
-          Hitta hit
-        </GetDirections>
+        <GetDirections target="_blank">Hitta hit</GetDirections>
         <MapCard url={mapUrl} />
       </MapWrapper>
       <TagList>
-        {tags && tags.map(tag => <TagItem id={tag.id}>{tag.title}</TagItem>)}
+        {tags && tags.map(tag => <TagItem id={tag.id}>{tag.name}</TagItem>)}
       </TagList>
       <Info>
         <Text>Se {visitCount} besök nedan.</Text>
@@ -191,7 +182,7 @@ export const PlaceScene = ({
           <VisitItem key={visit.id}>
             <VisitLink to={visitRoute(visit.id)}>
               <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
-              <VisitScore>{visit.rate.score}</VisitScore>
+              <VisitScore>{8}</VisitScore>
             </VisitLink>
           </VisitItem>
         ))}

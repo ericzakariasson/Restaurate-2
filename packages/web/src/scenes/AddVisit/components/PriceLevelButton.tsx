@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { PriceLevelProps } from '../../../utils/priceLevelHelpers';
+import { formatPriceLevel } from '../../../utils/format';
+import { PriceLevel } from '../../../graphql/types';
 
 const Item = styled.li`
   margin-bottom: 10px;
@@ -58,7 +59,7 @@ const Check = styled.span<CheckProps>`
 `;
 
 interface PriceLevelButtonProps {
-  priceLevel: PriceLevelProps;
+  priceLevel: PriceLevel;
   selected: boolean;
   onClick: () => void;
 }
@@ -70,7 +71,7 @@ export const PriceLevelButton = ({
 }: PriceLevelButtonProps) => (
   <Item>
     <Button selected={selected} onClick={onClick}>
-      <Name>{priceLevel.label}</Name>
+      <Name>{formatPriceLevel(priceLevel)}</Name>
       <Check selected={selected} />
     </Button>
   </Item>

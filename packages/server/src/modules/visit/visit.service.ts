@@ -19,7 +19,7 @@ export class VisitService {
     private readonly rateRepository: Repository<Rate>
   ) {}
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.visitRepository.findOne(id);
   }
 

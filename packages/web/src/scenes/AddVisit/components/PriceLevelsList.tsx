@@ -2,10 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { PriceLevelButton } from './PriceLevelButton';
-import {
-  getFormattedPriceLevels,
-  PriceLevelProps
-} from '../../../utils/priceLevelHelpers';
+import { PriceLevel } from '../../../graphql/types';
 
 const List = styled.ul`
   list-style: none;
@@ -16,8 +13,8 @@ const List = styled.ul`
 `;
 
 interface PriceLevelListProps {
-  selectedPriceLevel: number | undefined;
-  setPriceLevel: (level: number) => void;
+  selectedPriceLevel: PriceLevel | null;
+  setPriceLevel: (priceLevel: PriceLevel) => void;
   resetPriceLevel: () => void;
 }
 
@@ -26,23 +23,21 @@ export const PriceLevelList = ({
   setPriceLevel,
   resetPriceLevel
 }: PriceLevelListProps) => {
-  const formattedPriceLevels = getFormattedPriceLevels();
-
-  const handleClick = (priceLevel: PriceLevelProps) => {
-    if (priceLevel.value === selectedPriceLevel) {
+  const handleClick = (priceLevel: PriceLevel) => {
+    if (priceLevel === selectedPriceLevel) {
       resetPriceLevel();
     } else {
-      setPriceLevel(priceLevel.value);
+      setPriceLevel(priceLevel);
     }
   };
 
   return (
     <List>
-      {formattedPriceLevels.map(priceLevel => (
+      {Object.entries(PriceLevel).map(([key, priceLevel]) => (
         <PriceLevelButton
           key={priceLevel.value}
           priceLevel={priceLevel}
-          selected={priceLevel.value === selectedPriceLevel}
+          selected={priceLevel === selectedPriceLevel}
           onClick={() => handleClick(priceLevel)}
         />
       ))}

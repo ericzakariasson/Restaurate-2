@@ -1,4 +1,5 @@
 import { Tag } from './types/place';
+import { PriceLevel } from '../../graphql/types';
 
 export const SET_PLACE = 'SET_PLACE';
 export const RESET_PLACE = 'RESET_PLACE';
@@ -30,7 +31,7 @@ export const createActions = (dispatch: any) => {
 
   const deselectPlace = () => dispatch({ type: RESET_PLACE });
 
-  const setPriceLevel = (priceLevel: number) =>
+  const setPriceLevel = (priceLevel: PriceLevel) =>
     dispatch({ type: SET_PRICE_LEVEL, payload: priceLevel });
 
   const resetPriceLevel = () => dispatch({ type: RESET_PRICE_LEVEL });
