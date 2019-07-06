@@ -1,17 +1,17 @@
 import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
-export class VenueDetails {
+export class PlaceData {
   @Field()
   id: string;
 
   @Field()
   name: string;
 
-  @Field(() => Contact, { nullable: true })
+  @Field(() => Contact)
   contact: Contact;
 
-  @Field(() => Location, { nullable: true })
+  @Field(() => Location)
   location: Location;
 
   @Field({ nullable: true })
@@ -23,7 +23,7 @@ export class VenueDetails {
 
 @ObjectType()
 class Location {
-  @Field({ nullable: true })
+  @Field()
   address: string;
   @Field({ nullable: true })
   crossStreet: string;
@@ -37,11 +37,11 @@ class Location {
   postalCode: string;
   @Field({ nullable: true })
   cc: string;
-  @Field({ nullable: true })
+  @Field()
   city: string;
   @Field({ nullable: true })
   state: string;
-  @Field({ nullable: true })
+  @Field()
   country: string;
   @Field(() => [String])
   formattedAddress: string[];

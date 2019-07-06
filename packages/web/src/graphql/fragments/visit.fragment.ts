@@ -8,8 +8,11 @@ export default gql`
     orders {
       ...VisitOrder
     }
-    rate {
+    ratings {
       ...VisitRate
+      children {
+        ...VisitRate
+      }
     }
     user {
       ...User

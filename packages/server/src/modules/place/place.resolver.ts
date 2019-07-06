@@ -2,7 +2,7 @@ import { Resolver, Arg, Query, FieldResolver, Root } from 'type-graphql';
 import { Place } from './place.entity';
 import { Visit } from '../visit/visit.entity';
 import { PlaceService } from './place.service';
-import { VenueDetails } from '../../graphql/placeData';
+import { PlaceData } from '../../graphql/placeData';
 import { Service, Container } from 'typedi';
 import { useContainer } from 'typeorm';
 
@@ -42,8 +42,8 @@ export class PlaceResolver {
     return this.placeService.getAverageScore(place.id);
   }
 
-  @FieldResolver(() => VenueDetails)
-  async data(@Root() place: Place): Promise<VenueDetails> {
+  @FieldResolver(() => PlaceData)
+  async data(@Root() place: Place): Promise<PlaceData> {
     return this.placeService.getPlaceData(place.foursquareId);
   }
 }

@@ -5,25 +5,25 @@ import * as fragments from './';
 export default gql`
   fragment Place on Place {
     id
-    googlePlaceId
-    name
+    foursquareId
     slug
-    lat
-    lng
     priceLevel
-    url
     types
-    address {
-      ...PlaceAddress
-    }
+    averageScore
+    visitCount
     tags {
       ...PlaceTag
     }
-    averageScore
-    visitCount
+    data {
+      ...PlaceData
+    }
+    user {
+      ...User
+    }
     createdAt
     updatedAt
   }
-  ${fragments.placeAddress}
   ${fragments.placeTag}
+  ${fragments.placeData}
+  ${fragments.user}
 `;
