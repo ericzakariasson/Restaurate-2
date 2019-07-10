@@ -12,7 +12,7 @@ export const DefaultScene = () => {
   }
 
   if (error) {
-    return <GeneralError />;
+    return <GeneralError error={error} />;
   }
 
   if (data && data.me) {
