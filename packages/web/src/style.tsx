@@ -47,10 +47,70 @@ export const theme = {
       rgba: (opacity: number) => `rgba(255, 102, 102, ${opacity / 100})`,
       gradient: 'linear-gradient(105deg, #FF6666 15%, #FD7394 85%);'
     },
+    warning: {
+      hex: '#ffd56b',
+      hues: [
+        '#ffd56b',
+        '#ffd97a',
+        '#ffdd89',
+        '#ffe297',
+        '#ffe6a6',
+        '#ffeab5',
+        '#ffeec4',
+        '#fff2d3',
+        '#fff7e1',
+        '#fffbf0',
+        '#ffffff'
+      ]
+    },
     error: {
-      hex: '#EA4335'
+      hex: '#EA4335',
+      hues: [
+        '#ea4335',
+        '#ec5649',
+        '#ee695d',
+        '#f07b72',
+        '#f28e86',
+        '#f5a19a',
+        '#f7b4ae',
+        '#f9c7c2',
+        '#fbd9d7',
+        '#fdeceb',
+        '#ffffff'
+      ]
+    },
+    success: {
+      hex: '#11bf5a',
+      hues: [
+        '#11bf5a',
+        '#29c56b',
+        '#41cc7b',
+        '#58d28c',
+        '#70d99c',
+        '#88dfad',
+        '#a0e5bd',
+        '#b8ecce',
+        '#cff2de',
+        '#e7f9ef',
+        '#ffffff'
+      ]
+    },
+    black: {
+      hex: '#222',
+      hues: [
+        '#222222',
+        '#383838',
+        '#4e4e4e',
+        '#646464',
+        '#7a7a7a',
+        '#919191',
+        '#a7a7a7',
+        '#bdbdbd',
+        '#d3d3d3',
+        '#e9e9e9',
+        '#ffffff'
+      ]
     }
-    // rgba: (opacity: number): string => `rgba(140, 116, 228, ${opacity / 100})`
   },
   fonts: {
     default: 'Karla, sans-serif',

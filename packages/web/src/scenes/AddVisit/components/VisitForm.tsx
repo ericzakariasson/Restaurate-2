@@ -51,6 +51,7 @@ export const VisitForm = ({
       <VisitDate setDate={setDate} />
       <Button
         text="Spara besök"
+        variant="primary"
         onClick={saveVisit}
         disabled={averageScore === null}
       />

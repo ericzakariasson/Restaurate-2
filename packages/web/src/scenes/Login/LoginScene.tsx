@@ -84,7 +84,12 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
                 label="Lösenord"
               />
             </Fields>
-            <Button disabled={!isValid} type="submit" text="Logga in" />
+            <Button
+              variant="primary"
+              disabled={!isValid}
+              type="submit"
+              text="Logga in"
+            />
             <RegisterText>
               Inget konto?{' '}
               <Register to={routes.register}>Registrera dig</Register>

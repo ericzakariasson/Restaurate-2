@@ -1,26 +1,51 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link, LinkProps } from 'react-router-dom';
 
-interface ButtonProps {
+type Size = 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
+
+type Type = 'submit' | 'reset' | 'button';
+
+type Variant = 'primary' | 'secondary';
+
+type Margin = 'top' | 'right' | 'bottom' | 'left';
+
+type Color = 'primary' | 'success' | 'warning' | 'error' | 'black';
+
+interface Props {
   text: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  size?: 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
   disabled?: boolean;
-  type?: 'submit' | 'reset' | 'button';
+  size?: Size;
+  type?: Type;
+  margin?: Margin[];
+  color?: Color;
+}
+interface ButtonProps extends Props {
+  variant: Variant;
 }
 
 interface NavButtonProps extends ButtonProps {
   to: string;
 }
 
-interface StyledButtonProps {
-  size: 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
+interface TextButtonProps extends Props {}
+
+interface StyledProps {
+  size: Size;
+  color: Color;
+}
+
+interface StyledButtonProps extends StyledProps {
+  variant: Variant;
+  margin?: Margin[];
 }
 
 interface StyledNavButtonProps extends StyledButtonProps {
   to: string;
 }
+
+interface StyledTextButtonProps extends StyledProps {}
 
 interface Padding {
   xxsmall: string;
@@ -39,7 +64,7 @@ const padding: Padding = {
   large: '14px 16px'
 };
 
-const BaseButton = styled.button<StyledButtonProps>`
+const BaseButton = styled.button<StyledProps>`
   border-radius: 3px;
   margin: 0;
   border: none;
@@ -50,67 +75,84 @@ const BaseButton = styled.button<StyledButtonProps>`
   transition: ${p => p.theme.transition};
 `;
 
-const StyledSecondaryButton = styled(BaseButton)`
-  font-weight: 700;
-  color: ${p => p.theme.colors.primary.hex};
-  background-color: ${p => p.theme.colors.primary.hues[9]};
-  transition: ${p => p.theme.transition} background;
-
-  &:hover {
-    background: ${p => p.theme.colors.primary.hues[8]};
-  }
-
-  &:active {
-    background: ${p => p.theme.colors.primary.hues[7]};
-  }
-`;
-
-export const SecondaryButton = ({
-  text,
-  onClick,
-  size = 'normal',
-  type = 'button'
-}: ButtonProps) => (
-  <StyledSecondaryButton type={type} size={size} onClick={onClick}>
-    {text}
-  </StyledSecondaryButton>
-);
-
-const StyledTextButton = styled(BaseButton)<StyledButtonProps>`
+const StyledTextButton = styled(BaseButton)<StyledTextButtonProps>`
   background: none;
-  color: ${p => p.theme.colors.primary.hex};
+  color: ${p => p.theme.colors[p.color].hex};
 `;
 
 export const TextButton = ({
   text,
   onClick,
   size = 'normal',
-  type = 'button'
-}: ButtonProps) => (
-  <StyledTextButton type={type} size={size} onClick={onClick}>
+  type = 'button',
+  color = 'primary'
+}: TextButtonProps) => (
+  <StyledTextButton type={type} size={size} onClick={onClick} color={color}>
     {text}
   </StyledTextButton>
 );
 
 const StyledButton = styled(BaseButton)<StyledButtonProps>`
-  background-color: ${p =>
-    p.disabled ? '#EEE' : p.theme.colors.primary.hues[0]};
   color: #222;
   width: 100%;
   font-weight: 700;
-  border: 1px solid
-    ${p => (p.disabled ? '#CCC' : p.theme.colors.primary.hues[0])};
+  border: 1px solid;
   box-shadow: ${p => p.theme.boxShadow};
+  transition: ${p => p.theme.transition} background;
+
+  ${p =>
+    p.margin &&
+    p.margin.map(direction => `margin-${direction}: 10px;`).join('\n')}
+
+  ${p =>
+    p.disabled &&
+    css`
+      background-color: #eee;
+      border-color: #ccc;
+    `}
+
+  ${p =>
+    p.variant === 'primary' &&
+    css`
+      background-color: ${p.theme.colors[p.color].hues[0]};
+      border-color: ${p.theme.colors[p.color].hues[0]};
+    `}
+  
+  ${p =>
+    p.variant === 'secondary' &&
+    css`
+      background-color: ${p.theme.colors[p.color].hues[9]};
+      border-color: ${p.theme.colors[p.color].hues[0]};
+
+      &:hover {
+        background: ${p.theme.colors[p.color].hues[8]};
+      }
+
+      &:active {
+        background: ${p.theme.colors[p.color].hues[7]};
+      }
+    `}
 `;
 
 export const Button = ({
   text,
   onClick,
+  variant,
   size = 'large',
   disabled = false,
-  type = 'button'
+  type = 'button',
+  margin,
+  color = 'primary'
 }: ButtonProps) => (
-  <StyledButton type={type} size={size} onClick={onClick} disabled={disabled}>
+  <StyledButton
+    variant={variant}
+    type={type}
+    size={size}
+    onClick={onClick}
+    disabled={disabled}
+    margin={margin}
+    color={color}
+  >
     {text}
   </StyledButton>
 );
@@ -122,10 +164,12 @@ const StyledNavButton = styled(StyledButton)<StyledNavButtonProps>`
 
 export const NavButton = ({
   text,
+  to,
+  variant,
   size = 'large',
   disabled = false,
   type = 'button',
-  to
+  color = 'primary'
 }: NavButtonProps) => (
   <StyledNavButton
     as={Link}
@@ -133,6 +177,8 @@ export const NavButton = ({
     type={type}
     size={size}
     disabled={disabled}
+    variant={variant}
+    color={color}
   >
     {text}
   </StyledNavButton>

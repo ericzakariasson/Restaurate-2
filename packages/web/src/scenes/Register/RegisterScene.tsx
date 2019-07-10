@@ -120,7 +120,12 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
                 label="Bekräfta lösenord"
               />
             </Fields>
-            <Button disabled={!isValid} type="submit" text="Registrera" />
+            <Button
+              variant="primary"
+              disabled={!isValid}
+              type="submit"
+              text="Registrera"
+            />
             <LoginText>
               Har du redan ett konto?{' '}
               <Login to={routes.login}>Logga in här</Login>

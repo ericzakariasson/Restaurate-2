@@ -35,7 +35,7 @@ export const DashboardScene = () => {
     <Page>
       <Name>{firstName}</Name>
       <PlacesAndVisits placeCount={placeCount} visitCount={visitCount} />
-      <NavButton to={routes.addVisit} text="Nytt besök" />
+      <NavButton variant="primary" to={routes.addVisit} text="Nytt besök" />
     </Page>
   );
 };
