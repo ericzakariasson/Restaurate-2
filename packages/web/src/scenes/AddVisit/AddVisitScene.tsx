@@ -3,8 +3,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 import Helmet from 'react-helmet';
-import { useMutation } from 'react-apollo-hooks';
-
 import { routes } from '../../routes';
 
 import { PlaceForm } from './components/PlaceForm';
@@ -22,6 +20,8 @@ import {
   MePlacesDocument,
   MeVisitsDocument
 } from '../../graphql/types';
+import { usePosition } from '../../hooks';
+import { AskForPosition } from './components/AskForPosition';
 
 const slideStyle = {
   padding: 20,
@@ -34,11 +34,20 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
   const [state, dispatch] = React.useReducer(addVisitReducer, initialState);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [movingSlider, setMovingSlider] = React.useState(false);
-
   const [loading, setLoading] = React.useState(false);
 
-  const handleIndexChange = (index: number) => setTabIndex(index);
+  const {
+    position,
+    askForPosition,
+    error,
+    rejected,
+    loading: loadingPosition
+  } = usePosition();
 
+  const shouldDisplayPositionConsent =
+    !position && !rejected && !loadingPosition;
+
+  const handleIndexChange = (index: number) => setTabIndex(index);
   const goToVisitForm = () => setTabIndex(1);
 
   const addVisit = useAddVisitMutation();
@@ -112,7 +121,15 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
           <Tabs tabs={tabs} index={tabIndex} setIndex={setTabIndex} />
         </FormWrapper>
       ) : (
-        <SearchPlace selected={state.place} setSelected={actions.selectPlace} />
+        <>
+          {shouldDisplayPositionConsent && (
+            <AskForPosition confirm={askForPosition} />
+          )}
+          <SearchPlace
+            selected={state.place}
+            setSelected={actions.selectPlace}
+          />
+        </>
       )}
     </>
   );
