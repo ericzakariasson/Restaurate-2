@@ -92,9 +92,14 @@ const placeTypes: string[] = Object.values(PlaceType);
 interface SearchPlaceProps {
   selected: google.maps.places.PlaceResult | null;
   setSelected: (place: google.maps.places.PlaceResult) => void;
+  displayLocationSearch: boolean;
 }
 
-export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
+export const SearchPlace = ({
+  selected,
+  setSelected,
+  displayLocationSearch
+}: SearchPlaceProps) => {
   const [query, setQuery] = useState<string>('');
   const { loading, places, search, clear, searched } = useGooglePlaces(
     query,
@@ -138,6 +143,7 @@ export const SearchPlace = ({ selected, setSelected }: SearchPlaceProps) => {
           <ClearButton type="button" onClick={handleClear} enabled={hasValue}>
             <X color="#AAA" />
           </ClearButton>
+          {displayLocationSearch && <input />}
         </Form>
         {loading ? (
           <Text>Laddar...</Text>

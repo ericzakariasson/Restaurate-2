@@ -47,10 +47,15 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
   const shouldDisplayPositionConsent =
     !position && !rejected && !loadingPosition;
 
+  const displayLocationSearch = !position && rejected && !loadingPosition;
+
   const handleIndexChange = (index: number) => setTabIndex(index);
   const goToVisitForm = () => setTabIndex(1);
 
-  const addVisit = useAddVisitMutation();
+  const addVisit = useAddVisitMutation({
+    refetchQueries: [{ query: MeVisitsDocument }, { query: MePlacesDocument }],
+    awaitRefetchQueries: true
+  });
 
   const handleSave = async () => {
     setLoading(true);
@@ -58,12 +63,7 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
     const { data } = await addVisit({
       variables: {
         data: toInputData(state)
-      },
-      refetchQueries: [
-        { query: MeVisitsDocument },
-        { query: MePlacesDocument }
-      ],
-      awaitRefetchQueries: true
+      }
     });
 
     if (data && data.addVisit.saved) {
@@ -128,6 +128,7 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
           <SearchPlace
             selected={state.place}
             setSelected={actions.selectPlace}
+            displayLocationSearch={displayLocationSearch}
           />
         </>
       )}

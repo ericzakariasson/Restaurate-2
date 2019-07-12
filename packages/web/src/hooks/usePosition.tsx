@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const LOCALSTORAGE_KEY = 'USE_POSITION_SET_STATUS';
+const LOCALSTORAGE_KEY = 'USE_POSITION_STATUS';
 
 interface Status {
   hasTakenAction: boolean;
@@ -19,7 +19,7 @@ export function usePosition() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<PositionError | null>(null);
 
-  async function init() {
+  async function tryGetPosition() {
     persistStatus();
     try {
       const position = await getPosition();
@@ -52,14 +52,19 @@ export function usePosition() {
     return JSON.parse(str);
   }
 
-  React.useEffect(() => {
+  async function init() {
     const status = getPersistedStatus();
 
     if (status && status.hasTakenAction) {
-      init(); // If user has already taken action, try to get the location
+      await tryGetPosition(); // If user has already taken action, try to get the location
     }
+
     setLoading(false);
+  }
+
+  React.useEffect(() => {
+    init();
   }, []);
 
-  return { position, error, rejected, askForPosition: init, loading };
+  return { position, error, rejected, askForPosition: tryGetPosition, loading };
 }

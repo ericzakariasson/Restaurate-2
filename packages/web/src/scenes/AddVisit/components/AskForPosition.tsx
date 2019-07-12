@@ -59,7 +59,7 @@ export const AskForPosition = ({ confirm }: AskForLocationProps) => {
           variant="secondary"
           onClick={confirm}
           margin={['bottom']}
-          color="success"
+          color="black"
         />
       </Card>
       <Overlay />
