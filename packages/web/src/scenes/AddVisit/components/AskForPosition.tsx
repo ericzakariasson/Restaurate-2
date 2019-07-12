@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Button, TextButton } from '../../../components';
+import { Button } from '../../../components';
 
 const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.08);

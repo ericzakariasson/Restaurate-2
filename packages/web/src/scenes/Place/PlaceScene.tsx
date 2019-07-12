@@ -113,9 +113,6 @@ const VisitScore = styled.span`
   font-weight: 700;
 `;
 
-const mapsUrlFromPlaceId = (placeId: string) =>
-  `https://www.google.com/maps/place/?q=place_id:${placeId}`;
-
 type WithPlaceSlug = { slug: string };
 
 export const PlaceScene = ({
@@ -138,7 +135,6 @@ export const PlaceScene = ({
   const place = data && data.place;
 
   const {
-    foursquareId,
     data: { name, location, url },
     priceLevel,
     types,

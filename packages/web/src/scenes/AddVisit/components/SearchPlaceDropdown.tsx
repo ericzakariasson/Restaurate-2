@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Places } from '../../../hooks/useGooglePlaces';
 
 import { SearchPlaceType } from './SearchPlaceType';
-import { PlaceType } from '../../../graphql/types';
 
 const Types = styled.section`
   padding: 20px 5px;
@@ -19,7 +18,6 @@ interface SearchPlaceDropdownProps {
 export const SearchPlaceDropdown = ({
   types,
   places,
-  loading,
   setSelected
 }: SearchPlaceDropdownProps) => {
   return (

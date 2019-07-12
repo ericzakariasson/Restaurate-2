@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled, { StyledComponentProps } from 'styled-components';
+import styled from 'styled-components';
 
 interface LabelProps {
   text: string;

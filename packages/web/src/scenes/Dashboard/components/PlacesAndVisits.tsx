@@ -1,8 +1,7 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { routes } from '../../../routes';
-import { MapPin, FileText } from 'react-feather';
 
 const List = styled.ul`
   list-style: none;

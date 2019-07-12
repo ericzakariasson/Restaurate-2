@@ -1,13 +1,12 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import { Loading, Page } from '../../components';
+import { Page } from 'components';
 
-import { NoResult } from '../../components/NoResult';
-import { groupVisitsByDay } from '../../utils/groupVisitsByDay';
-import { VisitGroup } from '../../components/VisitGroup';
+import { NoResult } from 'components/NoResult';
+import { groupVisitsByDay } from 'utils/groupVisitsByDay';
+import { VisitGroup } from 'components/VisitGroup';
 import { GeneralError } from '../Error/GeneralError';
-import { useMeVisitsQuery, Visit, VisitFragment } from '../../graphql/types';
-import { SkeletonCard, SkeletonCards } from '../../components/Skeleton';
+import { useMeVisitsQuery, VisitFragment } from 'graphql/types';
+import { SkeletonCards } from 'components/Skeleton';
 
 export const MyVisitsScene = () => {
   const { data, loading, error } = useMeVisitsQuery();

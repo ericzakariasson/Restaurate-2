@@ -1,4 +1,3 @@
-import { Tag } from './types/place';
 import { PriceLevel } from '../../graphql/types';
 
 export const SET_PLACE = 'SET_PLACE';

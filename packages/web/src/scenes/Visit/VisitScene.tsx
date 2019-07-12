@@ -1,12 +1,11 @@
 import * as React from 'react';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
-import { RouteComponentProps, Link } from 'react-router-dom';
-
-import { Loading, PageTitle, Page } from '../../components';
-import { formatDate, formatRate } from '../../utils/format';
-import { placeRoute } from '../../routes';
 import { GeneralError } from '..';
-import { useVisitQuery } from '../../graphql/types';
+import { Loading, Page } from 'components';
+import { useVisitQuery } from 'graphql/types';
+import { placeRoute } from 'routes';
+import { formatDate } from 'utils/format';
 
 const PlaceLink = styled(Link)`
   padding: 15px;
@@ -63,40 +62,38 @@ const Comment = styled.p`
   line-height: 1.5;
 `;
 
-const RateList = styled.ul`
-  list-style: none;
-`;
+// const RateList = styled.ul`
 
-const RateItem = styled.li`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-radius: 5px;
-  border: 1px solid #eee;
-  box-shadow: ${p => p.theme.boxShadow};
-  font-size: 1.125rem;
+// const RateItem = styled.li`
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding: 15px;
+//   border-radius: 5px;
+//   border: 1px solid #eee;
+//   box-shadow: ${p => p.theme.boxShadow};
+//   font-size: 1.125rem;
 
-  &:not(:last-child) {
-    margin-bottom: 15px;
-  }
-`;
+//   &:not(:last-child) {
+//     margin-bottom: 15px;
+//   }
+// `;
 
-const RateLabel = styled.span``;
+// const RateLabel = styled.span``;
 
-const RateScore = styled.span`
-  font-weight: 700;
-`;
+// const RateScore = styled.span`
+//   font-weight: 700;
+// `;
 
-const ScoreItem = styled(RateItem)`
-  color: #fff;
-  background: #222;
+// const ScoreItem = styled(RateItem)`
+//   color: #fff;
+//   background: #222;
 
-  ${RateScore} {
-    font-size: 1.5rem;
-    color: ${p => p.theme.colors.primary.hues[0]};
-  }
-`;
+//   ${RateScore} {
+//     font-size: 1.5rem;
+//     color: ${p => p.theme.colors.primary.hues[0]};
+//   }
+// `;
 
 type WithVisitId = { id: string };
 
@@ -118,7 +115,7 @@ export const VisitScene = ({
   }
 
   const visit = data && data.visit;
-  const { place, ratings, visitDate, orders, comment } = visit!;
+  const { place, visitDate, orders, comment } = visit!;
 
   // const formattedRate = formatRate(rate);
 

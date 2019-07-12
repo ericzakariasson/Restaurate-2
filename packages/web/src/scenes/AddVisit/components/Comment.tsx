@@ -18,7 +18,7 @@ export const Comment = ({ setComment }: CommentProps) => {
 
   React.useEffect(() => {
     setComment(debouncedValue);
-  }, [debouncedValue]);
+  }, [debouncedValue, setComment]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setValue(e.target.value);

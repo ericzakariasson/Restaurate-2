@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { useDebounce } from 'use-debounce';
 import { SearchTypeData } from '../scenes/AddVisit/types/place';
 
@@ -35,19 +35,21 @@ export function useGooglePlaces(
   query: string,
   placeTypes: string[]
 ): UseGooglePlaces {
-  const [mounted, setMounted] = useState<boolean>(false);
-  const [searched, setSearched] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [mounted, setMounted] = React.useState<boolean>(false);
+  const [searched, setSearched] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [
     service,
     setService
-  ] = useState<google.maps.places.PlacesService | null>(null);
+  ] = React.useState<google.maps.places.PlacesService | null>(null);
 
   const [debouncedQuery] = useDebounce(query, 500);
-  const [places, setPlaces] = useState<Places>({ ...initialState.places });
+  const [places, setPlaces] = React.useState<Places>({
+    ...initialState.places
+  });
 
-  useEffect(() => {
+  React.useEffect(() => {
     const mapDiv = document.createElement('div');
     if (window.google) {
       const map = new window.google.maps.Map(mapDiv);
@@ -62,23 +64,26 @@ export function useGooglePlaces(
     return () => mapDiv.remove();
   }, []);
 
-  const SearchedType = (query: string, type: string): Promise<SearchTypeData> =>
-    new Promise((resolve, reject) => {
-      if (!service) {
-        return reject();
-      }
+  const searchedType = React.useCallback(
+    (query: string, type: string): Promise<SearchTypeData> =>
+      new Promise((resolve, reject) => {
+        if (!service) {
+          return reject();
+        }
 
-      service.textSearch(
-        {
-          type,
-          query
-        },
-        (
-          results: google.maps.places.PlaceResult[],
-          status: google.maps.places.PlacesServiceStatus
-        ) => resolve({ results, status, type })
-      );
-    });
+        service.textSearch(
+          {
+            type,
+            query
+          },
+          (
+            results: google.maps.places.PlaceResult[],
+            status: google.maps.places.PlacesServiceStatus
+          ) => resolve({ results, status, type })
+        );
+      }),
+    [service]
+  );
 
   const clear = () => {
     setError(false);
@@ -87,7 +92,7 @@ export function useGooglePlaces(
     setSearched(false);
   };
 
-  const search = async () => {
+  const search = React.useCallback(async () => {
     if (loading) {
       return;
     }
@@ -98,7 +103,7 @@ export function useGooglePlaces(
     }
 
     setLoading(true);
-    const promises = placeTypes.map(type => SearchedType(debouncedQuery, type));
+    const promises = placeTypes.map(type => searchedType(debouncedQuery, type));
 
     const results = await Promise.all(promises);
 
@@ -115,13 +120,13 @@ export function useGooglePlaces(
 
     setLoading(false);
     setSearched(true);
-  };
+  }, [loading, debouncedQuery, placeTypes, searchedType]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!error && mounted) {
       search();
     }
-  }, [debouncedQuery]);
+  }, [debouncedQuery, search, mounted, error]);
 
   return {
     loading,

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
-import { string, object } from 'yup';
 import { RouteComponentProps, Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { PageTitle, Button, InputField } from '../../components';
@@ -40,11 +39,11 @@ const initialValues = {
 export const LoginScene = ({ history }: RouteComponentProps) => {
   const { data } = useMeQuery();
 
+  const login = useLoginMutation();
+
   if (data && data.me) {
     return <Redirect to={routes.dashboard} />;
   }
-
-  const login = useLoginMutation();
 
   return (
     <Page>

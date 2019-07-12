@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 type Size = 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
 

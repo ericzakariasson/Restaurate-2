@@ -17,35 +17,6 @@ const Wrapper = styled.article`
   }
 `;
 
-const Info = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const Name = styled.h2`
-  color: #333;
-  font-size: 1.375rem;
-  font-weight: 700;
-  margin-right: auto;
-`;
-
-const Value = styled(Name)`
-  margin: 0;
-  margin-left: 15px;
-`;
-
-const ParentArea = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  background: #f9f9f9;
-`;
-
-const SliderWrapper = styled.div`
-  margin-top: 15px;
-`;
-
 interface NodeProps {
   node: RateNode;
   setMoving: (moving: boolean) => void;

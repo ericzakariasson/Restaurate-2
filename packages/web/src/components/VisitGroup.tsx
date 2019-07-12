@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { CardWithScore } from '.';
+import { VisitFragment } from '../graphql/types';
 import { visitRoute } from '../routes';
-import { Visit, VisitFragment } from '../graphql/types';
 import { formatDate } from '../utils/format';
 
 const Group = styled.article`

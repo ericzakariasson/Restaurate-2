@@ -105,7 +105,7 @@ export function addVisitReducer(state: ReducerState, action: ReducerAction) {
         orders: state.orders.filter((order: string) => order !== action.payload)
       };
     case SET_RATE:
-      const { name, score, parent } = action.payload;
+      const { name, score } = action.payload;
 
       // if (parent) {
       //   const oldParentValue = state.rate[parent];

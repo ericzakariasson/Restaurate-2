@@ -50,11 +50,11 @@ const initialValues: FormValues = {
 export const RegisterScene = ({ history }: RouteComponentProps) => {
   const { data } = useMeQuery();
 
+  const register = useRegisterMutation();
+
   if (data && data.me) {
     return <Redirect to={routes.dashboard} />;
   }
-
-  const register = useRegisterMutation();
 
   return (
     <Page>

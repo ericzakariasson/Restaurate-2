@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Loading, CardWithScore, Page } from '../../components';
+import { CardWithScore, Page } from '../../components';
 
 import { NoResult } from '../../components/NoResult';
 import { placeRoute } from '../../routes';

@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 import Helmet from 'react-helmet';
-import { routes } from '../../routes';
+import { routes } from 'routes';
 
 import { PlaceForm } from './components/PlaceForm';
 import { VisitForm } from './components/VisitForm';
@@ -19,9 +19,11 @@ import {
   useAddVisitMutation,
   MePlacesDocument,
   MeVisitsDocument
-} from '../../graphql/types';
-import { usePosition } from '../../hooks';
+} from 'graphql/types';
+import { usePosition } from 'hooks';
 import { AskForPosition } from './components/AskForPosition';
+
+import { Input } from 'components';
 
 const slideStyle = {
   padding: 20,
@@ -39,7 +41,6 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
   const {
     position,
     askForPosition,
-    error,
     rejected,
     loading: loadingPosition
   } = usePosition();
@@ -125,6 +126,7 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
           {shouldDisplayPositionConsent && (
             <AskForPosition confirm={askForPosition} />
           )}
+          <Input />
           <SearchPlace
             selected={state.place}
             setSelected={actions.selectPlace}

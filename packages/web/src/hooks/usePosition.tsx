@@ -19,7 +19,7 @@ export function usePosition() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<PositionError | null>(null);
 
-  async function tryGetPosition() {
+  const tryGetPosition = React.useCallback(async () => {
     persistStatus();
     try {
       const position = await getPosition();
@@ -31,7 +31,7 @@ export function usePosition() {
         setRejected(true);
       }
     }
-  }
+  }, []);
 
   function persistStatus() {
     const data = JSON.stringify({
@@ -52,19 +52,20 @@ export function usePosition() {
     return JSON.parse(str);
   }
 
-  async function init() {
-    const status = getPersistedStatus();
+  React.useEffect(() => {
+    async function init() {
+      const status = getPersistedStatus();
 
-    if (status && status.hasTakenAction) {
-      await tryGetPosition(); // If user has already taken action, try to get the location
+      if (status && status.hasTakenAction) {
+        // If user has already taken action, it will either get the position or fail
+        await tryGetPosition();
+      }
+
+      setLoading(false);
     }
 
-    setLoading(false);
-  }
-
-  React.useEffect(() => {
     init();
-  }, []);
+  }, [tryGetPosition]);
 
   return { position, error, rejected, askForPosition: tryGetPosition, loading };
 }
