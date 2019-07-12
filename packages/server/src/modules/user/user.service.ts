@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { Service } from 'typedi';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { User } from './user.entity';
 import { Request } from 'express';
