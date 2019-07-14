@@ -7,8 +7,9 @@ import { RateResolver } from './modules/visit/rate/rate.resolver';
 import { authChecker } from './modules/middleware/authorization';
 import { Container } from 'typedi';
 
-export const schema = buildSchema({
-  resolvers: [UserResolver, VisitResolver, PlaceResolver, RateResolver],
-  authChecker,
-  container: Container
-});
+export const generateSchema = async () =>
+  await buildSchema({
+    resolvers: [UserResolver, VisitResolver, PlaceResolver, RateResolver],
+    authChecker,
+    container: Container
+  });

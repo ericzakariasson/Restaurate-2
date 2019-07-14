@@ -2,7 +2,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  BaseEntity,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
@@ -19,7 +18,7 @@ import { PlaceType, PriceLevel } from './place.types';
 
 @ObjectType()
 @Entity()
-export class Place extends BaseEntity {
+export class Place {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;

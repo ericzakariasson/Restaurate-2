@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Place } from './place.entity';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
@@ -107,5 +107,14 @@ export class PlaceService {
   async findById(id: number) {
     const place = await this.placeRepository.findOne(id);
     return place;
+  }
+
+  async getUserPlacesByProviderIds(userId: number, ids: string[]) {
+    return this.placeRepository.find({
+      where: {
+        userId,
+        foursquareId: In(ids)
+      }
+    });
   }
 }

@@ -34,12 +34,15 @@ class FoursquareRepository {
       .split('-')
       .join('');
 
-    const parameters = qs.stringify({
-      ...options,
-      client_id: this.clientId,
-      client_secret: this.clientSecret,
-      v: version
-    });
+    const parameters = qs.stringify(
+      {
+        ...options,
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
+        v: version
+      },
+      { arrayFormat: 'comma' }
+    );
 
     return parameters;
   }
@@ -66,7 +69,7 @@ class VenueService {
   async search(options: SearchOptions): Promise<Venue[]> {
     const { response } = await this.repository.fetch<VenueSearchResponse>(
       '/venues/search',
-      options
+      { ...options, categoryId: ['4d4b7105d754a06374d81259'] }
     );
 
     return response.venues;

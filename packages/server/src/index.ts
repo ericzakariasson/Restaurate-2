@@ -8,7 +8,7 @@ import { ApolloServer } from 'apollo-server-express';
 
 import { config } from './ormconfig';
 
-import { schema } from './schema';
+import { generateSchema } from './schema';
 import { insertUser } from './seed';
 
 dotenv.config();
@@ -45,8 +45,10 @@ const startServer = async (): Promise<void> => {
     })
   );
 
+  const schema = await generateSchema();
+
   const server = new ApolloServer({
-    schema: await schema,
+    schema,
     context: ({ req }: { req: Request }) => ({ req })
   });
 
@@ -60,5 +62,5 @@ const startServer = async (): Promise<void> => {
 try {
   startServer();
 } catch (e) {
-  console.error(e);
+  console.log(JSON.stringify(e, null, 4));
 }

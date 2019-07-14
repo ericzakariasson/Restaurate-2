@@ -1,16 +1,31 @@
-import { Resolver, Arg, Query, FieldResolver, Root } from 'type-graphql';
+import {
+  Resolver,
+  Arg,
+  Query,
+  FieldResolver,
+  Root,
+  Ctx,
+  Authorized
+} from 'type-graphql';
 import { Place } from './place.entity';
 import { Visit } from '../visit/visit.entity';
 import { PlaceService } from './place.service';
 import { PlaceData } from '../../graphql/placeData';
 import { Service, Container } from 'typedi';
 import { useContainer } from 'typeorm';
+import { PlaceSearchResult, PlaceSearchInput } from './place.types';
+import { FoursquareService } from '../../services/foursquare/foursquare.service';
+import { transformVenueToSearchItem } from './place.helpers';
+import { Context } from '../../graphql/types';
 
 useContainer(Container);
 @Service()
 @Resolver(Place)
 export class PlaceResolver {
-  constructor(private readonly placeService: PlaceService) {}
+  constructor(
+    private readonly placeService: PlaceService,
+    private readonly foursquareService: FoursquareService
+  ) {}
 
   @Query(() => Place, { nullable: true })
   async place(
@@ -22,6 +37,38 @@ export class PlaceResolver {
     }
 
     return this.placeService.findByIdOrSlug(id, slug);
+  }
+
+  @Authorized()
+  @Query(() => PlaceSearchResult, { nullable: true })
+  async searchPlace(
+    @Arg('filter') { query, near, position }: PlaceSearchInput,
+    @Ctx() ctx: Context
+  ): Promise<PlaceSearchResult | null> {
+    if (!near && !position) {
+      throw new Error('One of `near` or `position` is required');
+    }
+
+    const venues = await this.foursquareService.venue.search({
+      query,
+      intent: 'browse',
+      ...(near && { near }),
+      ...(!near &&
+        position && { ll: [position.lat, position.lng], radius: 10000 })
+    });
+
+    if (!venues || venues.length === 0) {
+      return null;
+    }
+
+    const userPlaces = await this.placeService.getUserPlacesByProviderIds(
+      ctx.req.session!.userId,
+      venues.map(venue => venue.id)
+    );
+
+    const result = venues.map(transformVenueToSearchItem(userPlaces));
+    const response = new PlaceSearchResult({ places: result });
+    return response;
   }
 
   @FieldResolver()

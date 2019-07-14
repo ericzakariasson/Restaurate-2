@@ -49,6 +49,7 @@ export interface SearchOptions {
   radius?: number;
   query: string;
   limit?: number;
+  categoryId?: string[];
 }
 
 export interface Meta {
