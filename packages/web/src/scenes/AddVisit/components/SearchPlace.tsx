@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { X } from 'react-feather';
 import { SearchPlaceDropdown } from './SearchPlaceDropdown';
-import { useGooglePlaces } from '../../../hooks';
+import { useGooglePlaces } from 'hooks';
 
-import { Label } from '../../../components/Label';
-import { Input } from '../../../components/Input';
+import { Label } from 'components/Label';
+import { Input } from 'components/Input';
 
-import { PageTitle } from '../../../components';
-import { PlaceType } from '../../../graphql/types';
+import { PageTitle } from 'components';
+import { PlaceType } from 'graphql/types';
 
 interface WrapperProps {
   y: number;
@@ -29,24 +29,36 @@ const ResultsWrapper = styled.div`
   width: 100%;
 `;
 
+const LocationInput = styled(Input)`
+  margin-top: 10px;
+  width: 90%;
+`;
+
 interface FormProps {
   sticky: boolean;
 }
 
 const Form = styled.form<FormProps>`
-  position: relative;
   width: 100%;
   position: ${p => (p.sticky ? 'sticky' : 'relative')};
   top: ${p => (p.sticky ? 15 : 0)}px;
   z-index: 1;
   transition: 0.2s ease-in-out;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 
   ${p =>
     p.sticky &&
     css`
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
     `}
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
 `;
 
 interface ClearButtonProps {
@@ -87,6 +99,17 @@ const Text = styled.p<TextProps>`
   margin-top: 20px;
 `;
 
+const ToggleLocationInput = styled.div`
+  margin-left: 8px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  font-family: ${p => p.theme.fonts.monospace};
+  color: #666;
+`;
+
 const placeTypes: string[] = Object.values(PlaceType);
 
 interface SearchPlaceProps {
@@ -101,6 +124,9 @@ export const SearchPlace = ({
   displayLocationSearch
 }: SearchPlaceProps) => {
   const [query, setQuery] = useState<string>('');
+  const [displaylocationInput, setDisplaylocationInput] = React.useState(
+    displayLocationSearch
+  );
   const { loading, places, search, clear, searched } = useGooglePlaces(
     query,
     placeTypes
@@ -132,18 +158,26 @@ export const SearchPlace = ({
       <Label htmlFor={inputId} text="Sök ställe" />
       <ResultsWrapper>
         <Form onSubmit={handleSubmit} sticky={showDropdown}>
-          <Input
-            autoFocus
-            id={inputId}
-            value={query}
-            onChange={handleChange}
-            placeholder="Namn eller plats"
-            type="search"
-          />
-          <ClearButton type="button" onClick={handleClear} enabled={hasValue}>
-            <X color="#AAA" />
-          </ClearButton>
-          {displayLocationSearch && <input />}
+          <InputWrapper>
+            <Input
+              autoFocus
+              id={inputId}
+              value={query}
+              onChange={handleChange}
+              placeholder="Namn eller plats"
+              type="search"
+              fontSize="large"
+            />
+            <ClearButton type="button" onClick={handleClear} enabled={hasValue}>
+              <X color="#AAA" />
+            </ClearButton>
+          </InputWrapper>
+          {displaylocationInput && (
+            <LocationInput fontSize="normal" placeholder="Plats" />
+          )}
+          <ToggleLocationInput onClick={() => setDisplaylocationInput(s => !s)}>
+            {displaylocationInput ? 'Dölj plats' : 'Visa plats'}
+          </ToggleLocationInput>
         </Form>
         {loading ? (
           <Text>Laddar...</Text>

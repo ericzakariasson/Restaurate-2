@@ -47,6 +47,23 @@ export const theme = {
       rgba: (opacity: number) => `rgba(255, 102, 102, ${opacity / 100})`,
       gradient: 'linear-gradient(105deg, #FF6666 15%, #FD7394 85%);'
     },
+    secondary: {
+      hex: '#2065d4',
+      hues: [
+        '#2065d4',
+        '#3674d8',
+        '#4d84dd',
+        '#6393e1',
+        '#79a3e5',
+        '#90b2ea',
+        '#a6c1ee',
+        '#bcd1f2',
+        '#d2e0f6',
+        '#e9f0fb',
+        '#ffffff'
+      ],
+      rgba: (opacity: number) => `rgba(32, 101, 212, ${opacity / 100})`
+    },
     warning: {
       hex: '#ffd56b',
       hues: [

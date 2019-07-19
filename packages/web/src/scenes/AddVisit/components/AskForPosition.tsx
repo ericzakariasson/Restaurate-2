@@ -22,6 +22,7 @@ const Card = styled.article`
   border-radius: 5px;
   box-shadow: ${p => p.theme.boxShadow};
   padding: 20px;
+  padding-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,15 +52,16 @@ export const AskForPosition = ({ confirm }: AskForLocationProps) => {
         <Title>Plats</Title>
         <Description>
           För att du ska slippa ange din plats manuellt kan du dela din enhets
-          plats. Vi använder den endast för att hitta närliggande ställen och
-          inget annat.
+          plats. Det kommer att hitta ställen inom 5 mil. För att hitta ett
+          ställe utanför behöver du ange en plats. Vi använder den endast för
+          att hitta närliggande ställen och inget annat.
         </Description>
         <Button
           text="Låt mig välja"
           variant="secondary"
           onClick={confirm}
           margin={['bottom']}
-          color="black"
+          color="secondary"
         />
       </Card>
       <Overlay />

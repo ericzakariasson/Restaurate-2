@@ -23,8 +23,6 @@ import {
 import { usePosition } from 'hooks';
 import { AskForPosition } from './components/AskForPosition';
 
-import { Input } from 'components';
-
 const slideStyle = {
   padding: 20,
   paddingBottom: 70
@@ -126,7 +124,6 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
           {shouldDisplayPositionConsent && (
             <AskForPosition confirm={askForPosition} />
           )}
-          <Input />
           <SearchPlace
             selected={state.place}
             setSelected={actions.selectPlace}

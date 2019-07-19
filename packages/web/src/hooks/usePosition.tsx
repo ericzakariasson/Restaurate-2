@@ -27,7 +27,13 @@ export function usePosition() {
     } catch (err) {
       setError(err);
 
+      // https://developer.mozilla.org/en-US/docs/Web/API/PositionError
       if (err.code === 1) {
+        setRejected(true);
+      }
+
+      // Probably in localhost so hide for now
+      if (err.code === 2) {
         setRejected(true);
       }
     }

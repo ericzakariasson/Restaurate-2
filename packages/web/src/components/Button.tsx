@@ -10,7 +10,13 @@ type Variant = 'primary' | 'secondary';
 
 type Margin = 'top' | 'right' | 'bottom' | 'left';
 
-type Color = 'primary' | 'success' | 'warning' | 'error' | 'black';
+type Color =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'black';
 
 interface Props {
   text: string;
@@ -60,7 +66,7 @@ const padding: Padding = {
   xxsmall: '4px 8px',
   xsmall: '4px 8px',
   small: '5px 10px',
-  normal: '6px 12px',
+  normal: '14px 16px',
   large: '14px 16px'
 };
 
@@ -138,7 +144,7 @@ export const Button = ({
   text,
   onClick,
   variant,
-  size = 'large',
+  size = 'normal',
   disabled = false,
   type = 'button',
   margin,
