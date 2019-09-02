@@ -118,11 +118,43 @@ export type PlaceInput = {
   tags: Array<Scalars['String']>;
 };
 
+export type PlaceSearchInput = {
+  query: Scalars['String'];
+  near?: Maybe<Scalars['String']>;
+  position?: Maybe<PositionInput>;
+};
+
+export type PlaceSearchItem = {
+  __typename?: 'PlaceSearchItem';
+  foursquareId: Scalars['String'];
+  name: Scalars['String'];
+  address: Scalars['String'];
+  visits: Scalars['Float'];
+  coordinates: Position;
+  types: Array<Scalars['String']>;
+};
+
+export type PlaceSearchResult = {
+  __typename?: 'PlaceSearchResult';
+  places: Array<PlaceSearchItem>;
+};
+
 /** Type of place */
 export enum PlaceType {
   Restaurant = 'Restaurant',
   Cafe = 'Cafe'
 }
+
+export type Position = {
+  __typename?: 'Position';
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+};
+
+export type PositionInput = {
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+};
 
 /** Price level of place */
 export enum PriceLevel {
@@ -137,6 +169,7 @@ export type Query = {
   me?: Maybe<User>;
   visit?: Maybe<Visit>;
   place?: Maybe<Place>;
+  searchPlace?: Maybe<PlaceSearchResult>;
 };
 
 export type QueryVisitArgs = {
@@ -146,6 +179,10 @@ export type QueryVisitArgs = {
 export type QueryPlaceArgs = {
   slug?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['Float']>;
+};
+
+export type QuerySearchPlaceArgs = {
+  filter: PlaceSearchInput;
 };
 
 export type Rate = {
@@ -350,6 +387,28 @@ export type PlaceQuery = { __typename?: 'Query' } & {
     { __typename?: 'Place' } & {
       visits: Array<{ __typename?: 'Visit' } & VisitFragment>;
     } & PlaceFragment
+  >;
+};
+
+export type SearchPlaceQueryVariables = {
+  filter: PlaceSearchInput;
+};
+
+export type SearchPlaceQuery = { __typename?: 'Query' } & {
+  searchPlace: Maybe<
+    { __typename?: 'PlaceSearchResult' } & {
+      places: Array<
+        { __typename?: 'PlaceSearchItem' } & Pick<
+          PlaceSearchItem,
+          'foursquareId' | 'name' | 'address' | 'visits' | 'types'
+        > & {
+            coordinates: { __typename?: 'Position' } & Pick<
+              Position,
+              'lat' | 'lng'
+            >;
+          }
+      >;
+    }
   >;
 };
 
@@ -603,6 +662,32 @@ export function usePlaceQuery(
 ) {
   return ReactApolloHooks.useQuery<PlaceQuery, PlaceQueryVariables>(
     PlaceDocument,
+    baseOptions
+  );
+}
+export const SearchPlaceDocument = gql`
+  query SearchPlace($filter: PlaceSearchInput!) {
+    searchPlace(filter: $filter) {
+      places {
+        foursquareId
+        name
+        address
+        visits
+        coordinates {
+          lat
+          lng
+        }
+        types
+      }
+    }
+  }
+`;
+
+export function useSearchPlaceQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<SearchPlaceQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<SearchPlaceQuery, SearchPlaceQueryVariables>(
+    SearchPlaceDocument,
     baseOptions
   );
 }

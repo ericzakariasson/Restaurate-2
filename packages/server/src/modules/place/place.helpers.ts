@@ -6,8 +6,6 @@ import { Place } from './place.entity';
 export const transformVenueToSearchItem = (userPlaces: Place[]) => (
   venue: Venue
 ) => {
-  // console.log(JSON.stringify(venue.categories, null, 4));
-
   const samePlace = userPlaces.find(place => place.foursquareId === venue.id);
   const formattedAddress =
     venue.location.address && venue.location.city

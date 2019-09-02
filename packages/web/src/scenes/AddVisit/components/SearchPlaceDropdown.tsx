@@ -1,35 +1,32 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Places } from '../../../hooks/useGooglePlaces';
+import { PlaceSearchItem } from 'graphql/types';
+import { SearchPlaceResult } from './SearchPlaceResult';
 
-import { SearchPlaceType } from './SearchPlaceType';
-
-const Types = styled.section`
-  padding: 20px 5px;
+const Results = styled.ul`
+  margin: 0 -10px;
+  padding: 20px 0;
 `;
 
 interface SearchPlaceDropdownProps {
-  types: string[];
-  places: Places;
+  places: PlaceSearchItem[];
   loading: boolean;
-  setSelected: (place: google.maps.places.PlaceResult) => void;
+  setSelected: (place: PlaceSearchItem) => void;
 }
 
 export const SearchPlaceDropdown = ({
-  types,
   places,
   setSelected
 }: SearchPlaceDropdownProps) => {
   return (
-    <Types>
-      {types.map(type => (
-        <SearchPlaceType
-          key={type}
-          type={type}
-          data={places.data[type]}
-          select={setSelected}
+    <Results>
+      {places.map(place => (
+        <SearchPlaceResult
+          key={place.foursquareId}
+          place={place}
+          select={() => setSelected(place)}
         />
       ))}
-    </Types>
+    </Results>
   );
 };

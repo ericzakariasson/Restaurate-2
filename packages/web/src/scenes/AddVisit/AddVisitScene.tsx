@@ -128,6 +128,7 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
             selected={state.place}
             setSelected={actions.selectPlace}
             displayLocationSearch={displayLocationSearch}
+            position={position || undefined}
           />
         </>
       )}

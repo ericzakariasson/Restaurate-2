@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
 import { staticMapboxMapUrl } from '../../../utils';
+import { PlaceSearchItem } from 'graphql/types';
 
 interface ItemProps {
   touching: boolean;
@@ -69,15 +70,32 @@ const Address = styled.p`
 const Info = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 5px 0;
+`;
+
+const Types = styled.ul`
+  display: flex;
+  margin-top: 5px;
+`;
+
+const Type = styled.li`
+  font-size: 12px;
+  padding: 5px;
+  background: #f5f5f5;
+  border-radius: 3px;
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
 `;
 
 interface SearchPlaceResultProps {
-  result: google.maps.places.PlaceResult;
+  place: PlaceSearchItem;
   select: Function;
 }
 
 export const SearchPlaceResult = ({
-  result: { name, formatted_address, geometry },
+  place: { name, address, coordinates, types },
   select
 }: SearchPlaceResultProps) => {
   const [touching, setTouching] = useState(false);
@@ -86,13 +104,14 @@ export const SearchPlaceResult = ({
   const handleTouchEnd = () => setTouching(false);
 
   const size = {
-    width: 70,
-    height: 70
+    width: 79,
+    height: 79
   };
 
   const mapUrl = staticMapboxMapUrl({
     ...size,
-    geometry,
+    lat: coordinates.lat,
+    lng: coordinates.lng,
     zoom: 12,
     options: {
       logo: false
@@ -109,7 +128,12 @@ export const SearchPlaceResult = ({
       <Map style={{ ...size }} touching={touching} src={mapUrl} />
       <Info>
         <Name>{name}</Name>
-        <Address>{formatted_address}</Address>
+        <Address>{address}</Address>
+        <Types>
+          {types.map(type => (
+            <Type key={type}>{type}</Type>
+          ))}
+        </Types>
       </Info>
     </Item>
   );

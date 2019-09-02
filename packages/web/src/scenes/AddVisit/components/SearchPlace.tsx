@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { X } from 'react-feather';
+import { useApolloClient } from 'react-apollo-hooks';
 import { SearchPlaceDropdown } from './SearchPlaceDropdown';
-import { useGooglePlaces } from 'hooks';
 
 import { Label } from 'components/Label';
 import { Input } from 'components/Input';
 
 import { PageTitle } from 'components';
-import { PlaceType } from 'graphql/types';
+import {
+  PlaceType,
+  SearchPlaceDocument,
+  SearchPlaceQuery,
+  PlaceSearchItem
+} from 'graphql/types';
 
 interface WrapperProps {
   y: number;
@@ -116,21 +121,53 @@ interface SearchPlaceProps {
   selected: google.maps.places.PlaceResult | null;
   setSelected: (place: google.maps.places.PlaceResult) => void;
   displayLocationSearch: boolean;
+  position?: Position;
 }
 
 export const SearchPlace = ({
   selected,
   setSelected,
-  displayLocationSearch
+  displayLocationSearch,
+  position
 }: SearchPlaceProps) => {
-  const [query, setQuery] = useState<string>('');
+  const [query, setQuery] = React.useState<string>('');
+  const [location, setLocation] = React.useState<string>('');
+  const [places, setPlaces] = React.useState<PlaceSearchItem[]>([]);
+  const [searched, setSearched] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [displaylocationInput, setDisplaylocationInput] = React.useState(
     displayLocationSearch
   );
-  const { loading, places, search, clear, searched } = useGooglePlaces(
-    query,
-    placeTypes
-  );
+
+  const client = useApolloClient();
+
+  const search = async () => {
+    setLoading(true);
+    const { data, loading, errors } = await client.query<SearchPlaceQuery>({
+      query: SearchPlaceDocument,
+      variables: {
+        filter: {
+          query,
+          near: location,
+          ...(position && {
+            position: {
+              lat: position && position.coords.latitude,
+              lng: position && position.coords.longitude
+            }
+          })
+        }
+      }
+    });
+
+    const places = data.searchPlace && data.searchPlace.places;
+
+    if (places) {
+      setPlaces(places);
+      setSearched(true);
+    }
+
+    setLoading(false);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -139,18 +176,24 @@ export const SearchPlace = ({
 
   const handleClear = () => {
     setQuery('');
-    clear();
+    // clear();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
     setQuery(e.target.value);
 
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
+    setLocation(e.target.value);
+
   const hasValue = query.length > 0;
-  const noResults = !loading && searched && places.total === 0;
-  const showDropdown = !selected && !noResults && places.total > 0;
-  const showExtra = places.total === 0 && !searched && !loading;
+  const noResults = !loading && searched && places.length === 0;
+  const showDropdown = !selected && !noResults && places.length > 0;
+  const showExtra = places.length === 0 && !searched && !loading;
   const searchTop = searched ? 0 : window.innerHeight / 4;
   const inputId = 'search-place-input';
+
+  console.log(places);
+  console.log(position);
 
   return (
     <Wrapper y={searchTop}>
@@ -163,17 +206,24 @@ export const SearchPlace = ({
               autoFocus
               id={inputId}
               value={query}
-              onChange={handleChange}
+              onChange={handleQueryChange}
               placeholder="Namn eller plats"
               type="search"
               fontSize="large"
+              name="query"
             />
             <ClearButton type="button" onClick={handleClear} enabled={hasValue}>
               <X color="#AAA" />
             </ClearButton>
           </InputWrapper>
           {displaylocationInput && (
-            <LocationInput fontSize="normal" placeholder="Plats" />
+            <LocationInput
+              onChange={handleLocationChange}
+              value={location}
+              name="location"
+              fontSize="normal"
+              placeholder="Plats"
+            />
           )}
           <ToggleLocationInput onClick={() => setDisplaylocationInput(s => !s)}>
             {displaylocationInput ? 'Dölj plats' : 'Visa plats'}
@@ -183,7 +233,6 @@ export const SearchPlace = ({
           <Text>Laddar...</Text>
         ) : showDropdown ? (
           <SearchPlaceDropdown
-            types={placeTypes}
             places={places}
             loading={loading}
             setSelected={setSelected}
