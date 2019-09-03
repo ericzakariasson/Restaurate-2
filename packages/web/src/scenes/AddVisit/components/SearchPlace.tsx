@@ -115,8 +115,6 @@ const ToggleLocationInput = styled.div`
   color: #666;
 `;
 
-const placeTypes: string[] = Object.values(PlaceType);
-
 interface SearchPlaceProps {
   selected: google.maps.places.PlaceResult | null;
   setSelected: (place: google.maps.places.PlaceResult) => void;
@@ -141,22 +139,24 @@ export const SearchPlace = ({
 
   const client = useApolloClient();
 
+  const variables = {
+    filter: {
+      query,
+      near: location,
+      ...(position && {
+        position: {
+          lat: position && position.coords.latitude,
+          lng: position && position.coords.longitude
+        }
+      })
+    }
+  };
+
   const search = async () => {
     setLoading(true);
     const { data, loading, errors } = await client.query<SearchPlaceQuery>({
       query: SearchPlaceDocument,
-      variables: {
-        filter: {
-          query,
-          near: location,
-          ...(position && {
-            position: {
-              lat: position && position.coords.latitude,
-              lng: position && position.coords.longitude
-            }
-          })
-        }
-      }
+      variables
     });
 
     const places = data.searchPlace && data.searchPlace.places;
@@ -170,6 +170,8 @@ export const SearchPlace = ({
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    console.log('submit');
+
     e.preventDefault();
     search();
   };
@@ -191,9 +193,6 @@ export const SearchPlace = ({
   const showExtra = places.length === 0 && !searched && !loading;
   const searchTop = searched ? 0 : window.innerHeight / 4;
   const inputId = 'search-place-input';
-
-  console.log(places);
-  console.log(position);
 
   return (
     <Wrapper y={searchTop}>
@@ -228,6 +227,7 @@ export const SearchPlace = ({
           <ToggleLocationInput onClick={() => setDisplaylocationInput(s => !s)}>
             {displaylocationInput ? 'Dölj plats' : 'Visa plats'}
           </ToggleLocationInput>
+          <button>Sök</button>
         </Form>
         {loading ? (
           <Text>Laddar...</Text>
