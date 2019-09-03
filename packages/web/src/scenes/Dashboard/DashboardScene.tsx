@@ -35,7 +35,12 @@ export const DashboardScene = () => {
     <Page>
       <Name>{firstName}</Name>
       <PlacesAndVisits placeCount={placeCount} visitCount={visitCount} />
-      <NavButton variant="primary" to={routes.addVisit} text="Nytt besök" />
+      <NavButton
+        variant="primary"
+        color="black"
+        to={routes.searchPlace}
+        text="Sök ställe"
+      />
     </Page>
   );
 };

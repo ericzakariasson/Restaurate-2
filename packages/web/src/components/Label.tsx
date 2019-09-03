@@ -15,13 +15,13 @@ interface LabelStyleProps {
 }
 
 const Normal = styled.label<LabelStyleProps>`
-  margin-bottom: 10px;
   display: block;
-  text-align: center;
-  font-size: 1.125rem;
+  font-size: 0.875rem;
   color: ${p => (p.error ? p.theme.colors.error.hex : '#CCC')};
-  font-weight: 400;
-  margin-bottom: ${p => p.marginBottom};
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  margin-bottom: ${p => p.marginBottom || '5px'};
   font-family: ${p => p.theme.fonts.monospace};
 `;
 
@@ -42,7 +42,7 @@ interface SmallLabelStyleProps {
 }
 
 const Small = styled(Normal)<SmallLabelStyleProps>`
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-weight: 500;
   text-align: ${p => p.textAlign};
 `;

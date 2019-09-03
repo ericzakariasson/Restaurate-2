@@ -71,7 +71,7 @@ const padding: Padding = {
 };
 
 const BaseButton = styled.button<StyledProps>`
-  border-radius: 3px;
+  border-radius: 8px;
   margin: 0;
   border: none;
   background: none;
@@ -137,6 +137,15 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
       &:active {
         background: ${p.theme.colors[p.color].hues[7]};
       }
+    `}
+  
+  ${p =>
+    p.variant === 'primary' &&
+    p.color === 'black' &&
+    css`
+      color: ${p.theme.colors.primary.hues[0]};
+      background-color: ${p.theme.colors[p.color].hues[0]};
+      border-color: ${p.theme.colors[p.color].hues[0]};
     `}
 `;
 

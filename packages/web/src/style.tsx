@@ -133,12 +133,12 @@ export const theme = {
     default: 'Karla, sans-serif',
     monospace: '"Overpass Mono", monospace'
   },
-  boxShadow: '0px 4px 2px rgba(0, 0, 0, 0.04)',
+  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.08)',
   fontSize: {
     xxsmall: '0.625rem',
     xsmall: '0.75rem',
     small: '0.875rem',
     normal: '1rem',
-    large: '1.1rem'
+    large: '1.125rem'
   }
 };

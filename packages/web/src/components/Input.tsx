@@ -30,11 +30,11 @@ interface InputProps {
 export const Input = styled.input<InputProps>`
   display: block;
   padding: ${p => padding[p.fontSize || 'large']};
-  border-radius: 5px;
+  border-radius: 6px;
   background: #fcfcfc;
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
   outline: none;
-  font-size: ${p => p.theme.fontSize[p.fontSize || 'normal']};
+  font-size: ${p => p.theme.fontSize[p.fontSize || 'large']};
   width: 100%;
   transition: ${p => p.theme.transition};
   box-shadow: ${p => p.theme.boxShadow};
@@ -42,13 +42,17 @@ export const Input = styled.input<InputProps>`
   color: #222;
 
   &:focus {
-    border-color: #aaa;
+    border-color: #ccc;
     transition: ${p => p.theme.transition};
   }
 
   &::-webkit-search-cancel-button {
     -webkit-appearance: none;
     display: none;
+  }
+
+  &::placeholder {
+    color: #ddd;
   }
 `;
 
