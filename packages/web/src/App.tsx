@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Helmet from 'react-helmet';
-import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from '@apollo/react-hooks';
 
 import { client } from './apollo';
 
@@ -25,6 +25,7 @@ import {
   MyPlacesScene,
   PlaceScene
 } from './scenes';
+import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -48,7 +49,7 @@ const App = () => {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <>
-            <Helmet defaultTitle="Restaurate" titleTemplate="Restaurate - %s" />
+            <Helmet defaultTitle="Restaurate" titleTemplate="Restaurate – %s" />
             <Wrapper>
               {ready ? (
                 <Switch>
@@ -70,6 +71,11 @@ const App = () => {
                   <Route
                     path={routes.login}
                     component={LoginScene}
+                    exact={true}
+                  />
+                  <AuthRoute
+                    path={routes.searchPlace}
+                    component={SearchPlaceScene}
                     exact={true}
                   />
                   <AuthRoute

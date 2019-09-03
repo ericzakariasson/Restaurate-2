@@ -9,7 +9,8 @@ export const routes: Routes = {
   register: '/register',
   login: '/login',
   visit: '/visit/:id',
-  place: '/place/:slug'
+  place: '/place/:slug',
+  searchPlace: '/search/place'
 };
 
 export const visitRoute = (id: string) => `/visit/${id}`;
