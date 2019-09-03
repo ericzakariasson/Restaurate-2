@@ -39,7 +39,7 @@ const initialValues = {
 export const LoginScene = ({ history }: RouteComponentProps) => {
   const { data } = useMeQuery();
 
-  const login = useLoginMutation();
+  const [login] = useLoginMutation();
 
   if (data && data.me) {
     return <Redirect to={routes.dashboard} />;

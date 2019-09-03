@@ -35,7 +35,7 @@ export const PriceLevelList = ({
     <List>
       {Object.entries(PriceLevel).map(([key, priceLevel]) => (
         <PriceLevelButton
-          key={priceLevel.value}
+          key={priceLevel}
           priceLevel={priceLevel}
           selected={priceLevel === selectedPriceLevel}
           onClick={() => handleClick(priceLevel)}

@@ -51,7 +51,7 @@ export const AddVisitScene = ({ history }: RouteComponentProps) => {
   const handleIndexChange = (index: number) => setTabIndex(index);
   const goToVisitForm = () => setTabIndex(1);
 
-  const addVisit = useAddVisitMutation({
+  const [addVisit] = useAddVisitMutation({
     refetchQueries: [{ query: MeVisitsDocument }, { query: MePlacesDocument }],
     awaitRefetchQueries: true
   });

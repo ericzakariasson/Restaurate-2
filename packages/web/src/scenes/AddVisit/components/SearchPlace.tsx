@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { X } from 'react-feather';
-import { useApolloClient } from 'react-apollo-hooks';
 import { SearchPlaceDropdown } from './SearchPlaceDropdown';
 
 import { Label } from 'components/Label';
@@ -137,8 +136,6 @@ export const SearchPlace = ({
     displayLocationSearch
   );
 
-  const client = useApolloClient();
-
   const variables = {
     filter: {
       query,
@@ -153,20 +150,17 @@ export const SearchPlace = ({
   };
 
   const search = async () => {
-    setLoading(true);
-    const { data, loading, errors } = await client.query<SearchPlaceQuery>({
-      query: SearchPlaceDocument,
-      variables
-    });
-
-    const places = data.searchPlace && data.searchPlace.places;
-
-    if (places) {
-      setPlaces(places);
-      setSearched(true);
-    }
-
-    setLoading(false);
+    // setLoading(true);
+    // const { data, loading, errors } = await client.query<SearchPlaceQuery>({
+    //   query: SearchPlaceDocument,
+    //   variables
+    // });
+    // const places = data.searchPlace && data.searchPlace.places;
+    // if (places) {
+    //   setPlaces(places);
+    //   setSearched(true);
+    // }
+    // setLoading(false);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
