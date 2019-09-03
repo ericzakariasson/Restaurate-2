@@ -13,7 +13,11 @@ function getPosition() {
   );
 }
 
-export function usePosition() {
+interface UsePositionOptions {
+  initiateOnMount: boolean;
+}
+
+export function usePosition(options?: UsePositionOptions) {
   const [position, setPosition] = React.useState<Position | null>(null);
   const [rejected, setRejected] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
@@ -62,7 +66,10 @@ export function usePosition() {
     async function init() {
       const status = getPersistedStatus();
 
-      if (status && status.hasTakenAction) {
+      if (
+        (options && options.initiateOnMount) ||
+        (status && status.hasTakenAction)
+      ) {
         // If user has already taken action, it will either get the position or fail
         await tryGetPosition();
       }
