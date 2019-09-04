@@ -174,6 +174,7 @@ export type Query = {
   me?: Maybe<User>,
   visit?: Maybe<Visit>,
   place?: Maybe<Place>,
+  placeBasicDetails?: Maybe<PlaceSearchItem>,
   searchPlace?: Maybe<PlaceSearchResult>,
 };
 
@@ -186,6 +187,11 @@ export type QueryVisitArgs = {
 export type QueryPlaceArgs = {
   slug?: Maybe<Scalars['String']>,
   id?: Maybe<Scalars['Float']>
+};
+
+
+export type QueryPlaceBasicDetailsArgs = {
+  id: Scalars['String']
 };
 
 
@@ -271,6 +277,15 @@ export type PlaceFragment = (
   , user: { __typename?: 'User' }
     & UserFragment
    }
+);
+
+export type PlaceBasicDetailsFragment = (
+  { __typename?: 'PlaceSearchItem' }
+  & Pick<PlaceSearchItem, 'foursquareId' | 'name' | 'address' | 'visits' | 'types'>
+  & { coordinates: (
+    { __typename?: 'Position' }
+    & Pick<Position, 'lat' | 'lng'>
+  ) }
 );
 
 export type PlaceDataFragment = (
@@ -433,6 +448,18 @@ export type PlaceQuery = (
   > }
 );
 
+export type PlaceBasicDetailsQueryVariables = {
+  id: Scalars['String']
+};
+
+
+export type PlaceBasicDetailsQuery = (
+  { __typename?: 'Query' }
+  & { placeBasicDetails: Maybe<{ __typename?: 'PlaceSearchItem' }
+    & PlaceBasicDetailsFragment
+  > }
+);
+
 export type SearchPlaceQueryVariables = {
   filter: PlaceSearchInput
 };
@@ -442,14 +469,9 @@ export type SearchPlaceQuery = (
   { __typename?: 'Query' }
   & { searchPlace: Maybe<(
     { __typename?: 'PlaceSearchResult' }
-    & { places: Array<(
-      { __typename?: 'PlaceSearchItem' }
-      & Pick<PlaceSearchItem, 'foursquareId' | 'name' | 'address' | 'visits' | 'types'>
-      & { coordinates: (
-        { __typename?: 'Position' }
-        & Pick<Position, 'lat' | 'lng'>
-      ) }
-    )> }
+    & { places: Array<{ __typename?: 'PlaceSearchItem' }
+      & PlaceBasicDetailsFragment
+    > }
   )> }
 );
 
@@ -464,6 +486,19 @@ export type VisitQuery = (
     & VisitFragment
   > }
 );
+export const PlaceBasicDetailsFragmentDoc = gql`
+    fragment PlaceBasicDetails on PlaceSearchItem {
+  foursquareId
+  name
+  address
+  visits
+  coordinates {
+    lat
+    lng
+  }
+  types
+}
+    `;
 export const VisitOrderFragmentDoc = gql`
     fragment VisitOrder on Order {
   id
@@ -724,23 +759,32 @@ ${VisitFragmentDoc}`;
       
 export type PlaceQueryHookResult = ReturnType<typeof usePlaceQuery>;
 export type PlaceQueryResult = ApolloReactCommon.QueryResult<PlaceQuery, PlaceQueryVariables>;
+export const PlaceBasicDetailsDocument = gql`
+    query PlaceBasicDetails($id: String!) {
+  placeBasicDetails(id: $id) {
+    ...PlaceBasicDetails
+  }
+}
+    ${PlaceBasicDetailsFragmentDoc}`;
+
+    export function usePlaceBasicDetailsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>) {
+      return ApolloReactHooks.useQuery<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>(PlaceBasicDetailsDocument, baseOptions);
+    }
+      export function usePlaceBasicDetailsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>(PlaceBasicDetailsDocument, baseOptions);
+      }
+      
+export type PlaceBasicDetailsQueryHookResult = ReturnType<typeof usePlaceBasicDetailsQuery>;
+export type PlaceBasicDetailsQueryResult = ApolloReactCommon.QueryResult<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>;
 export const SearchPlaceDocument = gql`
     query SearchPlace($filter: PlaceSearchInput!) {
   searchPlace(filter: $filter) {
     places {
-      foursquareId
-      name
-      address
-      visits
-      coordinates {
-        lat
-        lng
-      }
-      types
+      ...PlaceBasicDetails
     }
   }
 }
-    `;
+    ${PlaceBasicDetailsFragmentDoc}`;
 
     export function useSearchPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchPlaceQuery, SearchPlaceQueryVariables>) {
       return ApolloReactHooks.useQuery<SearchPlaceQuery, SearchPlaceQueryVariables>(SearchPlaceDocument, baseOptions);

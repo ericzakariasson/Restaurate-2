@@ -67,6 +67,18 @@ export class PlaceService {
     return place;
   }
 
+  async findByProviderId(providerId: string) {
+    const place = await this.placeRepository.findOne({
+      where: { foursquareId: providerId }
+    });
+
+    if (!place) {
+      return null;
+    }
+
+    return place;
+  }
+
   async getPlaceData(providerId: string) {
     return this.foursquareService.venue.details(providerId);
   }

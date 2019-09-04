@@ -1,10 +1,10 @@
-import { Venue, Category } from '../../services/foursquare/types';
+import { Venue, Category, VenueDetails } from '../../services/foursquare/types';
 import { PlaceSearchItem, Position } from './place.types';
 import * as categories from '../../translations/categories.json';
 import { Place } from './place.entity';
 
 export const transformVenueToSearchItem = (userPlaces: Place[]) => (
-  venue: Venue
+  venue: Venue | VenueDetails
 ) => {
   const samePlace = userPlaces.find(place => place.foursquareId === venue.id);
   const formattedAddress =
@@ -26,6 +26,10 @@ export const transformVenueToSearchItem = (userPlaces: Place[]) => (
   return place;
 };
 
+export const transformVenueDetailsToBasicDetails = (
+  userPlace: Place | null,
+  venue: VenueDetails
+) => transformVenueToSearchItem(userPlace ? [userPlace] : [])(venue);
 interface Categories {
   [key: string]: {
     sv: string;

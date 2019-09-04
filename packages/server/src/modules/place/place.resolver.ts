@@ -13,9 +13,16 @@ import { PlaceService } from './place.service';
 import { PlaceData } from '../../graphql/placeData';
 import { Service, Container } from 'typedi';
 import { useContainer } from 'typeorm';
-import { PlaceSearchResult, PlaceSearchInput } from './place.types';
+import {
+  PlaceSearchResult,
+  PlaceSearchInput,
+  PlaceSearchItem
+} from './place.types';
 import { FoursquareService } from '../../services/foursquare/foursquare.service';
-import { transformVenueToSearchItem } from './place.helpers';
+import {
+  transformVenueToSearchItem,
+  transformVenueDetailsToBasicDetails
+} from './place.helpers';
 import { Context } from '../../graphql/types';
 
 useContainer(Container);
@@ -27,6 +34,7 @@ export class PlaceResolver {
     private readonly foursquareService: FoursquareService
   ) {}
 
+  @Authorized()
   @Query(() => Place, { nullable: true })
   async place(
     @Arg('id', { nullable: true }) id?: number,
@@ -37,6 +45,22 @@ export class PlaceResolver {
     }
 
     return this.placeService.findByIdOrSlug(id, slug);
+  }
+
+  // @Authorized()
+  @Query(() => PlaceSearchItem, { nullable: true })
+  async placeBasicDetails(
+    @Arg('id') id: string
+  ): Promise<PlaceSearchItem | null> {
+    const venue = await this.foursquareService.venue.details(id);
+    const place = await this.placeService.findByProviderId(id);
+
+    if (!venue) {
+      return null;
+    }
+
+    const details = transformVenueDetailsToBasicDetails(place, venue);
+    return details;
   }
 
   @Authorized()
