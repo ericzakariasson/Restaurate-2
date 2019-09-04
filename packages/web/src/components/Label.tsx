@@ -43,7 +43,7 @@ interface SmallLabelStyleProps {
 
 const Small = styled(Normal)<SmallLabelStyleProps>`
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 700;
   text-align: ${p => p.textAlign};
 `;
 
@@ -53,8 +53,8 @@ interface SmallLabelProps extends LabelProps {
 
 export const SmallLabel = ({
   text,
-  textAlign = 'center',
-  marginBottom = '10px',
+  textAlign = 'left',
+  marginBottom = '5px',
   htmlFor,
   error
 }: SmallLabelProps) => (

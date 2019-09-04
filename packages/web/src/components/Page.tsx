@@ -17,16 +17,13 @@ interface TitleProps {
 }
 
 const Title = styled.h1<TitleProps>`
-  font-size: ${p => (p.large ? '2rem' : '1.5rem')};
-  font-weight: 400;
+  font-size: 2rem;
+  font-weight: 700;
   transition: ${p => p.theme.transition};
-  text-align: center;
 `;
 
 const SubTitle = styled.p`
   font-size: 1rem;
-  margin-top: 10px;
-  text-align: center;
 `;
 
 interface PageTitleProps {

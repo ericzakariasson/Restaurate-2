@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FieldProps } from 'formik';
 import styled from 'styled-components';
 
-import { SmallLabel } from './Label';
+import { Label } from './Label';
 
 type Size = 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
 
@@ -72,7 +72,7 @@ export const InputField = ({
 }: InputFieldProps) => (
   <Wrapper>
     {label && (
-      <SmallLabel
+      <Label
         error={
           Boolean(form.touched[field.name]) && Boolean(form.errors[field.name])
         }

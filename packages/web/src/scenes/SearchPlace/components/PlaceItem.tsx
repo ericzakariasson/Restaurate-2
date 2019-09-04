@@ -3,6 +3,8 @@ import styled, { css } from 'styled-components';
 
 import { staticMapboxMapUrl } from '../../../utils';
 import { PlaceSearchItem } from 'graphql/types';
+import { NavLink } from 'react-router-dom';
+import { addVisitRoute } from 'routes';
 
 interface ItemProps {
   touching: boolean;
@@ -11,10 +13,7 @@ interface ItemProps {
 
 const Item = styled.li<ItemProps>`
   background: #fff;
-  padding: 5px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
   transition: 0.15s ease-in-out;
   box-shadow: ${p => p.theme.boxShadow};
   border: 1px solid #f5f5f5;
@@ -29,6 +28,13 @@ const Item = styled.li<ItemProps>`
   &:not(:last-of-type) {
     margin-bottom: 15px;
   }
+`;
+
+const Link = styled(NavLink)`
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
 `;
 
 interface MapProps {
@@ -96,7 +102,7 @@ interface PlaceItemProps {
 }
 
 export const PlaceItem = ({
-  place: { name, address, coordinates, types }
+  place: { foursquareId, name, address, coordinates, types }
 }: PlaceItemProps) => {
   const [touching, setTouching] = useState(false);
 
@@ -124,16 +130,18 @@ export const PlaceItem = ({
       onTouchEnd={handleTouchEnd}
       touching={touching}
     >
-      <Map style={{ ...size }} touching={touching} src={mapUrl} />
-      <Info>
-        <Name>{name}</Name>
-        <Address>{address}</Address>
-        <Types>
-          {types.map(type => (
-            <Type key={type}>{type}</Type>
-          ))}
-        </Types>
-      </Info>
+      <Link to={addVisitRoute(foursquareId)}>
+        <Map style={{ ...size }} touching={touching} src={mapUrl} />
+        <Info>
+          <Name>{name}</Name>
+          <Address>{address}</Address>
+          <Types>
+            {types.map(type => (
+              <Type key={type}>{type}</Type>
+            ))}
+          </Types>
+        </Info>
+      </Link>
     </Item>
   );
 };

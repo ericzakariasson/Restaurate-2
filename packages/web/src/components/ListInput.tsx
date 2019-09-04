@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Plus } from 'react-feather';
+import { Plus, X } from 'react-feather';
 
 import { Input } from './Input';
-import { SmallLabel } from './Label';
+import { Label } from './Label';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
   &:not(:last-child) {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 `;
 
@@ -19,30 +19,26 @@ const List = styled.ul`
 `;
 
 const Item = styled.li`
-  padding: 10px 15px;
-  border-radius: 3px;
-  background: #fff;
-  margin-bottom: 5px;
-  border: 1px solid #ddd;
-  box-shadow: ${p => p.theme.boxShadow};
-
+  margin-bottom: 10px;
+  font-size: ${p => p.theme.fontSize['large']};
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  text-transform: capitalize;
 `;
 
 const Remove = styled.button`
-  background: none;
+  background: #f5f5f5;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  width: 16px;
   border: none;
   outline: none;
   padding: 0;
   margin: 0;
-  color: ${p => p.theme.colors.error.hex};
-  font-size: 0.75rem;
-  font-weight: 600;
-  white-space: pre;
-  margin-left: 5px;
+  margin-left: 10px;
+  box-shadow: ${p => p.theme.boxShadow};
 `;
 
 const Form = styled.form`
@@ -66,25 +62,17 @@ const AddItem = styled.button<AddButtonProps>`
   height: 40px;
   border-radius: 4px;
   right: 5px;
-  top: 5px;
-  background: ${p => (p.active ? '#FFF' : 'none')};
+  top: 50%;
+  transform: translateY(-50%);
   transition: ${p => p.theme.transition};
-
-  svg {
-    stroke: ${p => (p.active ? p.theme.colors.primary.hex : '#AAA')};
-    transition: ${p => p.theme.transition};
-  }
+  opacity: ${p => (p.active ? 1 : 0.5)};
 `;
 
-const ItemText = styled.span`
-  word-break: break-all;
-`;
+const ItemText = styled.span``;
 
 const NoItems = styled.p`
-  margin-top: 5px;
   font-size: 1rem;
-  color: #aaa;
-  text-align: center;
+  color: #ccc;
 `;
 
 interface ListInputProps {
@@ -132,7 +120,7 @@ export const ListInput = ({
 
   return (
     <Wrapper>
-      {label && <SmallLabel text={label} />}
+      {label && <Label text={label} htmlFor={label} />}
       <Form onSubmit={handleSubmit}>
         <StyledInput
           value={value}
@@ -141,16 +129,19 @@ export const ListInput = ({
           maxLength={maxLength}
           ref={inputRef}
           placeholder={placeholder}
+          id={label || undefined}
         />
         <AddItem active={activeInput} type="submit">
-          <Plus size={28} color="#aaa" />
+          <Plus size={24} color="#666" />
         </AddItem>
       </Form>
       <List>
         {items.map(item => (
           <Item key={item}>
-            <ItemText>{item}</ItemText>
-            <Remove onClick={() => removeItem(item)}>Ta bort</Remove>
+            <ItemText>– {item}</ItemText>
+            <Remove onClick={() => removeItem(item)}>
+              <X size={12} color="#666" />
+            </Remove>
           </Item>
         ))}
       </List>
