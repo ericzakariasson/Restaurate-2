@@ -54,7 +54,7 @@ export class PlaceResolver {
       intent: 'browse',
       ...(near && { near }),
       ...(!near &&
-        position && { ll: [position.lat, position.lng], radius: 50000 })
+        position && { ll: [position.lat, position.lng], radius: 50_000 })
     });
 
     if (!venues || venues.length === 0) {

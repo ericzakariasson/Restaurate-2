@@ -54,8 +54,8 @@ class FoursquareRepository {
 
     const response = await nodeFetch(endpoint);
 
-    const json = await response.json();
-    return json as T;
+    const json: T = await response.json();
+    return json;
   }
 }
 

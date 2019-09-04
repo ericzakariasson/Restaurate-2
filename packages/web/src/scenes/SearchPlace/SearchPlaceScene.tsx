@@ -5,13 +5,14 @@ import { usePosition } from 'hooks';
 import { MapPin, Compass } from 'react-feather';
 import { SearchForm, SearchPlaceFormValues } from './components/SearchForm';
 import { useSearchPlaceLazyQuery } from 'graphql/types';
+import { SearchPlaces } from './components/SearchPlaces';
 
 const Page = styled.section`
   padding: ${p => p.theme.page.padding};
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
+`;
+
+const Wrapper = styled.div`
+  margin-top: 25vh;
 `;
 
 const Title = styled.h1`
@@ -19,6 +20,12 @@ const Title = styled.h1`
   color: #333;
   font-weight: 700;
   margin-bottom: 30px;
+`;
+
+const NoResults = styled.p`
+  margin-top: 20px;
+  font-weight: 700;
+  color: #666;
 `;
 
 const getVariables = (
@@ -59,12 +66,20 @@ export const SearchPlaceScene = () => {
     });
   };
 
-  console.log(data);
+  const places = (data && data.searchPlace && data.searchPlace.places) || [];
+  const noResults = called && !loading && places.length === 0;
 
   return (
     <Page>
-      <Title>Sök ställe</Title>
-      <SearchForm onSubmit={handleSubmit} />
+      <Wrapper>
+        <Title>Sök ställe</Title>
+        <SearchForm onSubmit={handleSubmit} />
+        {noResults ? (
+          <NoResults>Hittade inga ställen. Testa att ange plats</NoResults>
+        ) : (
+          <SearchPlaces places={places} />
+        )}
+      </Wrapper>
     </Page>
   );
 };

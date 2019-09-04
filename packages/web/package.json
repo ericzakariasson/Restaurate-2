@@ -68,5 +68,6 @@
     "@types/styled-components": "^4.1.18",
     "@types/yup": "^0.26.23",
     "yarn-upgrade-all": "^0.5.2"
-  }
+  },
+  "proxy": "http://localhost:4000"
 }

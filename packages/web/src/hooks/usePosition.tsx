@@ -78,7 +78,7 @@ export function usePosition(options?: UsePositionOptions) {
     }
 
     init();
-  }, [tryGetPosition]);
+  }, [tryGetPosition, options]);
 
   return { position, error, rejected, askForPosition: tryGetPosition, loading };
 }

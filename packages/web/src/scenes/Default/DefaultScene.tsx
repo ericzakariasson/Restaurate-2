@@ -19,9 +19,5 @@ export const DefaultScene = () => {
     return <Redirect to={routes.dashboard} />;
   }
 
-  return (
-    <div>
-      <Link to={routes.login}>Logga in</Link>
-    </div>
-  );
+  return <Redirect to={routes.login} />;
 };
