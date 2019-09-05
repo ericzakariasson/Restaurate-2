@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
   Slider,
   Handles,
@@ -18,8 +18,8 @@ const Rail = styled.div`
   height: 58px;
   /* 9 * 2 + 6 = 24 = handle height */
   border-radius: 3px;
-  background-color: #FFF;
-  border: 1px solid #CCC;
+  background-color: #fff;
+  border: 1px solid #ccc;
   position: relative;
   box-shadow: ${p => p.theme.boxShadow};
 `;
@@ -40,12 +40,12 @@ const Label = styled.span`
   font-size: 1.25rem;
   z-index: 2;
   mix-blend-mode: difference;
-  color: #FFF;
+  color: #fff;
 `;
 
 const Value = styled(Label)`
   font-size: 1.35rem;
-`
+`;
 
 const Text = styled.div`
   position: absolute;
@@ -82,9 +82,15 @@ export const InputSlider = ({
   domain = defaultDomain,
   onChange,
   onSlideStart,
-  onSlideEnd,
+  onSlideEnd
 }: InputSliderProps) => {
+  const [touched, setTouched] = React.useState(false);
   const handleUpdate = (values: readonly number[]) => onInput(values[0]);
+
+  const handleSlideStart = (values: readonly number[]) => {
+    onSlideStart && onSlideStart(values);
+    setTouched(true);
+  };
 
   return (
     <StyledSlider
@@ -93,7 +99,7 @@ export const InputSlider = ({
       domain={domain}
       onUpdate={handleUpdate}
       onChange={onChange}
-      onSlideStart={onSlideStart}
+      onSlideStart={handleSlideStart}
       onSlideEnd={onSlideEnd}
     >
       <Handles>
@@ -105,6 +111,7 @@ export const InputSlider = ({
                 active={handle.id === activeHandleID}
                 handle={handle}
                 getHandleProps={getHandleProps}
+                touched={touched}
               />
             ))}
           </HandleTrack>
@@ -134,6 +141,7 @@ export const InputSlider = ({
 
 interface StyledHandleProps {
   active: boolean;
+  touched: boolean;
 }
 
 const StyledHandle = styled.div<StyledHandleProps>`
@@ -155,33 +163,49 @@ const StyledHandle = styled.div<StyledHandleProps>`
     left: 50%;
     transform: translate(-50%, -50%);
     background: ${p => p.theme.colors.primary.hex};
+    transition: ${p => p.theme.transition};
   }
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 3px;
+    border-radius: 8px;
     background: #fff;
     border: 1px solid #222;
     width: 12px;
     height: 58px;
     z-index: -1;
+    transition: ${p => p.theme.transition};
   }
+
+  ${p =>
+    !p.touched &&
+    css`
+      &::before {
+        width: 4px;
+      }
+
+      &::after {
+        width: 16px;
+      }
+    `}
 `;
 
 interface HandleProps {
   handle: SliderItem;
   getHandleProps: GetHandleProps;
   active: boolean;
+  touched: boolean;
 }
 
 const Handle = ({
   handle: { id, value, percent },
   getHandleProps,
   active,
+  touched
 }: HandleProps) => {
   return (
     <StyledHandle
@@ -189,6 +213,7 @@ const Handle = ({
         left: `${percent}%`
       }}
       active={active}
+      touched={touched}
       {...getHandleProps(id)}
     />
   );
