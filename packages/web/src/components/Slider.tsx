@@ -10,14 +10,15 @@ import {
   GetHandleProps
 } from 'react-compound-slider';
 
+const HANDLE_WIDTH = 12;
+
 const StyledSlider = styled(Slider)`
   position: relative;
 `;
 
 const Rail = styled.div`
-  height: 58px;
-  /* 9 * 2 + 6 = 24 = handle height */
-  border-radius: 3px;
+  height: 46px;
+  border-radius: 10px;
   background-color: #fff;
   border: 1px solid #ccc;
   position: relative;
@@ -26,7 +27,7 @@ const Rail = styled.div`
 
 const HandleTrack = styled.div`
   /* Cancel out the handle width */
-  width: calc(100% - 12px);
+  width: calc(100% - ${HANDLE_WIDTH}px);
   height: 100%;
   margin: 0 auto;
   position: absolute;
@@ -35,32 +36,12 @@ const HandleTrack = styled.div`
   z-index: 3;
 `;
 
-const Label = styled.span`
-  position: relative;
-  font-size: 1.25rem;
-  z-index: 2;
-  mix-blend-mode: difference;
-  color: #fff;
-`;
-
-const Value = styled(Label)`
-  font-size: 1.35rem;
-`;
-
-const Text = styled.div`
+const StyledTracks = styled.div`
+  width: calc(100% - ${HANDLE_WIDTH}px);
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-
-  /* mix-blend-mode: difference; */
-  color: #222;
-  font-weight: 400;
 `;
 
 const defaultDomain = [1, 10];
@@ -85,11 +66,18 @@ export const InputSlider = ({
   onSlideEnd
 }: InputSliderProps) => {
   const [touched, setTouched] = React.useState(false);
+  const [touching, setTouching] = React.useState(false);
   const handleUpdate = (values: readonly number[]) => onInput(values[0]);
 
   const handleSlideStart = (values: readonly number[]) => {
     onSlideStart && onSlideStart(values);
     setTouched(true);
+    setTouching(true);
+  };
+
+  const handleSlideEnd = (values: readonly number[]) => {
+    onSlideEnd && onSlideEnd(values);
+    setTouching(false);
   };
 
   return (
@@ -100,7 +88,7 @@ export const InputSlider = ({
       onUpdate={handleUpdate}
       onChange={onChange}
       onSlideStart={handleSlideStart}
-      onSlideEnd={onSlideEnd}
+      onSlideEnd={handleSlideEnd}
     >
       <Handles>
         {({ handles, getHandleProps, activeHandleID }) => (
@@ -112,18 +100,15 @@ export const InputSlider = ({
                 handle={handle}
                 getHandleProps={getHandleProps}
                 touched={touched}
+                touching={touching}
               />
             ))}
           </HandleTrack>
         )}
       </Handles>
-      <Text>
-        <Label>{label}</Label>
-        <Value>{value}</Value>
-      </Text>
       <Tracks right={false}>
         {({ tracks, getTrackProps }) => (
-          <>
+          <StyledTracks>
             {tracks.map(track => (
               <Track
                 key={track.id}
@@ -131,7 +116,7 @@ export const InputSlider = ({
                 getTrackProps={getTrackProps}
               />
             ))}
-          </>
+          </StyledTracks>
         )}
       </Tracks>
       <Rail />
@@ -142,43 +127,45 @@ export const InputSlider = ({
 interface StyledHandleProps {
   active: boolean;
   touched: boolean;
+  touching: boolean;
 }
 
 const StyledHandle = styled.div<StyledHandleProps>`
   position: absolute;
   top: 0;
-  z-index: 2;
+  height: 100%;
+  width: ${HANDLE_WIDTH}px;
   cursor: pointer;
-  transform: translateX(-24px);
-  padding: 29px 30px;
-  user-select: none;
+  padding: 20px;
+  transform: translateX(-${HANDLE_WIDTH}px);
 
   &::before {
     content: '';
     position: absolute;
     width: 2px;
-    height: 48px;
-    border-radius: 2px;
+    height: 36px;
+    border-radius: 10px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: ${p => p.theme.colors.primary.hex};
-    transition: ${p => p.theme.transition};
+    transition: all ${p => p.theme.transition};
+    z-index: 1;
   }
 
   &::after {
     content: '';
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
     border-radius: 8px;
-    background: #fff;
     border: 1px solid #222;
-    width: 12px;
-    height: 58px;
-    z-index: -1;
-    transition: ${p => p.theme.transition};
+    width: ${HANDLE_WIDTH}px;
+    height: 100%;
+    transition: width ${p => p.theme.transition};
+    background: #fff;
+    box-sizing: border-box;
+    transform: translateX(-50%);
   }
 
   ${p =>
@@ -191,6 +178,16 @@ const StyledHandle = styled.div<StyledHandleProps>`
       &::after {
         width: 16px;
       }
+      width: 16px;
+    `}
+
+  ${p =>
+    p.touching &&
+    css`
+      &::before {
+        width: 6px;
+        height: 40px;
+      }
     `}
 `;
 
@@ -199,13 +196,15 @@ interface HandleProps {
   getHandleProps: GetHandleProps;
   active: boolean;
   touched: boolean;
+  touching: boolean;
 }
 
 const Handle = ({
   handle: { id, value, percent },
   getHandleProps,
   active,
-  touched
+  touched,
+  touching
 }: HandleProps) => {
   return (
     <StyledHandle
@@ -214,6 +213,7 @@ const Handle = ({
       }}
       active={active}
       touched={touched}
+      touching={touching}
       {...getHandleProps(id)}
     />
   );
@@ -227,7 +227,7 @@ const StyledTrack = styled.div`
   height: 100%;
   z-index: 1;
   box-shadow: none;
-  border-radius: 3px;
+  border-radius: 10px 8px 8px 10px;
 `;
 
 interface TrackProps {
@@ -240,7 +240,7 @@ const Track = ({ track: { source, target }, getTrackProps }: TrackProps) => {
     <StyledTrack
       style={{
         left: `${source.percent}%`,
-        width: `${target.percent - source.percent}%`
+        width: `calc(${target.percent - source.percent}% + ${HANDLE_WIDTH}px)`
       }}
       {...getTrackProps()}
     />
