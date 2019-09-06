@@ -44,12 +44,29 @@ const StyledTracks = styled.div`
   left: 0;
 `;
 
+const StepLines = styled.div`
+  width: calc(100% - ${HANDLE_WIDTH * 4}px);
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const StepLine = styled.span`
+  width: 1px;
+  height: 18px;
+  background: #aaa;
+  opacity: 0.2;
+`;
+
 const defaultDomain = [1, 10];
 
 interface InputSliderProps {
   value: number;
   onInput: (value: number) => void;
-  label?: string;
   domain?: number[];
   onChange?: (values: readonly number[]) => void;
   onSlideStart?: (values: readonly number[]) => void;
@@ -59,7 +76,6 @@ interface InputSliderProps {
 export const InputSlider = ({
   value,
   onInput,
-  label,
   domain = defaultDomain,
   onChange,
   onSlideStart,
@@ -79,6 +95,11 @@ export const InputSlider = ({
     onSlideEnd && onSlideEnd(values);
     setTouching(false);
   };
+
+  const [min, max] = domain;
+  const stepLines = max - min - 1;
+
+  const stepPercent = 100 / stepLines;
 
   return (
     <StyledSlider
@@ -103,6 +124,16 @@ export const InputSlider = ({
                 touching={touching}
               />
             ))}
+            <StepLines
+              style={{
+                left: `${stepPercent}%`,
+                width: `calc(100% - ${HANDLE_WIDTH * 2}px - ${stepPercent}%)`
+              }}
+            >
+              {Array.from({ length: stepLines }, (_, i) => (
+                <StepLine key={i} />
+              ))}
+            </StepLines>
           </HandleTrack>
         )}
       </Handles>
@@ -137,6 +168,7 @@ const StyledHandle = styled.div<StyledHandleProps>`
   width: ${HANDLE_WIDTH}px;
   cursor: pointer;
   padding: 20px;
+  z-index: 2;
   transform: translateX(-${HANDLE_WIDTH}px);
 
   &::before {
