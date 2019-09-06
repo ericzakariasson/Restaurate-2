@@ -3,19 +3,11 @@ import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
 import { RouteComponentProps, Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { PageTitle, Button, InputField } from '../../components';
+import { Button, InputField, Page } from '../../components';
 
 import { routes } from '../../routes';
 import { useLoginMutation, MeDocument, useMeQuery } from '../../graphql/types';
 import { loginValidationSchema } from './loginValidationSchema';
-
-const Page = styled.section`
-  padding: ${p => p.theme.page.padding};
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
 
 const Fields = styled.div`
   margin-bottom: 30px;
@@ -46,8 +38,7 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
   }
 
   return (
-    <Page>
-      <PageTitle title="Logga in" large />
+    <Page title="Logga in" center>
       <Formik
         initialValues={initialValues}
         validationSchema={loginValidationSchema}
@@ -85,6 +76,7 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
             </Fields>
             <Button
               variant="primary"
+              size="large"
               disabled={!isValid}
               type="submit"
               text="Logga in"

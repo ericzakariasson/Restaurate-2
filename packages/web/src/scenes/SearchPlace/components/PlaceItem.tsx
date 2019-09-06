@@ -50,6 +50,8 @@ const Map = styled.img<MapProps>`
   background-size: 100%;
   background-position: center;
   background-color: #eee;
+  width: 78px;
+  height: 78px;
 
   ${p =>
     p.touching &&
@@ -60,9 +62,9 @@ const Map = styled.img<MapProps>`
 `;
 
 const Name = styled.h4`
-  font-size: 1rem;
+  font-size: ${p => p.theme.fontSize.large};
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   color: #111;
 `;
 
@@ -116,6 +118,7 @@ export const PlaceItem = ({
 
   const mapUrl = staticMapboxMapUrl({
     ...size,
+    retina: true,
     lat: coordinates.lat,
     lng: coordinates.lng,
     zoom: 12,
@@ -131,7 +134,7 @@ export const PlaceItem = ({
       touching={touching}
     >
       <Link to={addVisitRoute(foursquareId)}>
-        <Map style={{ ...size }} touching={touching} src={mapUrl} />
+        <Map touching={touching} src={mapUrl} />
         <Info>
           <Name>{name}</Name>
           <Address>{address}</Address>

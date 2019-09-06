@@ -1,10 +1,21 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-const PageWrapper = styled.section`
+interface PageWrapperProps {
+  center: boolean;
+}
+
+const PageWrapper = styled.section<PageWrapperProps>`
   padding: ${p => p.theme.page.padding};
   display: flex;
   flex-direction: column;
+
+  ${p =>
+    p.center &&
+    css`
+      height: 100vh;
+      justify-content: center;
+    `}
 `;
 
 const PageTitleWrapper = styled.div`
@@ -48,15 +59,17 @@ interface PageProps {
   children: React.ReactNode | React.ReactNode[];
   largeTitle?: boolean;
   subTitle?: string;
+  center?: boolean;
 }
 
 export const Page = ({
   title,
   children,
+  subTitle,
   largeTitle = false,
-  subTitle
+  center = false
 }: PageProps) => (
-  <PageWrapper>
+  <PageWrapper center={center}>
     <PageTitle title={title} large={largeTitle} subTitle={subTitle} />
     {children}
   </PageWrapper>
