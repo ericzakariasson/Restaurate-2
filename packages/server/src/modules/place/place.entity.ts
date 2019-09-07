@@ -37,8 +37,8 @@ export class Place {
   @Column()
   slug: string;
 
-  @Field(() => [PlaceType])
-  @Column({ type: 'enum', enum: PlaceType, array: true })
+  @Field(() => [PlaceType], { nullable: true })
+  @Column({ type: 'enum', enum: PlaceType, array: true, nullable: true })
   types: PlaceType[];
 
   @Field(() => PriceLevel, { nullable: true })

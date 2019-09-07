@@ -53,6 +53,10 @@ class FoursquareRepository {
 
     const response = await nodeFetch(endpoint);
 
+    if (response.status !== 200) {
+      console.error(response.statusText);
+    }
+
     // Too many requests
     if (response.status === 429) {
       throw new Error(response.statusText);

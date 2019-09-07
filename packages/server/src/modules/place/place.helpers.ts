@@ -21,7 +21,7 @@ export const transformVenueToSearchItem = (userPlaces: Place[]) => (
     lng: venue.location.lng
   });
   place.types = venue.categories.map(translateCategory);
-  place.visits = samePlace ? samePlace.visits.length : 0;
+  place.visits = samePlace && samePlace.visits ? samePlace.visits.length : 0;
 
   return place;
 };

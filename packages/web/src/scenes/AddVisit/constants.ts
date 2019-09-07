@@ -5,21 +5,21 @@ export const rateNodes: RateNode[] = [
     order: 0,
     label: 'Mat',
     name: 'food',
-    score: null,
-    children: [
-      {
-        order: 0,
-        name: 'taste',
-        label: 'Smak',
-        score: null
-      },
-      {
-        order: 1,
-        name: 'quality',
-        label: 'Kvalitet',
-        score: null
-      }
-    ]
+    score: null
+    // children: [
+    //   {
+    //     order: 0,
+    //     name: 'taste',
+    //     label: 'Smak',
+    //     score: null
+    //   },
+    //   {
+    //     order: 1,
+    //     name: 'quality',
+    //     label: 'Kvalitet',
+    //     score: null
+    //   }
+    // ]
   },
   {
     order: 1,

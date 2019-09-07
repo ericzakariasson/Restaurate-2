@@ -1,9 +1,11 @@
 import { InputType, Field, ObjectType } from 'type-graphql';
-import { PlaceInput } from '../place/place.types';
 import { RateInput } from './rate/rate.types';
 
 @InputType()
-export class VisitInput {
+export class AddVisitInput {
+  @Field()
+  providerId: string;
+
   @Field()
   visitDate: Date;
 
@@ -15,15 +17,6 @@ export class VisitInput {
 
   @Field(() => [RateInput])
   ratings: RateInput[];
-}
-
-@InputType()
-export class AddVisitInput {
-  @Field(() => PlaceInput)
-  place: PlaceInput;
-
-  @Field(() => VisitInput)
-  visit: VisitInput;
 }
 
 @ObjectType()

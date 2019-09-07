@@ -15,8 +15,11 @@ export type Scalars = {
 };
 
 export type AddVisitInput = {
-  place: PlaceInput,
-  visit: VisitInput,
+  providerId: Scalars['String'],
+  visitDate: Scalars['DateTime'],
+  comment?: Maybe<Scalars['String']>,
+  orders?: Maybe<Array<Scalars['String']>>,
+  ratings: Array<RateInput>,
 };
 
 export type AddVisitResponse = {
@@ -259,13 +262,6 @@ export type Visit = {
   updatedAt: Scalars['DateTime'],
   place: Place,
   user: User,
-};
-
-export type VisitInput = {
-  visitDate: Scalars['DateTime'],
-  comment?: Maybe<Scalars['String']>,
-  orders?: Maybe<Array<Scalars['String']>>,
-  ratings: Array<RateInput>,
 };
 export type PlaceFragment = (
   { __typename?: 'Place' }

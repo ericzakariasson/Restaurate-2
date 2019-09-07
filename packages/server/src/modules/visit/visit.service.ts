@@ -2,11 +2,11 @@ import { Repository } from 'typeorm';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Visit } from './visit.entity';
-import { VisitInput } from './visit.types';
 import { Place } from '../place/place.entity';
 import { User } from '../user/user.entity';
 import { Order } from './order/order.entity';
 import { Rate } from './rate/rate.entity';
+import { AddVisitInput } from './visit.types';
 
 @Service()
 export class VisitService {
@@ -23,7 +23,7 @@ export class VisitService {
     return this.visitRepository.findOne(id);
   }
 
-  async createVisit(input: VisitInput, place: Place, user: User) {
+  async createVisit(input: AddVisitInput, place: Place, user: User) {
     const orders = input.orders
       ? await Promise.all(
           input.orders.map(async title =>

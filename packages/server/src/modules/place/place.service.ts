@@ -6,8 +6,7 @@ import { Visit } from '../visit/visit.entity';
 import { round, slugify } from '../../utils';
 import { FoursquareService } from '../../services/foursquare/foursquare.service';
 import { User } from '../user/user.entity';
-import { TagService } from './tag/tag.service';
-import { PlaceInput } from './place.types';
+// import { TagService } from './tag/tag.service';
 
 @Service()
 export class PlaceService {
@@ -16,8 +15,7 @@ export class PlaceService {
     private readonly placeRepository: Repository<Place>,
     @InjectRepository(Visit)
     private readonly visitRepository: Repository<Visit>,
-    private readonly foursquareService: FoursquareService,
-    private readonly tagService: TagService
+    private readonly foursquareService: FoursquareService // private readonly tagService: TagService
   ) {}
 
   async getAverageScore(id: number) {
@@ -83,31 +81,24 @@ export class PlaceService {
     return this.foursquareService.venue.details(providerId);
   }
 
-  async findByInputOrCreate({ id, ...input }: PlaceInput, user: User) {
-    const place = await this.placeRepository.findOne(id);
+  async findByIdOrCreate(providerId: string, user: User) {
+    const place = await this.placeRepository.findOne({
+      where: { foursquareId: providerId }
+    });
 
     if (place) {
       return place;
     }
 
-    return this.createPlace(input, user);
+    return this.createPlace(providerId, user);
   }
 
-  async createPlace(input: PlaceInput, user: User) {
-    const tags = input.tags
-      ? await Promise.all(
-          input.tags.map(
-            async name => await this.tagService.findByNameOrCreate(name, user)
-          )
-        )
-      : [];
-
-    const { name, location } = await this.getPlaceData(input.foursquareId);
+  async createPlace(providerId: string, user: User) {
+    const { name, location } = await this.getPlaceData(providerId);
 
     const createdPlace = this.placeRepository.create({
-      ...input,
       user,
-      tags,
+      foursquareId: providerId,
       slug: slugify(`${name} ${location.address} ${location.city}`)
     });
 

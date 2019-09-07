@@ -1,4 +1,5 @@
 import { ReducerState, RateNode, RateStateNode } from './rateReducer';
+import { RateInput } from 'graphql/types';
 
 function round(value: number, precision = 1) {
   var multiplier = Math.pow(10, precision || 0);
@@ -15,6 +16,34 @@ export function calculateAverageNodeScore(children: RateStateNode[]) {
     (score: Score, node: RateStateNode) => {
       if (node.score) {
         score.totalScore += node.score;
+        score.entries += 1;
+      }
+
+      return score;
+    },
+    { totalScore: 0, entries: 0 }
+  );
+
+  const average = round(score.totalScore / score.entries);
+
+  if (Number.isFinite(average)) {
+    return average;
+  }
+
+  return null;
+}
+
+export function calculateAverageScore(state: ReducerState) {
+  const score = Object.entries(state).reduce(
+    (score: Score, [key, node]: [string, RateStateNode]) => {
+      if (node.score) {
+        score.totalScore += node.score;
+        score.entries += 1;
+      } else if (node.children) {
+        const childArray = Object.values(node.children);
+        const averageNodeScore = calculateAverageNodeScore(childArray);
+
+        score.totalScore += averageNodeScore!;
         score.entries += 1;
       }
 
@@ -49,4 +78,22 @@ export function createInitialRateState(nodes: RateNode[]): ReducerState {
     }
     return tree;
   }, {});
+}
+
+type Node = { [key: string]: RateStateNode };
+
+export function transformToInput(state: Node): RateInput[] {
+  const inputs = Object.entries(state).map(([key, node]) => {
+    const calculatedScore =
+      calculateAverageNodeScore(Object.values(node.children || {})) || 0;
+
+    return {
+      name: node.name,
+      calculatedScore: node.controlled,
+      score: node.controlled ? calculatedScore : node.score || 0,
+      children: node.children ? transformToInput(node.children) : null
+    };
+  });
+
+  return inputs;
 }

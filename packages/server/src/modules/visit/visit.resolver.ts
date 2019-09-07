@@ -46,12 +46,12 @@ export class VisitResolver {
       throw new Error('No user found');
     }
 
-    const place = await this.placeService.findByInputOrCreate(
-      input.place,
+    const place = await this.placeService.findByIdOrCreate(
+      input.providerId,
       user
     );
 
-    const visit = await this.visitService.createVisit(input.visit, place, user);
+    const visit = await this.visitService.createVisit(input, place, user);
 
     return {
       saved: true

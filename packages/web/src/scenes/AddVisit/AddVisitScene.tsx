@@ -1,14 +1,36 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { Page, Loading, ListInput, Label } from 'components';
+import { RouteComponentProps, Redirect } from 'react-router-dom';
+import {
+  Page,
+  Loading,
+  ListInput,
+  Label,
+  Textarea,
+  DateInput,
+  Button
+} from 'components';
 import Helmet from 'react-helmet';
-import { usePlaceBasicDetailsQuery } from 'graphql/types';
+import { usePlaceBasicDetailsQuery, useAddVisitMutation } from 'graphql/types';
 import { useArray } from 'hooks';
 import { rateNodes } from './constants';
-import { createInitialRateState } from './rateHelper';
+import {
+  createInitialRateState,
+  calculateAverageScore,
+  transformToInput
+} from './rateHelper';
 import { rateReducer, SetRatePayload } from './rateReducer';
 import { GeneralError } from 'scenes/Error/GeneralError';
-import { RateSliderParent } from './components/RateParent';
+import { RateSliderParent, RateHeader } from './components/RateParent';
+import styled from 'styled-components';
+import { routes } from 'routes';
+
+const RateTotal = styled.article`
+  margin-top: 30px;
+`;
+
+const Section = styled.section`
+  margin-bottom: 30px;
+`;
 
 type ProviderIdParam = { providerId: string };
 
@@ -24,9 +46,30 @@ export const AddVisitScene = ({
   });
 
   const [orders, addOrder, removeOrder] = useArray<string>();
+  const [comment, setComment] = React.useState('');
+  const [visitDate, setVisitDate] = React.useState(new Date());
 
   const initialRateState = createInitialRateState(rateNodes);
   const [rateState, dispatch] = React.useReducer(rateReducer, initialRateState);
+
+  const [
+    addVisit,
+    { loading: saving, data: addVisitData }
+  ] = useAddVisitMutation({
+    variables: {
+      data: {
+        providerId,
+        visitDate,
+        comment,
+        orders,
+        ratings: transformToInput(rateState)
+      }
+    }
+  });
+
+  if (addVisitData && addVisitData.addVisit.saved) {
+    return <Redirect to={routes.dashboard} />;
+  }
 
   if (loading) {
     return <Loading />;
@@ -40,23 +83,30 @@ export const AddVisitScene = ({
 
   const { name, address } = place!;
 
+  const averageScore = calculateAverageScore(rateState);
+
   const setScore = (payload: SetRatePayload) =>
     dispatch({ type: 'SET_RATE', payload });
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+    setComment(e.target.value);
 
   return (
     <Page title={name} subTitle={address}>
       <Helmet>
         <title>Nytt besök</title>
       </Helmet>
-      <ListInput
-        label="Beställningar"
-        items={orders}
-        addItem={addOrder}
-        removeItem={removeOrder}
-        placeholder="Tikka Masala, nr. 5 ..."
-      />
-      <Label text="Betyg" />
-      <section>
+      <Section>
+        <ListInput
+          label="Beställningar"
+          items={orders}
+          addItem={addOrder}
+          removeItem={removeOrder}
+          placeholder="Tikka Masala, nr. 5 ..."
+        />
+      </Section>
+      <Section>
+        <Label text="Betyg" />
         {rateNodes.map(node => (
           <RateSliderParent
             key={node.name}
@@ -77,7 +127,30 @@ export const AddVisitScene = ({
             }
           />
         ))}
-      </section>
+        <RateTotal>
+          <RateHeader label="Betyg" score={averageScore} />
+        </RateTotal>
+      </Section>
+      <Section>
+        <Label text="Kommentar" />
+        <Textarea
+          placeholder="Något som kan vara värt att minnas till nästa gång?"
+          rows={3}
+          value={comment}
+          maxLength={300}
+          onChange={handleCommentChange}
+        />
+      </Section>
+      <Section>
+        <Label text="Datum" />
+        <DateInput onChange={setVisitDate} />
+      </Section>
+      <Button
+        variant="primary"
+        onClick={() => addVisit()}
+        text={saving ? 'Sparar' : 'Lägg till besök'}
+        size="large"
+      />
     </Page>
   );
 };

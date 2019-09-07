@@ -24,6 +24,8 @@ import {
   transformVenueDetailsToBasicDetails
 } from './place.helpers';
 import { Context } from '../../graphql/types';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
 
 useContainer(Container);
 @Service()
@@ -31,6 +33,7 @@ useContainer(Container);
 export class PlaceResolver {
   constructor(
     private readonly placeService: PlaceService,
+    private readonly userService: UserService,
     private readonly foursquareService: FoursquareService
   ) {}
 
@@ -101,6 +104,17 @@ export class PlaceResolver {
     @Arg('limit', { nullable: true }) limit?: number
   ): Promise<Visit[]> {
     return this.placeService.getVisits(place.id, { limit });
+  }
+
+  @FieldResolver()
+  async user(@Root() place: Place): Promise<User> {
+    const user = await this.userService.findById(place.userId);
+
+    if (!user) {
+      throw new Error('No user found');
+    }
+
+    return user;
   }
 
   @FieldResolver(() => Number)

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Textarea = styled.textarea`
   display: block;
   padding: 15px;
-  border-radius: 5px;
+  border-radius: 6px;
   background: #fcfcfc;
   border: 1px solid #ccc;
   outline: none;

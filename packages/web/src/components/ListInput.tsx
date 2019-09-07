@@ -8,10 +8,6 @@ import { Label } from './Label';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-
-  &:not(:last-child) {
-    margin-bottom: 30px;
-  }
 `;
 
 const List = styled.ul`

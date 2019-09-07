@@ -37,6 +37,17 @@ const ChildArea = styled.ul`
   }
 `;
 
+interface RateHeaderProps {
+  label: string;
+  score: number | null;
+}
+
+export const RateHeader = ({ label, score }: RateHeaderProps) => (
+  <Text>
+    <span>{label}</span> – <Score>{score}</Score>
+  </Text>
+);
+
 const Text = styled.h2`
   margin-bottom: 5px;
   font-size: ${p => p.theme.fontSize.xxl};
@@ -77,10 +88,7 @@ export const RateSliderParent = ({
   return (
     <Wrapper>
       <ParentArea>
-        <Text>
-          <span>{label} – </span>
-          <Score>{s}</Score>
-        </Text>
+        <RateHeader label={label} score={s} />
         <InputSlider
           value={s}
           onChange={score => setScore({ name, score })}
