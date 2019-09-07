@@ -49,10 +49,14 @@ class FoursquareRepository {
 
   async fetch<T>(url: string, options?: object) {
     const parameters = this.getParameters(options || {});
-
     const endpoint = `${this.baseUrl}/${url}?${parameters}`;
 
     const response = await nodeFetch(endpoint);
+
+    // Too many requests
+    if (response.status === 429) {
+      throw new Error(response.statusText);
+    }
 
     const json: T = await response.json();
     return json;

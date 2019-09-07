@@ -1,4 +1,4 @@
-import { ReducerState, RateNode } from './rateReducer';
+import { ReducerState, RateNode, RateStateNode } from './rateReducer';
 
 function round(value: number, precision = 1) {
   var multiplier = Math.pow(10, precision || 0);
@@ -10,9 +10,9 @@ interface Score {
   entries: number;
 }
 
-export function calculateAverageScore(state: ReducerState) {
-  const score = Object.entries(state).reduce(
-    (score: Score, [key, node]: [string, RateNode]) => {
+export function calculateAverageNodeScore(children: RateStateNode[]) {
+  const score = children.reduce(
+    (score: Score, node: RateStateNode) => {
       if (node.score) {
         score.totalScore += node.score;
         score.entries += 1;
@@ -37,17 +37,16 @@ const initialNodeState = (rest: any) => ({
   ...rest
 });
 
-export function createInitialRateState(nodes: RateNode[]) {
-  return nodes
-    .sort(node => node.order)
-    .reduce((tree: any, { name, children, ...rest }: RateNode) => {
-      if (!tree[name]) {
-        tree[name] = initialNodeState({
-          name,
-          children: children ? createInitialRateState(children) : undefined,
-          ...rest
-        });
-      }
-      return tree;
-    }, {});
+export function createInitialRateState(nodes: RateNode[]): ReducerState {
+  return nodes.reduce((tree: any, { name, children, ...rest }: RateNode) => {
+    if (!tree[name]) {
+      tree[name] = initialNodeState({
+        name,
+        controlled: false,
+        children: children ? createInitialRateState(children) : undefined,
+        ...rest
+      });
+    }
+    return tree;
+  }, {});
 }

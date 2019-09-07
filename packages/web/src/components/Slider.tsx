@@ -11,13 +11,19 @@ import {
 } from 'react-compound-slider';
 
 const HANDLE_WIDTH = 12;
+const SLIDER_HEIGHT = 46;
 
-const StyledSlider = styled(Slider)`
+interface StyledSliderProps {
+  small: boolean;
+}
+
+const StyledSlider = styled(Slider)<StyledSliderProps>`
   position: relative;
+  height: ${p => (p.small ? 32 : 46)}px;
 `;
 
 const Rail = styled.div`
-  height: 46px;
+  height: 100%;
   border-radius: 10px;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -66,11 +72,13 @@ const defaultDomain = [1, 10];
 
 interface InputSliderProps {
   value: number;
-  onInput: (value: number) => void;
+  onInput?: (value: number) => void;
   domain?: number[];
-  onChange?: (values: readonly number[]) => void;
+  onChange: (value: number) => void;
   onSlideStart?: (values: readonly number[]) => void;
   onSlideEnd?: (values: readonly number[]) => void;
+  small?: boolean;
+  controlled?: boolean;
 }
 
 export const InputSlider = ({
@@ -79,11 +87,17 @@ export const InputSlider = ({
   domain = defaultDomain,
   onChange,
   onSlideStart,
-  onSlideEnd
+  onSlideEnd,
+  controlled,
+  small = false
 }: InputSliderProps) => {
   const [touched, setTouched] = React.useState(false);
   const [touching, setTouching] = React.useState(false);
-  const handleUpdate = (values: readonly number[]) => onInput(values[0]);
+  const handleUpdate = (values: readonly number[]) =>
+    !controlled && onInput && onInput(values[0]);
+
+  const handleChange = (values: readonly number[]) =>
+    !controlled && onChange(values[0]);
 
   const handleSlideStart = (values: readonly number[]) => {
     onSlideStart && onSlideStart(values);
@@ -97,8 +111,10 @@ export const InputSlider = ({
   };
 
   const handleStepClick = (value: number) => {
-    onInput(value);
-    setTouched(true);
+    if (!controlled) {
+      onChange(value);
+      setTouched(true);
+    }
   };
 
   const [min, max] = domain;
@@ -109,12 +125,14 @@ export const InputSlider = ({
   return (
     <StyledSlider
       step={1}
-      values={[value]}
-      domain={domain}
+      values={[controlled ? value * 2 : value]}
+      domain={controlled ? [1, 20] : domain}
       onUpdate={handleUpdate}
-      onChange={onChange}
+      onChange={handleChange}
       onSlideStart={handleSlideStart}
       onSlideEnd={handleSlideEnd}
+      small={small}
+      disabled={controlled}
     >
       <Handles>
         {({ handles, getHandleProps, activeHandleID }) => (
@@ -127,6 +145,7 @@ export const InputSlider = ({
                 getHandleProps={getHandleProps}
                 touched={touched}
                 touching={touching}
+                controlled={controlled}
               />
             ))}
             <StepLines
@@ -164,6 +183,7 @@ interface StyledHandleProps {
   active: boolean;
   touched: boolean;
   touching: boolean;
+  controlled?: boolean;
 }
 
 const StyledHandle = styled.div<StyledHandleProps>`
@@ -172,15 +192,16 @@ const StyledHandle = styled.div<StyledHandleProps>`
   height: 100%;
   width: ${HANDLE_WIDTH}px;
   cursor: pointer;
-  padding: 20px;
+  padding: 0 20px;
   z-index: 2;
   transform: translateX(-${HANDLE_WIDTH + 2}px);
+  
 
   &::before {
     content: '';
     position: absolute;
     width: 2px;
-    height: 36px;
+    height: calc(100% - 10px);
     border-radius: 10px;
     top: 50%;
     left: 50%;
@@ -223,7 +244,22 @@ const StyledHandle = styled.div<StyledHandleProps>`
     css`
       &::before {
         width: 6px;
-        height: 40px;
+        height: calc(100% - 6px);
+      }
+    `}
+  
+  ${p =>
+    p.controlled &&
+    css`
+      &::before {
+        width: 2px;
+        height: calc(100% - 6px);
+        transform: translate(-2px, -50%);
+      }
+
+      &::after {
+        width: 8px;
+        background: #222;
       }
     `}
 `;
@@ -234,6 +270,7 @@ interface HandleProps {
   active: boolean;
   touched: boolean;
   touching: boolean;
+  controlled?: boolean;
 }
 
 const Handle = ({
@@ -241,7 +278,8 @@ const Handle = ({
   getHandleProps,
   active,
   touched,
-  touching
+  touching,
+  controlled
 }: HandleProps) => {
   return (
     <StyledHandle
@@ -251,6 +289,7 @@ const Handle = ({
       active={active}
       touched={touched}
       touching={touching}
+      controlled={controlled}
       {...getHandleProps(id)}
     />
   );

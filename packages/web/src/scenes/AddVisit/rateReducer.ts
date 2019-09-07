@@ -1,6 +1,12 @@
 import { rateNodes } from './constants';
 import { createInitialRateState } from './rateHelper';
 
+export interface SetRatePayload {
+  score: number;
+  name: string;
+  parent?: string;
+}
+
 export interface RateNode {
   order: number;
   name: string;
@@ -10,10 +16,25 @@ export interface RateNode {
 }
 
 export interface ReducerState {
-  [key: string]: RateNode;
+  food: RateStateNode;
+  service: RateStateNode;
+  environment: RateStateNode;
+  experience: RateStateNode;
+  [key: string]: RateStateNode;
 }
 
-type Payload = Pick<RateNode, 'name' | 'score'> & { parent: string };
+export interface RateStateNode {
+  order: number;
+  name: string;
+  label: string;
+  score: number | null;
+  controlled: boolean;
+  children?: {
+    [key: string]: RateStateNode;
+  };
+}
+
+type Payload = SetRatePayload;
 
 interface ReducerAction {
   type: 'SET_RATE';
@@ -22,37 +43,46 @@ interface ReducerAction {
 
 export const initialState = createInitialRateState(rateNodes);
 
-export function rateReducer(state: ReducerState, action: ReducerAction) {
+export function rateReducer(
+  state: ReducerState,
+  action: ReducerAction
+): ReducerState {
   switch (action.type) {
     case 'SET_RATE':
-      const { name, score, parent } = action.payload;
+      const { name, score, parent: parentName } = action.payload;
 
-      if (parent) {
-        const oldParentValue = state[parent];
+      if (parentName) {
+        const parent = state[parentName];
+        const child = parent.children && parent.children[name];
 
-        const newParentValue = {
-          ...oldParentValue,
+        const updatedChild = { ...child, score };
+
+        const updatedParent = {
+          ...parent,
+          controlled: true,
           children: {
-            ...oldParentValue.children,
-            [name]: { score }
+            ...parent.children,
+            [name]: updatedChild
           }
         };
 
         return {
           ...state,
-          rate: {
-            ...state.rate,
-            [parent]: newParentValue
-          }
+          [parentName]: updatedParent
         };
       }
 
+      const node = state[name];
+
+      const updatedNode = {
+        ...node,
+        controlled: false,
+        score
+      };
+
       return {
         ...state,
-        rate: {
-          ...state.rate,
-          [name]: score
-        }
+        [name]: updatedNode
       };
     default:
       throw new Error();
