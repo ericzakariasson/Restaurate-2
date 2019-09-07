@@ -1,5 +1,4 @@
-import { RateNode } from './types/visit';
-import { ReducerState, RateNodeState } from './addVisitReducer';
+import { ReducerState, RateNode } from './rateReducer';
 
 function round(value: number, precision = 1) {
   var multiplier = Math.pow(10, precision || 0);
@@ -12,10 +11,10 @@ interface Score {
 }
 
 export function calculateAverageScore(state: ReducerState) {
-  const score = Object.entries(state.rate).reduce(
-    (score: Score, [key, value]: [string, number]) => {
-      if (value) {
-        score.totalScore += value;
+  const score = Object.entries(state).reduce(
+    (score: Score, [key, node]: [string, RateNode]) => {
+      if (node.score) {
+        score.totalScore += node.score;
         score.entries += 1;
       }
 
@@ -33,12 +32,12 @@ export function calculateAverageScore(state: ReducerState) {
   return null;
 }
 
-const initialNodeState = (rest: any) => null; /* ({
+const initialNodeState = (rest: any) => ({
   score: null,
   ...rest
-}); */
+});
 
-export function createInitialRateState(nodes: RateNode[]): RateNodeState {
+export function createInitialRateState(nodes: RateNode[]) {
   return nodes
     .sort(node => node.order)
     .reduce((tree: any, { name, children, ...rest }: RateNode) => {

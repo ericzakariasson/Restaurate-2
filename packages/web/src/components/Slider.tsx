@@ -96,6 +96,11 @@ export const InputSlider = ({
     setTouching(false);
   };
 
+  const handleStepClick = (value: number) => {
+    onInput(value);
+    setTouched(true);
+  };
+
   const [min, max] = domain;
   const stepLines = max - min - 1;
 
@@ -131,7 +136,7 @@ export const InputSlider = ({
               }}
             >
               {Array.from({ length: stepLines }, (_, i) => (
-                <StepLine key={i} />
+                <StepLine key={i} onClick={() => handleStepClick(i + 2)} />
               ))}
             </StepLines>
           </HandleTrack>
@@ -169,7 +174,7 @@ const StyledHandle = styled.div<StyledHandleProps>`
   cursor: pointer;
   padding: 20px;
   z-index: 2;
-  transform: translateX(-${HANDLE_WIDTH}px);
+  transform: translateX(-${HANDLE_WIDTH + 2}px);
 
   &::before {
     content: '';
@@ -272,7 +277,8 @@ const Track = ({ track: { source, target }, getTrackProps }: TrackProps) => {
     <StyledTrack
       style={{
         left: `${source.percent}%`,
-        width: `calc(${target.percent - source.percent}% + ${HANDLE_WIDTH}px)`
+        width: `calc(${target.percent - source.percent}% + ${HANDLE_WIDTH -
+          2}px)`
       }}
       {...getTrackProps()}
     />

@@ -1,4 +1,4 @@
-import { RateNode } from './types/visit';
+import { RateNode } from './rateReducer';
 
 export const rateNodes: RateNode[] = [
   {

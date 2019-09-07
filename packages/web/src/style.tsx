@@ -141,6 +141,8 @@ export const theme = {
     xsmall: '0.75rem',
     small: '0.875rem',
     normal: '1rem',
-    large: '1.125rem'
+    large: '1.125rem',
+    xl: '1.25rem',
+    xxl: '1.5rem'
   }
 };
