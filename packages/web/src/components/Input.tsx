@@ -3,17 +3,9 @@ import { FieldProps } from 'formik';
 import styled from 'styled-components';
 
 import { Label } from './Label';
+import { Size } from 'style';
 
-type Size = 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
-
-interface Padding {
-  xxsmall: string;
-  xsmall: string;
-  small: string;
-  normal: string;
-  large: string;
-  [key: string]: string;
-}
+type Padding = { [key in Size | string]: string };
 
 const padding: Padding = {
   xxsmall: '4px 8px',

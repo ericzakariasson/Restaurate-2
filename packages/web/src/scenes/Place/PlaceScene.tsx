@@ -1,17 +1,15 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { RouteComponentProps, Link } from 'react-router-dom';
-import { Loading, Page } from '../../components';
+import { RouteComponentProps } from 'react-router-dom';
+import { Loading, Page, Label, Button, NavButton } from '../../components';
 import { GeneralError } from '../Error/GeneralError';
-import {
-  formatPriceLevel,
-  formatDate,
-  formatPlaceType,
-  formatURL
-} from '../../utils/format';
-import { staticMapboxMapUrl } from '../../utils';
-import { visitRoute } from '../../routes';
+import { formatURL, formatPriceLevel } from '../../utils/format';
 import { usePlaceQuery } from '../../graphql/types';
+import { PlaceMap } from './components/Map';
+import { Visits } from './components/Visits';
+import { UserStat } from './components/UserStat';
+import { Website } from './components/Website';
+import { ProviderIdParam, addVisitRoute } from 'routes';
 
 const Info = styled.div`
   margin-bottom: 20px;
@@ -21,107 +19,41 @@ const Text = styled.p`
   text-align: center;
 `;
 
-const PlaceText = styled(Text)`
-  font-size: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #222;
+const UserStats = styled.section`
+  display: flex;
   margin-bottom: 20px;
 `;
 
-const Website = styled.a`
-  text-align: center;
-  padding: 10px;
-  display: block;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 1rem;
-  color: #222;
-  font-weight: 700;
-  text-decoration: none;
+const UserPlaceInputs = styled.section`
+  margin-bottom: 30px;
 `;
 
-const MapWrapper = styled.div`
-  position: relative;
+const PlaceInput = styled.article`
+  &:not(:last-of-type) {
+    margin-bottom: 20px;
+  }
 `;
 
-interface MapCardProps {
-  url: string;
-}
-
-const MapCard = styled.div<MapCardProps>`
-  background: url(${p => p.url});
-  width: 100%;
-  height: 100px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 4px;
-  box-shadow: ${p => p.theme.boxShadow};
-  border: 1px solid #aaa;
-  margin-bottom: 40px;
+const PlaceInputText = styled.h4`
+  font-size: 1.375rem;
+  font-weight: 400;
 `;
 
 const TagList = styled.ul``;
 
 const TagItem = styled.li``;
 
-const VisitList = styled.ul`
-  list-style: none;
-`;
+const Buttons = styled.div``;
 
-const GetDirections = styled.a`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 8px 12px;
-  text-decoration: none;
-  display: block;
-  font-size: 0.9rem;
-  font-weight: 700;
-  border-radius: 4px;
-  border: 1px solid #eee;
-  color: #222;
-  background: #fff;
-  box-shadow: ${p => p.theme.boxShadow};
-`;
-
-const VisitItem = styled.li`
-  border-radius: 4px;
-  box-shadow: ${p => p.theme.boxShadow};
-  border: 1px solid #ccc;
-
-  &:not(:last-child) {
-    margin-bottom: 15px;
-  }
-`;
-
-const VisitLink = styled(Link)`
-  text-decoration: none;
-  color: #222;
-  display: flex;
-  padding: 15px;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const VisitDate = styled.span``;
-
-const VisitScore = styled.span`
-  font-size: 1.125rem;
-  font-weight: 700;
-`;
-
-type WithPlaceSlug = { slug: string };
+interface PlaceSceneProps extends RouteComponentProps<ProviderIdParam> {}
 
 export const PlaceScene = ({
   match: {
-    params: { slug }
+    params: { providerId }
   }
-}: RouteComponentProps<WithPlaceSlug>) => {
+}: PlaceSceneProps) => {
   const { data, loading, error } = usePlaceQuery({
-    variables: { slug }
+    variables: { providerId }
   });
 
   if (loading) {
@@ -140,49 +72,78 @@ export const PlaceScene = ({
     types,
     tags,
     visitCount,
-    visits
+    averageScore,
+    visits,
+    foursquareId,
+    hasVisited
   } = place!;
 
-  const mapUrl = staticMapboxMapUrl({
-    lat: location.lat!,
-    lng: location.lng!,
-    zoom: 14,
-    width: window.innerWidth - 40,
-    height: window.innerHeight / 2
-  });
+  const formattedAddress = location.address
+    ? `${location.address}, ${location.city}`
+    : location.city;
 
   return (
-    <Page title={name} subTitle={`${location.address}, ${location.city} `}>
-      <PlaceText>
-        {types.map(formatPlaceType).join(',')}
-        {` `}—{` `}
-        {formatPriceLevel(priceLevel || null)}
-      </PlaceText>
-      {url && (
-        <Website href={url} target="_blank">
-          {formatURL(url)}
-        </Website>
-      )}
-      <MapWrapper>
-        <GetDirections target="_blank">Hitta hit</GetDirections>
-        <MapCard url={mapUrl} />
-      </MapWrapper>
-      <TagList>
-        {tags && tags.map(tag => <TagItem id={tag.id}>{tag.name}</TagItem>)}
-      </TagList>
+    <Page title={name} subTitle={formattedAddress}>
+      <PlaceMap lat={location.lat!} lng={location.lng!} />
+      {url && <Website url={url} />}
+      <UserStats>
+        <UserStat label="Besök" value={visitCount} />
+        <UserStat label="Betyg" value={averageScore || '–'} />
+      </UserStats>
+      <UserPlaceInputs>
+        <LabelWrapper label="Prisklass">
+          <PlaceInputText>
+            {!!priceLevel ? formatPriceLevel(priceLevel) : '–'}
+          </PlaceInputText>
+        </LabelWrapper>
+        <LabelWrapper label="Taggar">
+          <PlaceInputText>
+            {tags && tags.length > 0 ? (
+              <TagList>
+                {tags.map(tag => (
+                  <TagItem id={tag.id}>{tag.name}</TagItem>
+                ))}
+              </TagList>
+            ) : (
+              '–'
+            )}
+          </PlaceInputText>
+        </LabelWrapper>
+        <LabelWrapper label="Kommentar">
+          <PlaceInputText>–</PlaceInputText>
+        </LabelWrapper>
+      </UserPlaceInputs>
+      <Buttons>
+        {!hasVisited && (
+          <Button
+            text="Vill besöka"
+            variant="secondary"
+            color="white"
+            margin={['bottom']}
+          />
+        )}
+        <NavButton
+          text="Nytt besök"
+          variant="primary"
+          to={addVisitRoute(foursquareId)}
+        />
+      </Buttons>
       <Info>
         <Text>Se {visitCount} besök nedan.</Text>
       </Info>
-      <VisitList>
-        {visits.map(visit => (
-          <VisitItem key={visit.id}>
-            <VisitLink to={visitRoute(visit.id)}>
-              <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
-              <VisitScore>{8}</VisitScore>
-            </VisitLink>
-          </VisitItem>
-        ))}
-      </VisitList>
+      <Visits visits={visits} />
     </Page>
   );
 };
+
+interface LabelWrapperProps {
+  label: string;
+  children: React.ReactNode;
+}
+
+const LabelWrapper = ({ children, label }: LabelWrapperProps) => (
+  <PlaceInput>
+    <Label text={label} noMargin />
+    {children}
+  </PlaceInput>
+);

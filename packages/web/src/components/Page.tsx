@@ -19,7 +19,7 @@ const PageWrapper = styled.section<PageWrapperProps>`
 `;
 
 const PageTitleWrapper = styled.div`
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   padding-top: 15px;
 `;
 

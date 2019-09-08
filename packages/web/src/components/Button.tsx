@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-
-type Size = 'xxsmall' | 'xsmall' | 'small' | 'normal' | 'large';
+import { Size } from 'style';
 
 type Type = 'submit' | 'reset' | 'button';
 
@@ -16,7 +15,8 @@ type Color =
   | 'success'
   | 'warning'
   | 'error'
-  | 'black';
+  | 'black'
+  | 'white';
 
 interface Props {
   text: string;
@@ -111,13 +111,6 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
     p.margin.map(direction => `margin-${direction}: 10px;`).join('\n')}
 
   ${p =>
-    p.disabled &&
-    css`
-      background-color: #eee;
-      border-color: #ccc;
-    `}
-
-  ${p =>
     p.variant === 'primary' &&
     css`
       background-color: ${p.theme.colors[p.color].hues[0]};
@@ -126,6 +119,7 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
   
   ${p =>
     p.variant === 'secondary' &&
+    p.color !== 'white' &&
     css`
       background-color: ${p.theme.colors[p.color].hues[9]};
       border-color: ${p.theme.colors[p.color].hues[0]};
@@ -140,6 +134,21 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
     `}
   
   ${p =>
+    p.color === 'white' &&
+    css`
+      background-color: #fff;
+      border-color: #eee;
+
+      &:hover {
+        background: #fcfcfc;
+      }
+
+      &:active {
+        background: #eee;
+      }
+    `}
+  
+  ${p =>
     p.variant === 'primary' &&
     p.color === 'black' &&
     css`
@@ -147,13 +156,23 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
       background-color: ${p.theme.colors[p.color].hues[0]};
       border-color: ${p.theme.colors[p.color].hues[0]};
     `}
+
+    
+  ${p =>
+    p.disabled &&
+    css`
+      background-color: #fcfcfc;
+      border-color: #ccc;
+      opacity: 0.5;
+      box-shadow: none;
+    `}
 `;
 
 export const Button = ({
   text,
   onClick,
   variant,
-  size = 'normal',
+  size = 'large',
   disabled = false,
   type = 'button',
   margin,
@@ -164,7 +183,7 @@ export const Button = ({
     type={type}
     size={size}
     onClick={onClick}
-    disabled={disabled}
+    disabled={disabled || !onClick}
     margin={margin}
     color={color}
   >

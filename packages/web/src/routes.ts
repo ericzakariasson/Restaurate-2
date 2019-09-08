@@ -1,5 +1,7 @@
 type Routes = { [key: string]: string };
 
+export type ProviderIdParam = { providerId: string };
+
 export const routes: Routes = {
   default: '/',
   dashboard: '/dashboard',
@@ -9,10 +11,10 @@ export const routes: Routes = {
   register: '/register',
   login: '/login',
   visit: '/visit/:id',
-  place: '/place/:slug',
+  place: '/place/:providerId',
   searchPlace: '/search/place'
 };
 
 export const visitRoute = (id: string) => `/visit/${id}`;
-export const placeRoute = (slug: string) => `/place/${slug}`;
+export const placeRoute = (providerId: string) => `/place/${providerId}`;
 export const addVisitRoute = (providerId: string) => `/add-visit/${providerId}`;

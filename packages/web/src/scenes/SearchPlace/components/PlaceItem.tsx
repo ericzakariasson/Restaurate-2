@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { staticMapboxMapUrl } from '../../../utils';
 import { PlaceSearchItem } from 'graphql/types';
 import { NavLink } from 'react-router-dom';
-import { addVisitRoute } from 'routes';
+import { addVisitRoute, placeRoute } from 'routes';
 
 interface ItemProps {
   touching: boolean;
@@ -133,7 +133,7 @@ export const PlaceItem = ({
       onTouchEnd={handleTouchEnd}
       touching={touching}
     >
-      <Link to={addVisitRoute(foursquareId)}>
+      <Link to={placeRoute(foursquareId)}>
         <Map touching={touching} src={mapUrl} />
         <Info>
           <Name>{name}</Name>

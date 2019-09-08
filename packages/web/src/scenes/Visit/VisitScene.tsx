@@ -154,7 +154,7 @@ export const VisitScene = ({
         <Label>Kommentar</Label>
         <Comment>{comment || 'Ingen kommentar'}</Comment>
       </Block>
-      <PlaceLink to={placeRoute(place.slug)}>
+      <PlaceLink to={placeRoute(place.foursquareId)}>
         Visa stället {place.data.name}
       </PlaceLink>
     </Page>

@@ -46,7 +46,7 @@ export const VisitGroup = ({ date, visits }: VisitGroupProps) => {
           <CardWithScore
             key={visit.id}
             name={visit.place.data.name}
-            address={visit.place.data.location.address}
+            address={visit.place.data.location.address || '–'}
             to={visitRoute(visit.id)}
             score={5}
           />

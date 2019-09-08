@@ -1,69 +1,48 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { Size } from 'style';
 
 interface LabelProps {
   text: string;
-  marginBottom?: string;
+  noMargin?: boolean;
   htmlFor?: string;
   as?: any;
   error?: boolean;
+  size?: Size;
 }
 
 interface LabelStyleProps {
-  marginBottom?: string;
+  noMargin?: boolean;
   error?: boolean;
+  size: Size;
 }
 
 const Normal = styled.label<LabelStyleProps>`
   display: block;
-  font-size: 0.875rem;
+  font-size: ${p => p.theme.fontSize[p.size]};
   color: ${p => (p.error ? p.theme.colors.error.hex : '#CCC')};
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1rem;
-  margin-bottom: ${p => p.marginBottom || '5px'};
+  margin-bottom: ${p => (p.noMargin ? 0 : '5px')};
   font-family: ${p => p.theme.fonts.monospace};
 `;
 
 export const Label = ({
   text,
-  marginBottom,
+  noMargin,
   htmlFor,
   as,
-  error
+  error,
+  size = 'small'
 }: LabelProps) => (
-  <Normal error={error} as={as} htmlFor={htmlFor} marginBottom={marginBottom}>
-    {text}
-  </Normal>
-);
-
-interface SmallLabelStyleProps {
-  textAlign: string;
-}
-
-const Small = styled(Normal)<SmallLabelStyleProps>`
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-align: ${p => p.textAlign};
-`;
-
-interface SmallLabelProps extends LabelProps {
-  textAlign?: string;
-}
-
-export const SmallLabel = ({
-  text,
-  textAlign = 'left',
-  marginBottom = '5px',
-  htmlFor,
-  error
-}: SmallLabelProps) => (
-  <Small
+  <Normal
     error={error}
+    as={as}
     htmlFor={htmlFor}
-    marginBottom={marginBottom}
-    textAlign={textAlign}
+    noMargin={noMargin}
+    size={size}
   >
     {text}
-  </Small>
+  </Normal>
 );

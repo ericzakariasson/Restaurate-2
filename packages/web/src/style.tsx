@@ -25,6 +25,17 @@ export const GlobalStyle = createGlobalStyle`
   }
 `;
 
+export type Size =
+  | 'xxsmall'
+  | 'xsmall'
+  | 'small'
+  | 'normal'
+  | 'large'
+  | 'xl'
+  | 'xxl'
+  | 'xxxl'
+  | 'xxxxl';
+
 export const theme = {
   transition: '0.15s ease-in-out',
   page: {
@@ -143,6 +154,7 @@ export const theme = {
     normal: '1rem',
     large: '1.125rem',
     xl: '1.25rem',
-    xxl: '1.5rem'
+    xxl: '1.5rem',
+    xxxxl: '2.25rem'
   }
 };

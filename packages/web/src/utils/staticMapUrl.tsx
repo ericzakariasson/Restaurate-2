@@ -64,7 +64,7 @@ export const staticMapboxMapUrl = ({
   geometry,
   width,
   height,
-  retina = false,
+  retina = true,
   options
 }: staticMapboxMapUrlParameters): string => {
   const latitude = geometry ? geometry!.location.lat() : lat;
@@ -72,8 +72,9 @@ export const staticMapboxMapUrl = ({
 
   const optionsQuery = options ? qs.stringify(options) : '';
 
-  return `${MAPBOX_STATIC_MAPS_BASE}/${longitude},${latitude},${zoom},0,0/${width}x${height}${retina &&
-    '@2x'}?access_token=${
+  return `${MAPBOX_STATIC_MAPS_BASE}/${longitude},${latitude},${zoom},0,0/${width.toFixed(
+    0
+  )}x${height.toFixed(0)}${retina ? '@2x' : ''}?access_token=${
     process.env.REACT_APP_MAPBOX_API_KEY
   }&${optionsQuery}`;
 };

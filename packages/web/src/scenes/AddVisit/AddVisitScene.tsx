@@ -22,7 +22,7 @@ import { rateReducer, SetRatePayload } from './rateReducer';
 import { GeneralError } from 'scenes/Error/GeneralError';
 import { RateSliderParent, RateHeader } from './components/RateParent';
 import styled from 'styled-components';
-import { routes } from 'routes';
+import { routes, ProviderIdParam } from 'routes';
 
 const RateTotal = styled.article`
   margin-top: 30px;
@@ -31,8 +31,6 @@ const RateTotal = styled.article`
 const Section = styled.section`
   margin-bottom: 30px;
 `;
-
-type ProviderIdParam = { providerId: string };
 
 interface AddVisitSceneProps extends RouteComponentProps<ProviderIdParam> {}
 
