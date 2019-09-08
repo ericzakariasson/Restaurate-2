@@ -8,15 +8,20 @@ import {
   usePlaceQuery,
   PlaceDocument,
   PlaceQuery,
-  useToggleWantToVisitMutation
+  useToggleWantToVisitMutation,
+  PriceLevel
 } from '../../graphql/types';
 import { PlaceMap } from './components/Map';
 import { Visits } from './components/Visits';
 import { UserStat } from './components/UserStat';
 import { Website } from './components/Website';
 import { ProviderIdParam, addVisitRoute } from 'routes';
-import { Check, CheckCircle, X } from 'react-feather';
+import { Check, CheckCircle, X, ChevronDown } from 'react-feather';
 import { WantToVisitButton } from './components/WantToVisitButton';
+import { DataProxy } from 'apollo-cache';
+import { ActionButton } from './components/ActionButton';
+import { PriceLevelPicker } from './components/PriceLevelPicker';
+import { InputBlock } from './components/InputBlock';
 
 const Info = styled.div`
   margin-bottom: 20px;
@@ -35,20 +40,30 @@ const UserPlaceInputs = styled.section`
   margin-bottom: 30px;
 `;
 
-const PlaceInput = styled.article`
-  &:not(:last-of-type) {
-    margin-bottom: 20px;
-  }
-`;
-
-const PlaceInputText = styled.h4`
-  font-size: 1.375rem;
-  font-weight: 400;
-`;
-
 const TagList = styled.ul``;
 
 const TagItem = styled.li``;
+
+const updateWantToVisit = (providerId: string) => (cache: DataProxy) => {
+  const placeQuery = {
+    query: PlaceDocument,
+    variables: { providerId }
+  };
+
+  const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;
+
+  const updatedQuery = {
+    ...placeQuery,
+    data: {
+      place: {
+        ...place,
+        wantToVisit: !place!.wantToVisit
+      }
+    }
+  };
+
+  cache.writeQuery(updatedQuery);
+};
 
 interface PlaceSceneProps extends RouteComponentProps<ProviderIdParam> {}
 
@@ -63,29 +78,10 @@ export const PlaceScene = ({
 
   const [
     addWantToVisit,
-    { called, loading: togglingWantToVisit }
+    { loading: togglingWantToVisit }
   ] = useToggleWantToVisitMutation({
     variables: { providerId },
-    update(cache, other) {
-      const placeQuery = {
-        query: PlaceDocument,
-        variables: { providerId }
-      };
-
-      const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;
-
-      const updatedQuery = {
-        ...placeQuery,
-        data: {
-          place: {
-            ...place,
-            wantToVisit: !place!.wantToVisit
-          }
-        }
-      };
-
-      cache.writeQuery(updatedQuery);
-    }
+    update: updateWantToVisit(providerId)
   });
 
   if (loading) {
@@ -125,27 +121,19 @@ export const PlaceScene = ({
         <UserStat label="Betyg" value={averageScore || '–'} />
       </UserStats>
       <UserPlaceInputs>
-        <LabelWrapper label="Prisklass">
-          <PlaceInputText>
-            {!!priceLevel ? formatPriceLevel(priceLevel) : '–'}
-          </PlaceInputText>
-        </LabelWrapper>
-        <LabelWrapper label="Taggar">
-          <PlaceInputText>
-            {tags && tags.length > 0 ? (
-              <TagList>
-                {tags.map(tag => (
-                  <TagItem id={tag.id}>{tag.name}</TagItem>
-                ))}
-              </TagList>
-            ) : (
-              '–'
-            )}
-          </PlaceInputText>
-        </LabelWrapper>
-        <LabelWrapper label="Kommentar">
-          <PlaceInputText>–</PlaceInputText>
-        </LabelWrapper>
+        <PriceLevelPicker value={priceLevel} providerId={foursquareId} />
+        <InputBlock label="Taggar">
+          {tags && tags.length > 0 ? (
+            <TagList>
+              {tags.map(tag => (
+                <TagItem id={tag.id}>{tag.name}</TagItem>
+              ))}
+            </TagList>
+          ) : (
+            '–'
+          )}
+        </InputBlock>
+        <InputBlock label="Kommentar">–</InputBlock>
       </UserPlaceInputs>
       {!hasVisited && (
         <WantToVisitButton
@@ -166,15 +154,3 @@ export const PlaceScene = ({
     </Page>
   );
 };
-
-interface LabelWrapperProps {
-  label: string;
-  children: React.ReactNode;
-}
-
-const LabelWrapper = ({ children, label }: LabelWrapperProps) => (
-  <PlaceInput>
-    <Label text={label} noMargin />
-    {children}
-  </PlaceInput>
-);

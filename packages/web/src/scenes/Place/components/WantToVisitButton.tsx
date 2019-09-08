@@ -2,22 +2,7 @@ import * as React from 'react';
 import { Button } from 'components';
 import { X } from 'react-feather';
 import styled from 'styled-components';
-
-const ButtonWrapper = styled.button`
-  background: #f5f5f5;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 18px;
-  width: 18px;
-  border: none;
-  outline: none;
-  padding: 0;
-  margin: 0;
-  margin-left: 10px;
-  box-shadow: ${p => p.theme.boxShadow};
-`;
+import { ActionButton } from './ActionButton';
 
 const ButtonText = styled.span`
   display: flex;
@@ -42,9 +27,7 @@ export const WantToVisitButton = ({
         wantToVisit ? (
           <ButtonText>
             Vill besöka
-            <ButtonWrapper>
-              <X size={16} color="#666" />
-            </ButtonWrapper>
+            <ActionButton as="span" icon={<X size={16} color="#666" />} />
           </ButtonText>
         ) : (
           'Lägg till i vill besöka'

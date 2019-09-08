@@ -17,7 +17,8 @@ import { useContainer } from 'typeorm';
 import {
   PlaceSearchResult,
   PlaceSearchInput,
-  PlaceSearchItem
+  PlaceSearchItem,
+  PriceLevel
 } from './place.types';
 import { FoursquareService } from '../../services/foursquare/foursquare.service';
 import {
@@ -115,6 +116,20 @@ export class PlaceResolver {
     @Ctx() ctx: Context
   ): Promise<boolean> {
     return this.wtvService.toggle(providerId, ctx.req.session!.userId);
+  }
+
+  @Authorized()
+  @Mutation(() => PriceLevel)
+  async setPriceLevel(
+    @Arg('providerId') providerId: string,
+    @Arg('priceLevel') priceLevel: PriceLevel,
+    @Ctx() ctx: Context
+  ): Promise<PriceLevel> {
+    return this.placeService.setPriceLevel(
+      providerId,
+      priceLevel,
+      ctx.req.session!.userId
+    );
   }
 
   @FieldResolver()

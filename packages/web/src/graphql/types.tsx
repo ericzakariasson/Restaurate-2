@@ -61,6 +61,7 @@ export type Mutation = {
   logout?: Maybe<Scalars['Boolean']>,
   addVisit: AddVisitResponse,
   toggleWantToVisit: Scalars['Boolean'],
+  setPriceLevel: PriceLevel,
 };
 
 
@@ -81,6 +82,12 @@ export type MutationAddVisitArgs = {
 
 
 export type MutationToggleWantToVisitArgs = {
+  providerId: Scalars['String']
+};
+
+
+export type MutationSetPriceLevelArgs = {
+  priceLevel: Scalars['Float'],
   providerId: Scalars['String']
 };
 
@@ -397,6 +404,17 @@ export type RegisterMutation = (
   )> }
 );
 
+export type SetPriceLevelMutationVariables = {
+  providerId: Scalars['String'],
+  priceLevel: Scalars['Float']
+};
+
+
+export type SetPriceLevelMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'setPriceLevel'>
+);
+
 export type ToggleWantToVisitMutationVariables = {
   providerId: Scalars['String']
 };
@@ -695,6 +713,19 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMuta
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const SetPriceLevelDocument = gql`
+    mutation SetPriceLevel($providerId: String!, $priceLevel: Float!) {
+  setPriceLevel(providerId: $providerId, priceLevel: $priceLevel)
+}
+    `;
+export type SetPriceLevelMutationFn = ApolloReactCommon.MutationFunction<SetPriceLevelMutation, SetPriceLevelMutationVariables>;
+
+    export function useSetPriceLevelMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetPriceLevelMutation, SetPriceLevelMutationVariables>) {
+      return ApolloReactHooks.useMutation<SetPriceLevelMutation, SetPriceLevelMutationVariables>(SetPriceLevelDocument, baseOptions);
+    }
+export type SetPriceLevelMutationHookResult = ReturnType<typeof useSetPriceLevelMutation>;
+export type SetPriceLevelMutationResult = ApolloReactCommon.MutationResult<SetPriceLevelMutation>;
+export type SetPriceLevelMutationOptions = ApolloReactCommon.BaseMutationOptions<SetPriceLevelMutation, SetPriceLevelMutationVariables>;
 export const ToggleWantToVisitDocument = gql`
     mutation ToggleWantToVisit($providerId: String!) {
   toggleWantToVisit(providerId: $providerId)

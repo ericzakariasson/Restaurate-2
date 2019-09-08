@@ -6,6 +6,8 @@ import { round } from '../../utils';
 import { FoursquareService } from '../../services/foursquare/foursquare.service';
 import { User } from '../user/user.entity';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { UserService } from '../user/user.service';
+import { PriceLevel } from './place.types';
 // import { TagService } from './tag/tag.service';
 
 @Service()
@@ -15,6 +17,7 @@ export class PlaceService {
     private readonly placeRepository: Repository<Place>,
     @InjectRepository(Visit)
     private readonly visitRepository: Repository<Visit>,
+    private readonly userService: UserService,
     private readonly foursquareService: FoursquareService // private readonly tagService: TagService
   ) {}
 
@@ -119,5 +122,25 @@ export class PlaceService {
         foursquareId: In(ids)
       }
     });
+  }
+
+  async setPriceLevel(
+    providerId: string,
+    priceLevel: PriceLevel,
+    userId: number
+  ) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new Error('No user found');
+    }
+
+    const place = await this.findByIdOrCreate(providerId, user);
+
+    place.priceLevel = priceLevel;
+
+    await this.placeRepository.update(place.id, place);
+
+    return priceLevel;
   }
 }

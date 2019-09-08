@@ -158,3 +158,10 @@ export const theme = {
     xxxxl: '2.25rem'
   }
 };
+
+export const devices = {
+  mobile: {
+    min: 0,
+    max: 768
+  }
+};
