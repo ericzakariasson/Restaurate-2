@@ -5,7 +5,8 @@ import {
   FieldResolver,
   Root,
   Ctx,
-  Authorized
+  Authorized,
+  Mutation
 } from 'type-graphql';
 import { Place } from './place.entity';
 import { Visit } from '../visit/visit.entity';
@@ -26,6 +27,7 @@ import {
 import { Context } from '../../graphql/types';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
+import { WantToVisitService } from './wantToVisit/wantToVisit.service';
 
 useContainer(Container);
 @Service()
@@ -34,10 +36,11 @@ export class PlaceResolver {
   constructor(
     private readonly placeService: PlaceService,
     private readonly userService: UserService,
-    private readonly foursquareService: FoursquareService
+    private readonly foursquareService: FoursquareService,
+    private readonly wtvService: WantToVisitService
   ) {}
 
-  // @Authorized()
+  @Authorized()
   @Query(() => Place, { nullable: true })
   async place(@Arg('providerId') providerId: string): Promise<Place | null> {
     const venue = await this.foursquareService.venue.details(providerId);
@@ -57,7 +60,7 @@ export class PlaceResolver {
     return userPlace;
   }
 
-  // @Authorized()
+  @Authorized()
   @Query(() => PlaceSearchItem, { nullable: true })
   async placeBasicDetails(
     @Arg('id') id: string
@@ -105,6 +108,15 @@ export class PlaceResolver {
     return response;
   }
 
+  @Authorized()
+  @Mutation(() => Boolean)
+  async toggleWantToVisit(
+    @Arg('providerId') providerId: string,
+    @Ctx() ctx: Context
+  ): Promise<boolean> {
+    return this.wtvService.toggle(providerId, ctx.req.session!.userId);
+  }
+
   @FieldResolver()
   async visits(
     @Root() place: Place,
@@ -144,7 +156,18 @@ export class PlaceResolver {
   }
 
   @FieldResolver(() => Boolean)
-  hasVisited(@Root() place: Place): boolean {
-    return Boolean(place.id) && Boolean(place.userId);
+  async hasVisited(@Root() place: Place): Promise<boolean> {
+    return (await this.visitCount(place)) > 0;
+  }
+
+  @FieldResolver(() => Boolean)
+  async wantToVisit(
+    @Root() place: Place,
+    @Ctx() ctx: Context
+  ): Promise<boolean> {
+    return !!this.wtvService.findByProviderId(
+      place.foursquareId,
+      ctx.req.session!.userId
+    );
   }
 }

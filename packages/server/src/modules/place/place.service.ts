@@ -1,11 +1,11 @@
 import { Repository, In } from 'typeorm';
 import { Place } from './place.entity';
 import { Service } from 'typedi';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Visit } from '../visit/visit.entity';
 import { round } from '../../utils';
 import { FoursquareService } from '../../services/foursquare/foursquare.service';
 import { User } from '../user/user.entity';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 // import { TagService } from './tag/tag.service';
 
 @Service()

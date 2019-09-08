@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Size } from 'style';
+import { Loader } from 'react-feather';
 
 type Type = 'submit' | 'reset' | 'button';
 
@@ -19,13 +20,14 @@ type Color =
   | 'white';
 
 interface Props {
-  text: string;
+  text: string | React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   size?: Size;
   type?: Type;
   margin?: Margin[];
   color?: Color;
+  loading?: boolean;
 }
 interface ButtonProps extends Props {
   variant: Variant;
@@ -79,6 +81,9 @@ const BaseButton = styled.button<StyledProps>`
   font-size: ${p => p.theme.fontSize[p.size]};
   padding: ${p => padding[p.size]};
   transition: ${p => p.theme.transition};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const StyledTextButton = styled(BaseButton)<StyledTextButtonProps>`
@@ -172,22 +177,23 @@ export const Button = ({
   text,
   onClick,
   variant,
-  size = 'large',
-  disabled = false,
-  type = 'button',
   margin,
-  color = 'primary'
+  loading,
+  size = 'large',
+  type = 'button',
+  color = 'primary',
+  disabled = false
 }: ButtonProps) => (
   <StyledButton
     variant={variant}
     type={type}
     size={size}
     onClick={onClick}
-    disabled={disabled || !onClick}
+    disabled={disabled || loading || (!onClick && type === 'button')}
     margin={margin}
     color={color}
   >
-    {text}
+    {loading ? <Loader size={22} /> : text}
   </StyledButton>
 );
 

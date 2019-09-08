@@ -1,15 +1,22 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
-import { Loading, Page, Label, Button, NavButton } from '../../components';
+import { Loading, Page, Label, NavButton } from '../../components';
 import { GeneralError } from '../Error/GeneralError';
-import { formatURL, formatPriceLevel } from '../../utils/format';
-import { usePlaceQuery } from '../../graphql/types';
+import { formatPriceLevel } from '../../utils/format';
+import {
+  usePlaceQuery,
+  PlaceDocument,
+  PlaceQuery,
+  useToggleWantToVisitMutation
+} from '../../graphql/types';
 import { PlaceMap } from './components/Map';
 import { Visits } from './components/Visits';
 import { UserStat } from './components/UserStat';
 import { Website } from './components/Website';
 import { ProviderIdParam, addVisitRoute } from 'routes';
+import { Check, CheckCircle, X } from 'react-feather';
+import { WantToVisitButton } from './components/WantToVisitButton';
 
 const Info = styled.div`
   margin-bottom: 20px;
@@ -43,8 +50,6 @@ const TagList = styled.ul``;
 
 const TagItem = styled.li``;
 
-const Buttons = styled.div``;
-
 interface PlaceSceneProps extends RouteComponentProps<ProviderIdParam> {}
 
 export const PlaceScene = ({
@@ -54,6 +59,33 @@ export const PlaceScene = ({
 }: PlaceSceneProps) => {
   const { data, loading, error } = usePlaceQuery({
     variables: { providerId }
+  });
+
+  const [
+    addWantToVisit,
+    { called, loading: togglingWantToVisit }
+  ] = useToggleWantToVisitMutation({
+    variables: { providerId },
+    update(cache, other) {
+      const placeQuery = {
+        query: PlaceDocument,
+        variables: { providerId }
+      };
+
+      const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;
+
+      const updatedQuery = {
+        ...placeQuery,
+        data: {
+          place: {
+            ...place,
+            wantToVisit: !place!.wantToVisit
+          }
+        }
+      };
+
+      cache.writeQuery(updatedQuery);
+    }
   });
 
   if (loading) {
@@ -75,7 +107,8 @@ export const PlaceScene = ({
     averageScore,
     visits,
     foursquareId,
-    hasVisited
+    hasVisited,
+    wantToVisit
   } = place!;
 
   const formattedAddress = location.address
@@ -86,6 +119,7 @@ export const PlaceScene = ({
     <Page title={name} subTitle={formattedAddress}>
       <PlaceMap lat={location.lat!} lng={location.lng!} />
       {url && <Website url={url} />}
+
       <UserStats>
         <UserStat label="Besök" value={visitCount} />
         <UserStat label="Betyg" value={averageScore || '–'} />
@@ -113,21 +147,18 @@ export const PlaceScene = ({
           <PlaceInputText>–</PlaceInputText>
         </LabelWrapper>
       </UserPlaceInputs>
-      <Buttons>
-        {!hasVisited && (
-          <Button
-            text="Vill besöka"
-            variant="secondary"
-            color="white"
-            margin={['bottom']}
-          />
-        )}
-        <NavButton
-          text="Nytt besök"
-          variant="primary"
-          to={addVisitRoute(foursquareId)}
+      {!hasVisited && (
+        <WantToVisitButton
+          wantToVisit={wantToVisit}
+          toggleWantToVisit={addWantToVisit}
+          loading={togglingWantToVisit}
         />
-      </Buttons>
+      )}
+      <NavButton
+        text="Nytt besök"
+        variant="primary"
+        to={addVisitRoute(foursquareId)}
+      />
       <Info>
         <Text>Se {visitCount} besök nedan.</Text>
       </Info>

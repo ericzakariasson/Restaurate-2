@@ -12,7 +12,7 @@ const Page = styled.section`
 `;
 
 const Wrapper = styled.div`
-  margin-top: 25vh;
+  margin-top: 20vh;
 `;
 
 const Title = styled.h1`

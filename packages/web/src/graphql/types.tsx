@@ -60,6 +60,7 @@ export type Mutation = {
   register?: Maybe<User>,
   logout?: Maybe<Scalars['Boolean']>,
   addVisit: AddVisitResponse,
+  toggleWantToVisit: Scalars['Boolean'],
 };
 
 
@@ -76,6 +77,11 @@ export type MutationRegisterArgs = {
 
 export type MutationAddVisitArgs = {
   data: AddVisitInput
+};
+
+
+export type MutationToggleWantToVisitArgs = {
+  providerId: Scalars['String']
 };
 
 export type Order = {
@@ -101,6 +107,7 @@ export type Place = {
   averageScore: Scalars['Float'],
   data: PlaceData,
   hasVisited: Scalars['Boolean'],
+  wantToVisit: Scalars['Boolean'],
 };
 
 
@@ -262,9 +269,17 @@ export type Visit = {
   place: Place,
   user: User,
 };
+
+export type WantToVisit = {
+   __typename?: 'WantToVisit',
+  id: Scalars['ID'],
+  providerId: Scalars['String'],
+  createdAt: Scalars['String'],
+  updatedAt: Scalars['String'],
+};
 export type PlaceFragment = (
   { __typename?: 'Place' }
-  & Pick<Place, 'id' | 'foursquareId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'hasVisited' | 'createdAt' | 'updatedAt'>
+  & Pick<Place, 'id' | 'foursquareId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
   & { tags: Maybe<Array<{ __typename?: 'Tag' }
     & PlaceTagFragment
   >>, data: { __typename?: 'PlaceData' }
@@ -380,6 +395,16 @@ export type RegisterMutation = (
     { __typename?: 'User' }
     & Pick<User, 'id'>
   )> }
+);
+
+export type ToggleWantToVisitMutationVariables = {
+  providerId: Scalars['String']
+};
+
+
+export type ToggleWantToVisitMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'toggleWantToVisit'>
 );
 
 export type MeQueryVariables = {};
@@ -590,6 +615,7 @@ export const PlaceFragmentDoc = gql`
   user {
     ...User
   }
+  wantToVisit
   hasVisited
   createdAt
   updatedAt
@@ -669,6 +695,19 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMuta
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const ToggleWantToVisitDocument = gql`
+    mutation ToggleWantToVisit($providerId: String!) {
+  toggleWantToVisit(providerId: $providerId)
+}
+    `;
+export type ToggleWantToVisitMutationFn = ApolloReactCommon.MutationFunction<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>;
+
+    export function useToggleWantToVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>) {
+      return ApolloReactHooks.useMutation<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>(ToggleWantToVisitDocument, baseOptions);
+    }
+export type ToggleWantToVisitMutationHookResult = ReturnType<typeof useToggleWantToVisitMutation>;
+export type ToggleWantToVisitMutationResult = ApolloReactCommon.MutationResult<ToggleWantToVisitMutation>;
+export type ToggleWantToVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {
