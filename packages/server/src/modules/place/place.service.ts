@@ -8,7 +8,11 @@ import { User } from '../user/user.entity';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserService } from '../user/user.service';
 import { PriceLevel } from './place.types';
+import { CacheService } from '../../services/cache/cache.service';
+import { VenueDetails } from '../../services/foursquare/types';
 // import { TagService } from './tag/tag.service';
+
+const placeDataKey = (key: string) => `placeData_${key}`;
 
 @Service()
 export class PlaceService {
@@ -18,7 +22,8 @@ export class PlaceService {
     @InjectRepository(Visit)
     private readonly visitRepository: Repository<Visit>,
     private readonly userService: UserService,
-    private readonly foursquareService: FoursquareService // private readonly tagService: TagService
+    private readonly foursquareService: FoursquareService,
+    private readonly cacheService: CacheService
   ) {}
 
   async getAverageScore(id: number) {
@@ -81,7 +86,22 @@ export class PlaceService {
   }
 
   async getPlaceData(providerId: string) {
-    return this.foursquareService.venue.details(providerId);
+    const cached = this.cacheService.get<VenueDetails>(
+      placeDataKey(providerId)
+    );
+
+    if (cached) {
+      return cached;
+    }
+
+    const placeData = await this.foursquareService.venue.details(providerId);
+    const success = this.cacheService.set(placeDataKey(providerId), placeData);
+
+    if (!success) {
+      console.error(`Error setting cache for "${providerId}"`);
+    }
+
+    return placeData;
   }
 
   async findByIdOrCreate(providerId: string, user: User) {

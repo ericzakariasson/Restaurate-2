@@ -44,9 +44,9 @@ export class PlaceResolver {
   @Authorized()
   @Query(() => Place, { nullable: true })
   async place(@Arg('providerId') providerId: string): Promise<Place | null> {
-    const venue = await this.foursquareService.venue.details(providerId);
+    const placeData = await this.placeService.getPlaceData(providerId);
 
-    if (!venue) {
+    if (!placeData) {
       return null;
     }
 
@@ -54,7 +54,7 @@ export class PlaceResolver {
 
     if (!userPlace) {
       const place = new Place();
-      place.foursquareId = venue.id;
+      place.foursquareId = placeData.id;
       return place;
     }
 
@@ -66,14 +66,14 @@ export class PlaceResolver {
   async placeBasicDetails(
     @Arg('id') id: string
   ): Promise<PlaceSearchItem | null> {
-    const venue = await this.foursquareService.venue.details(id);
+    const placeData = await this.placeService.getPlaceData(id);
     const place = await this.placeService.findByProviderId(id);
 
-    if (!venue) {
+    if (!placeData) {
       return null;
     }
 
-    const details = transformVenueDetailsToBasicDetails(place, venue);
+    const details = transformVenueDetailsToBasicDetails(place, placeData);
     return details;
   }
 

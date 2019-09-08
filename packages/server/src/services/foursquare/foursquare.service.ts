@@ -94,7 +94,7 @@ class VenueService {
 }
 
 export class FoursquareService {
-  venue: VenueService;
+  public venue: VenueService;
 
   constructor() {
     const repository = new FoursquareRepository();
