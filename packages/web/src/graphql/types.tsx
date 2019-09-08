@@ -41,7 +41,7 @@ export type Contact = {
 
 export type Location = {
    __typename?: 'Location',
-  address: Scalars['String'],
+  address?: Maybe<Scalars['String']>,
   crossStreet?: Maybe<Scalars['String']>,
   lat?: Maybe<Scalars['Float']>,
   lng?: Maybe<Scalars['Float']>,
@@ -88,19 +88,19 @@ export type Order = {
 
 export type Place = {
    __typename?: 'Place',
-  id: Scalars['ID'],
+  id?: Maybe<Scalars['ID']>,
   foursquareId: Scalars['String'],
-  user: User,
-  slug: Scalars['String'],
-  types: Array<PlaceType>,
+  user?: Maybe<User>,
+  types?: Maybe<Array<PlaceType>>,
   priceLevel?: Maybe<PriceLevel>,
   tags?: Maybe<Array<Tag>>,
   visits: Array<Visit>,
-  createdAt: Scalars['DateTime'],
-  updatedAt: Scalars['DateTime'],
+  createdAt?: Maybe<Scalars['DateTime']>,
+  updatedAt?: Maybe<Scalars['DateTime']>,
   visitCount: Scalars['Float'],
   averageScore: Scalars['Float'],
   data: PlaceData,
+  hasVisited: Scalars['Boolean'],
 };
 
 
@@ -188,8 +188,7 @@ export type QueryVisitArgs = {
 
 
 export type QueryPlaceArgs = {
-  slug?: Maybe<Scalars['String']>,
-  id?: Maybe<Scalars['Float']>
+  providerId: Scalars['String']
 };
 
 
@@ -265,14 +264,14 @@ export type Visit = {
 };
 export type PlaceFragment = (
   { __typename?: 'Place' }
-  & Pick<Place, 'id' | 'foursquareId' | 'slug' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'createdAt' | 'updatedAt'>
+  & Pick<Place, 'id' | 'foursquareId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'hasVisited' | 'createdAt' | 'updatedAt'>
   & { tags: Maybe<Array<{ __typename?: 'Tag' }
     & PlaceTagFragment
   >>, data: { __typename?: 'PlaceData' }
     & PlaceDataFragment
-  , user: { __typename?: 'User' }
+  , user: Maybe<{ __typename?: 'User' }
     & UserFragment
-   }
+  > }
 );
 
 export type PlaceBasicDetailsFragment = (
@@ -427,8 +426,7 @@ export type MeVisitsQuery = (
 );
 
 export type PlaceQueryVariables = {
-  slug?: Maybe<Scalars['String']>,
-  id?: Maybe<Scalars['Float']>
+  providerId: Scalars['String']
 };
 
 
@@ -579,7 +577,6 @@ export const PlaceFragmentDoc = gql`
     fragment Place on Place {
   id
   foursquareId
-  slug
   priceLevel
   types
   averageScore
@@ -593,6 +590,7 @@ export const PlaceFragmentDoc = gql`
   user {
     ...User
   }
+  hasVisited
   createdAt
   updatedAt
 }
@@ -735,8 +733,8 @@ export const MeVisitsDocument = gql`
 export type MeVisitsQueryHookResult = ReturnType<typeof useMeVisitsQuery>;
 export type MeVisitsQueryResult = ApolloReactCommon.QueryResult<MeVisitsQuery, MeVisitsQueryVariables>;
 export const PlaceDocument = gql`
-    query Place($slug: String, $id: Float) {
-  place(slug: $slug, id: $id) {
+    query Place($providerId: String!) {
+  place(providerId: $providerId) {
     ...Place
     visits {
       ...Visit

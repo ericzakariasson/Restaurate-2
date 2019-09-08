@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 import * as fragments from '../fragments';
 
 export default gql`
-  query Place($slug: String, $id: Float) {
-    place(slug: $slug, id: $id) {
+  query Place($providerId: String!) {
+    place(providerId: $providerId) {
       ...Place
       visits {
         ...Visit

@@ -37,17 +37,24 @@ export class PlaceResolver {
     private readonly foursquareService: FoursquareService
   ) {}
 
-  @Authorized()
+  // @Authorized()
   @Query(() => Place, { nullable: true })
-  async place(
-    @Arg('id', { nullable: true }) id?: number,
-    @Arg('slug', { nullable: true }) slug?: string
-  ): Promise<Place | null> {
-    if (!id && !slug) {
-      throw new Error('At least one argument is required');
+  async place(@Arg('providerId') providerId: string): Promise<Place | null> {
+    const venue = await this.foursquareService.venue.details(providerId);
+
+    if (!venue) {
+      return null;
     }
 
-    return this.placeService.findByIdOrSlug(id, slug);
+    const userPlace = await this.placeService.findByProviderId(providerId);
+
+    if (!userPlace) {
+      const place = new Place();
+      place.foursquareId = venue.id;
+      return place;
+    }
+
+    return userPlace;
   }
 
   // @Authorized()
@@ -107,7 +114,11 @@ export class PlaceResolver {
   }
 
   @FieldResolver()
-  async user(@Root() place: Place): Promise<User> {
+  async user(@Root() place: Place): Promise<User | null> {
+    if (!place.userId) {
+      return null;
+    }
+
     const user = await this.userService.findById(place.userId);
 
     if (!user) {
@@ -130,5 +141,10 @@ export class PlaceResolver {
   @FieldResolver(() => PlaceData)
   async data(@Root() place: Place): Promise<PlaceData> {
     return this.placeService.getPlaceData(place.foursquareId);
+  }
+
+  @FieldResolver(() => Boolean)
+  hasVisited(@Root() place: Place): boolean {
+    return Boolean(place.id) && Boolean(place.userId);
   }
 }

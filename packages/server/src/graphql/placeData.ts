@@ -23,8 +23,8 @@ export class PlaceData {
 
 @ObjectType()
 class Location {
-  @Field()
-  address: string;
+  @Field({ nullable: true })
+  address?: string;
   @Field({ nullable: true })
   crossStreet: string;
   @Field({ nullable: true })

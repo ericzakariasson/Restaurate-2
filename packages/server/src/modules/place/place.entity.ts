@@ -19,7 +19,7 @@ import { PlaceType, PriceLevel } from './place.types';
 @ObjectType()
 @Entity()
 export class Place {
-  @Field(() => ID)
+  @Field(() => ID, { nullable: true })
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,15 +27,15 @@ export class Place {
   @Column()
   foursquareId: string;
 
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.places)
   user: User;
   @RelationColumn()
   userId: number;
 
-  @Field()
-  @Column()
-  slug: string;
+  // @Field()
+  // @Column()
+  // slug: string;
 
   @Field(() => [PlaceType], { nullable: true })
   @Column({ type: 'enum', enum: PlaceType, array: true, nullable: true })
@@ -57,11 +57,11 @@ export class Place {
   @OneToMany(() => Visit, visit => visit.place)
   visits: Visit[];
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @CreateDateColumn()
   createdAt: string;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @UpdateDateColumn()
   updatedAt: string;
 }

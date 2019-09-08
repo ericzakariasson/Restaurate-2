@@ -6,7 +6,6 @@ export default gql`
   fragment Place on Place {
     id
     foursquareId
-    slug
     priceLevel
     types
     averageScore
@@ -20,6 +19,7 @@ export default gql`
     user {
       ...User
     }
+    hasVisited
     createdAt
     updatedAt
   }

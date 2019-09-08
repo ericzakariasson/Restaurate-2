@@ -3,7 +3,7 @@ import { Place } from './place.entity';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Visit } from '../visit/visit.entity';
-import { round, slugify } from '../../utils';
+import { round } from '../../utils';
 import { FoursquareService } from '../../services/foursquare/foursquare.service';
 import { User } from '../user/user.entity';
 // import { TagService } from './tag/tag.service';
@@ -53,17 +53,17 @@ export class PlaceService {
     return visits;
   }
 
-  async findByIdOrSlug(id?: number, slug?: string) {
-    const place = await this.placeRepository.findOne({
-      where: [{ id }, { slug }]
-    });
+  // async findByIdOrSlug(id?: number, providerId?: string) {
+  //   const place = await this.placeRepository.findOne({
+  //     where: [{ id }, { foursquareId: providerId }]
+  //   });
 
-    if (!place) {
-      return null;
-    }
+  //   if (!place) {
+  //     return null;
+  //   }
 
-    return place;
-  }
+  //   return place;
+  // }
 
   async findByProviderId(providerId: string) {
     const place = await this.placeRepository.findOne({
@@ -94,12 +94,12 @@ export class PlaceService {
   }
 
   async createPlace(providerId: string, user: User) {
-    const { name, location } = await this.getPlaceData(providerId);
+    // const { name, location } = await this.getPlaceData(providerId);
 
     const createdPlace = this.placeRepository.create({
       user,
-      foursquareId: providerId,
-      slug: slugify(`${name} ${location.address} ${location.city}`)
+      foursquareId: providerId
+      // slug: slugify(`${name} ${location.address} ${location.city} ${user.id}`)
     });
 
     await this.placeRepository.save(createdPlace);
