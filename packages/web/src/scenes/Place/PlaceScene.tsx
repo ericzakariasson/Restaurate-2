@@ -44,27 +44,6 @@ const TagList = styled.ul``;
 
 const TagItem = styled.li``;
 
-const updateWantToVisit = (providerId: string) => (cache: DataProxy) => {
-  const placeQuery = {
-    query: PlaceDocument,
-    variables: { providerId }
-  };
-
-  const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;
-
-  const updatedQuery = {
-    ...placeQuery,
-    data: {
-      place: {
-        ...place,
-        wantToVisit: !place!.wantToVisit
-      }
-    }
-  };
-
-  cache.writeQuery(updatedQuery);
-};
-
 interface PlaceSceneProps extends RouteComponentProps<ProviderIdParam> {}
 
 export const PlaceScene = ({
@@ -74,14 +53,6 @@ export const PlaceScene = ({
 }: PlaceSceneProps) => {
   const { data, loading, error } = usePlaceQuery({
     variables: { providerId }
-  });
-
-  const [
-    addWantToVisit,
-    { loading: togglingWantToVisit }
-  ] = useToggleWantToVisitMutation({
-    variables: { providerId },
-    update: updateWantToVisit(providerId)
   });
 
   if (loading) {
@@ -137,9 +108,8 @@ export const PlaceScene = ({
       </UserPlaceInputs>
       {!hasVisited && (
         <WantToVisitButton
+          providerId={foursquareId}
           wantToVisit={wantToVisit}
-          toggleWantToVisit={addWantToVisit}
-          loading={togglingWantToVisit}
         />
       )}
       <NavButton

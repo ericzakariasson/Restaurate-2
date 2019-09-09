@@ -41,9 +41,13 @@ export class Place {
   @Column({ type: 'enum', enum: PlaceType, array: true, nullable: true })
   types: PlaceType[];
 
-  @Field(() => PriceLevel, { nullable: true })
-  @Column({ enum: PriceLevel, nullable: true })
+  @Field(() => PriceLevel)
+  @Column({ enum: PriceLevel, default: PriceLevel.NotSet })
   priceLevel: PriceLevel;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  comment: string;
 
   @Field(() => [Tag], { nullable: true })
   @ManyToMany(() => Tag, tag => tag.place, {

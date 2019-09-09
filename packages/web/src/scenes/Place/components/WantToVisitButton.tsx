@@ -3,6 +3,12 @@ import { Button } from 'components';
 import { X } from 'react-feather';
 import styled from 'styled-components';
 import { ActionButton } from './ActionButton';
+import {
+  useToggleWantToVisitMutation,
+  PlaceDocument,
+  PlaceQuery
+} from 'graphql/types';
+import { DataProxy } from 'apollo-cache';
 
 const ButtonText = styled.span`
   display: flex;
@@ -10,17 +16,41 @@ const ButtonText = styled.span`
   align-items: centeR;
 `;
 
+const updateWantToVisit = (providerId: string) => (cache: DataProxy) => {
+  const placeQuery = {
+    query: PlaceDocument,
+    variables: { providerId }
+  };
+
+  const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;
+
+  const updatedQuery = {
+    ...placeQuery,
+    data: {
+      place: {
+        ...place,
+        wantToVisit: !place!.wantToVisit
+      }
+    }
+  };
+
+  cache.writeQuery(updatedQuery);
+};
+
 interface WantToVisitButtonProps {
+  providerId: string;
   wantToVisit: boolean;
-  toggleWantToVisit: () => void;
-  loading: boolean;
 }
 
 export const WantToVisitButton = ({
-  wantToVisit,
-  toggleWantToVisit,
-  loading
+  providerId,
+  wantToVisit
 }: WantToVisitButtonProps) => {
+  const [toggleWantToVisit, { loading }] = useToggleWantToVisitMutation({
+    variables: { providerId },
+    update: updateWantToVisit(providerId)
+  });
+
   return (
     <Button
       text={

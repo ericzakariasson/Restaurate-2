@@ -117,12 +117,10 @@ export class PlaceService {
   }
 
   async createPlace(providerId: string, user: User) {
-    // const { name, location } = await this.getPlaceData(providerId);
-
     const createdPlace = this.placeRepository.create({
       user,
+      userId: user.id,
       foursquareId: providerId
-      // slug: slugify(`${name} ${location.address} ${location.city} ${user.id}`)
     });
 
     return this.placeRepository.save(createdPlace);
@@ -154,10 +152,7 @@ export class PlaceService {
     }
 
     const place = await this.findByIdOrCreate(providerId, user);
-
-    place.priceLevel = priceLevel;
-
-    await this.placeRepository.update(place.id, place);
+    await this.placeRepository.update(place.id, { priceLevel });
 
     return priceLevel;
   }

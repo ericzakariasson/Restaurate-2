@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { devices } from 'style';
 
+const isMobileBrowser = () =>
+  typeof window.orientation !== 'undefined' ||
+  navigator.userAgent.indexOf('IEMobile') !== -1;
+
 export function useDevice() {
   const [width, setWidth] = React.useState(window.innerWidth);
 
@@ -11,9 +15,10 @@ export function useDevice() {
 
   const handleResize = () => setWidth(window.innerWidth);
 
-  console.log(width);
-
-  const isMobile = devices.mobile.max > width && width > devices.mobile.min;
+  const isMobile =
+    devices.mobile.max > width &&
+    width > devices.mobile.min &&
+    isMobileBrowser();
 
   return { isMobile };
 }

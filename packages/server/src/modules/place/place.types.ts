@@ -6,6 +6,7 @@ export enum PlaceType {
 }
 
 export enum PriceLevel {
+  NotSet = 0,
   Inexpensive = 1,
   Moderate = 2,
   Expensive = 3,

@@ -70,16 +70,21 @@ interface PriceLevelProps {
 }
 
 export const PriceLevelPicker = ({ value, providerId }: PriceLevelProps) => {
-  const [setPriceLevel] = useSetPriceLevelMutation({
+  const [priceLevel, setPriceLevel] = React.useState(value);
+
+  const [savePriceLevel] = useSetPriceLevelMutation({
     update: updatePriceLevel(providerId)
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const priceLevel = priceLevelArray.findIndex(pl => pl === e.target.value);
-    setPriceLevel({
+    setPriceLevel(e.target.value as PriceLevel);
+
+    const priceLevelIndex =
+      priceLevelArray.findIndex(pl => pl === e.target.value) + 1;
+    savePriceLevel({
       variables: {
         providerId,
-        priceLevel
+        priceLevel: priceLevelIndex
       }
     });
   };
@@ -102,8 +107,16 @@ export const PriceLevelPicker = ({ value, providerId }: PriceLevelProps) => {
             />
           </>
         )}
-        <StyledSelect ref={selectRef} onChange={handleChange} hide={isMobile}>
-          {Object.values(PriceLevel).map(pl => (
+        <StyledSelect
+          ref={selectRef}
+          value={priceLevel || undefined}
+          onChange={handleChange}
+          hide={isMobile}
+        >
+          <option key="0" value={0}>
+            –
+          </option>
+          {priceLevelArray.map(pl => (
             <option key={pl} value={pl}>
               {formatPriceLevel(pl)}
             </option>
