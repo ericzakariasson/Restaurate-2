@@ -10,6 +10,7 @@ import { UserService } from '../user/user.service';
 import { PriceLevel } from './place.types';
 import { CacheService } from '../../services/cache/cache.service';
 import { VenueDetails } from '../../services/foursquare/types';
+import { TagService } from './tag/tag.service';
 // import { TagService } from './tag/tag.service';
 
 const placeDataKey = (key: string) => `placeData_${key}`;
@@ -22,6 +23,7 @@ export class PlaceService {
     @InjectRepository(Visit)
     private readonly visitRepository: Repository<Visit>,
     private readonly userService: UserService,
+    private readonly tagService: TagService,
     private readonly foursquareService: FoursquareService,
     private readonly cacheService: CacheService
   ) {}
@@ -155,5 +157,17 @@ export class PlaceService {
     await this.placeRepository.update(place.id, { priceLevel });
 
     return priceLevel;
+  }
+
+  async addTag(providerId: string, name: string, userId: number) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new Error('No user found');
+    }
+
+    const place = await this.findByIdOrCreate(providerId, user);
+
+    return this.tagService.findByNameOrCreate(name, place, user);
   }
 }

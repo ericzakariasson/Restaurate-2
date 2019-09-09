@@ -29,6 +29,7 @@ import { Context } from '../../graphql/types';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
+import { Tag } from './tag/tag.entity';
 
 useContainer(Container);
 @Service()
@@ -130,6 +131,16 @@ export class PlaceResolver {
       priceLevel,
       ctx.req.session!.userId
     );
+  }
+
+  @Authorized()
+  @Mutation(() => Tag)
+  async addTag(
+    @Arg('providerId') providerId: string,
+    @Arg('name') name: string,
+    @Ctx() ctx: Context
+  ): Promise<Tag> {
+    return this.placeService.addTag(providerId, name, ctx.req.session!.userId);
   }
 
   @FieldResolver()

@@ -21,15 +21,17 @@ interface ActionButtonProps {
   icon: React.ReactNode;
   onClick?: () => void;
   as?: 'button' | 'span' | 'div';
+  type?: 'button' | 'submit';
 }
 
 export const ActionButton = ({
   icon,
   onClick,
+  type = 'button',
   as = 'button'
 }: ActionButtonProps) => {
   return (
-    <Background as={as} onClick={onClick}>
+    <Background as={as} onClick={onClick} type={type}>
       {icon}
     </Background>
   );

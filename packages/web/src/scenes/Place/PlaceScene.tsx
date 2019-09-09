@@ -9,19 +9,22 @@ import {
   PlaceDocument,
   PlaceQuery,
   useToggleWantToVisitMutation,
-  PriceLevel
+  PriceLevel,
+  Tag,
+  PlaceTagFragment
 } from '../../graphql/types';
 import { PlaceMap } from './components/Map';
 import { Visits } from './components/Visits';
 import { UserStat } from './components/UserStat';
 import { Website } from './components/Website';
 import { ProviderIdParam, addVisitRoute } from 'routes';
-import { Check, CheckCircle, X, ChevronDown } from 'react-feather';
+import { Check, CheckCircle, X, ChevronDown, Plus } from 'react-feather';
 import { WantToVisitButton } from './components/WantToVisitButton';
 import { DataProxy } from 'apollo-cache';
 import { ActionButton } from './components/ActionButton';
 import { PriceLevelPicker } from './components/PriceLevelPicker';
 import { InputBlock } from './components/InputBlock';
+import { Tags } from './components/Tags';
 
 const Info = styled.div`
   margin-bottom: 20px;
@@ -39,10 +42,6 @@ const UserStats = styled.section`
 const UserPlaceInputs = styled.section`
   margin-bottom: 30px;
 `;
-
-const TagList = styled.ul``;
-
-const TagItem = styled.li``;
 
 interface PlaceSceneProps extends RouteComponentProps<ProviderIdParam> {}
 
@@ -93,17 +92,7 @@ export const PlaceScene = ({
       </UserStats>
       <UserPlaceInputs>
         <PriceLevelPicker value={priceLevel} providerId={foursquareId} />
-        <InputBlock label="Taggar">
-          {tags && tags.length > 0 ? (
-            <TagList>
-              {tags.map(tag => (
-                <TagItem id={tag.id}>{tag.name}</TagItem>
-              ))}
-            </TagList>
-          ) : (
-            '–'
-          )}
-        </InputBlock>
+        <Tags tags={tags} />
         <InputBlock label="Kommentar">–</InputBlock>
       </UserPlaceInputs>
       {!hasVisited && (

@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Tag } from './tag.entity';
 import { User } from '../../user/user.entity';
+import { Place } from '../place.entity';
 
 @Service()
 export class TagService {
@@ -11,14 +12,20 @@ export class TagService {
     private readonly tagRepository: Repository<Tag>
   ) {}
 
-  async findByNameOrCreate(name: string, user: User) {
+  async findByNameOrCreate(name: string, place: Place, user: User) {
     const tag = await this.tagRepository.findOne({ where: { name } });
 
     if (tag) {
       return tag;
     }
 
-    const newTag = this.tagRepository.create({ name, user });
-    return await this.tagRepository.save(newTag);
+    const newTag = this.tagRepository.create({
+      name,
+      user,
+      userId: user.id,
+      place
+    });
+
+    return this.tagRepository.save(newTag);
   }
 }
