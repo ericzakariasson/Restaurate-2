@@ -7,8 +7,6 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { client } from './apollo';
 
 import { GlobalStyle, theme } from './style';
-import { Loading } from './components';
-import { useGoogleApi } from './hooks';
 import { routes } from './routes';
 
 import { AuthRoute } from './components/AuthRoute';
@@ -31,19 +29,7 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
-const Fullscreen = styled.div`
-  height: 100vh;
-  width: 100vw;
-`;
-
 const App = () => {
-  const { ready, scriptError } = useGoogleApi(process.env
-    .REACT_APP_GOOGLE_MAPS_API_KEY as string);
-
-  if (scriptError) {
-    console.error('Error loading script');
-  }
-
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>
@@ -51,66 +37,58 @@ const App = () => {
           <>
             <Helmet defaultTitle="Restaurate" titleTemplate="Restaurate – %s" />
             <Wrapper>
-              {ready ? (
-                <Switch>
-                  <Route
-                    path={routes.default}
-                    component={DefaultScene}
-                    exact={true}
-                  />
-                  <AuthRoute
-                    path={routes.dashboard}
-                    component={DashboardScene}
-                    exact={true}
-                  />
-                  <Route
-                    path={routes.register}
-                    component={RegisterScene}
-                    exact={true}
-                  />
-                  <Route
-                    path={routes.login}
-                    component={LoginScene}
-                    exact={true}
-                  />
-                  <AuthRoute
-                    path={routes.searchPlace}
-                    component={SearchPlaceScene}
-                    exact={true}
-                  />
-                  <AuthRoute
-                    path={routes.visits}
-                    component={MyVisitsScene}
-                    exact={true}
-                  />
-                  <AuthRoute
-                    path={routes.places}
-                    component={MyPlacesScene}
-                    exact={true}
-                  />
-                  <AuthRoute
-                    path={routes.visit}
-                    component={VisitScene}
-                    exact={true}
-                  />
-                  <AuthRoute
-                    path={routes.place}
-                    component={PlaceScene}
-                    exact={true}
-                  />
-                  <AuthRoute
-                    path={routes.addVisit}
-                    component={AddVisitScene}
-                    exact={true}
-                  />
-                </Switch>
-              ) : scriptError ? (
-                <GeneralError />
-              ) : (
-                <Fullscreen>
-                  <Loading />
-                </Fullscreen>
-              )}
+              <Switch>
+                <Route
+                  path={routes.default}
+                  component={DefaultScene}
+                  exact={true}
+                />
+                <AuthRoute
+                  path={routes.dashboard}
+                  component={DashboardScene}
+                  exact={true}
+                />
+                <Route
+                  path={routes.register}
+                  component={RegisterScene}
+                  exact={true}
+                />
+                <Route
+                  path={routes.login}
+                  component={LoginScene}
+                  exact={true}
+                />
+                <AuthRoute
+                  path={routes.searchPlace}
+                  component={SearchPlaceScene}
+                  exact={true}
+                />
+                <AuthRoute
+                  path={routes.visits}
+                  component={MyVisitsScene}
+                  exact={true}
+                />
+                <AuthRoute
+                  path={routes.places}
+                  component={MyPlacesScene}
+                  exact={true}
+                />
+                <AuthRoute
+                  path={routes.visit}
+                  component={VisitScene}
+                  exact={true}
+                />
+                <AuthRoute
+                  path={routes.place}
+                  component={PlaceScene}
+                  exact={true}
+                />
+                <AuthRoute
+                  path={routes.addVisit}
+                  component={AddVisitScene}
+                  exact={true}
+                />
+              </Switch>
               <GlobalStyle />
             </Wrapper>
           </>

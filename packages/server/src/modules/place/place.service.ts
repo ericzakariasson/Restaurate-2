@@ -125,9 +125,7 @@ export class PlaceService {
       // slug: slugify(`${name} ${location.address} ${location.city} ${user.id}`)
     });
 
-    await this.placeRepository.save(createdPlace);
-
-    return createdPlace;
+    return this.placeRepository.save(createdPlace);
   }
 
   async findById(id: number) {
