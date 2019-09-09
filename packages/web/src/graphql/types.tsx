@@ -62,6 +62,7 @@ export type Mutation = {
   addVisit: AddVisitResponse,
   toggleWantToVisit: Scalars['Boolean'],
   setPriceLevel: PriceLevel,
+  addTag: Tag,
 };
 
 
@@ -91,6 +92,12 @@ export type MutationSetPriceLevelArgs = {
   providerId: Scalars['String']
 };
 
+
+export type MutationAddTagArgs = {
+  name: Scalars['String'],
+  providerId: Scalars['String']
+};
+
 export type Order = {
    __typename?: 'Order',
   id: Scalars['ID'],
@@ -105,8 +112,9 @@ export type Place = {
   foursquareId: Scalars['String'],
   user?: Maybe<User>,
   types?: Maybe<Array<PlaceType>>,
-  priceLevel?: Maybe<PriceLevel>,
-  tags?: Maybe<Array<Tag>>,
+  priceLevel: PriceLevel,
+  comment?: Maybe<Scalars['String']>,
+  tags: Array<Tag>,
   visits: Array<Visit>,
   createdAt?: Maybe<Scalars['DateTime']>,
   updatedAt?: Maybe<Scalars['DateTime']>,
@@ -180,6 +188,7 @@ export type PositionInput = {
 
 /** Price level of place */
 export enum PriceLevel {
+  NotSet = 'NotSet',
   Inexpensive = 'Inexpensive',
   Moderate = 'Moderate',
   Expensive = 'Expensive',
@@ -287,9 +296,9 @@ export type WantToVisit = {
 export type PlaceFragment = (
   { __typename?: 'Place' }
   & Pick<Place, 'id' | 'foursquareId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
-  & { tags: Maybe<Array<{ __typename?: 'Tag' }
+  & { tags: Array<{ __typename?: 'Tag' }
     & PlaceTagFragment
-  >>, data: { __typename?: 'PlaceData' }
+  >, data: { __typename?: 'PlaceData' }
     & PlaceDataFragment
   , user: Maybe<{ __typename?: 'User' }
     & UserFragment
@@ -330,6 +339,11 @@ export type PlaceTagFragment = (
   & Pick<Tag, 'id' | 'name' | 'createdAt'>
 );
 
+export type TagFragment = (
+  { __typename?: 'Tag' }
+  & Pick<Tag, 'id' | 'name' | 'createdAt' | 'updatedAt'>
+);
+
 export type UserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'firstName' | 'lastName' | 'role' | 'email' | 'createdAt' | 'updatedAt' | 'placeCount' | 'visitCount'>
@@ -362,6 +376,19 @@ export type VisitOrderFragment = (
 export type VisitRateFragment = (
   { __typename?: 'Rate' }
   & Pick<Rate, 'id' | 'name' | 'score' | 'calculatedScore' | 'createdAt' | 'updatedAt'>
+);
+
+export type AddTagMutationVariables = {
+  providerId: Scalars['String'],
+  name: Scalars['String']
+};
+
+
+export type AddTagMutation = (
+  { __typename?: 'Mutation' }
+  & { addTag: { __typename?: 'Tag' }
+    & TagFragment
+   }
 );
 
 export type AddVisitMutationVariables = {
@@ -536,6 +563,14 @@ export const PlaceBasicDetailsFragmentDoc = gql`
   types
 }
     `;
+export const TagFragmentDoc = gql`
+    fragment Tag on Tag {
+  id
+  name
+  createdAt
+  updatedAt
+}
+    `;
 export const VisitOrderFragmentDoc = gql`
     fragment VisitOrder on Order {
   id
@@ -668,6 +703,21 @@ export const VisitFragmentDoc = gql`
 ${VisitRateFragmentDoc}
 ${UserFragmentDoc}
 ${PlaceFragmentDoc}`;
+export const AddTagDocument = gql`
+    mutation AddTag($providerId: String!, $name: String!) {
+  addTag(providerId: $providerId, name: $name) {
+    ...Tag
+  }
+}
+    ${TagFragmentDoc}`;
+export type AddTagMutationFn = ApolloReactCommon.MutationFunction<AddTagMutation, AddTagMutationVariables>;
+
+    export function useAddTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddTagMutation, AddTagMutationVariables>) {
+      return ApolloReactHooks.useMutation<AddTagMutation, AddTagMutationVariables>(AddTagDocument, baseOptions);
+    }
+export type AddTagMutationHookResult = ReturnType<typeof useAddTagMutation>;
+export type AddTagMutationResult = ApolloReactCommon.MutationResult<AddTagMutation>;
+export type AddTagMutationOptions = ApolloReactCommon.BaseMutationOptions<AddTagMutation, AddTagMutationVariables>;
 export const AddVisitDocument = gql`
     mutation AddVisit($data: AddVisitInput!) {
   addVisit(data: $data) {

@@ -42,45 +42,51 @@ const priceLevelArray = Object.values(PriceLevel);
 
 const updatePriceLevel = (providerId: string) => (
   cache: DataProxy,
-  { data }: FetchResult<SetPriceLevelMutation>
+  { data: result }: FetchResult<SetPriceLevelMutation>
 ) => {
-  const placeQuery = {
-    query: PlaceDocument,
-    variables: { providerId }
-  };
-
-  const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;
-
-  const updatedQuery = {
-    ...placeQuery,
-    data: {
-      place: {
-        ...place,
-        priceLevel: data ? data.setPriceLevel : null
-      }
+  try {
+    if (!result) {
+      throw new Error('No result');
     }
-  };
 
-  cache.writeQuery(updatedQuery);
+    const placeQuery = {
+      query: PlaceDocument,
+      variables: { providerId }
+    };
+
+    const data = cache.readQuery<PlaceQuery>(placeQuery);
+
+    if (!data || !data.place) {
+      throw new Error('No query data');
+    }
+
+    data.place.priceLevel = result.setPriceLevel;
+
+    cache.writeQuery({
+      ...placeQuery,
+      data
+    });
+  } catch {}
 };
 
 interface PriceLevelProps {
-  value?: PriceLevel | null;
+  priceLevel: PriceLevel;
   providerId: string;
 }
 
-export const PriceLevelPicker = ({ value, providerId }: PriceLevelProps) => {
-  const [priceLevel, setPriceLevel] = React.useState(value);
-
+export const PriceLevelPicker = ({
+  priceLevel,
+  providerId
+}: PriceLevelProps) => {
   const [savePriceLevel] = useSetPriceLevelMutation({
     update: updatePriceLevel(providerId)
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPriceLevel(e.target.value as PriceLevel);
+    const priceLevelIndex = priceLevelArray.findIndex(
+      pl => pl === e.target.value
+    );
 
-    const priceLevelIndex =
-      priceLevelArray.findIndex(pl => pl === e.target.value) + 1;
     savePriceLevel({
       variables: {
         providerId,
@@ -100,7 +106,7 @@ export const PriceLevelPicker = ({ value, providerId }: PriceLevelProps) => {
       <InputBlock label="Prisklass">
         {isMobile && (
           <>
-            {!!value ? formatPriceLevel(value) : '–'}
+            {!!priceLevel ? formatPriceLevel(priceLevel) : '–'}
             <ActionButton
               onClick={handleClick}
               icon={<ChevronDown size={20} color="#666" />}
@@ -109,13 +115,10 @@ export const PriceLevelPicker = ({ value, providerId }: PriceLevelProps) => {
         )}
         <StyledSelect
           ref={selectRef}
-          value={priceLevel || undefined}
+          value={priceLevel}
           onChange={handleChange}
           hide={isMobile}
         >
-          <option key="0" value={0}>
-            –
-          </option>
           {priceLevelArray.map(pl => (
             <option key={pl} value={pl}>
               {formatPriceLevel(pl)}

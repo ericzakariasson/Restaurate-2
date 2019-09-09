@@ -9,6 +9,7 @@ export function formatDate(date: Date | string) {
 }
 
 const priceLevelMap = {
+  [PriceLevel.NotSet]: '–',
   [PriceLevel.Inexpensive]: 'Billig',
   [PriceLevel.Moderate]: 'Mellan',
   [PriceLevel.Expensive]: 'Dyr',

@@ -22,16 +22,18 @@ interface ActionButtonProps {
   onClick?: () => void;
   as?: 'button' | 'span' | 'div';
   type?: 'button' | 'submit';
+  disabled?: boolean;
 }
 
 export const ActionButton = ({
   icon,
   onClick,
   type = 'button',
-  as = 'button'
+  as = 'button',
+  disabled
 }: ActionButtonProps) => {
   return (
-    <Background as={as} onClick={onClick} type={type}>
+    <Background as={as} onClick={onClick} type={type} disabled={disabled}>
       {icon}
     </Background>
   );

@@ -91,8 +91,8 @@ export const PlaceScene = ({
         <UserStat label="Betyg" value={averageScore || '–'} />
       </UserStats>
       <UserPlaceInputs>
-        <PriceLevelPicker value={priceLevel} providerId={foursquareId} />
-        <Tags tags={tags} />
+        <PriceLevelPicker priceLevel={priceLevel} providerId={foursquareId} />
+        <Tags tags={tags} providerId={foursquareId} />
         <InputBlock label="Kommentar">–</InputBlock>
       </UserPlaceInputs>
       {!hasVisited && (

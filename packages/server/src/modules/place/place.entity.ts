@@ -49,10 +49,9 @@ export class Place {
   @Column({ nullable: true })
   comment: string;
 
-  @Field(() => [Tag], { nullable: true })
+  @Field(() => [Tag])
   @ManyToMany(() => Tag, tag => tag.place, {
-    eager: true,
-    nullable: true
+    eager: true
   })
   @JoinTable()
   tags: Tag[];
