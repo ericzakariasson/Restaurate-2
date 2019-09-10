@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 export const Card = styled.div`
   padding: 15px;
   background: #fefefe;
-  border: 1px solid #999;
+  border: 1px solid #eee;
   box-shadow: ${p => p.theme.boxShadow};
-  border-radius: 4px;
+  border-radius: 8px;
 
   &:not(:last-of-type) {
     margin-bottom: 15px;

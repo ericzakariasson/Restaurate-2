@@ -12,7 +12,7 @@ const Group = styled.article`
 `;
 
 const Label = styled.h3`
-  margin-bottom: 10px;
+  margin-bottom: 10px 15px;
   text-align: center;
   font-weight: 700;
   font-size: 1rem;
@@ -39,7 +39,7 @@ export const VisitGroup = ({ date, visits }: VisitGroupProps) => {
     <Group>
       <Label>
         <Date>{formatDate(date)}</Date>
-        <VisitCount>— {visits.length}</VisitCount>
+        <VisitCount> – {visits.length}</VisitCount>
       </Label>
       <VisitList>
         {visits.map(visit => (

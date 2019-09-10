@@ -2,11 +2,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes } from '../../../routes';
+import { Label } from 'components';
 
 const List = styled.ul`
   list-style: none;
   display: flex;
-  margin: 40px 0;
+  margin-bottom: 30px;
 `;
 
 const Item = styled.li`
@@ -25,12 +26,6 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Label = styled.span`
-  color: #666;
-  margin-bottom: 5px;
-  font-size: 1.1rem;
-`;
-
 interface BoxProps {
   disabled: boolean;
 }
@@ -39,15 +34,15 @@ const Box = styled.h2<BoxProps>`
   width: 100%;
   background: ${p => (p.disabled ? '#FCFCFC' : '#FFF')};
   color: #222;
-  border-radius: 3px;
+  border-radius: 6px;
   border: 1px solid;
-  border-color: ${p => (p.disabled ? '#DDD' : '#222')};
+  border-color: ${p => (p.disabled ? '#DDD' : '#EEE')};
   box-shadow: ${p => p.theme.boxShadow};
   padding: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-shadow: 3px 3px 0 #eee;
+  font-size: ${p => p.theme.fontSize.xxxl};
 `;
 
 interface PlacesAndVisitsProps {
@@ -63,13 +58,13 @@ export const PlacesAndVisits = ({
     <List>
       <Item>
         <StyledLink to={routes.places}>
-          <Label>Ställen</Label>
+          <Label text="Ställen" />
           <Box disabled={placeCount === 0}>{placeCount}</Box>
         </StyledLink>
       </Item>
       <Item>
         <StyledLink to={routes.visits}>
-          <Label>Besök</Label>
+          <Label text="Besök" />
           <Box disabled={visitCount === 0}>{visitCount}</Box>
         </StyledLink>
       </Item>
