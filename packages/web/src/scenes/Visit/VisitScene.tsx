@@ -2,42 +2,19 @@ import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { GeneralError } from '..';
-import { Loading, Page } from 'components';
+import { Loading, Page, NavButton, Label } from 'components';
 import { useVisitQuery } from 'graphql/types';
 import { placeRoute } from 'routes';
-import { formatDate } from 'utils/format';
-
-const PlaceLink = styled(Link)`
-  padding: 15px;
-  display: block;
-  margin-bottom: 20px;
-  background: ${p => p.theme.colors.primary.hues[9]};
-  border: 1px solid #ccc;
-  text-align: center;
-  color: #222;
-  text-decoration: none;
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 1.125rem;
-  box-shadow: ${p => p.theme.boxShadow};
-`;
-
-const Label = styled.span`
-  font-family: ${p => p.theme.fonts.monospace};
-  display: block;
-  color: #ccc;
-  margin-bottom: 10px;
-`;
+import { formatDate, translateRateName } from 'utils/format';
 
 const Block = styled.article`
   &:not(:last-child) {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 `;
 
 const OrderList = styled.ol`
-  /* list-style: none; */
-  padding-left: 15px;
+  list-style: none;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -50,50 +27,55 @@ const OrderItem = styled.li`
 `;
 
 const OrderTitle = styled.span`
-  margin-left: 10px;
   display: block;
-  padding: 10px 13px;
-  border-radius: 3px;
-  border: 1px solid #eee;
-  box-shadow: ${p => p.theme.boxShadow};
+  font-size: ${p => p.theme.fontSize.large};
 `;
 
 const Comment = styled.p`
   line-height: 1.5;
 `;
 
-// const RateList = styled.ul`
+const Ratings = styled.ul`
+  list-style: none;
+`;
 
-// const RateItem = styled.li`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   padding: 15px;
-//   border-radius: 5px;
-//   border: 1px solid #eee;
-//   box-shadow: ${p => p.theme.boxShadow};
-//   font-size: 1.125rem;
+const RatingText = styled.h3`
+  font-size: ${p => p.theme.fontSize.xl};
+  font-weight: 400;
+  color: #222;
+`;
 
-//   &:not(:last-child) {
-//     margin-bottom: 15px;
-//   }
-// `;
+const RatingScore = styled.span`
+  font-weight: 700;
+`;
 
-// const RateLabel = styled.span``;
+const RatingWrapper = styled.div`
+  display: flex;
+`;
 
-// const RateScore = styled.span`
-//   font-weight: 700;
-// `;
+const ChildRatings = styled(Ratings)`
+  margin-left: 10px;
+  margin-top: 10px;
+`;
 
-// const ScoreItem = styled(RateItem)`
-//   color: #fff;
-//   background: #222;
+const Rating = styled.li`
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+`;
 
-//   ${RateScore} {
-//     font-size: 1.5rem;
-//     color: ${p => p.theme.colors.primary.hues[0]};
-//   }
-// `;
+const ChildRating = styled(Rating)`
+  display: flex;
+  &:not(:last-child) {
+    margin-bottom: 5px;
+  }
+`;
+
+const ChildRatingText = styled.h4`
+  font-size: ${p => p.theme.fontSize.normal};
+  font-weight: 400;
+  color: #222;
+`;
 
 type WithVisitId = { id: string };
 
@@ -115,28 +97,52 @@ export const VisitScene = ({
   }
 
   const visit = data && data.visit;
-  const { place, visitDate, orders, comment } = visit!;
-
-  // const formattedRate = formatRate(rate);
+  const { place, visitDate, orders, comment, ratings } = visit!;
 
   return (
     <Page title={place.data.name} subTitle={formatDate(visitDate)}>
       <Block>
-        <Label>Beställningar</Label>
+        <Label text="Beställningar" />
         {orders && orders.length > 0 ? (
           <OrderList>
             {orders.map(order => (
               <OrderItem key={order.id}>
-                <OrderTitle>{order.title}</OrderTitle>
+                <OrderTitle>– {order.title}</OrderTitle>
               </OrderItem>
             ))}
           </OrderList>
         ) : (
-          'Inga beställningar'
+          '–'
         )}
       </Block>
       <Block>
-        <Label>Betyg</Label>
+        <Label text="Betyg" />
+        <Ratings>
+          {ratings.map(rate => {
+            return (
+              <Rating>
+                <RatingWrapper>
+                  <RatingText>
+                    {translateRateName(rate.name)} –{' '}
+                    <RatingScore>{rate.score}</RatingScore>
+                  </RatingText>
+                </RatingWrapper>
+                {rate.children && (
+                  <ChildRatings>
+                    {rate.children.map(child => (
+                      <ChildRating>
+                        <ChildRatingText>
+                          {translateRateName(child.name)} –{' '}
+                          <RatingScore>{child.score}</RatingScore>
+                        </ChildRatingText>
+                      </ChildRating>
+                    ))}
+                  </ChildRatings>
+                )}
+              </Rating>
+            );
+          })}
+        </Ratings>
         {/* <RateList>
           {formattedRate.map(rate => (
             <RateItem key={rate.label}>
@@ -151,12 +157,15 @@ export const VisitScene = ({
         </RateList> */}
       </Block>
       <Block>
-        <Label>Kommentar</Label>
-        <Comment>{comment || 'Ingen kommentar'}</Comment>
+        <Label text="Kommentar" />
+        <Comment>{comment || '–'}</Comment>
       </Block>
-      <PlaceLink to={placeRoute(place.foursquareId)}>
-        Visa stället {place.data.name}
-      </PlaceLink>
+      <NavButton
+        variant="secondary"
+        color="white"
+        to={placeRoute(place.foursquareId)}
+        text={`${place.data.name}`}
+      />
     </Page>
   );
 };

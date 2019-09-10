@@ -8,12 +8,21 @@ import { visitRoute } from 'routes';
 import { formatDate } from 'utils/format';
 import { VisitFragment } from 'graphql/types';
 
+const Wrapper = styled.article`
+  margin-top: 20px;
+`;
+
+const Title = styled.h4`
+  font-size: ${p => p.theme.fontSize.large};
+  margin-bottom: 10px;
+`;
+
 const VisitList = styled.ul`
   list-style: none;
 `;
 
 const VisitItem = styled.li`
-  border-radius: 4px;
+  border-radius: 8px;
   box-shadow: ${p => p.theme.boxShadow};
   border: 1px solid #ccc;
 
@@ -44,15 +53,18 @@ interface VisitsProps {
 
 export const Visits = ({ visits }: VisitsProps) => {
   return (
-    <VisitList>
-      {visits.map(visit => (
-        <VisitItem key={visit.id}>
-          <VisitLink to={visitRoute(visit.id)}>
-            <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
-            <VisitScore>{8}</VisitScore>
-          </VisitLink>
-        </VisitItem>
-      ))}
-    </VisitList>
+    <Wrapper>
+      {visits.length > 0 && <Title>{visits.length} besök</Title>}
+      <VisitList>
+        {visits.map(visit => (
+          <VisitItem key={visit.id}>
+            <VisitLink to={visitRoute(visit.id)}>
+              <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
+              <VisitScore>{visit.score}</VisitScore>
+            </VisitLink>
+          </VisitItem>
+        ))}
+      </VisitList>
+    </Wrapper>
   );
 };

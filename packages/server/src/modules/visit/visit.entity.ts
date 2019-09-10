@@ -35,7 +35,7 @@ export class Visit extends BaseEntity {
   @Column()
   visitDate: Date;
 
-  @Field(() => [Order], { nullable: true })
+  @Field(() => [Order])
   @OneToMany(() => Order, order => order.visit, {
     cascade: true,
     eager: true,
@@ -49,6 +49,10 @@ export class Visit extends BaseEntity {
     eager: true
   })
   ratings: Rate[];
+
+  @Field()
+  @Column({ type: 'float' })
+  score: number;
 
   @ManyToOne(() => Place, place => place.visits)
   place: Place;

@@ -7,6 +7,8 @@ import { User } from '../user/user.entity';
 import { Order } from './order/order.entity';
 import { Rate } from './rate/rate.entity';
 import { AddVisitInput } from './visit.types';
+import { RateInput } from './rate/rate.types';
+import { round } from '../../utils';
 
 @Service()
 export class VisitService {
@@ -55,12 +57,20 @@ export class VisitService {
       })
     );
 
+    const score = round(
+      input.ratings.reduce(
+        (total: number, rate: RateInput) => (total += rate.score),
+        0
+      ) / input.ratings.length
+    );
+
     const visit = this.visitRepository.create({
       ...input,
       orders,
       place,
       placeId: place.id,
       user,
+      score,
       userId: user.id,
       ratings
     });

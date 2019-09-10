@@ -1,4 +1,5 @@
-import { Rate, PriceLevel, PlaceType } from '../graphql/types';
+import { PriceLevel, PlaceType } from '../graphql/types';
+import { rateNodes } from 'scenes/AddVisit/constants';
 
 export function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString('sv-SE', {
@@ -20,35 +21,10 @@ export function formatPriceLevel(priceLevel: PriceLevel | null): string {
   return priceLevel ? priceLevelMap[priceLevel] : '';
 }
 
-type RateMap = { [key: string]: { label: string } };
+export function translateRateName(rateName: string) {
+  const item = rateNodes.find(node => node.name === rateName);
 
-const rateMap: RateMap = {
-  food: {
-    label: 'Mat'
-  },
-  service: {
-    label: 'Service'
-  },
-  environment: {
-    label: 'Miljö'
-  },
-  experience: {
-    label: 'Upplevelse'
-  }
-};
-
-interface FormattedRate {
-  label: string;
-  score: number;
-}
-
-export function formatRate(rate: Rate): FormattedRate[] {
-  return Object.entries(rate)
-    .filter(([key]) => key in rateMap)
-    .map(([key, score]: [string, number]) => ({
-      label: rateMap[key].label,
-      score
-    }));
+  return item ? item.label : '';
 }
 
 type PlaceTypeMap = { [key in PlaceType]: string };

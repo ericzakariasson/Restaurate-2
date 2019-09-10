@@ -292,8 +292,9 @@ export type Visit = {
   id: Scalars['ID'],
   comment?: Maybe<Scalars['String']>,
   visitDate: Scalars['DateTime'],
-  orders?: Maybe<Array<Order>>,
+  orders: Array<Order>,
   ratings: Array<Rate>,
+  score: Scalars['Float'],
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   place: Place,
@@ -365,10 +366,10 @@ export type UserFragment = (
 
 export type VisitFragment = (
   { __typename?: 'Visit' }
-  & Pick<Visit, 'id' | 'comment' | 'visitDate' | 'createdAt' | 'updatedAt'>
-  & { orders: Maybe<Array<{ __typename?: 'Order' }
+  & Pick<Visit, 'id' | 'score' | 'comment' | 'visitDate' | 'createdAt' | 'updatedAt'>
+  & { orders: Array<{ __typename?: 'Order' }
     & VisitOrderFragment
-  >>, ratings: Array<(
+  >, ratings: Array<(
     { __typename?: 'Rate' }
     & { children: Maybe<Array<{ __typename?: 'Rate' }
       & VisitRateFragment
@@ -725,6 +726,7 @@ export const VisitFragmentDoc = gql`
       ...VisitRate
     }
   }
+  score
   user {
     ...User
   }
