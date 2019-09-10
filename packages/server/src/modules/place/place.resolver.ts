@@ -159,6 +159,20 @@ export class PlaceResolver {
     );
   }
 
+  @Authorized()
+  @Mutation(() => String)
+  async setComment(
+    @Arg('providerId') providerId: string,
+    @Arg('comment') comment: string,
+    @Ctx() ctx: Context
+  ): Promise<string> {
+    return this.placeService.setComment(
+      providerId,
+      comment,
+      ctx.req.session!.userId
+    );
+  }
+
   @FieldResolver()
   async visits(
     @Root() place: Place,

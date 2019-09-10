@@ -190,4 +190,19 @@ export class PlaceService {
 
     return tagId;
   }
+
+  async setComment(providerId: string, comment: string, userId: number) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new Error('No user found');
+    }
+
+    const place = await this.findByIdOrCreate(providerId, user);
+    place.comment = comment;
+
+    await this.placeRepository.save(place);
+
+    return comment;
+  }
 }

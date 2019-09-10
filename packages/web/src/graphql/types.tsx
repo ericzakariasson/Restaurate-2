@@ -64,6 +64,7 @@ export type Mutation = {
   setPriceLevel: PriceLevel,
   addTag: Tag,
   removeTag: Scalars['Float'],
+  setComment: Scalars['String'],
 };
 
 
@@ -102,6 +103,12 @@ export type MutationAddTagArgs = {
 
 export type MutationRemoveTagArgs = {
   tagId: Scalars['Float'],
+  providerId: Scalars['String']
+};
+
+
+export type MutationSetCommentArgs = {
+  comment: Scalars['String'],
   providerId: Scalars['String']
 };
 
@@ -302,7 +309,7 @@ export type WantToVisit = {
 };
 export type PlaceFragment = (
   { __typename?: 'Place' }
-  & Pick<Place, 'id' | 'foursquareId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
+  & Pick<Place, 'id' | 'foursquareId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'comment' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
   & { tags: Array<{ __typename?: 'Tag' }
     & PlaceTagFragment
   >, data: { __typename?: 'PlaceData' }
@@ -447,6 +454,17 @@ export type RemoveTagMutationVariables = {
 export type RemoveTagMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'removeTag'>
+);
+
+export type SetCommentMutationVariables = {
+  providerId: Scalars['String'],
+  comment: Scalars['String']
+};
+
+
+export type SetCommentMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'setComment'>
 );
 
 export type SetPriceLevelMutationVariables = {
@@ -686,6 +704,7 @@ export const PlaceFragmentDoc = gql`
   user {
     ...User
   }
+  comment
   wantToVisit
   hasVisited
   createdAt
@@ -794,6 +813,19 @@ export type RemoveTagMutationFn = ApolloReactCommon.MutationFunction<RemoveTagMu
 export type RemoveTagMutationHookResult = ReturnType<typeof useRemoveTagMutation>;
 export type RemoveTagMutationResult = ApolloReactCommon.MutationResult<RemoveTagMutation>;
 export type RemoveTagMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTagMutation, RemoveTagMutationVariables>;
+export const SetCommentDocument = gql`
+    mutation SetComment($providerId: String!, $comment: String!) {
+  setComment(providerId: $providerId, comment: $comment)
+}
+    `;
+export type SetCommentMutationFn = ApolloReactCommon.MutationFunction<SetCommentMutation, SetCommentMutationVariables>;
+
+    export function useSetCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetCommentMutation, SetCommentMutationVariables>) {
+      return ApolloReactHooks.useMutation<SetCommentMutation, SetCommentMutationVariables>(SetCommentDocument, baseOptions);
+    }
+export type SetCommentMutationHookResult = ReturnType<typeof useSetCommentMutation>;
+export type SetCommentMutationResult = ApolloReactCommon.MutationResult<SetCommentMutation>;
+export type SetCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<SetCommentMutation, SetCommentMutationVariables>;
 export const SetPriceLevelDocument = gql`
     mutation SetPriceLevel($providerId: String!, $priceLevel: Float!) {
   setPriceLevel(providerId: $providerId, priceLevel: $priceLevel)

@@ -18,13 +18,14 @@ import { Visits } from './components/Visits';
 import { UserStat } from './components/UserStat';
 import { Website } from './components/Website';
 import { ProviderIdParam, addVisitRoute } from 'routes';
-import { Check, CheckCircle, X, ChevronDown, Plus } from 'react-feather';
+import { Check, CheckCircle, X, ChevronDown, Plus, Edit2 } from 'react-feather';
 import { WantToVisitButton } from './components/WantToVisitButton';
 import { DataProxy } from 'apollo-cache';
 import { ActionButton } from './components/ActionButton';
 import { PriceLevelPicker } from './components/PriceLevelPicker';
 import { InputBlock } from './components/InputBlock';
 import { Tags } from './components/Tags';
+import { Comment } from './components/Comment';
 
 const Info = styled.div`
   margin-bottom: 20px;
@@ -69,6 +70,7 @@ export const PlaceScene = ({
     priceLevel,
     types,
     tags,
+    comment,
     visitCount,
     averageScore,
     visits,
@@ -93,7 +95,7 @@ export const PlaceScene = ({
       <UserPlaceInputs>
         <PriceLevelPicker priceLevel={priceLevel} providerId={foursquareId} />
         <Tags tags={tags} providerId={foursquareId} />
-        <InputBlock label="Kommentar">–</InputBlock>
+        <Comment comment={comment} providerId={foursquareId} />
       </UserPlaceInputs>
       {!hasVisited && (
         <WantToVisitButton

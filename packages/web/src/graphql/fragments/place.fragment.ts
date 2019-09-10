@@ -19,6 +19,7 @@ export default gql`
     user {
       ...User
     }
+    comment
     wantToVisit
     hasVisited
     createdAt
