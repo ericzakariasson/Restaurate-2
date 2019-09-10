@@ -56,6 +56,8 @@ export class PlaceResolver {
     if (!userPlace) {
       const place = new Place();
       place.foursquareId = placeData.id;
+      place.priceLevel = PriceLevel.NotSet;
+      place.tags = [];
       return place;
     }
 
@@ -141,6 +143,20 @@ export class PlaceResolver {
     @Ctx() ctx: Context
   ): Promise<Tag> {
     return this.placeService.addTag(providerId, name, ctx.req.session!.userId);
+  }
+
+  @Authorized()
+  @Mutation(() => Number)
+  async removeTag(
+    @Arg('providerId') providerId: string,
+    @Arg('tagId') tagId: number,
+    @Ctx() ctx: Context
+  ): Promise<number> {
+    return this.placeService.removeTag(
+      providerId,
+      tagId,
+      ctx.req.session!.userId
+    );
   }
 
   @FieldResolver()

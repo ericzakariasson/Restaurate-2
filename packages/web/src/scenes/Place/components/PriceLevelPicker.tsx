@@ -60,11 +60,18 @@ const updatePriceLevel = (providerId: string) => (
       throw new Error('No query data');
     }
 
-    data.place.priceLevel = result.setPriceLevel;
+    const { place } = data;
+
+    const updatedData = {
+      place: {
+        ...place,
+        priceLevel: result.setPriceLevel
+      }
+    };
 
     cache.writeQuery({
       ...placeQuery,
-      data
+      data: updatedData
     });
   } catch {}
 };

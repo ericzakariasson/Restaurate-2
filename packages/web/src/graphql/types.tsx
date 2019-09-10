@@ -63,6 +63,7 @@ export type Mutation = {
   toggleWantToVisit: Scalars['Boolean'],
   setPriceLevel: PriceLevel,
   addTag: Tag,
+  removeTag: Scalars['Float'],
 };
 
 
@@ -95,6 +96,12 @@ export type MutationSetPriceLevelArgs = {
 
 export type MutationAddTagArgs = {
   name: Scalars['String'],
+  providerId: Scalars['String']
+};
+
+
+export type MutationRemoveTagArgs = {
+  tagId: Scalars['Float'],
   providerId: Scalars['String']
 };
 
@@ -431,6 +438,17 @@ export type RegisterMutation = (
   )> }
 );
 
+export type RemoveTagMutationVariables = {
+  providerId: Scalars['String'],
+  tagId: Scalars['Float']
+};
+
+
+export type RemoveTagMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'removeTag'>
+);
+
 export type SetPriceLevelMutationVariables = {
   providerId: Scalars['String'],
   priceLevel: Scalars['Float']
@@ -763,6 +781,19 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMuta
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const RemoveTagDocument = gql`
+    mutation RemoveTag($providerId: String!, $tagId: Float!) {
+  removeTag(providerId: $providerId, tagId: $tagId)
+}
+    `;
+export type RemoveTagMutationFn = ApolloReactCommon.MutationFunction<RemoveTagMutation, RemoveTagMutationVariables>;
+
+    export function useRemoveTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveTagMutation, RemoveTagMutationVariables>) {
+      return ApolloReactHooks.useMutation<RemoveTagMutation, RemoveTagMutationVariables>(RemoveTagDocument, baseOptions);
+    }
+export type RemoveTagMutationHookResult = ReturnType<typeof useRemoveTagMutation>;
+export type RemoveTagMutationResult = ApolloReactCommon.MutationResult<RemoveTagMutation>;
+export type RemoveTagMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTagMutation, RemoveTagMutationVariables>;
 export const SetPriceLevelDocument = gql`
     mutation SetPriceLevel($providerId: String!, $priceLevel: Float!) {
   setPriceLevel(providerId: $providerId, priceLevel: $priceLevel)

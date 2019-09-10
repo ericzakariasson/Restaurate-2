@@ -167,7 +167,27 @@ export class PlaceService {
     }
 
     const place = await this.findByIdOrCreate(providerId, user);
+    const tag = await this.tagService.findByNameOrCreate(name, place, user);
 
-    return this.tagService.findByNameOrCreate(name, place, user);
+    place.tags = place.tags ? place.tags.concat(tag) : [tag];
+
+    await this.placeRepository.save(place);
+
+    return tag;
+  }
+
+  async removeTag(providerId: string, tagId: number, userId: number) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new Error('No user found');
+    }
+
+    const place = await this.findByIdOrCreate(providerId, user);
+    place.tags = place.tags.filter(tag => tag.id !== tagId);
+
+    await this.placeRepository.save(place);
+
+    return tagId;
   }
 }
