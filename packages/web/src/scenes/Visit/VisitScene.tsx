@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { GeneralError } from '..';
 import { Loading, Page, NavButton, Label } from 'components';
@@ -40,7 +40,7 @@ const Ratings = styled.ul`
 `;
 
 const RatingText = styled.h3`
-  font-size: ${p => p.theme.fontSize.xl};
+  font-size: ${p => p.theme.fontSize.xxl};
   font-weight: 400;
   color: #222;
 `;
@@ -72,7 +72,7 @@ const ChildRating = styled(Rating)`
 `;
 
 const ChildRatingText = styled.h4`
-  font-size: ${p => p.theme.fontSize.normal};
+  font-size: ${p => p.theme.fontSize.xl};
   font-weight: 400;
   color: #222;
 `;

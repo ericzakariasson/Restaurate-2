@@ -12,10 +12,9 @@ const Group = styled.article`
 `;
 
 const Label = styled.h3`
-  margin-bottom: 10px 15px;
-  text-align: center;
+  margin-bottom: 10px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: ${p => p.theme.fontSize.normal};
   color: #222;
 `;
 

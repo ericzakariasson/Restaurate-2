@@ -113,6 +113,18 @@ export class PlaceResolver {
   }
 
   @Authorized()
+  @Query(() => [PlaceSearchItem])
+  async wantToVisitList(@Ctx() ctx: Context): Promise<PlaceSearchItem[]> {
+    const placeDataList = await this.placeService.getWantToVisitList(
+      ctx.req.session!.userId
+    );
+
+    return placeDataList.map(pd =>
+      transformVenueDetailsToBasicDetails(null, pd)
+    );
+  }
+
+  @Authorized()
   @Mutation(() => Boolean)
   async toggleWantToVisit(
     @Arg('providerId') providerId: string,

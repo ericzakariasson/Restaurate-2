@@ -11,6 +11,7 @@ import { PriceLevel } from './place.types';
 import { CacheService } from '../../services/cache/cache.service';
 import { VenueDetails } from '../../services/foursquare/types';
 import { TagService } from './tag/tag.service';
+import { WantToVisit } from './wantToVisit/wantToVisit.entity';
 // import { TagService } from './tag/tag.service';
 
 const placeDataKey = (key: string) => `placeData_${key}`;
@@ -22,6 +23,8 @@ export class PlaceService {
     private readonly placeRepository: Repository<Place>,
     @InjectRepository(Visit)
     private readonly visitRepository: Repository<Visit>,
+    @InjectRepository(WantToVisit)
+    private readonly wtvRepository: Repository<WantToVisit>,
     private readonly userService: UserService,
     private readonly tagService: TagService,
     private readonly foursquareService: FoursquareService,
@@ -204,5 +207,15 @@ export class PlaceService {
     await this.placeRepository.save(place);
 
     return comment;
+  }
+
+  async getWantToVisitList(userId: number) {
+    const wantToVisit = await this.wtvRepository.find({ where: { userId } });
+
+    const places = Promise.all(
+      wantToVisit.map(async wtv => await this.getPlaceData(wtv.providerId))
+    );
+
+    return places;
   }
 }

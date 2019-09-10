@@ -12,7 +12,8 @@ export const routes: Routes = {
   login: '/login',
   visit: '/visit/:id',
   place: '/place/:providerId',
-  searchPlace: '/search/place'
+  searchPlace: '/search/place',
+  wantToVisit: '/want-to-visit'
 };
 
 export const visitRoute = (id: string) => `/visit/${id}`;

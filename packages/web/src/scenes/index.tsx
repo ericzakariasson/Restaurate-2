@@ -8,3 +8,4 @@ export * from './Login/LoginScene';
 export * from './Default/DefaultScene';
 export * from './MyPlaces/MyPlacesScene';
 export * from './Place/PlaceScene';
+export * from './WantToVisit/WantToVisitScene';

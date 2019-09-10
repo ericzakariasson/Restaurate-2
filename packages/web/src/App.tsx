@@ -20,7 +20,8 @@ import {
   LoginScene,
   MyVisitsScene,
   MyPlacesScene,
-  PlaceScene
+  PlaceScene,
+  WantToVisitScene
 } from './scenes';
 import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 
@@ -85,6 +86,11 @@ const App = () => {
                 <AuthRoute
                   path={routes.addVisit}
                   component={AddVisitScene}
+                  exact={true}
+                />
+                <AuthRoute
+                  path={routes.wantToVisit}
+                  component={WantToVisitScene}
                   exact={true}
                 />
               </Switch>

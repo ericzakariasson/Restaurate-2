@@ -206,6 +206,7 @@ export const NavButton = ({
   text,
   to,
   variant,
+  margin,
   size = 'large',
   disabled = false,
   type = 'button',
@@ -219,6 +220,7 @@ export const NavButton = ({
     disabled={disabled}
     variant={variant}
     color={color}
+    margin={margin}
   >
     {text}
   </StyledNavButton>

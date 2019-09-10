@@ -216,6 +216,7 @@ export type Query = {
   place?: Maybe<Place>,
   placeBasicDetails?: Maybe<PlaceSearchItem>,
   searchPlace?: Maybe<PlaceSearchResult>,
+  wantToVisitList: Array<PlaceSearchItem>,
 };
 
 
@@ -585,6 +586,16 @@ export type VisitQuery = (
   { __typename?: 'Query' }
   & { visit: Maybe<{ __typename?: 'Visit' }
     & VisitFragment
+  > }
+);
+
+export type WantToVisitListQueryVariables = {};
+
+
+export type WantToVisitListQuery = (
+  { __typename?: 'Query' }
+  & { wantToVisitList: Array<{ __typename?: 'PlaceSearchItem' }
+    & PlaceBasicDetailsFragment
   > }
 );
 export const PlaceBasicDetailsFragmentDoc = gql`
@@ -991,3 +1002,20 @@ export const VisitDocument = gql`
       
 export type VisitQueryHookResult = ReturnType<typeof useVisitQuery>;
 export type VisitQueryResult = ApolloReactCommon.QueryResult<VisitQuery, VisitQueryVariables>;
+export const WantToVisitListDocument = gql`
+    query WantToVisitList {
+  wantToVisitList {
+    ...PlaceBasicDetails
+  }
+}
+    ${PlaceBasicDetailsFragmentDoc}`;
+
+    export function useWantToVisitListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WantToVisitListQuery, WantToVisitListQueryVariables>) {
+      return ApolloReactHooks.useQuery<WantToVisitListQuery, WantToVisitListQueryVariables>(WantToVisitListDocument, baseOptions);
+    }
+      export function useWantToVisitListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<WantToVisitListQuery, WantToVisitListQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<WantToVisitListQuery, WantToVisitListQueryVariables>(WantToVisitListDocument, baseOptions);
+      }
+      
+export type WantToVisitListQueryHookResult = ReturnType<typeof useWantToVisitListQuery>;
+export type WantToVisitListQueryResult = ApolloReactCommon.QueryResult<WantToVisitListQuery, WantToVisitListQueryVariables>;
