@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import {
   PlaceTagFragment,
   useAddTagMutation,
@@ -11,7 +11,7 @@ import {
 } from 'graphql/types';
 import { InputBlock } from './InputBlock';
 import { ActionButton } from './ActionButton';
-import { Check, X, Plus, Loader, Edit, Edit2, Edit3 } from 'react-feather';
+import { Check, X, Plus, Loader, Edit2 } from 'react-feather';
 import { DataProxy } from 'apollo-cache';
 import { FetchResult } from 'apollo-link';
 import { Input } from 'components';
@@ -149,7 +149,7 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
     update: updateAddTag(providerId)
   });
 
-  const [removeTag, { loading: removing }] = useRemoveTagMutation({
+  const [removeTag] = useRemoveTagMutation({
     update: updateRemoveTag(providerId)
   });
 

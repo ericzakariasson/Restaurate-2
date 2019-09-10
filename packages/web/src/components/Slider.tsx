@@ -11,7 +11,6 @@ import {
 } from 'react-compound-slider';
 
 const HANDLE_WIDTH = 12;
-const SLIDER_HEIGHT = 46;
 
 interface StyledSliderProps {
   small: boolean;

@@ -68,7 +68,7 @@ interface SearchFormProps {
 }
 
 export const SearchForm = ({ onSubmit }: SearchFormProps) => {
-  const { position, rejected, loading: loadingPosition } = usePosition({
+  const { position, rejected } = usePosition({
     initiateOnMount: true
   });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { routes } from '../../routes';
 import { useMeQuery } from '../../graphql/types';
 import { GeneralError } from '../Error/GeneralError';

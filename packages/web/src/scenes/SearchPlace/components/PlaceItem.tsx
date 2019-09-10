@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { staticMapboxMapUrl } from '../../../utils';
 import { PlaceSearchItem } from 'graphql/types';
 import { NavLink } from 'react-router-dom';
-import { addVisitRoute, placeRoute } from 'routes';
+import { placeRoute } from 'routes';
 
 interface ItemProps {
   touching: boolean;

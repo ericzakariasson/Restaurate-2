@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { RateNode, SetRatePayload, RateStateNode } from '../rateReducer';
+import { SetRatePayload, RateStateNode } from '../rateReducer';
 import { InputSlider } from 'components/Slider';
 import { RateSliderChild } from './RateChild';
 import { calculateAverageNodeScore } from '../rateHelper';

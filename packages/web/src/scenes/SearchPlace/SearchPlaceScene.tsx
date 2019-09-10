@@ -1,8 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Input, Label } from 'components';
-import { usePosition } from 'hooks';
-import { MapPin, Compass } from 'react-feather';
 import { SearchForm, SearchPlaceFormValues } from './components/SearchForm';
 import { useSearchPlaceLazyQuery } from 'graphql/types';
 import { SearchPlaces } from './components/SearchPlaces';

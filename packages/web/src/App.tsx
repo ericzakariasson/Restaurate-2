@@ -15,7 +15,6 @@ import {
   AddVisitScene,
   DashboardScene,
   VisitScene,
-  GeneralError,
   RegisterScene,
   DefaultScene,
   LoginScene,

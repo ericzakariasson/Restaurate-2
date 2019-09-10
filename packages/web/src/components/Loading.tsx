@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { Loader } from 'react-feather';
 
 interface WrapperProps {
