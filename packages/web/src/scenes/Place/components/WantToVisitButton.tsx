@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button } from 'components';
-import { X } from 'react-feather';
+import { X, Plus } from 'react-feather';
 import styled from 'styled-components';
 import { ActionButton } from './ActionButton';
 import {
@@ -13,7 +13,7 @@ import { DataProxy } from 'apollo-cache';
 const ButtonText = styled.span`
   display: flex;
   justify-content: center;
-  align-items: centeR;
+  align-items: center;
 `;
 
 const updateWantToVisit = (providerId: string) => (cache: DataProxy) => {
@@ -54,14 +54,19 @@ export const WantToVisitButton = ({
   return (
     <Button
       text={
-        wantToVisit ? (
-          <ButtonText>
-            Vill besöka
-            <ActionButton as="span" icon={<X size={16} color="#666" />} />
-          </ButtonText>
-        ) : (
-          'Lägg till i vill besöka'
-        )
+        <ButtonText>
+          {wantToVisit ? 'Vill besöka' : 'Lägg till i vill besöka'}
+          <ActionButton
+            as="span"
+            icon={
+              wantToVisit ? (
+                <X size={16} color="#666" />
+              ) : (
+                <Plus size={16} color="#666" />
+              )
+            }
+          />
+        </ButtonText>
       }
       variant="secondary"
       color="white"

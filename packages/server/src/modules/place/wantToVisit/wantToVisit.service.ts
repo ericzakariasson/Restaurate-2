@@ -33,10 +33,11 @@ export class WantToVisitService {
     });
 
     await this.wtvRepository.save(wantToVisit);
+
     return true;
   }
 
   async findByProviderId(providerId: string, userId: number) {
-    return this.wtvRepository.find({ where: { providerId, userId } });
+    return this.wtvRepository.findOne({ where: { providerId, userId } });
   }
 }

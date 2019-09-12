@@ -122,6 +122,17 @@ export class PlaceService {
   }
 
   async createPlace(providerId: string, user: User) {
+    const wtv = await this.wtvRepository.findOne({
+      where: {
+        providerId,
+        userId: user.id
+      }
+    });
+
+    if (wtv) {
+      await this.wtvRepository.remove(wtv);
+    }
+
     const createdPlace = this.placeRepository.create({
       user,
       userId: user.id,

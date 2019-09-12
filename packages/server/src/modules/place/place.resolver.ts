@@ -233,9 +233,11 @@ export class PlaceResolver {
     @Root() place: Place,
     @Ctx() ctx: Context
   ): Promise<boolean> {
-    return !!this.wtvService.findByProviderId(
+    const wantToVisit = await this.wtvService.findByProviderId(
       place.foursquareId,
       ctx.req.session!.userId
     );
+
+    return Boolean(wantToVisit);
   }
 }
