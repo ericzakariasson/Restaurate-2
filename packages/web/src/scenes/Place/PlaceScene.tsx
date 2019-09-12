@@ -8,7 +8,7 @@ import { PlaceMap } from './components/Map';
 import { Visits } from './components/Visits';
 import { UserStat } from './components/UserStat';
 import { Website } from './components/Website';
-import { ProviderIdParam, addVisitRoute } from 'routes';
+import { ProviderPlaceIdParam, addVisitRoute } from 'routes';
 import { WantToVisitButton } from './components/WantToVisitButton';
 import { PriceLevelPicker } from './components/PriceLevelPicker';
 import { Tags } from './components/Tags';
@@ -23,15 +23,15 @@ const UserPlaceInputs = styled.section`
   margin-bottom: 30px;
 `;
 
-interface PlaceSceneProps extends RouteComponentProps<ProviderIdParam> {}
+interface PlaceSceneProps extends RouteComponentProps<ProviderPlaceIdParam> {}
 
 export const PlaceScene = ({
   match: {
-    params: { providerId }
+    params: { providerPlaceId }
   }
 }: PlaceSceneProps) => {
   const { data, loading, error } = usePlaceQuery({
-    variables: { providerId }
+    variables: { providerPlaceId }
   });
 
   if (loading) {
@@ -52,7 +52,6 @@ export const PlaceScene = ({
     visitCount,
     averageScore,
     visits,
-    foursquareId,
     hasVisited,
     wantToVisit
   } = place!;
@@ -70,20 +69,23 @@ export const PlaceScene = ({
         <UserStat label="Betyg" value={averageScore || '–'} />
       </UserStats>
       <UserPlaceInputs>
-        <PriceLevelPicker priceLevel={priceLevel} providerId={foursquareId} />
-        <Tags tags={tags} providerId={foursquareId} />
-        <Comment comment={comment} providerId={foursquareId} />
+        <PriceLevelPicker
+          priceLevel={priceLevel}
+          providerPlaceId={providerPlaceId}
+        />
+        <Tags tags={tags} providerPlaceId={providerPlaceId} />
+        <Comment comment={comment} providerPlaceId={providerPlaceId} />
       </UserPlaceInputs>
       {!hasVisited && (
         <WantToVisitButton
-          providerId={foursquareId}
+          providerPlaceId={providerPlaceId}
           wantToVisit={wantToVisit}
         />
       )}
       <NavButton
         text="Nytt besök"
         variant="primary"
-        to={addVisitRoute(foursquareId)}
+        to={addVisitRoute(providerPlaceId)}
       />
       <Visits visits={visits} />
     </Page>

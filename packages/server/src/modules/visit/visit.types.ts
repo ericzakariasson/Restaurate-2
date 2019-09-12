@@ -4,7 +4,7 @@ import { RateInput } from './rate/rate.types';
 @InputType()
 export class AddVisitInput {
   @Field()
-  providerId: string;
+  providerPlaceId: string;
 
   @Field()
   visitDate: Date;

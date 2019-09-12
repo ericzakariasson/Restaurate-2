@@ -12,14 +12,14 @@ export class WantToVisitService {
     private readonly userService: UserService
   ) {}
 
-  async toggle(providerId: string, userId: number) {
+  async toggle(providerPlaceId: string, userId: number) {
     const user = await this.userService.findById(userId);
 
     if (!user) {
       throw new Error('No user found');
     }
 
-    const exists = await this.findByProviderId(providerId, userId);
+    const exists = await this.findByProviderId(providerPlaceId, userId);
 
     if (exists) {
       await this.wtvRepository.remove(exists);
@@ -27,7 +27,7 @@ export class WantToVisitService {
     }
 
     const wantToVisit = this.wtvRepository.create({
-      providerId,
+      providerPlaceId,
       user,
       userId: user.id
     });
@@ -37,7 +37,7 @@ export class WantToVisitService {
     return true;
   }
 
-  async findByProviderId(providerId: string, userId: number) {
-    return this.wtvRepository.findOne({ where: { providerId, userId } });
+  async findByProviderId(providerPlaceId: string, userId: number) {
+    return this.wtvRepository.findOne({ where: { providerPlaceId, userId } });
   }
 }

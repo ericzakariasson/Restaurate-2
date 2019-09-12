@@ -16,7 +16,7 @@ export const SearchPlaces = ({ places }: SearchPlacesProps) => {
   return (
     <Results>
       {places.map(place => (
-        <PlaceItem key={place.foursquareId} place={place} />
+        <PlaceItem key={place.providerPlaceId} place={place} />
       ))}
     </Results>
   );

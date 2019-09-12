@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   margin-top: 10px;
 `;
 
-const updateComment = (providerId: string) => (
+const updateComment = (providerPlaceId: string) => (
   cache: DataProxy,
   { data: result }: FetchResult<SetCommentMutation>
 ) => {
@@ -30,7 +30,7 @@ const updateComment = (providerId: string) => (
 
     const placeQuery = {
       query: PlaceDocument,
-      variables: { providerId }
+      variables: { providerPlaceId }
     };
 
     const data = cache.readQuery<PlaceQuery>(placeQuery);
@@ -57,19 +57,19 @@ const updateComment = (providerId: string) => (
 
 interface CommentProps {
   comment?: string | null;
-  providerId: string;
+  providerPlaceId: string;
 }
 
-export const Comment = ({ comment, providerId }: CommentProps) => {
+export const Comment = ({ comment, providerPlaceId }: CommentProps) => {
   const [editing, setEditing] = React.useState(false);
   const [value, setValue] = React.useState(comment || '');
 
   const [setComment, { loading: saving }] = useSetCommentMutation({
-    update: updateComment(providerId)
+    update: updateComment(providerPlaceId)
   });
 
   const handleClick = async () => {
-    await setComment({ variables: { providerId, comment: value } });
+    await setComment({ variables: { providerPlaceId, comment: value } });
     setEditing(false);
   };
 

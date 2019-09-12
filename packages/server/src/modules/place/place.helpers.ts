@@ -6,14 +6,16 @@ import { Place } from './place.entity';
 export const transformVenueToSearchItem = (userPlaces: Place[]) => (
   venue: Venue | VenueDetails
 ) => {
-  const samePlace = userPlaces.find(place => place.foursquareId === venue.id);
+  const samePlace = userPlaces.find(
+    place => place.providerPlaceId === venue.id
+  );
   const formattedAddress =
     venue.location.address && venue.location.city
       ? `${venue.location.address}, ${venue.location.city}`
       : venue.location.country;
 
   const place = new PlaceSearchItem();
-  place.foursquareId = venue.id;
+  place.providerPlaceId = venue.id;
   place.name = venue.name;
   place.address = formattedAddress;
   place.coordinates = new Position({

@@ -163,7 +163,7 @@ export const VisitScene = ({
       <NavButton
         variant="secondary"
         color="white"
-        to={placeRoute(place.foursquareId)}
+        to={placeRoute(place.providerPlaceId)}
         text={`${place.data.name}`}
       />
     </Page>

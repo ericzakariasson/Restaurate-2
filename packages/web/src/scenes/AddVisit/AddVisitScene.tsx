@@ -22,7 +22,7 @@ import { rateReducer, SetRatePayload } from './rateReducer';
 import { GeneralError } from 'scenes/Error/GeneralError';
 import { RateSliderParent, RateHeader } from './components/RateParent';
 import styled from 'styled-components';
-import { routes, ProviderIdParam } from 'routes';
+import { routes, ProviderPlaceIdParam } from 'routes';
 
 const RateTotal = styled.article`
   margin-top: 30px;
@@ -32,15 +32,16 @@ const Section = styled.section`
   margin-bottom: 30px;
 `;
 
-interface AddVisitSceneProps extends RouteComponentProps<ProviderIdParam> {}
+interface AddVisitSceneProps
+  extends RouteComponentProps<ProviderPlaceIdParam> {}
 
 export const AddVisitScene = ({
   match: {
-    params: { providerId }
+    params: { providerPlaceId }
   }
 }: AddVisitSceneProps) => {
   const { data, loading, error } = usePlaceBasicDetailsQuery({
-    variables: { id: providerId }
+    variables: { providerPlaceId }
   });
 
   const [orders, addOrder, removeOrder] = useArray<string>();
@@ -56,7 +57,7 @@ export const AddVisitScene = ({
   ] = useAddVisitMutation({
     variables: {
       data: {
-        providerId,
+        providerPlaceId,
         visitDate,
         comment,
         orders,

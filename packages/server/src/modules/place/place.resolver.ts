@@ -44,18 +44,20 @@ export class PlaceResolver {
 
   @Authorized()
   @Query(() => Place, { nullable: true })
-  async place(@Arg('providerId') providerId: string): Promise<Place | null> {
-    const placeData = await this.placeService.getPlaceData(providerId);
+  async place(
+    @Arg('providerPlaceId') providerPlaceId: string
+  ): Promise<Place | null> {
+    const placeData = await this.placeService.getPlaceData(providerPlaceId);
 
     if (!placeData) {
       return null;
     }
 
-    const userPlace = await this.placeService.findByProviderId(providerId);
+    const userPlace = await this.placeService.findByProviderId(providerPlaceId);
 
     if (!userPlace) {
       const place = new Place();
-      place.foursquareId = placeData.id;
+      place.providerPlaceId = placeData.id;
       place.priceLevel = PriceLevel.NotSet;
       place.tags = [];
       return place;
@@ -67,10 +69,10 @@ export class PlaceResolver {
   @Authorized()
   @Query(() => PlaceSearchItem, { nullable: true })
   async placeBasicDetails(
-    @Arg('id') id: string
+    @Arg('providerPlaceId') providerPlaceId: string
   ): Promise<PlaceSearchItem | null> {
-    const placeData = await this.placeService.getPlaceData(id);
-    const place = await this.placeService.findByProviderId(id);
+    const placeData = await this.placeService.getPlaceData(providerPlaceId);
+    const place = await this.placeService.findByProviderId(providerPlaceId);
 
     if (!placeData) {
       return null;
@@ -127,21 +129,21 @@ export class PlaceResolver {
   @Authorized()
   @Mutation(() => Boolean)
   async toggleWantToVisit(
-    @Arg('providerId') providerId: string,
+    @Arg('providerPlaceId') providerPlaceId: string,
     @Ctx() ctx: Context
   ): Promise<boolean> {
-    return this.wtvService.toggle(providerId, ctx.req.session!.userId);
+    return this.wtvService.toggle(providerPlaceId, ctx.req.session!.userId);
   }
 
   @Authorized()
   @Mutation(() => PriceLevel)
   async setPriceLevel(
-    @Arg('providerId') providerId: string,
+    @Arg('providerPlaceId') providerPlaceId: string,
     @Arg('priceLevel') priceLevel: PriceLevel,
     @Ctx() ctx: Context
   ): Promise<PriceLevel> {
     return this.placeService.setPriceLevel(
-      providerId,
+      providerPlaceId,
       priceLevel,
       ctx.req.session!.userId
     );
@@ -150,22 +152,26 @@ export class PlaceResolver {
   @Authorized()
   @Mutation(() => Tag)
   async addTag(
-    @Arg('providerId') providerId: string,
+    @Arg('providerPlaceId') providerPlaceId: string,
     @Arg('name') name: string,
     @Ctx() ctx: Context
   ): Promise<Tag> {
-    return this.placeService.addTag(providerId, name, ctx.req.session!.userId);
+    return this.placeService.addTag(
+      providerPlaceId,
+      name,
+      ctx.req.session!.userId
+    );
   }
 
   @Authorized()
   @Mutation(() => Number)
   async removeTag(
-    @Arg('providerId') providerId: string,
+    @Arg('providerPlaceId') providerPlaceId: string,
     @Arg('tagId') tagId: number,
     @Ctx() ctx: Context
   ): Promise<number> {
     return this.placeService.removeTag(
-      providerId,
+      providerPlaceId,
       tagId,
       ctx.req.session!.userId
     );
@@ -174,12 +180,12 @@ export class PlaceResolver {
   @Authorized()
   @Mutation(() => String)
   async setComment(
-    @Arg('providerId') providerId: string,
+    @Arg('providerPlaceId') providerPlaceId: string,
     @Arg('comment') comment: string,
     @Ctx() ctx: Context
   ): Promise<string> {
     return this.placeService.setComment(
-      providerId,
+      providerPlaceId,
       comment,
       ctx.req.session!.userId
     );
@@ -220,7 +226,7 @@ export class PlaceResolver {
 
   @FieldResolver(() => PlaceData)
   async data(@Root() place: Place): Promise<PlaceData> {
-    return this.placeService.getPlaceData(place.foursquareId);
+    return this.placeService.getPlaceData(place.providerPlaceId);
   }
 
   @FieldResolver(() => Boolean)
@@ -234,7 +240,7 @@ export class PlaceResolver {
     @Ctx() ctx: Context
   ): Promise<boolean> {
     const wantToVisit = await this.wtvService.findByProviderId(
-      place.foursquareId,
+      place.providerPlaceId,
       ctx.req.session!.userId
     );
 

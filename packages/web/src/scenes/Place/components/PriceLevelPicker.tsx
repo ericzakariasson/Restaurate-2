@@ -40,7 +40,7 @@ const StyledSelect = styled.select<SelectProps>`
 
 const priceLevelArray = Object.values(PriceLevel);
 
-const updatePriceLevel = (providerId: string) => (
+const updatePriceLevel = (providerPlaceId: string) => (
   cache: DataProxy,
   { data: result }: FetchResult<SetPriceLevelMutation>
 ) => {
@@ -51,7 +51,7 @@ const updatePriceLevel = (providerId: string) => (
 
     const placeQuery = {
       query: PlaceDocument,
-      variables: { providerId }
+      variables: { providerPlaceId }
     };
 
     const data = cache.readQuery<PlaceQuery>(placeQuery);
@@ -78,15 +78,15 @@ const updatePriceLevel = (providerId: string) => (
 
 interface PriceLevelProps {
   priceLevel: PriceLevel;
-  providerId: string;
+  providerPlaceId: string;
 }
 
 export const PriceLevelPicker = ({
   priceLevel,
-  providerId
+  providerPlaceId
 }: PriceLevelProps) => {
   const [savePriceLevel] = useSetPriceLevelMutation({
-    update: updatePriceLevel(providerId)
+    update: updatePriceLevel(providerPlaceId)
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -96,7 +96,7 @@ export const PriceLevelPicker = ({
 
     savePriceLevel({
       variables: {
-        providerId,
+        providerPlaceId,
         priceLevel: priceLevelIndex
       }
     });

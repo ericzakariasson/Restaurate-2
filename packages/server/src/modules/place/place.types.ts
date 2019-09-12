@@ -19,7 +19,7 @@ export class PlaceInput {
   id?: number;
 
   @Field()
-  foursquareId: string;
+  providerPlaceId: string;
 
   @Field(() => PriceLevel, { nullable: true })
   priceLevel?: PriceLevel;
@@ -76,7 +76,7 @@ export class PlaceSearchInput {
 @ObjectType()
 export class PlaceSearchItem {
   @Field()
-  foursquareId: string;
+  providerPlaceId: string;
 
   @Field()
   name: string;

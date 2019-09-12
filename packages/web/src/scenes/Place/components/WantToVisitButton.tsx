@@ -16,10 +16,10 @@ const ButtonText = styled.span`
   align-items: center;
 `;
 
-const updateWantToVisit = (providerId: string) => (cache: DataProxy) => {
+const updateWantToVisit = (providerPlaceId: string) => (cache: DataProxy) => {
   const placeQuery = {
     query: PlaceDocument,
-    variables: { providerId }
+    variables: { providerPlaceId }
   };
 
   const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;
@@ -38,17 +38,17 @@ const updateWantToVisit = (providerId: string) => (cache: DataProxy) => {
 };
 
 interface WantToVisitButtonProps {
-  providerId: string;
+  providerPlaceId: string;
   wantToVisit: boolean;
 }
 
 export const WantToVisitButton = ({
-  providerId,
+  providerPlaceId,
   wantToVisit
 }: WantToVisitButtonProps) => {
   const [toggleWantToVisit, { loading }] = useToggleWantToVisitMutation({
-    variables: { providerId },
-    update: updateWantToVisit(providerId)
+    variables: { providerPlaceId },
+    update: updateWantToVisit(providerPlaceId)
   });
 
   return (

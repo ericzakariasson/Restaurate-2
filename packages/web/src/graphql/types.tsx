@@ -15,7 +15,7 @@ export type Scalars = {
 };
 
 export type AddVisitInput = {
-  providerId: Scalars['String'],
+  providerPlaceId: Scalars['String'],
   visitDate: Scalars['DateTime'],
   comment?: Maybe<Scalars['String']>,
   orders?: Maybe<Array<Scalars['String']>>,
@@ -85,31 +85,31 @@ export type MutationAddVisitArgs = {
 
 
 export type MutationToggleWantToVisitArgs = {
-  providerId: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
 export type MutationSetPriceLevelArgs = {
   priceLevel: Scalars['Float'],
-  providerId: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
 export type MutationAddTagArgs = {
   name: Scalars['String'],
-  providerId: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
 export type MutationRemoveTagArgs = {
   tagId: Scalars['Float'],
-  providerId: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
 export type MutationSetCommentArgs = {
   comment: Scalars['String'],
-  providerId: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 export type Order = {
@@ -123,7 +123,7 @@ export type Order = {
 export type Place = {
    __typename?: 'Place',
   id?: Maybe<Scalars['ID']>,
-  foursquareId: Scalars['String'],
+  providerPlaceId: Scalars['ID'],
   user?: Maybe<User>,
   types?: Maybe<Array<PlaceType>>,
   priceLevel: PriceLevel,
@@ -156,7 +156,7 @@ export type PlaceData = {
 
 export type PlaceInput = {
   id?: Maybe<Scalars['Float']>,
-  foursquareId: Scalars['String'],
+  providerPlaceId: Scalars['String'],
   priceLevel?: Maybe<PriceLevel>,
   types: Array<PlaceType>,
   tags: Array<Scalars['String']>,
@@ -170,7 +170,7 @@ export type PlaceSearchInput = {
 
 export type PlaceSearchItem = {
    __typename?: 'PlaceSearchItem',
-  foursquareId: Scalars['String'],
+  providerPlaceId: Scalars['String'],
   name: Scalars['String'],
   address: Scalars['String'],
   visits: Scalars['Float'],
@@ -226,12 +226,12 @@ export type QueryVisitArgs = {
 
 
 export type QueryPlaceArgs = {
-  providerId: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
 export type QueryPlaceBasicDetailsArgs = {
-  id: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
@@ -305,13 +305,13 @@ export type Visit = {
 export type WantToVisit = {
    __typename?: 'WantToVisit',
   id: Scalars['ID'],
-  providerId: Scalars['String'],
+  providerPlaceId: Scalars['String'],
   createdAt: Scalars['String'],
   updatedAt: Scalars['String'],
 };
 export type PlaceFragment = (
   { __typename?: 'Place' }
-  & Pick<Place, 'id' | 'foursquareId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'comment' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
+  & Pick<Place, 'id' | 'providerPlaceId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'comment' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
   & { tags: Array<{ __typename?: 'Tag' }
     & PlaceTagFragment
   >, data: { __typename?: 'PlaceData' }
@@ -323,7 +323,7 @@ export type PlaceFragment = (
 
 export type PlaceBasicDetailsFragment = (
   { __typename?: 'PlaceSearchItem' }
-  & Pick<PlaceSearchItem, 'foursquareId' | 'name' | 'address' | 'visits' | 'types'>
+  & Pick<PlaceSearchItem, 'providerPlaceId' | 'name' | 'address' | 'visits' | 'types'>
   & { coordinates: (
     { __typename?: 'Position' }
     & Pick<Position, 'lat' | 'lng'>
@@ -395,7 +395,7 @@ export type VisitRateFragment = (
 );
 
 export type AddTagMutationVariables = {
-  providerId: Scalars['String'],
+  providerPlaceId: Scalars['String'],
   name: Scalars['String']
 };
 
@@ -448,7 +448,7 @@ export type RegisterMutation = (
 );
 
 export type RemoveTagMutationVariables = {
-  providerId: Scalars['String'],
+  providerPlaceId: Scalars['String'],
   tagId: Scalars['Float']
 };
 
@@ -459,7 +459,7 @@ export type RemoveTagMutation = (
 );
 
 export type SetCommentMutationVariables = {
-  providerId: Scalars['String'],
+  providerPlaceId: Scalars['String'],
   comment: Scalars['String']
 };
 
@@ -470,7 +470,7 @@ export type SetCommentMutation = (
 );
 
 export type SetPriceLevelMutationVariables = {
-  providerId: Scalars['String'],
+  providerPlaceId: Scalars['String'],
   priceLevel: Scalars['Float']
 };
 
@@ -481,7 +481,7 @@ export type SetPriceLevelMutation = (
 );
 
 export type ToggleWantToVisitMutationVariables = {
-  providerId: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
@@ -534,7 +534,7 @@ export type MeVisitsQuery = (
 );
 
 export type PlaceQueryVariables = {
-  providerId: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
@@ -551,7 +551,7 @@ export type PlaceQuery = (
 );
 
 export type PlaceBasicDetailsQueryVariables = {
-  id: Scalars['String']
+  providerPlaceId: Scalars['String']
 };
 
 
@@ -600,7 +600,7 @@ export type WantToVisitListQuery = (
 );
 export const PlaceBasicDetailsFragmentDoc = gql`
     fragment PlaceBasicDetails on PlaceSearchItem {
-  foursquareId
+  providerPlaceId
   name
   address
   visits
@@ -702,7 +702,7 @@ ${LocationFragmentDoc}`;
 export const PlaceFragmentDoc = gql`
     fragment Place on Place {
   id
-  foursquareId
+  providerPlaceId
   priceLevel
   types
   averageScore
@@ -754,8 +754,8 @@ ${VisitRateFragmentDoc}
 ${UserFragmentDoc}
 ${PlaceFragmentDoc}`;
 export const AddTagDocument = gql`
-    mutation AddTag($providerId: String!, $name: String!) {
-  addTag(providerId: $providerId, name: $name) {
+    mutation AddTag($providerPlaceId: String!, $name: String!) {
+  addTag(providerPlaceId: $providerPlaceId, name: $name) {
     ...Tag
   }
 }
@@ -814,8 +814,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const RemoveTagDocument = gql`
-    mutation RemoveTag($providerId: String!, $tagId: Float!) {
-  removeTag(providerId: $providerId, tagId: $tagId)
+    mutation RemoveTag($providerPlaceId: String!, $tagId: Float!) {
+  removeTag(providerPlaceId: $providerPlaceId, tagId: $tagId)
 }
     `;
 export type RemoveTagMutationFn = ApolloReactCommon.MutationFunction<RemoveTagMutation, RemoveTagMutationVariables>;
@@ -827,8 +827,8 @@ export type RemoveTagMutationHookResult = ReturnType<typeof useRemoveTagMutation
 export type RemoveTagMutationResult = ApolloReactCommon.MutationResult<RemoveTagMutation>;
 export type RemoveTagMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTagMutation, RemoveTagMutationVariables>;
 export const SetCommentDocument = gql`
-    mutation SetComment($providerId: String!, $comment: String!) {
-  setComment(providerId: $providerId, comment: $comment)
+    mutation SetComment($providerPlaceId: String!, $comment: String!) {
+  setComment(providerPlaceId: $providerPlaceId, comment: $comment)
 }
     `;
 export type SetCommentMutationFn = ApolloReactCommon.MutationFunction<SetCommentMutation, SetCommentMutationVariables>;
@@ -840,8 +840,8 @@ export type SetCommentMutationHookResult = ReturnType<typeof useSetCommentMutati
 export type SetCommentMutationResult = ApolloReactCommon.MutationResult<SetCommentMutation>;
 export type SetCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<SetCommentMutation, SetCommentMutationVariables>;
 export const SetPriceLevelDocument = gql`
-    mutation SetPriceLevel($providerId: String!, $priceLevel: Float!) {
-  setPriceLevel(providerId: $providerId, priceLevel: $priceLevel)
+    mutation SetPriceLevel($providerPlaceId: String!, $priceLevel: Float!) {
+  setPriceLevel(providerPlaceId: $providerPlaceId, priceLevel: $priceLevel)
 }
     `;
 export type SetPriceLevelMutationFn = ApolloReactCommon.MutationFunction<SetPriceLevelMutation, SetPriceLevelMutationVariables>;
@@ -853,8 +853,8 @@ export type SetPriceLevelMutationHookResult = ReturnType<typeof useSetPriceLevel
 export type SetPriceLevelMutationResult = ApolloReactCommon.MutationResult<SetPriceLevelMutation>;
 export type SetPriceLevelMutationOptions = ApolloReactCommon.BaseMutationOptions<SetPriceLevelMutation, SetPriceLevelMutationVariables>;
 export const ToggleWantToVisitDocument = gql`
-    mutation ToggleWantToVisit($providerId: String!) {
-  toggleWantToVisit(providerId: $providerId)
+    mutation ToggleWantToVisit($providerPlaceId: String!) {
+  toggleWantToVisit(providerPlaceId: $providerPlaceId)
 }
     `;
 export type ToggleWantToVisitMutationFn = ApolloReactCommon.MutationFunction<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>;
@@ -929,8 +929,8 @@ export const MeVisitsDocument = gql`
 export type MeVisitsQueryHookResult = ReturnType<typeof useMeVisitsQuery>;
 export type MeVisitsQueryResult = ApolloReactCommon.QueryResult<MeVisitsQuery, MeVisitsQueryVariables>;
 export const PlaceDocument = gql`
-    query Place($providerId: String!) {
-  place(providerId: $providerId) {
+    query Place($providerPlaceId: String!) {
+  place(providerPlaceId: $providerPlaceId) {
     ...Place
     visits {
       ...Visit
@@ -950,8 +950,8 @@ ${VisitFragmentDoc}`;
 export type PlaceQueryHookResult = ReturnType<typeof usePlaceQuery>;
 export type PlaceQueryResult = ApolloReactCommon.QueryResult<PlaceQuery, PlaceQueryVariables>;
 export const PlaceBasicDetailsDocument = gql`
-    query PlaceBasicDetails($id: String!) {
-  placeBasicDetails(id: $id) {
+    query PlaceBasicDetails($providerPlaceId: String!) {
+  placeBasicDetails(providerPlaceId: $providerPlaceId) {
     ...PlaceBasicDetails
   }
 }

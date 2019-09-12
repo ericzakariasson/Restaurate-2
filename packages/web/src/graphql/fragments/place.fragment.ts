@@ -5,7 +5,7 @@ import * as fragments from './';
 export default gql`
   fragment Place on Place {
     id
-    foursquareId
+    providerPlaceId
     priceLevel
     types
     averageScore

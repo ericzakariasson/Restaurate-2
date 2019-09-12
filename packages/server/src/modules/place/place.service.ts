@@ -66,21 +66,9 @@ export class PlaceService {
     return visits;
   }
 
-  // async findByIdOrSlug(id?: number, providerId?: string) {
-  //   const place = await this.placeRepository.findOne({
-  //     where: [{ id }, { foursquareId: providerId }]
-  //   });
-
-  //   if (!place) {
-  //     return null;
-  //   }
-
-  //   return place;
-  // }
-
-  async findByProviderId(providerId: string) {
+  async findByProviderId(providerPlaceId: string) {
     const place = await this.placeRepository.findOne({
-      where: { foursquareId: providerId }
+      where: { providerPlaceId }
     });
 
     if (!place) {
@@ -90,41 +78,46 @@ export class PlaceService {
     return place;
   }
 
-  async getPlaceData(providerId: string) {
+  async getPlaceData(providerPlaceId: string) {
     const cached = this.cacheService.get<VenueDetails>(
-      placeDataKey(providerId)
+      placeDataKey(providerPlaceId)
     );
 
     if (cached) {
       return cached;
     }
 
-    const placeData = await this.foursquareService.venue.details(providerId);
-    const success = this.cacheService.set(placeDataKey(providerId), placeData);
+    const placeData = await this.foursquareService.venue.details(
+      providerPlaceId
+    );
+    const success = this.cacheService.set(
+      placeDataKey(providerPlaceId),
+      placeData
+    );
 
     if (!success) {
-      console.error(`Error setting cache for "${providerId}"`);
+      console.error(`Error setting cache for "${providerPlaceId}"`);
     }
 
     return placeData;
   }
 
-  async findByIdOrCreate(providerId: string, user: User) {
+  async findByIdOrCreate(providerPlaceId: string, user: User) {
     const place = await this.placeRepository.findOne({
-      where: { foursquareId: providerId }
+      where: { providerPlaceId }
     });
 
     if (place) {
       return place;
     }
 
-    return this.createPlace(providerId, user);
+    return this.createPlace(providerPlaceId, user);
   }
 
-  async createPlace(providerId: string, user: User) {
+  async createPlace(providerPlaceId: string, user: User) {
     const wtv = await this.wtvRepository.findOne({
       where: {
-        providerId,
+        providerPlaceId,
         userId: user.id
       }
     });
@@ -136,7 +129,7 @@ export class PlaceService {
     const createdPlace = this.placeRepository.create({
       user,
       userId: user.id,
-      foursquareId: providerId
+      providerPlaceId
     });
 
     return this.placeRepository.save(createdPlace);
@@ -147,17 +140,17 @@ export class PlaceService {
     return place;
   }
 
-  async getUserPlacesByProviderIds(userId: number, ids: string[]) {
+  async getUserPlacesByProviderIds(userId: number, providerPlaceIds: string[]) {
     return this.placeRepository.find({
       where: {
         userId,
-        foursquareId: In(ids)
+        providerPlaceId: In(providerPlaceIds)
       }
     });
   }
 
   async setPriceLevel(
-    providerId: string,
+    providerPlaceId: string,
     priceLevel: PriceLevel,
     userId: number
   ) {
@@ -167,20 +160,20 @@ export class PlaceService {
       throw new Error('No user found');
     }
 
-    const place = await this.findByIdOrCreate(providerId, user);
+    const place = await this.findByIdOrCreate(providerPlaceId, user);
     await this.placeRepository.update(place.id, { priceLevel });
 
     return priceLevel;
   }
 
-  async addTag(providerId: string, name: string, userId: number) {
+  async addTag(providerPlaceId: string, name: string, userId: number) {
     const user = await this.userService.findById(userId);
 
     if (!user) {
       throw new Error('No user found');
     }
 
-    const place = await this.findByIdOrCreate(providerId, user);
+    const place = await this.findByIdOrCreate(providerPlaceId, user);
     const tag = await this.tagService.findByNameOrCreate(name, place, user);
 
     place.tags = place.tags ? place.tags.concat(tag) : [tag];
@@ -190,14 +183,14 @@ export class PlaceService {
     return tag;
   }
 
-  async removeTag(providerId: string, tagId: number, userId: number) {
+  async removeTag(providerPlaceId: string, tagId: number, userId: number) {
     const user = await this.userService.findById(userId);
 
     if (!user) {
       throw new Error('No user found');
     }
 
-    const place = await this.findByIdOrCreate(providerId, user);
+    const place = await this.findByIdOrCreate(providerPlaceId, user);
     place.tags = place.tags.filter(tag => tag.id !== tagId);
 
     await this.placeRepository.save(place);
@@ -205,14 +198,14 @@ export class PlaceService {
     return tagId;
   }
 
-  async setComment(providerId: string, comment: string, userId: number) {
+  async setComment(providerPlaceId: string, comment: string, userId: number) {
     const user = await this.userService.findById(userId);
 
     if (!user) {
       throw new Error('No user found');
     }
 
-    const place = await this.findByIdOrCreate(providerId, user);
+    const place = await this.findByIdOrCreate(providerPlaceId, user);
     place.comment = comment;
 
     await this.placeRepository.save(place);
@@ -224,7 +217,7 @@ export class PlaceService {
     const wantToVisit = await this.wtvRepository.find({ where: { userId } });
 
     const places = Promise.all(
-      wantToVisit.map(async wtv => await this.getPlaceData(wtv.providerId))
+      wantToVisit.map(async wtv => await this.getPlaceData(wtv.providerPlaceId))
     );
 
     return places;

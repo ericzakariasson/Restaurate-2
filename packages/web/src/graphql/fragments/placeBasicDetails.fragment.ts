@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export default gql`
   fragment PlaceBasicDetails on PlaceSearchItem {
-    foursquareId
+    providerPlaceId
     name
     address
     visits

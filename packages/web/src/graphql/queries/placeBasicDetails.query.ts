@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 import * as fragments from '../fragments';
 
 export default gql`
-  query PlaceBasicDetails($id: String!) {
-    placeBasicDetails(id: $id) {
+  query PlaceBasicDetails($providerPlaceId: String!) {
+    placeBasicDetails(providerPlaceId: $providerPlaceId) {
       ...PlaceBasicDetails
     }
   }

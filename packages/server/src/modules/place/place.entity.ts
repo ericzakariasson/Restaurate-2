@@ -23,9 +23,9 @@ export class Place {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
+  @Field(() => ID)
   @Column()
-  foursquareId: string;
+  providerPlaceId: string;
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.places)

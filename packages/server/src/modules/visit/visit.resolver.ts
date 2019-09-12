@@ -47,7 +47,7 @@ export class VisitResolver {
     }
 
     const place = await this.placeService.findByIdOrCreate(
-      input.providerId,
+      input.providerPlaceId,
       user
     );
 

@@ -104,7 +104,7 @@ interface PlaceItemProps {
 }
 
 export const PlaceItem = ({
-  place: { foursquareId, name, address, coordinates, types }
+  place: { providerPlaceId, name, address, coordinates, types }
 }: PlaceItemProps) => {
   const [touching, setTouching] = useState(false);
 
@@ -133,7 +133,7 @@ export const PlaceItem = ({
       onTouchEnd={handleTouchEnd}
       touching={touching}
     >
-      <Link to={placeRoute(foursquareId)}>
+      <Link to={placeRoute(providerPlaceId)}>
         <Map touching={touching} src={mapUrl} />
         <Info>
           <Name>{name}</Name>
