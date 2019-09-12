@@ -55,7 +55,7 @@ interface staticMapboxMapUrlParameters extends StaticMapParameters {
 }
 
 const MAPBOX_STATIC_MAPS_BASE =
-  'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static';
+  'https://api.mapbox.com/styles/v1/ericzakariasson/cjuign0eq0cui1fs4b9hble2c/static';
 
 export const staticMapboxMapUrl = ({
   zoom = 12,

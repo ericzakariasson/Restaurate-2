@@ -43,7 +43,7 @@ export const theme = {
   },
   colors: {
     primary: {
-      hex: '#FFD966',
+      default: '#FFD966',
       hues: [
         '#ffd966',
         '#ffdd75',
@@ -61,7 +61,7 @@ export const theme = {
       gradient: 'linear-gradient(105deg, #FF6666 15%, #FD7394 85%);'
     },
     secondary: {
-      hex: '#2065d4',
+      default: '#2065d4',
       hues: [
         '#2065d4',
         '#3674d8',
@@ -78,7 +78,7 @@ export const theme = {
       rgba: (opacity: number) => `rgba(32, 101, 212, ${opacity / 100})`
     },
     warning: {
-      hex: '#ffd56b',
+      default: '#ffd56b',
       hues: [
         '#ffd56b',
         '#ffd97a',
@@ -94,7 +94,7 @@ export const theme = {
       ]
     },
     error: {
-      hex: '#EA4335',
+      default: '#EA4335',
       hues: [
         '#ea4335',
         '#ec5649',
@@ -110,7 +110,7 @@ export const theme = {
       ]
     },
     success: {
-      hex: '#11bf5a',
+      default: '#11bf5a',
       hues: [
         '#11bf5a',
         '#29c56b',
@@ -126,7 +126,7 @@ export const theme = {
       ]
     },
     black: {
-      hex: '#222',
+      default: '#222',
       hues: [
         '#222222',
         '#383838',

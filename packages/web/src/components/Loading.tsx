@@ -124,7 +124,7 @@ const Wrapper = styled.div<WrapperProps>`
 //   position: absolute;
 //   width: 15px;
 //   height: 15px;
-//   border: 6px solid ${p => p.theme.colors.primary.hex};
+//   border: 6px solid ${p => p.theme.colors.primary.default};
 //   background: #222;
 //   box-shadow: ${p => p.theme.boxShadow};
 //   z-index: 1;

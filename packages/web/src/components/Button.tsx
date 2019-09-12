@@ -88,7 +88,7 @@ const BaseButton = styled.button<StyledProps>`
 
 const StyledTextButton = styled(BaseButton)<StyledTextButtonProps>`
   background: none;
-  color: ${p => p.theme.colors[p.color].hex};
+  color: ${p => p.theme.colors[p.color].default};
 `;
 
 export const TextButton = ({

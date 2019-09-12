@@ -205,7 +205,7 @@ const StyledHandle = styled.div<StyledHandleProps>`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: ${p => p.theme.colors.primary.hex};
+    background: ${p => p.theme.colors.primary.default};
     transition: all ${p => p.theme.transition};
     z-index: 1;
   }

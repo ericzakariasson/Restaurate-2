@@ -6,6 +6,8 @@ import { staticMapboxMapUrl } from 'utils';
 const MapWrapper = styled.div`
   position: relative;
   margin-bottom: 20px;
+  box-shadow: ${p => p.theme.boxShadow};
+  border-radius: 8px;
 `;
 
 interface MapCardProps {
@@ -19,7 +21,20 @@ const MapCard = styled.div<MapCardProps>`
   background-size: cover;
   background-position: center;
   border-radius: 8px;
-  box-shadow: ${p => p.theme.boxShadow};
+  position: relative;
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.08);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: ${p => p.theme.colors.primary.default};
+    border-radius: 50%;
+  }
 `;
 
 const GetDirections = styled.a`
@@ -35,6 +50,7 @@ const GetDirections = styled.a`
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(3px);
+  z-index: 1;
 `;
 
 interface PlaceMapProps {
