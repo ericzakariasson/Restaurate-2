@@ -24,6 +24,7 @@ import {
   WantToVisitScene
 } from './scenes';
 import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
+import { Navigation } from 'components/Navigation';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -36,6 +37,7 @@ const App = () => {
         <ThemeProvider theme={theme}>
           <>
             <Helmet defaultTitle="Restaurate" titleTemplate="Restaurate – %s" />
+            <Navigation />
             <Wrapper>
               <Switch>
                 <Route

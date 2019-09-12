@@ -1,8 +1,8 @@
-type Routes = { [key: string]: string };
+// type Routes = { [key: string]: string };
 
 export type ProviderPlaceIdParam = { providerPlaceId: string };
 
-export const routes: Routes = {
+export const routes = {
   default: '/',
   dashboard: '/dashboard',
   visits: '/visits',

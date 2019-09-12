@@ -29,10 +29,15 @@ const Line = styled.div<LineProps>`
   background: #eee;
 `;
 
-export const SkeletonCard = () => {
-  const nameWidth = randomNumberBetween(50, 90);
-  const addressWidth = randomNumberBetween(40, 80);
+interface SkeletonCardProps {
+  nameWidth?: number;
+  addressWidth?: number;
+}
 
+export const SkeletonCard = ({
+  nameWidth = randomNumberBetween(50, 90),
+  addressWidth = randomNumberBetween(40, 80)
+}: SkeletonCardProps) => {
   return (
     <Wrapper>
       <Left>
@@ -51,7 +56,7 @@ const randomNumberBetween = (min: number, max: number): number =>
 
 export const SkeletonCards = ({ count }: { count: number }) => (
   <>
-    {Array.from({ length: count }, (i: number) => (
+    {Array.from({ length: count }, (_, i: number) => (
       <SkeletonCard key={i} />
     ))}
   </>
