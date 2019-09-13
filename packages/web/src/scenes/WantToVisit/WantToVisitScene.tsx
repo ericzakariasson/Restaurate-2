@@ -3,6 +3,7 @@ import { Page, Loading } from 'components';
 import { useWantToVisitListQuery } from 'graphql/types';
 import { PlaceItem } from 'scenes/SearchPlace/components/PlaceItem';
 import styled from 'styled-components';
+import { NoResult } from 'components/NoResult';
 
 const List = styled.ul`
   list-style: none;
@@ -20,9 +21,11 @@ export const WantToVisitScene = () => {
   return (
     <Page title="Vill besöka">
       <List>
-        {list.map(place => (
-          <PlaceItem place={place} />
-        ))}
+        {list.length > 0 ? (
+          list.map(place => <PlaceItem place={place} />)
+        ) : (
+          <NoResult label="ställen du vill besöka" />
+        )}
       </List>
     </Page>
   );

@@ -5,8 +5,7 @@ import { routes } from 'routes';
 
 const Nav = styled.nav`
   display: flex;
-  background: #f5f5f5;
-  padding: 0 10px;
+  /* padding: 0 10px; */
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
 `;
@@ -15,13 +14,13 @@ const Link = styled(NavLink)`
   display: block;
   text-decoration: none;
   color: #222;
-  font-size: ${p => p.theme.fontSize.normal};
-  padding: 10px;
+  font-size: ${p => p.theme.fontSize.large};
+  padding: 10px 20px;
   font-weight: 700;
   white-space: nowrap;
 
   &.active {
-    border-bottom: 2px solid #aaa;
+    border-bottom: 2px solid #222;
   }
 `;
 

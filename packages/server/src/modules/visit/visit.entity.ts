@@ -59,6 +59,10 @@ export class Visit extends BaseEntity {
   @RelationColumn()
   placeId: number;
 
+  @Field()
+  @Column({ default: false })
+  private: boolean;
+
   @Field(() => Date)
   @CreateDateColumn()
   createdAt: string;

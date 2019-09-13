@@ -40,11 +40,10 @@ export class PlaceService {
       return 0;
     }
 
-    // const averageScore =
-    //   visits.reduce((score, visit) => score + visit.ratings.score, 0) /
-    //   visits.length;
+    const averageScore =
+      visits.reduce((score, visit) => score + visit.score, 0) / visits.length;
 
-    const rounded = round(5.5);
+    const rounded = round(averageScore);
 
     return rounded;
   }

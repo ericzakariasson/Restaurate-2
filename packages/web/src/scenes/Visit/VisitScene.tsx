@@ -120,7 +120,7 @@ export const VisitScene = ({
         <Ratings>
           {ratings.map(rate => {
             return (
-              <Rating>
+              <Rating key={rate.name}>
                 <RatingWrapper>
                   <RatingText>
                     {translateRateName(rate.name)} –{' '}

@@ -10,7 +10,12 @@ import {
   Button
 } from 'components';
 import Helmet from 'react-helmet';
-import { usePlaceBasicDetailsQuery, useAddVisitMutation } from 'graphql/types';
+import {
+  usePlaceBasicDetailsQuery,
+  useAddVisitMutation,
+  MeVisitsDocument,
+  MePlacesDocument
+} from 'graphql/types';
 import { useArray } from 'hooks';
 import { rateNodes } from './constants';
 import {
@@ -63,7 +68,8 @@ export const AddVisitScene = ({
         orders,
         ratings: transformToInput(rateState)
       }
-    }
+    },
+    refetchQueries: [{ query: MeVisitsDocument }, { query: MePlacesDocument }]
   });
 
   if (addVisitData && addVisitData.addVisit.saved) {
@@ -147,8 +153,9 @@ export const AddVisitScene = ({
       <Button
         variant="primary"
         onClick={() => addVisit()}
-        text={saving ? 'Sparar' : 'Lägg till besök'}
+        text={'Lägg till besök'}
         size="large"
+        loading={saving}
       />
     </Page>
   );
