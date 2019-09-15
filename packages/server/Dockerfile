@@ -26,4 +26,4 @@ ENV NODE_ENV=production
 
 EXPOSE 4000
 
-CMD [ "yarn", "start" ]
+CMD ["node", "dist/index.js"]
