@@ -3,10 +3,10 @@ import { Service } from 'typedi';
 import * as bcrypt from 'bcryptjs';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { User } from './user.entity';
-import { Request } from 'express';
 import { UserRegisterInput } from './user.types';
 import { Place } from '../place/place.entity';
 import { Visit } from '../visit/visit.entity';
+import { SessionRequest } from 'src/graphql/types';
 
 @Service()
 export class UserService {
@@ -27,7 +27,7 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
 
-  async login(email: string, password: string, req: Request) {
+  async login(email: string, password: string, req: SessionRequest) {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
@@ -40,12 +40,12 @@ export class UserService {
       return null;
     }
 
-    req.session!.userId = user.id;
+    req.session.userId = user.id;
 
     return user;
   }
 
-  async register(input: UserRegisterInput, req: Request) {
+  async register(input: UserRegisterInput, req: SessionRequest) {
     const hashedPassword = await bcrypt.hash(input.password, 12);
 
     const user = this.userRepository.create({
@@ -55,14 +55,14 @@ export class UserService {
 
     await this.userRepository.save(user);
 
-    req.session!.userId = user.id;
+    req.session.userId = user.id;
 
     return user;
   }
 
-  async logout(req: Request): Promise<boolean> {
+  async logout(req: SessionRequest): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      return req.session!.destroy(err => {
+      return req.session.destroy(err => {
         if (err) {
           console.error(err);
           return reject(false);

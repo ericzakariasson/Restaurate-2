@@ -11,6 +11,7 @@ import { configs } from './ormconfig';
 import { generateSchema } from './schema';
 import { insertUser } from './seed';
 import { isDevelopment } from 'apollo-utilities';
+import { SessionRequest } from './graphql/types';
 
 dotenv.config();
 
@@ -56,7 +57,7 @@ const startServer = async (): Promise<void> => {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }: { req: Request }) => ({ req }),
+    context: ({ req }: { req: SessionRequest }) => ({ req }),
     playground: isDevelopment()
   });
 

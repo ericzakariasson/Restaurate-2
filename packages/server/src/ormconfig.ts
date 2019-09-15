@@ -12,7 +12,7 @@ export const configs: ConnectionOptions[] = [
     synchronize: true,
     dropSchema: true,
     logging: false,
-    entities: ['dist/modules/**/*.entity.js'],
+    entities: ['src/modules/**/*.entity.ts'],
     migrations: ['src/migration/**/*.ts'],
     subscribers: ['src/subscriber/**/*.ts'],
     cli: {

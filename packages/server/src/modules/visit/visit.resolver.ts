@@ -40,7 +40,7 @@ export class VisitResolver {
     @Arg('data') input: AddVisitInput,
     @Ctx() ctx: Context
   ): Promise<AddVisitResponse> {
-    const user = await this.userService.findById(ctx.req.session!.userId);
+    const user = await this.userService.findById(ctx.req.session.userId);
 
     if (!user) {
       throw new Error('No user found');

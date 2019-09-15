@@ -21,7 +21,7 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: Context): Promise<User | null> {
-    return this.userService.getMe(ctx.req.session!.userId);
+    return this.userService.getMe(ctx.req.session.userId);
   }
 
   @Mutation(() => User, { nullable: true })

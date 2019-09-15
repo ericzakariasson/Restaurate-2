@@ -105,7 +105,7 @@ export class PlaceResolver {
     }
 
     const userPlaces = await this.placeService.getUserPlacesByProviderIds(
-      ctx.req.session!.userId,
+      ctx.req.session.userId,
       venues.map(venue => venue.id)
     );
 
@@ -118,7 +118,7 @@ export class PlaceResolver {
   @Query(() => [PlaceSearchItem])
   async wantToVisitList(@Ctx() ctx: Context): Promise<PlaceSearchItem[]> {
     const placeDataList = await this.placeService.getWantToVisitList(
-      ctx.req.session!.userId
+      ctx.req.session.userId
     );
 
     return placeDataList.map(pd =>
@@ -132,7 +132,7 @@ export class PlaceResolver {
     @Arg('providerPlaceId') providerPlaceId: string,
     @Ctx() ctx: Context
   ): Promise<boolean> {
-    return this.wtvService.toggle(providerPlaceId, ctx.req.session!.userId);
+    return this.wtvService.toggle(providerPlaceId, ctx.req.session.userId);
   }
 
   @Authorized()
@@ -145,7 +145,7 @@ export class PlaceResolver {
     return this.placeService.setPriceLevel(
       providerPlaceId,
       priceLevel,
-      ctx.req.session!.userId
+      ctx.req.session.userId
     );
   }
 
@@ -159,7 +159,7 @@ export class PlaceResolver {
     return this.placeService.addTag(
       providerPlaceId,
       name,
-      ctx.req.session!.userId
+      ctx.req.session.userId
     );
   }
 
@@ -173,7 +173,7 @@ export class PlaceResolver {
     return this.placeService.removeTag(
       providerPlaceId,
       tagId,
-      ctx.req.session!.userId
+      ctx.req.session.userId
     );
   }
 
@@ -187,7 +187,7 @@ export class PlaceResolver {
     return this.placeService.setComment(
       providerPlaceId,
       comment,
-      ctx.req.session!.userId
+      ctx.req.session.userId
     );
   }
 
@@ -241,7 +241,7 @@ export class PlaceResolver {
   ): Promise<boolean> {
     const wantToVisit = await this.wtvService.findByProviderId(
       place.providerPlaceId,
-      ctx.req.session!.userId
+      ctx.req.session.userId
     );
 
     return Boolean(wantToVisit);
