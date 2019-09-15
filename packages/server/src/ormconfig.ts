@@ -25,12 +25,14 @@ export const configs: ConnectionOptions[] = [
     type: 'postgres',
     url: process.env.DATABASE_URL,
     logging: false,
+    synchronize: false,
+    migrationsRun: true,
     entities: ['dist/modules/**/*.entity.js'],
-    migrations: ['src/migration/**/*.ts'],
-    subscribers: ['src/subscriber/**/*.ts'],
+    migrations: ['dist/migration/**/*.js'],
+    subscribers: ['dist/subscriber/**/*.js'],
     cli: {
-      migrationsDir: 'src/migration',
-      subscribersDir: 'src/subscriber'
+      migrationsDir: 'dist/migration',
+      subscribersDir: 'dist/subscriber'
     }
   }
 ];
