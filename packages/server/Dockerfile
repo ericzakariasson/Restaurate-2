@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY ./package.json /app/
 RUN npm i -g yarn
-RUN yarn install --production
+RUN yarn install
 COPY . /app
 
 RUN yarn run clean
