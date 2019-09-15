@@ -65,6 +65,8 @@ const startServer = async (): Promise<void> => {
 
   server.applyMiddleware({ app, cors: corsOptions });
 
+  server.setGraphQLPath('');
+
   app.listen({ port: 4000 }, () =>
     console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
   );
