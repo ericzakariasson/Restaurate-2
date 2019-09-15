@@ -57,7 +57,8 @@ const startServer = async (): Promise<void> => {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }: { req: SessionRequest }) => ({ req })
+    context: ({ req }: { req: SessionRequest }) => ({ req }),
+    playground: true
   });
 
   server.applyMiddleware({ app, cors: corsOptions });
