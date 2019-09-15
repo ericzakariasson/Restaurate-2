@@ -20,15 +20,6 @@ const startServer = async (): Promise<void> => {
 
   const config =
     configs.find(c => c.name === process.env.NODE_ENV) || configs[0];
-  const connection = await createConnection(config);
-
-  if (isDev) {
-    await insertUser();
-  }
-
-  if (!connection) {
-    console.error('Could not established connection to database');
-  }
 
   const app = express();
 
@@ -66,6 +57,15 @@ const startServer = async (): Promise<void> => {
   server.applyMiddleware({ app, cors: corsOptions });
 
   server.setGraphQLPath('');
+
+  const connection = await createConnection(config);
+  if (isDev) {
+    await insertUser();
+  }
+
+  if (!connection) {
+    console.error('Could not established connection to database');
+  }
 
   app.listen({ port: 4000 }, () =>
     console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
