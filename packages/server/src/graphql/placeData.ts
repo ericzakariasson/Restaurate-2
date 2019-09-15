@@ -1,24 +1,21 @@
 import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
-export class PlaceData {
-  @Field()
-  id: string;
-
-  @Field()
-  name: string;
-
-  @Field(() => Contact)
-  contact: Contact;
-
-  @Field(() => Location)
-  location: Location;
-
+class Contact {
   @Field({ nullable: true })
-  url: string;
-
+  phone: string;
   @Field({ nullable: true })
-  description: string;
+  formattedPhone: string;
+  @Field({ nullable: true })
+  twitter: string;
+  @Field({ nullable: true })
+  instagram: string;
+  @Field({ nullable: true })
+  facebook: string;
+  @Field({ nullable: true })
+  facebookUsername: string;
+  @Field({ nullable: true })
+  facebookName: string;
 }
 
 @ObjectType()
@@ -48,19 +45,22 @@ class Location {
 }
 
 @ObjectType()
-class Contact {
+export class PlaceData {
+  @Field()
+  id: string;
+
+  @Field()
+  name: string;
+
+  @Field(() => Contact)
+  contact: Contact;
+
+  @Field(() => Location)
+  location: Location;
+
   @Field({ nullable: true })
-  phone: string;
+  url: string;
+
   @Field({ nullable: true })
-  formattedPhone: string;
-  @Field({ nullable: true })
-  twitter: string;
-  @Field({ nullable: true })
-  instagram: string;
-  @Field({ nullable: true })
-  facebook: string;
-  @Field({ nullable: true })
-  facebookUsername: string;
-  @Field({ nullable: true })
-  facebookName: string;
+  description: string;
 }

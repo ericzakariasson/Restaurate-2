@@ -33,7 +33,8 @@
     "typeorm-typedi-extensions": "^0.2.3"
   },
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "start": "tsc && NODE_ENV=production node dist/index.js"
   },
   "workspaces": {
     "nohoist": [

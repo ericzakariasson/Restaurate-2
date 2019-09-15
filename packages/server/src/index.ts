@@ -10,15 +10,20 @@ import { configs } from './ormconfig';
 
 import { generateSchema } from './schema';
 import { insertUser } from './seed';
+import { isDevelopment } from 'apollo-utilities';
 
 dotenv.config();
 
 const startServer = async (): Promise<void> => {
+  const isDev = isDevelopment();
+
   const config =
     configs.find(c => c.name === process.env.NODE_ENV) || configs[0];
   const connection = await createConnection(config);
 
-  await insertUser();
+  if (isDev) {
+    await insertUser();
+  }
 
   if (!connection) {
     console.error('Could not established connection to database');
@@ -28,7 +33,7 @@ const startServer = async (): Promise<void> => {
 
   const corsOptions = {
     credentials: true,
-    origin: ['http://localhost:3000', 'http://192.168.1.133:3000']
+    origin: ['*']
   };
 
   app.use(cors(corsOptions));
@@ -51,7 +56,8 @@ const startServer = async (): Promise<void> => {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }: { req: Request }) => ({ req })
+    context: ({ req }: { req: Request }) => ({ req }),
+    playground: isDevelopment()
   });
 
   server.applyMiddleware({ app, cors: corsOptions });

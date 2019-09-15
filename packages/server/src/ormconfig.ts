@@ -2,7 +2,7 @@ import { ConnectionOptions } from 'typeorm';
 
 export const configs: ConnectionOptions[] = [
   {
-    name: 'development',
+    name: 'default',
     type: 'postgres',
     host: 'localhost',
     port: 5432,
@@ -12,7 +12,7 @@ export const configs: ConnectionOptions[] = [
     synchronize: true,
     dropSchema: true,
     logging: false,
-    entities: ['src/modules/**/*.entity.ts'],
+    entities: ['dist/modules/**/*.entity.js'],
     migrations: ['src/migration/**/*.ts'],
     subscribers: ['src/subscriber/**/*.ts'],
     cli: {
@@ -25,7 +25,7 @@ export const configs: ConnectionOptions[] = [
     type: 'postgres',
     url: process.env.DATABASE_URL,
     logging: false,
-    entities: ['src/modules/**/*.entity.ts'],
+    entities: ['dist/modules/**/*.entity.js'],
     migrations: ['src/migration/**/*.ts'],
     subscribers: ['src/subscriber/**/*.ts'],
     cli: {

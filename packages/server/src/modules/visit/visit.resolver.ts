@@ -54,7 +54,8 @@ export class VisitResolver {
     const visit = await this.visitService.createVisit(input, place, user);
 
     return {
-      saved: true
+      saved: true,
+      visit
     };
   }
 

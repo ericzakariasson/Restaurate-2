@@ -1,5 +1,6 @@
 import { InputType, Field, ObjectType } from 'type-graphql';
 import { RateInput } from './rate/rate.types';
+import { Visit } from './visit.entity';
 
 @InputType()
 export class AddVisitInput {
@@ -23,4 +24,7 @@ export class AddVisitInput {
 export class AddVisitResponse {
   @Field()
   saved: boolean;
+
+  @Field(() => Visit)
+  visit: Visit;
 }
