@@ -6,7 +6,7 @@ import * as cors from 'cors';
 import { createConnection } from 'typeorm';
 import { ApolloServer } from 'apollo-server-express';
 
-import { config } from './ormconfig';
+import { configs } from './ormconfig';
 
 import { generateSchema } from './schema';
 import { insertUser } from './seed';
@@ -14,12 +14,14 @@ import { insertUser } from './seed';
 dotenv.config();
 
 const startServer = async (): Promise<void> => {
-  const connection = await createConnection(config as any);
+  const config =
+    configs.find(c => c.name === process.env.NODE_ENV) || configs[0];
+  const connection = await createConnection(config);
 
   await insertUser();
 
-  if (connection) {
-    console.log('Established connection');
+  if (!connection) {
+    console.error('Could not established connection to database');
   }
 
   const app = express();
