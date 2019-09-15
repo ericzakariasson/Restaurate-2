@@ -34,7 +34,7 @@
   },
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "start": "tsc && NODE_ENV=production node dist/index.js"
+    "start": "node_modules/.bin/tsc && NODE_ENV=production node dist/index.js"
   },
   "workspaces": {
     "nohoist": [
