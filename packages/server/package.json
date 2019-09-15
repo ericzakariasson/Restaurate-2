@@ -11,6 +11,7 @@
     "@types/node": "^8.0.29",
     "@types/node-fetch": "^2.5.0",
     "@types/qs": "^6.5.3",
+    "cross-env": "^5.2.1",
     "rimraf": "^3.0.0",
     "ts-node": "3.3.0",
     "typescript": "3.3.3333"
@@ -35,7 +36,7 @@
     "typeorm-typedi-extensions": "^0.2.3"
   },
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "cross-env NODE_ENV=development ts-node src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "clean": "rimraf ./dist"

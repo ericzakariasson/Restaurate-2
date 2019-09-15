@@ -3,20 +3,22 @@ import * as express from 'express';
 import * as session from 'express-session';
 import * as dotenv from 'dotenv';
 import * as cors from 'cors';
-import { createConnection, useContainer } from 'typeorm';
+import { useContainer } from 'typeorm';
 import { ApolloServer } from 'apollo-server-express';
-
-import { configs } from './ormconfig';
-
 import { generateSchema } from './schema';
 import { SessionRequest } from './graphql/types';
 import { Container } from 'typedi';
+import { createConnection } from './utils/createConnection';
 
 dotenv.config();
 
 const startServer = async (): Promise<void> => {
-  const config =
-    configs.find(c => c.name === process.env.NODE_ENV) || configs[0];
+  useContainer(Container);
+  const connection = await createConnection();
+
+  if (!connection) {
+    console.error('Could not established connection to database');
+  }
 
   const app = express();
 
@@ -50,13 +52,6 @@ const startServer = async (): Promise<void> => {
   });
 
   server.applyMiddleware({ app, cors: corsOptions });
-
-  useContainer(Container);
-  const connection = await createConnection(config);
-
-  if (!connection) {
-    console.error('Could not established connection to database');
-  }
 
   app.listen({ port: 4000 }, () =>
     console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
