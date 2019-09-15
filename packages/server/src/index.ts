@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as session from 'express-session';
 import * as dotenv from 'dotenv';
 import * as cors from 'cors';
-import { createConnection } from 'typeorm';
+import { createConnection, useContainer } from 'typeorm';
 import { ApolloServer } from 'apollo-server-express';
 
 import { configs } from './ormconfig';
@@ -12,6 +12,7 @@ import { generateSchema } from './schema';
 import { insertUser } from './seed';
 import { isDevelopment } from 'apollo-utilities';
 import { SessionRequest } from './graphql/types';
+import { Container } from 'typedi';
 
 dotenv.config();
 
@@ -52,13 +53,12 @@ const startServer = async (): Promise<void> => {
     playground: true
   });
 
-  console.log('Playground enabled');
-
   server.applyMiddleware({ app, cors: corsOptions });
 
-  server.setGraphQLPath('');
+  useContainer(Container);
 
   const connection = await createConnection(config);
+
   if (isDev) {
     await insertUser();
   }

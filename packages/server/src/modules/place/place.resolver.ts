@@ -12,8 +12,7 @@ import { Place } from './place.entity';
 import { Visit } from '../visit/visit.entity';
 import { PlaceService } from './place.service';
 import { PlaceData } from '../../graphql/placeData';
-import { Service, Container } from 'typedi';
-import { useContainer } from 'typeorm';
+import { Service } from 'typedi';
 import {
   PlaceSearchResult,
   PlaceSearchInput,
@@ -31,7 +30,6 @@ import { User } from '../user/user.entity';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
 import { Tag } from './tag/tag.entity';
 
-useContainer(Container);
 @Service()
 @Resolver(Place)
 export class PlaceResolver {
