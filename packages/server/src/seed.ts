@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import { User } from './modules/user/user.entity';
+import { getRepository } from 'typeorm';
 
 const users = [
   {
@@ -17,13 +18,17 @@ const users = [
 ];
 
 export async function insertUser() {
+  const userRepository = getRepository(User);
+
   const promises = users.map(async user => {
     const hashedPassword = await bcrypt.hash(user.password, 1);
 
-    await User.create({
+    const created = userRepository.create({
       ...user,
       password: hashedPassword
-    }).save();
+    });
+
+    await userRepository.save(created);
   });
 
   await Promise.all(promises);

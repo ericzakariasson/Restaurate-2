@@ -2,7 +2,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  BaseEntity,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn
@@ -23,7 +22,7 @@ registerEnumType(UserRole, {
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
+export class User {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;

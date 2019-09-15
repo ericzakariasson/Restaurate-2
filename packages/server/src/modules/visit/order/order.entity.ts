@@ -2,7 +2,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  BaseEntity,
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn
@@ -13,7 +12,7 @@ import { User } from '../../user/user.entity';
 
 @ObjectType()
 @Entity()
-export class Order extends BaseEntity {
+export class Order {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;

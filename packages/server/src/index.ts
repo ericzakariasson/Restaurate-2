@@ -9,16 +9,12 @@ import { ApolloServer } from 'apollo-server-express';
 import { configs } from './ormconfig';
 
 import { generateSchema } from './schema';
-import { insertUser } from './seed';
-import { isDevelopment } from 'apollo-utilities';
 import { SessionRequest } from './graphql/types';
 import { Container } from 'typedi';
 
 dotenv.config();
 
 const startServer = async (): Promise<void> => {
-  const isDev = isDevelopment();
-
   const config =
     configs.find(c => c.name === process.env.NODE_ENV) || configs[0];
 
@@ -56,12 +52,7 @@ const startServer = async (): Promise<void> => {
   server.applyMiddleware({ app, cors: corsOptions });
 
   useContainer(Container);
-
   const connection = await createConnection(config);
-
-  if (isDev) {
-    await insertUser();
-  }
 
   if (!connection) {
     console.error('Could not established connection to database');

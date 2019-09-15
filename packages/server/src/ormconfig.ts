@@ -2,7 +2,7 @@ import { ConnectionOptions } from 'typeorm';
 
 export const configs: ConnectionOptions[] = [
   {
-    name: 'default',
+    name: 'development',
     type: 'postgres',
     host: 'localhost',
     port: 5432,
