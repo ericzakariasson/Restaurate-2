@@ -26,6 +26,8 @@ const startServer = async (): Promise<void> => {
     .split(',')
     .map(str => str.trim());
 
+  console.log('Allowed origins: ', allowedOrigins);
+
   const corsOptions = {
     credentials: true,
     origin: allowedOrigins
