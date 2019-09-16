@@ -2,5 +2,12 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "lerna": "^3.16.4"
+  },
+  "scripts": {
+    "build:web": "lerna run build --scope=@restaurate/web"
+  },
+  "name": "restaurate"
 }
