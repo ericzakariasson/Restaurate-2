@@ -22,9 +22,13 @@ const startServer = async (): Promise<void> => {
 
   const app = express();
 
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS as string)
+    .split(',')
+    .map(str => str.trim());
+
   const corsOptions = {
     credentials: true,
-    origin: ['*']
+    origin: allowedOrigins
   };
 
   app.use(cors(corsOptions));
@@ -37,7 +41,7 @@ const startServer = async (): Promise<void> => {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
       }
     })
@@ -47,9 +51,7 @@ const startServer = async (): Promise<void> => {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }: { req: SessionRequest }) => ({ req }),
-    playground: true,
-    introspection: true
+    context: ({ req }: { req: SessionRequest }) => ({ req })
   });
 
   server.applyMiddleware({ app, cors: corsOptions });
@@ -62,5 +64,5 @@ const startServer = async (): Promise<void> => {
 try {
   startServer();
 } catch (e) {
-  console.log(JSON.stringify(e, null, 4));
+  console.log('Error occured:', JSON.stringify(e, null, 4));
 }
