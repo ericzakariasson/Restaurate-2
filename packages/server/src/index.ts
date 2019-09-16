@@ -22,15 +22,11 @@ const startServer = async (): Promise<void> => {
 
   const app = express();
 
-  const allowedOrigins = (process.env.ALLOWED_ORIGINS as string)
-    .split(',')
-    .map(str => str.trim());
-
-  console.log('Allowed origins: ', allowedOrigins);
+  console.log('Allowed origins: ', process.env.ALLOWED_ORIGINS);
 
   const corsOptions = {
     credentials: true,
-    origin: '*'
+    origin: process.env.ALLOWED_ORIGINS
   };
 
   app.use(cors(corsOptions));
