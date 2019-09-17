@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
-import { PageTitle, Button, InputField } from '../../components';
+import { PageTitle, Button, InputField, Page } from '../../components';
 
 import { RouteComponentProps, Redirect } from 'react-router';
 import { routes } from '../../routes';
@@ -12,10 +12,6 @@ import {
   MeDocument,
   useMeQuery
 } from '../../graphql/types';
-
-const Page = styled.section`
-  padding: ${p => p.theme.page.padding};
-`;
 
 const Fields = styled.div`
   margin-bottom: 30px;
@@ -28,6 +24,15 @@ const LoginText = styled.p`
 `;
 
 const Login = styled(Link)`
+  color: #222;
+`;
+
+const Links = styled.div`
+  text-align: center;
+  margin-top: 10px;
+`;
+
+const Href = styled.a`
   color: #222;
 `;
 
@@ -57,8 +62,7 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
   }
 
   return (
-    <Page>
-      <PageTitle title="Registrera" large />
+    <Page title="Registrera">
       <Formik
         initialValues={initialValues}
         validationSchema={registerValidationSchema}
@@ -127,9 +131,17 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
               text="Registrera"
             />
             <LoginText>
-              Har du redan ett konto?{' '}
-              <Login to={routes.login}>Logga in här</Login>
+              Har du redan ett konto? <Login to={routes.login}>Logga in</Login>
             </LoginText>
+            <Links>
+              <Href href="/privacy-policy.html" target="_blank">
+                Integritetspolicy
+              </Href>
+              ∙
+              <Href href="/terms-and-conditions.html" target="_blank">
+                Användarvillkor
+              </Href>
+            </Links>
           </Form>
         )}
       </Formik>
