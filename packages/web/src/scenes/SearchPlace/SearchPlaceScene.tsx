@@ -3,14 +3,7 @@ import styled from 'styled-components';
 import { SearchForm, SearchPlaceFormValues } from './components/SearchForm';
 import { useSearchPlaceLazyQuery } from 'graphql/types';
 import { SearchPlaces } from './components/SearchPlaces';
-
-const Page = styled.section`
-  padding: ${p => p.theme.page.padding};
-`;
-
-const Wrapper = styled.div`
-  margin-top: 20vh;
-`;
+import { Page } from 'components';
 
 const Title = styled.h1`
   font-size: 2rem;
@@ -67,16 +60,13 @@ export const SearchPlaceScene = () => {
   const noResults = called && !loading && places.length === 0;
 
   return (
-    <Page>
-      <Wrapper>
-        <Title>Sök ställe</Title>
-        <SearchForm onSubmit={handleSubmit} />
-        {noResults ? (
-          <NoResults>Hittade inga ställen. Testa att ange plats</NoResults>
-        ) : (
-          <SearchPlaces places={places} />
-        )}
-      </Wrapper>
+    <Page title="Sök ställe">
+      <SearchForm onSubmit={handleSubmit} />
+      {noResults ? (
+        <NoResults>Hittade inga ställen. Testa att ange plats</NoResults>
+      ) : (
+        <SearchPlaces places={places} />
+      )}
     </Page>
   );
 };

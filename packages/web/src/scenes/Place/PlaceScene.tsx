@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
-import { Loading, Page, NavButton } from '../../components';
+import { Loading, Page, NavButton, PoweredBy } from '../../components';
 import { GeneralError } from '../Error/GeneralError';
 import { usePlaceQuery } from '../../graphql/types';
 import { PlaceMap } from './components/Map';
@@ -88,6 +88,10 @@ export const PlaceScene = ({
         to={addVisitRoute(providerPlaceId)}
       />
       <Visits visits={visits} />
+      <PoweredBy
+        margin={['top']}
+        url={`http://foursquare.com/v/${providerPlaceId}`}
+      />
     </Page>
   );
 };
