@@ -1,15 +1,10 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { routes } from '../../routes';
 
 import { PlacesAndVisits } from './components/PlacesAndVisits';
 import { useMeQuery } from '../../graphql/types';
 import { GeneralError } from '../Error/GeneralError';
 import { Loading, Page, NavButton } from 'components';
-
-const Name = styled.h1`
-  margin-bottom: 20px;
-`;
 
 export const DashboardScene = () => {
   const { data, loading, error } = useMeQuery();

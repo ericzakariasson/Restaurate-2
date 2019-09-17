@@ -6,6 +6,8 @@ interface PageWrapperProps {
 }
 
 const PageWrapper = styled.section<PageWrapperProps>`
+  max-width: ${p => p.theme.page.maxWidth};
+  margin: 0 auto;
   padding: ${p => p.theme.page.padding};
   display: flex;
   flex-direction: column;
@@ -13,7 +15,7 @@ const PageWrapper = styled.section<PageWrapperProps>`
   ${p =>
     p.center &&
     css`
-      height: 100vh;
+      min-height: calc(100vh - 44px);
       justify-content: center;
     `}
 `;

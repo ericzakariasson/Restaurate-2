@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
-import { PageTitle, Button, InputField, Page } from '../../components';
+import { Button, InputField, Page } from 'components';
 
 import { RouteComponentProps, Redirect } from 'react-router';
-import { routes } from '../../routes';
+import { routes } from 'routes';
 import { Link } from 'react-router-dom';
 import { registerValidationSchema } from './registerValidationSchema';
 import {

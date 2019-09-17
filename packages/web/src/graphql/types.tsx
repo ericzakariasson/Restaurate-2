@@ -25,6 +25,7 @@ export type AddVisitInput = {
 export type AddVisitResponse = {
    __typename?: 'AddVisitResponse',
   saved: Scalars['Boolean'],
+  visit: Visit,
 };
 
 export type Contact = {
@@ -296,6 +297,7 @@ export type Visit = {
   orders: Array<Order>,
   ratings: Array<Rate>,
   score: Scalars['Float'],
+  private: Scalars['Boolean'],
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   place: Place,

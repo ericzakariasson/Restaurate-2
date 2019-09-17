@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { routes } from '../routes';
-import { Link } from 'react-router-dom';
 import { NavButton } from './Button';
 
 const Wrapper = styled.div``;
