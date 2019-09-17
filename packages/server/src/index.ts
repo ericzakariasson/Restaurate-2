@@ -31,6 +31,8 @@ const startServer = async (): Promise<void> => {
 
   app.use(cors(corsOptions));
 
+  app.set('trust proxy', true);
+
   app.use(
     session({
       name: 'access_token',
@@ -39,9 +41,10 @@ const startServer = async (): Promise<void> => {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: Boolean(process.env.SESSION_COOKIE_SECURE),
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
-      }
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 7 daysm
+      },
+      proxy: true
     })
   );
 
