@@ -39,7 +39,7 @@ const startServer = async (): Promise<void> => {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: Boolean(process.env.SESSION_COOKIE_SECURE),
         maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
       }
     })
