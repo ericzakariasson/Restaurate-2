@@ -15,13 +15,12 @@ const Link = styled.a`
 
 const Image = styled.img<ImageProps>`
   max-width: 200px;
-  width: 100%;
   margin: 0 auto;
   opacity: 0.5;
 
   ${p =>
     p.margin &&
-    p.margin.map(direction => `margin-${direction}: 10px;`).join('\n')}
+    p.margin.map(direction => `margin-${direction}: 30px;`).join('\n')}
 `;
 
 interface PoweredByProps {

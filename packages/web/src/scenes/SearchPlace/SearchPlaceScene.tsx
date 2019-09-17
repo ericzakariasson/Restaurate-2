@@ -5,13 +5,6 @@ import { useSearchPlaceLazyQuery } from 'graphql/types';
 import { SearchPlaces } from './components/SearchPlaces';
 import { Page } from 'components';
 
-const Title = styled.h1`
-  font-size: 2rem;
-  color: #333;
-  font-weight: 700;
-  margin-bottom: 30px;
-`;
-
 const NoResults = styled.p`
   margin-top: 20px;
   font-weight: 700;
