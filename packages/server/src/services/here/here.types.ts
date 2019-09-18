@@ -1,6 +1,4 @@
 import { Field, ObjectType, ID } from 'type-graphql';
-import { ExecSyncOptionsWithBufferEncoding } from 'child_process';
-import { isOptionalCallExpression } from '@babel/types';
 
 @ObjectType()
 class Category {
@@ -41,12 +39,13 @@ export class Coordinates {
   lng: number;
 }
 
-export class SearchResultItem {
+@ObjectType()
+export class HereSearchResultItem {
   @Field(() => ID)
   id: string;
 
-  @Field(() => Coordinates)
-  position: Coordinates;
+  @Field(() => [Number])
+  position: number[];
 
   @Field()
   ditance: number;
@@ -57,7 +56,7 @@ export class SearchResultItem {
   @Field()
   averageRating: number;
 
-  @Field()
+  @Field(() => [Category])
   categories: Category[];
 
   @Field()
@@ -73,8 +72,8 @@ export class SearchResultItem {
   openingHours: OpeningHours;
 }
 
-export interface SearchResult {
+export interface HereSearchResult {
   results: {
-    items: SearchResultItem[];
+    items: HereSearchResultItem[];
   };
 }

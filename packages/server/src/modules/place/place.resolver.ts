@@ -15,15 +15,11 @@ import { PlaceData } from '../../graphql/placeData';
 import { Service } from 'typedi';
 import {
   PlaceSearchResult,
-  PlaceSearchInput,
   PlaceSearchItem,
-  PriceLevel
+  PriceLevel,
+  PositionInput
 } from './place.types';
-import { FoursquareService } from '../../services/foursquare/foursquare.service';
-import {
-  transformVenueToSearchItem,
-  transformVenueDetailsToBasicDetails
-} from './place.helpers';
+import { transformVenueDetailsToBasicDetails } from './place.helpers';
 import { Context } from '../../graphql/types';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
@@ -36,9 +32,17 @@ export class PlaceResolver {
   constructor(
     private readonly placeService: PlaceService,
     private readonly userService: UserService,
-    private readonly foursquareService: FoursquareService,
     private readonly wtvService: WantToVisitService
   ) {}
+
+  @Query(() => PlaceSearchResult)
+  async searchPlace(
+    @Arg('query') query: string,
+    @Arg('position', { nullable: true }) position?: PositionInput
+  ): Promise<PlaceSearchResult> {
+    const places = await this.placeService.search(query, position);
+    return new PlaceSearchResult({ places });
+  }
 
   @Authorized()
   @Query(() => Place, { nullable: true })
@@ -80,37 +84,37 @@ export class PlaceResolver {
     return details;
   }
 
-  @Authorized()
-  @Query(() => PlaceSearchResult, { nullable: true })
-  async searchPlace(
-    @Arg('filter') { query, near, position }: PlaceSearchInput,
-    @Ctx() ctx: Context
-  ): Promise<PlaceSearchResult | null> {
-    if (!near && !position) {
-      throw new Error('One of `near` or `position` is required');
-    }
+  // @Authorized()
+  // @Query(() => PlaceSearchResult, { nullable: true })
+  // async searchPlace(
+  //   @Arg('filter') { query, near, position }: PlaceSearchInput,
+  //   @Ctx() ctx: Context
+  // ): Promise<PlaceSearchResult | null> {
+  //   if (!near && !position) {
+  //     throw new Error('One of `near` or `position` is required');
+  //   }
 
-    const venues = await this.foursquareService.venue.search({
-      query,
-      intent: 'browse',
-      ...(near && { near }),
-      ...(!near &&
-        position && { ll: [position.lat, position.lng], radius: 50_000 })
-    });
+  //   const venues = await this.foursquareService.venue.search({
+  //     query,
+  //     intent: 'browse',
+  //     ...(near && { near }),
+  //     ...(!near &&
+  //       position && { ll: [position.lat, position.lng], radius: 50_000 })
+  //   });
 
-    if (!venues || venues.length === 0) {
-      return null;
-    }
+  //   if (!venues || venues.length === 0) {
+  //     return null;
+  //   }
 
-    const userPlaces = await this.placeService.getUserPlacesByProviderIds(
-      ctx.req.session.userId,
-      venues.map(venue => venue.id)
-    );
+  //   const userPlaces = await this.placeService.getUserPlacesByProviderIds(
+  //     ctx.req.session.userId,
+  //     venues.map(venue => venue.id)
+  //   );
 
-    const result = venues.map(transformVenueToSearchItem(userPlaces));
-    const response = new PlaceSearchResult({ places: result });
-    return response;
-  }
+  //   const result = venues.map(transformVenueToSearchItem(userPlaces));
+  //   const response = new PlaceSearchResult({ places: result });
+  //   return response;
+  // }
 
   @Authorized()
   @Query(() => [PlaceSearchItem])

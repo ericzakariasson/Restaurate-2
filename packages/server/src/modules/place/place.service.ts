@@ -7,11 +7,13 @@ import { FoursquareService } from '../../services/foursquare/foursquare.service'
 import { User } from '../user/user.entity';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserService } from '../user/user.service';
-import { PriceLevel } from './place.types';
+import { PriceLevel, Coordinates } from './place.types';
 import { CacheService } from '../../services/cache/cache.service';
 import { VenueDetails } from '../../services/foursquare/types';
 import { TagService } from './tag/tag.service';
 import { WantToVisit } from './wantToVisit/wantToVisit.entity';
+import { HereService } from '../../services/here/here.service';
+import { mapProviderSearchItem } from './place.helpers';
 // import { TagService } from './tag/tag.service';
 
 const placeDataKey = (key: string) => `placeData_${key}`;
@@ -28,7 +30,8 @@ export class PlaceService {
     private readonly userService: UserService,
     private readonly tagService: TagService,
     private readonly foursquareService: FoursquareService,
-    private readonly cacheService: CacheService
+    private readonly cacheService: CacheService,
+    private readonly hereService: HereService
   ) {}
 
   async getAverageScore(id: number) {
@@ -220,5 +223,10 @@ export class PlaceService {
     );
 
     return places;
+  }
+
+  async search(query: string, location?: Coordinates) {
+    const results = await this.hereService.search(query, location);
+    return results.map(mapProviderSearchItem);
   }
 }

@@ -1,6 +1,10 @@
 import nodeFetch from 'node-fetch';
 import * as qs from 'qs';
-import { Coordinates, SearchResultItem, SearchResult } from './here.types';
+import {
+  Coordinates,
+  HereSearchResultItem,
+  HereSearchResult
+} from './here.types';
 
 type Headers = { [key: string]: string };
 
@@ -45,11 +49,6 @@ class HereRepository {
       console.error(response.statusText);
     }
 
-    // Too many requests
-    if (response.status === 429) {
-      throw new Error(response.statusText);
-    }
-
     const json: T = await response.json();
     return json;
   }
@@ -65,12 +64,12 @@ export class HereService {
   public async search(
     query: string,
     location?: Coordinates
-  ): Promise<SearchResultItem[]> {
+  ): Promise<HereSearchResultItem[]> {
     const geolocationHeader = getGeolocationHeader(
       location || FALLBACK_COORDINATES
     );
 
-    const data = await this.repository.fetch<SearchResult>(
+    const data = await this.repository.fetch<HereSearchResult>(
       '/discover/search',
       {
         q: query

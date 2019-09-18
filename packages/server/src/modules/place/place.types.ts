@@ -76,7 +76,7 @@ export class PlaceSearchInput {
 @ObjectType()
 export class PlaceSearchItem {
   @Field()
-  providerPlaceId: string;
+  providerId: string;
 
   @Field()
   name: string;
@@ -91,7 +91,7 @@ export class PlaceSearchItem {
   coordinates: Position;
 
   @Field(() => [String])
-  types: string[];
+  categories: string[];
 }
 
 @ObjectType()
