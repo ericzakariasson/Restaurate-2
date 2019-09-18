@@ -61,17 +61,27 @@ function formatProviderSearchItemAddress(vicinity: string) {
   return '';
 }
 
-export function mapProviderSearchItem(item: HereSearchResultItem) {
+export const transformProviderSearchItem = (userPlaces: Place[]) => (
+  item: HereSearchResultItem
+) => {
+  const samePlace = userPlaces.find(place => place.providerPlaceId === item.id);
+
   const [lat, lng] = item.position;
-  const placeSearchItem = new PlaceSearchItem();
-  placeSearchItem.providerId = item.id;
-  placeSearchItem.name = item.title;
-  placeSearchItem.coordinates = { lat, lng };
-  placeSearchItem.address = formatProviderSearchItemAddress(item.vicinity);
-  placeSearchItem.visits = 0;
-  placeSearchItem.categories = item.categories
+  const place = new PlaceSearchItem();
+  place.providerId = item.id;
+  place.name = item.title;
+  place.coordinates = { lat, lng };
+  place.address = formatProviderSearchItemAddress(item.vicinity);
+  place.visits = 0;
+  place.categories = item.categories
     ? item.categories.map(category => category.title)
     : [];
 
-  return placeSearchItem;
-}
+  place.visits = samePlace
+    ? samePlace.visits
+      ? samePlace.visits.length
+      : 0
+    : 0;
+
+  return place;
+};

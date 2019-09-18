@@ -13,7 +13,7 @@ import { VenueDetails } from '../../services/foursquare/types';
 import { TagService } from './tag/tag.service';
 import { WantToVisit } from './wantToVisit/wantToVisit.entity';
 import { HereService } from '../../services/here/here.service';
-import { mapProviderSearchItem } from './place.helpers';
+import { transformProviderSearchItem } from './place.helpers';
 // import { TagService } from './tag/tag.service';
 
 const placeDataKey = (key: string) => `placeData_${key}`;
@@ -225,8 +225,14 @@ export class PlaceService {
     return places;
   }
 
-  async search(query: string, location?: Coordinates) {
+  async search(userId: number, query: string, location?: Coordinates) {
     const results = await this.hereService.search(query, location);
-    return results.map(mapProviderSearchItem);
+    const userPlaces = await this.getUserPlacesByProviderIds(
+      userId,
+      results.map(result => result.id)
+    );
+
+    const transformWithUserPlaces = transformProviderSearchItem(userPlaces);
+    return results.map(transformWithUserPlaces);
   }
 }

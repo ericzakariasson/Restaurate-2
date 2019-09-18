@@ -37,10 +37,16 @@ export class PlaceResolver {
 
   @Query(() => PlaceSearchResult)
   async searchPlace(
+    @Ctx() ctx: Context,
     @Arg('query') query: string,
     @Arg('position', { nullable: true }) position?: PositionInput
   ): Promise<PlaceSearchResult> {
-    const places = await this.placeService.search(query, position);
+    const places = await this.placeService.search(
+      ctx.req.session.userId,
+      query,
+      position
+    );
+
     return new PlaceSearchResult({ places });
   }
 
