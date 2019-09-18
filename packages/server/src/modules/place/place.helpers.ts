@@ -1,5 +1,5 @@
 import {
-  PlaceSearchItem,
+  PlaceDetailsBasic,
   PlaceDetails,
   Category,
   Contact,
@@ -33,10 +33,10 @@ export const transformProviderSearchItem = (userPlaces: Place[]) => (
   const samePlace = userPlaces.find(place => place.providerPlaceId === item.id);
 
   const [lat, lng] = item.position;
-  const place = new PlaceSearchItem();
+  const place = new PlaceDetailsBasic();
   place.providerId = item.id;
   place.name = item.title;
-  place.coordinates = { lat, lng };
+  place.position = { lat, lng };
   place.address = formatProviderSearchItemAddress(item.vicinity);
   place.visits = 0;
   place.categories = item.categories
@@ -107,4 +107,27 @@ export const transformProviderDetails = (item: HerePlaceDetails) => {
   details.openingHours = transformOpeningHours(item.extended.openingHours);
 
   return details;
+};
+
+export const transformToBasicDetails = (userPlaces: Place[]) => (
+  details: PlaceDetails
+) => {
+  const samePlace = userPlaces.find(
+    place => place.providerPlaceId === details.providerId
+  );
+
+  const basicDetails = new PlaceDetailsBasic();
+  basicDetails.address = details.location.address.formatted;
+  basicDetails.categories = details.categories.map(category => category.title);
+  basicDetails.name = details.name;
+  basicDetails.providerId = details.providerId;
+  basicDetails.position = details.location.position;
+
+  basicDetails.visits = samePlace
+    ? samePlace.visits
+      ? samePlace.visits.length
+      : 0
+    : 0;
+
+  return basicDetails;
 };

@@ -1,4 +1,4 @@
-import { InputType, Field, ObjectType } from 'type-graphql';
+import { InputType, Field, ObjectType, InterfaceType } from 'type-graphql';
 import { Coordinates } from '../../utils/utils.types';
 
 export enum PlaceType {
@@ -14,9 +14,8 @@ export enum PriceLevel {
   Exclusive = 4
 }
 
-@ObjectType()
-@InputType()
-export class Position implements Coordinates {
+@InterfaceType()
+abstract class IPosition implements Coordinates {
   constructor(data?: Coordinates) {
     if (data) {
       this.lat = data.lat;
@@ -31,8 +30,23 @@ export class Position implements Coordinates {
   lng: number;
 }
 
+@ObjectType({ implements: IPosition })
+export class Position implements IPosition {
+  lat: number;
+  lng: number;
+}
+
+@InputType()
+export class PositionInput implements IPosition {
+  @Field()
+  lat: number;
+
+  @Field()
+  lng: number;
+}
+
 @ObjectType()
-export class PlaceSearchItem {
+export class PlaceDetailsBasic {
   @Field()
   providerId: string;
 
@@ -46,7 +60,7 @@ export class PlaceSearchItem {
   visits: number;
 
   @Field(() => Position)
-  coordinates: Position;
+  position: Position;
 
   @Field(() => [String])
   categories: string[];
@@ -54,12 +68,12 @@ export class PlaceSearchItem {
 
 @ObjectType()
 export class PlaceSearchResult {
-  constructor({ places }: { places: PlaceSearchItem[] }) {
+  constructor({ places }: { places: PlaceDetailsBasic[] }) {
     this.places = places;
   }
 
-  @Field(() => [PlaceSearchItem])
-  places: PlaceSearchItem[];
+  @Field(() => [PlaceDetailsBasic])
+  places: PlaceDetailsBasic[];
 }
 
 @ObjectType()

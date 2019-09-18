@@ -11,19 +11,20 @@ import {
 import { Place } from './place.entity';
 import { Visit } from '../visit/visit.entity';
 import { PlaceService } from './place.service';
-import { PlaceData } from '../../graphql/placeData';
 import { Service } from 'typedi';
 import {
   PlaceSearchResult,
   PriceLevel,
-  Position,
-  PlaceDetails
+  PlaceDetails,
+  PlaceDetailsBasic,
+  PositionInput
 } from './place.types';
 import { Context } from '../../graphql/types';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
 import { Tag } from './tag/tag.entity';
+import { transformToBasicDetails } from './place.helpers';
 
 @Service()
 @Resolver(Place)
@@ -39,9 +40,9 @@ export class PlaceResolver {
   async searchPlace(
     @Ctx() ctx: Context,
     @Arg('query') query: string,
-    @Arg('position', { nullable: true }) position?: Position
+    @Arg('position', { nullable: true }) position?: PositionInput
   ): Promise<PlaceSearchResult> {
-    const places = await this.placeService.search(
+    const places = await this.placeService.searchPlaces(
       ctx.req.session.userId,
       query,
       position
@@ -55,15 +56,15 @@ export class PlaceResolver {
   async placeDetails(
     @Arg('providerId') providerId: string
   ): Promise<PlaceDetails> {
-    return this.placeService.details(providerId);
+    return this.placeService.getPlaceDetails(providerId);
   }
 
   @Authorized()
   @Query(() => Place, { nullable: true })
   async place(@Arg('providerId') providerId: string): Promise<Place | null> {
-    const placeData = await this.placeService.getPlaceData(providerId);
+    const placeDetails = await this.placeService.getPlaceDetails(providerId);
 
-    if (!placeData) {
+    if (!placeDetails) {
       return null;
     }
 
@@ -71,7 +72,7 @@ export class PlaceResolver {
 
     if (!userPlace) {
       const place = new Place();
-      place.providerPlaceId = placeData.id;
+      place.providerPlaceId = placeDetails.providerId;
       place.priceLevel = PriceLevel.NotSet;
       place.tags = [];
       return place;
@@ -80,17 +81,17 @@ export class PlaceResolver {
     return userPlace;
   }
 
-  // @Authorized()
-  // @Query(() => [PlaceSearchItem])
-  // async wantToVisitList(@Ctx() ctx: Context): Promise<PlaceSearchItem[]> {
-  //   const placeDataList = await this.placeService.getWantToVisitList(
-  //     ctx.req.session.userId
-  //   );
+  @Authorized()
+  @Query(() => [PlaceDetailsBasic])
+  async wantToVisitList(@Ctx() ctx: Context): Promise<PlaceDetailsBasic[]> {
+    const placeDetailsList = await this.placeService.getWantToVisitList(
+      ctx.req.session.userId
+    );
 
-  //   return placeDataList.map(pd =>
-  //     transformVenueDetailsToBasicDetails(null, pd)
-  //   );
-  // }
+    const transform = transformToBasicDetails([]);
+
+    return placeDetailsList.map(transform);
+  }
 
   @Authorized()
   @Mutation(() => Boolean)
@@ -190,9 +191,9 @@ export class PlaceResolver {
     return this.placeService.getAverageScore(place.id);
   }
 
-  @FieldResolver(() => PlaceData)
-  async data(@Root() place: Place): Promise<PlaceData> {
-    return this.placeService.getPlaceData(place.providerPlaceId);
+  @FieldResolver(() => PlaceDetails)
+  async details(@Root() place: Place): Promise<PlaceDetails> {
+    return this.placeService.getPlaceDetails(place.providerPlaceId);
   }
 
   @FieldResolver(() => Boolean)

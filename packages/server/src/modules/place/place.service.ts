@@ -3,13 +3,11 @@ import { Place } from './place.entity';
 import { Service } from 'typedi';
 import { Visit } from '../visit/visit.entity';
 import { round } from '../../utils';
-import { FoursquareService } from '../../services/foursquare/foursquare.service';
 import { User } from '../user/user.entity';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserService } from '../user/user.service';
-import { PriceLevel } from './place.types';
+import { PriceLevel, PlaceDetails } from './place.types';
 import { CacheService } from '../../services/cache/cache.service';
-import { VenueDetails } from '../../services/foursquare/types';
 import { TagService } from './tag/tag.service';
 import { WantToVisit } from './wantToVisit/wantToVisit.entity';
 import { HereService } from '../../services/here/here.service';
@@ -20,7 +18,7 @@ import {
 import { Coordinates } from '../../utils/utils.types';
 // import { TagService } from './tag/tag.service';
 
-const placeDataKey = (key: string) => `placeData_${key}`;
+const placeDetailsKey = (key: string) => `placeDetails_providerId_${key}`;
 
 @Service()
 export class PlaceService {
@@ -33,7 +31,6 @@ export class PlaceService {
     private readonly wtvRepository: Repository<WantToVisit>,
     private readonly userService: UserService,
     private readonly tagService: TagService,
-    private readonly foursquareService: FoursquareService,
     private readonly cacheService: CacheService,
     private readonly hereService: HereService
   ) {}
@@ -84,28 +81,28 @@ export class PlaceService {
     return place;
   }
 
-  async getPlaceData(providerPlaceId: string) {
-    const cached = this.cacheService.get<VenueDetails>(
-      placeDataKey(providerPlaceId)
+  async getPlaceDetails(providerId: string) {
+    const cached = this.cacheService.get<PlaceDetails>(
+      placeDetailsKey(providerId)
     );
 
     if (cached) {
       return cached;
     }
 
-    const placeData = await this.foursquareService.venue.details(
-      providerPlaceId
-    );
+    const data = await this.hereService.details(providerId);
+    const placeDetails = transformProviderDetails(data);
+
     const success = this.cacheService.set(
-      placeDataKey(providerPlaceId),
-      placeData
+      placeDetailsKey(providerId),
+      placeDetails
     );
 
     if (!success) {
-      console.error(`Error setting cache for "${providerPlaceId}"`);
+      console.error(`Error setting cache for "${providerId}"`);
     }
 
-    return placeData;
+    return placeDetails;
   }
 
   async findByIdOrCreate(providerPlaceId: string, user: User) {
@@ -223,13 +220,15 @@ export class PlaceService {
     const wantToVisit = await this.wtvRepository.find({ where: { userId } });
 
     const places = Promise.all(
-      wantToVisit.map(async wtv => await this.getPlaceData(wtv.providerPlaceId))
+      wantToVisit.map(
+        async wtv => await this.getPlaceDetails(wtv.providerPlaceId)
+      )
     );
 
     return places;
   }
 
-  async search(userId: number, query: string, location?: Coordinates) {
+  async searchPlaces(userId: number, query: string, location?: Coordinates) {
     const results = await this.hereService.search(query, location);
     const userPlaces = await this.getUserPlacesByProviderIds(
       userId,
@@ -238,10 +237,5 @@ export class PlaceService {
 
     const transformWithUserPlaces = transformProviderSearchItem(userPlaces);
     return results.map(transformWithUserPlaces);
-  }
-
-  async details(providerId: string) {
-    const result = await this.hereService.details(providerId);
-    return transformProviderDetails(result);
   }
 }
