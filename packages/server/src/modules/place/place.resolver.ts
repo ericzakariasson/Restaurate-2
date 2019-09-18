@@ -15,11 +15,10 @@ import { PlaceData } from '../../graphql/placeData';
 import { Service } from 'typedi';
 import {
   PlaceSearchResult,
-  PlaceSearchItem,
   PriceLevel,
-  PositionInput
+  Position,
+  PlaceDetails
 } from './place.types';
-import { transformVenueDetailsToBasicDetails } from './place.helpers';
 import { Context } from '../../graphql/types';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
@@ -35,11 +34,12 @@ export class PlaceResolver {
     private readonly wtvService: WantToVisitService
   ) {}
 
+  @Authorized()
   @Query(() => PlaceSearchResult)
   async searchPlace(
     @Ctx() ctx: Context,
     @Arg('query') query: string,
-    @Arg('position', { nullable: true }) position?: PositionInput
+    @Arg('position', { nullable: true }) position?: Position
   ): Promise<PlaceSearchResult> {
     const places = await this.placeService.search(
       ctx.req.session.userId,
@@ -51,17 +51,23 @@ export class PlaceResolver {
   }
 
   @Authorized()
+  @Query(() => PlaceDetails)
+  async placeDetails(
+    @Arg('providerId') providerId: string
+  ): Promise<PlaceDetails> {
+    return this.placeService.details(providerId);
+  }
+
+  @Authorized()
   @Query(() => Place, { nullable: true })
-  async place(
-    @Arg('providerPlaceId') providerPlaceId: string
-  ): Promise<Place | null> {
-    const placeData = await this.placeService.getPlaceData(providerPlaceId);
+  async place(@Arg('providerId') providerId: string): Promise<Place | null> {
+    const placeData = await this.placeService.getPlaceData(providerId);
 
     if (!placeData) {
       return null;
     }
 
-    const userPlace = await this.placeService.findByProviderId(providerPlaceId);
+    const userPlace = await this.placeService.findByProviderId(providerId);
 
     if (!userPlace) {
       const place = new Place();
@@ -74,65 +80,17 @@ export class PlaceResolver {
     return userPlace;
   }
 
-  @Authorized()
-  @Query(() => PlaceSearchItem, { nullable: true })
-  async placeBasicDetails(
-    @Arg('providerPlaceId') providerPlaceId: string
-  ): Promise<PlaceSearchItem | null> {
-    const placeData = await this.placeService.getPlaceData(providerPlaceId);
-    const place = await this.placeService.findByProviderId(providerPlaceId);
-
-    if (!placeData) {
-      return null;
-    }
-
-    const details = transformVenueDetailsToBasicDetails(place, placeData);
-    return details;
-  }
-
   // @Authorized()
-  // @Query(() => PlaceSearchResult, { nullable: true })
-  // async searchPlace(
-  //   @Arg('filter') { query, near, position }: PlaceSearchInput,
-  //   @Ctx() ctx: Context
-  // ): Promise<PlaceSearchResult | null> {
-  //   if (!near && !position) {
-  //     throw new Error('One of `near` or `position` is required');
-  //   }
-
-  //   const venues = await this.foursquareService.venue.search({
-  //     query,
-  //     intent: 'browse',
-  //     ...(near && { near }),
-  //     ...(!near &&
-  //       position && { ll: [position.lat, position.lng], radius: 50_000 })
-  //   });
-
-  //   if (!venues || venues.length === 0) {
-  //     return null;
-  //   }
-
-  //   const userPlaces = await this.placeService.getUserPlacesByProviderIds(
-  //     ctx.req.session.userId,
-  //     venues.map(venue => venue.id)
+  // @Query(() => [PlaceSearchItem])
+  // async wantToVisitList(@Ctx() ctx: Context): Promise<PlaceSearchItem[]> {
+  //   const placeDataList = await this.placeService.getWantToVisitList(
+  //     ctx.req.session.userId
   //   );
 
-  //   const result = venues.map(transformVenueToSearchItem(userPlaces));
-  //   const response = new PlaceSearchResult({ places: result });
-  //   return response;
+  //   return placeDataList.map(pd =>
+  //     transformVenueDetailsToBasicDetails(null, pd)
+  //   );
   // }
-
-  @Authorized()
-  @Query(() => [PlaceSearchItem])
-  async wantToVisitList(@Ctx() ctx: Context): Promise<PlaceSearchItem[]> {
-    const placeDataList = await this.placeService.getWantToVisitList(
-      ctx.req.session.userId
-    );
-
-    return placeDataList.map(pd =>
-      transformVenueDetailsToBasicDetails(null, pd)
-    );
-  }
 
   @Authorized()
   @Mutation(() => Boolean)

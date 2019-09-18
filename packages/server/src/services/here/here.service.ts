@@ -1,12 +1,12 @@
 import nodeFetch from 'node-fetch';
 import * as qs from 'qs';
 import {
-  Coordinates,
   HereSearchResultItem,
-  HereSearchResult
+  HereSearchResult,
+  HerePlaceDetails,
+  Headers
 } from './here.types';
-
-type Headers = { [key: string]: string };
+import { Coordinates } from '../../utils/utils.types';
 
 const getGeolocationHeader = ({ lat, lng }: Coordinates) => `geo:${lat},${lng}`;
 
@@ -80,5 +80,12 @@ export class HereService {
     );
 
     return data.results.items;
+  }
+
+  public async details(id: string): Promise<HerePlaceDetails> {
+    return this.repository.fetch<HerePlaceDetails>('places/lookup', {
+      source: 'sharing',
+      id
+    });
   }
 }

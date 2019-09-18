@@ -1,79 +1,82 @@
-import { Field, ObjectType, ID } from 'type-graphql';
+export type Headers = { [key: string]: string };
 
-@ObjectType()
-class Category {
-  @Field()
+export interface HereCategory {
   id: string;
-
-  @Field()
   title: string;
-
-  @Field()
   href: string;
-
-  @Field()
   type: string;
-
-  @Field()
   system: string;
 }
 
-@ObjectType()
-class OpeningHours {
-  @Field()
+export interface HereOpeningHours {
   label: string;
-
-  @Field()
   isOpen: boolean;
-
-  @Field()
   text: string;
 }
 
-@ObjectType()
-export class Coordinates {
-  @Field()
-  lat: number;
-
-  @Field()
-  lng: number;
-}
-
-@ObjectType()
-export class HereSearchResultItem {
-  @Field(() => ID)
+export interface HereSearchResultItem {
   id: string;
-
-  @Field(() => [Number])
   position: number[];
-
-  @Field()
   ditance: number;
-
-  @Field()
   title: string;
-
-  @Field()
   averageRating: number;
-
-  @Field(() => [Category])
-  categories: Category[];
-
-  @Field()
+  categories: HereCategory[];
   icon: string;
-
-  @Field()
   vicinity: string;
-
-  @Field()
   href: string;
-
-  @Field(() => OpeningHours)
-  openingHours: OpeningHours;
+  openingHours: HereOpeningHours;
 }
 
 export interface HereSearchResult {
   results: {
     items: HereSearchResultItem[];
+  };
+}
+
+interface HereAddress {
+  text: string;
+  house: string;
+  street: string;
+  postalCode: string;
+  district: string;
+  city: string;
+  county: string;
+  state: string;
+  country: string;
+  countryCode: string;
+}
+
+export interface HereLocation {
+  position: [number, number];
+  address: HereAddress;
+}
+
+interface LabelValuePair {
+  label: string;
+  value: string;
+}
+
+export interface HereContacts {
+  phone: LabelValuePair[];
+  website: LabelValuePair[];
+}
+
+interface Tag {
+  id: string;
+  title: string;
+  group: string;
+}
+
+export interface HerePlaceDetails {
+  name: string;
+  placeId: string;
+  view: string;
+  location: HereLocation;
+  contacts: HereContacts;
+  categories: HereCategory[];
+  tags: Tag[];
+  icon: string;
+  extended: {
+    openingHours: HereOpeningHours;
   };
 }
