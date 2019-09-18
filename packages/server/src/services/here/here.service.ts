@@ -39,8 +39,18 @@ class HereRepository {
     return parameters;
   }
 
-  async fetch<T>(url: string, options?: object, headers?: Headers) {
+  private getHeaders(customHeaders: Headers) {
+    const headers = {
+      'Accept-Language': 'sv-SE,sv;q=0.9,en-US;q=0.8,en;q=0.7',
+      ...customHeaders
+    };
+
+    return headers;
+  }
+
+  async fetch<T>(url: string, options?: object, customHeaders?: Headers) {
     const parameters = this.getParameters(options || {});
+    const headers = this.getHeaders(customHeaders || {});
     const endpoint = `${this.baseUrl}/${url}?${parameters}`;
 
     const response = await nodeFetch(endpoint, { headers });
