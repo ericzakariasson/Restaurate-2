@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { PlaceItem } from './PlaceItem';
-import { PoweredBy } from 'components';
 import { PlaceDetailsBasic } from 'graphql/types';
 
 const Count = styled.p`

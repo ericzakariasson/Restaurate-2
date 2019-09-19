@@ -63,7 +63,7 @@ export const CardWithScore = ({
       </Place>
       <Numbers>
         {children}
-        <Score>{score}</Score>
+        <Score>{score || '–'}</Score>
       </Numbers>
     </NeutralLink>
   </Card>

@@ -38,7 +38,7 @@ export const VisitGroup = ({ date, visits }: VisitGroupProps) => {
     <Group>
       <Label>
         <Date>{formatDate(date)}</Date>
-        <VisitCount> – {visits.length}</VisitCount>
+        <VisitCount> – {visits.length} besök</VisitCount>
       </Label>
       <VisitList>
         {visits.map(visit => (
@@ -47,7 +47,7 @@ export const VisitGroup = ({ date, visits }: VisitGroupProps) => {
             name={visit.place.details.name}
             address={visit.place.details.location.address.formatted || '–'}
             to={visitRoute(visit.id)}
-            score={5}
+            score={visit.score}
           />
         ))}
       </VisitList>
