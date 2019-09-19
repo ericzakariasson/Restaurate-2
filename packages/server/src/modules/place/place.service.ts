@@ -234,10 +234,13 @@ export class PlaceService {
 
   async searchPlaces(userId: number, query: string, location?: Coordinates) {
     const results = await this.hereService.search(query, location);
-    const userPlaces = await this.getUserPlacesByProviderIds(
-      userId,
-      results.map(result => result.id)
-    );
+
+    const providerIds = results.map(result => result.id);
+
+    const userPlaces =
+      providerIds.length > 0
+        ? await this.getUserPlacesByProviderIds(userId, providerIds)
+        : [];
 
     const transformWithUserPlaces = transformProviderSearchItem(userPlaces);
     return results.map(transformWithUserPlaces);
