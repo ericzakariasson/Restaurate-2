@@ -6,7 +6,8 @@ import { ActionButton } from './ActionButton';
 import {
   useToggleWantToVisitMutation,
   PlaceDocument,
-  PlaceQuery
+  PlaceQuery,
+  WantToVisitListDocument
 } from 'graphql/types';
 import { DataProxy } from 'apollo-cache';
 
@@ -48,7 +49,8 @@ export const WantToVisitButton = ({
 }: WantToVisitButtonProps) => {
   const [toggleWantToVisit, { loading }] = useToggleWantToVisitMutation({
     variables: { providerPlaceId },
-    update: updateWantToVisit(providerPlaceId)
+    update: updateWantToVisit(providerPlaceId),
+    refetchQueries: [{ query: WantToVisitListDocument }]
   });
 
   return (

@@ -18,6 +18,7 @@ import { Phone } from './components/Phone';
 const UserStats = styled.section`
   display: flex;
   margin-bottom: 20px;
+  margin-top: 5px;
 `;
 
 const UserPlaceInputs = styled.section`
@@ -25,7 +26,26 @@ const UserPlaceInputs = styled.section`
 `;
 
 const Contact = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+`;
+
+const Categories = styled.ul`
+  list-style: none;
+  margin-bottom: 15px;
+`;
+
+const Category = styled.li`
+  display: inline-block;
+  font-size: 14px;
+  padding: 6px 8px;
+  background: #f5f5f5;
+  color: #222;
+  font-weight: 700;
+  border-radius: 6px;
+
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
 `;
 
 interface PlaceSceneProps extends RouteComponentProps<ProviderPlaceIdParam> {}
@@ -50,7 +70,7 @@ export const PlaceScene = ({
   const place = data && data.place;
 
   const {
-    details: { name, location, contact },
+    details: { name, location, contact, categories },
     priceLevel,
     tags,
     comment,
@@ -66,11 +86,20 @@ export const PlaceScene = ({
   return (
     <Page title={name} subTitle={location.address.formatted}>
       <PlaceMap lat={location.position.lat!} lng={location.position.lng} />
-      <Contact>
-        {website && website.map(w => <Website key={w.value} url={w.value} />)}
-        {website && ' — '}
-        {phone && phone.map(w => <Phone key={w.value} nr={w.value} />)}
-      </Contact>
+      {(website || phone) && (
+        <Contact>
+          {website && website.map(w => <Website key={w.value} url={w.value} />)}
+          {website && ' — '}
+          {phone && phone.map(w => <Phone key={w.value} nr={w.value} />)}
+        </Contact>
+      )}
+      {categories && (
+        <Categories>
+          {categories.map(category => (
+            <Category key={category.id}>{category.title}</Category>
+          ))}
+        </Categories>
+      )}
       <UserStats>
         <UserStat label="Besök" value={visitCount} />
         <UserStat label="Betyg" value={averageScore || '–'} />

@@ -33,15 +33,17 @@ const Item = styled.li<ItemProps>`
 const Link = styled(NavLink)`
   padding: 5px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   text-decoration: none;
 `;
 
 interface MapProps {
   touching: boolean;
+  size: number;
+  url: string;
 }
 
-const Map = styled.img<MapProps>`
+const Map = styled.div<MapProps>`
   margin-right: 10px;
   border-radius: 5px;
   position: relative;
@@ -50,8 +52,11 @@ const Map = styled.img<MapProps>`
   background-size: 100%;
   background-position: center;
   background-color: #eee;
-  width: 64px;
-  height: 64px;
+  width: ${p => p.size}px;
+  /* height: ${p => p.size}px; */
+  background-image: url(${p => p.url});
+  background-size: 100%;
+  background-position: center;
 
   ${p =>
     p.touching &&
@@ -66,6 +71,7 @@ const Name = styled.h4`
   font-weight: 600;
   margin-bottom: 2px;
   color: #111;
+  word-break: break-word;
 `;
 
 const Address = styled.p`
@@ -79,20 +85,32 @@ const Info = styled.div`
   display: flex;
   flex-direction: column;
   padding: 5px 0;
+  min-width: 0;
 `;
 
 const Categories = styled.ul`
   display: flex;
   margin-top: 5px;
+  list-style: none;
+  max-width: 100%;
+  overflow-x: auto;
+  padding-right: 10px;
+  margin-right: 5px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Category = styled.li`
+  list-style: none;
   font-size: 12px;
   padding: 4px 5px;
   background: #f5f5f5;
   color: #666;
   font-weight: 700;
   border-radius: 4px;
+  white-space: pre;
 
   &:not(:last-child) {
     margin-right: 5px;
@@ -101,10 +119,12 @@ const Category = styled.li`
 
 interface PlaceItemProps {
   place: PlaceDetailsBasic;
+  imageSize?: number;
 }
 
 export const PlaceItem = ({
-  place: { providerId, name, address, position, categories }
+  place: { providerId, name, address, position, categories },
+  imageSize = 64
 }: PlaceItemProps) => {
   const [touching, setTouching] = useState(false);
 
@@ -112,8 +132,8 @@ export const PlaceItem = ({
   const handleTouchEnd = () => setTouching(false);
 
   const size = {
-    width: 64,
-    height: 64
+    width: imageSize,
+    height: imageSize
   };
 
   const mapUrl = staticMapUrl({
@@ -127,15 +147,13 @@ export const PlaceItem = ({
   });
 
   return (
-    <Item
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      touching={touching}
-    >
+    <Item touching={touching}>
       <Link to={placeRoute(providerId)}>
-        <Map touching={touching} src={mapUrl} />
+        <Map touching={touching} url={mapUrl} size={imageSize} />
         <Info>
-          <Name>{name}</Name>
+          <Name onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+            {name}
+          </Name>
           <Address>{address}</Address>
           <Categories>
             {categories.map(category => (

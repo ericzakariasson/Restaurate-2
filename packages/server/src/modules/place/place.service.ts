@@ -221,7 +221,7 @@ export class PlaceService {
 
     const places = Promise.all(
       wantToVisit.map(
-        async wtv => await this.getPlaceDetails(wtv.providerPlaceId)
+        async wtv => await this.getPlaceDetails(wtv.placeProviderId)
       )
     );
 
