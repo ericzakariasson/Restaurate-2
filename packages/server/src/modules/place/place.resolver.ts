@@ -72,7 +72,7 @@ export class PlaceResolver {
 
     if (!userPlace) {
       const place = new Place();
-      place.providerPlaceId = placeDetails.providerId;
+      place.providerId = placeDetails.providerId;
       place.priceLevel = PriceLevel.NotSet;
       place.tags = [];
       return place;
@@ -193,7 +193,7 @@ export class PlaceResolver {
 
   @FieldResolver(() => PlaceDetails)
   async details(@Root() place: Place): Promise<PlaceDetails> {
-    return this.placeService.getPlaceDetails(place.providerPlaceId);
+    return this.placeService.getPlaceDetails(place.providerId);
   }
 
   @FieldResolver(() => Boolean)
@@ -207,7 +207,7 @@ export class PlaceResolver {
     @Ctx() ctx: Context
   ): Promise<boolean> {
     const wantToVisit = await this.wtvService.findByProviderId(
-      place.providerPlaceId,
+      place.providerId,
       ctx.req.session.userId
     );
 

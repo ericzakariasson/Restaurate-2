@@ -4,8 +4,8 @@ import * as fragments from '../fragments';
 export default gql`
   query WantToVisitList {
     wantToVisitList {
-      ...PlaceBasicDetails
+      ...PlaceDetailsBasic
     }
   }
-  ${fragments.placeBasicDetails}
+  ${fragments.placeDetailsBasic}
 `;

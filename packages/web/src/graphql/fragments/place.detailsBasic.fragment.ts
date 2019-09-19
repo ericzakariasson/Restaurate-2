@@ -1,15 +1,15 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  fragment PlaceBasicDetails on PlaceSearchItem {
-    providerPlaceId
+  fragment PlaceDetailsBasic on PlaceDetailsBasic {
+    providerId
     name
     address
     visits
-    coordinates {
+    position {
       lat
       lng
     }
-    types
+    categories
   }
 `;

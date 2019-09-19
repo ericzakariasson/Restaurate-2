@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import { staticMapboxMapUrl } from '../../../utils';
-import { PlaceSearchItem } from 'graphql/types';
+import { staticMapUrl } from '../../../utils';
 import { NavLink } from 'react-router-dom';
 import { placeRoute } from 'routes';
+import { PlaceDetailsBasic } from 'graphql/types';
 
 interface ItemProps {
   touching: boolean;
@@ -81,12 +81,12 @@ const Info = styled.div`
   padding: 5px 0;
 `;
 
-const Types = styled.ul`
+const Categories = styled.ul`
   display: flex;
   margin-top: 5px;
 `;
 
-const Type = styled.li`
+const Category = styled.li`
   font-size: 12px;
   padding: 4px 5px;
   background: #f5f5f5;
@@ -100,11 +100,11 @@ const Type = styled.li`
 `;
 
 interface PlaceItemProps {
-  place: PlaceSearchItem;
+  place: PlaceDetailsBasic;
 }
 
 export const PlaceItem = ({
-  place: { providerPlaceId, name, address, coordinates, types }
+  place: { providerId, name, address, position, categories }
 }: PlaceItemProps) => {
   const [touching, setTouching] = useState(false);
 
@@ -116,11 +116,10 @@ export const PlaceItem = ({
     height: 78
   };
 
-  const mapUrl = staticMapboxMapUrl({
+  const mapUrl = staticMapUrl({
     ...size,
+    ...position,
     retina: true,
-    lat: coordinates.lat,
-    lng: coordinates.lng,
     zoom: 12,
     options: {
       logo: false
@@ -133,16 +132,16 @@ export const PlaceItem = ({
       onTouchEnd={handleTouchEnd}
       touching={touching}
     >
-      <Link to={placeRoute(providerPlaceId)}>
+      <Link to={placeRoute(providerId)}>
         <Map touching={touching} src={mapUrl} />
         <Info>
           <Name>{name}</Name>
           <Address>{address}</Address>
-          <Types>
-            {types.map(type => (
-              <Type key={type}>{type}</Type>
+          <Categories>
+            {categories.map(category => (
+              <Category key={category}>{category}</Category>
             ))}
-          </Types>
+          </Categories>
         </Info>
       </Link>
     </Item>

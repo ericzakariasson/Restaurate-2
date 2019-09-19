@@ -2,12 +2,12 @@ import gql from 'graphql-tag';
 import * as fragments from '../fragments';
 
 export default gql`
-  query SearchPlace($filter: PlaceSearchInput!) {
-    searchPlace(filter: $filter) {
+  query SearchPlace($query: String!, $position: PositionInput) {
+    searchPlace(query: $query, position: $position) {
       places {
-        ...PlaceBasicDetails
+        ...PlaceDetailsBasic
       }
     }
   }
-  ${fragments.placeBasicDetails}
+  ${fragments.placeDetailsBasic}
 `;

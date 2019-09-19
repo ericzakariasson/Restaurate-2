@@ -100,7 +100,7 @@ export const VisitScene = ({
   const { place, visitDate, orders, comment, ratings } = visit!;
 
   return (
-    <Page title={place.data.name} subTitle={formatDate(visitDate)}>
+    <Page title={place.details.name} subTitle={formatDate(visitDate)}>
       <Block>
         <Label text="Beställningar" />
         {orders && orders.length > 0 ? (
@@ -143,18 +143,6 @@ export const VisitScene = ({
             );
           })}
         </Ratings>
-        {/* <RateList>
-          {formattedRate.map(rate => (
-            <RateItem key={rate.label}>
-              <RateLabel>{rate.label}</RateLabel>
-              <RateScore>{rate.score || '-'}</RateScore>
-            </RateItem>
-          ))}
-          <ScoreItem>
-            <RateLabel>Total</RateLabel>
-            <RateScore>{rate.score}</RateScore>
-          </ScoreItem>
-        </RateList> */}
       </Block>
       <Block>
         <Label text="Kommentar" />
@@ -163,8 +151,8 @@ export const VisitScene = ({
       <NavButton
         variant="secondary"
         color="white"
-        to={placeRoute(place.providerPlaceId)}
-        text={`${place.data.name}`}
+        to={placeRoute(place.providerId)}
+        text={`${place.details.name}`}
       />
     </Page>
   );

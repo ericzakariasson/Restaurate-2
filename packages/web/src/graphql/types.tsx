@@ -14,6 +14,20 @@ export type Scalars = {
   DateTime: any,
 };
 
+export type Address = {
+   __typename?: 'Address',
+  formatted: Scalars['String'],
+  house: Scalars['String'],
+  street: Scalars['String'],
+  postalCode: Scalars['String'],
+  district: Scalars['String'],
+  city: Scalars['String'],
+  county: Scalars['String'],
+  state: Scalars['String'],
+  country: Scalars['String'],
+  countryCode: Scalars['String'],
+};
+
 export type AddVisitInput = {
   providerPlaceId: Scalars['String'],
   visitDate: Scalars['DateTime'],
@@ -28,31 +42,34 @@ export type AddVisitResponse = {
   visit: Visit,
 };
 
+export type Category = {
+   __typename?: 'Category',
+  id: Scalars['String'],
+  title: Scalars['String'],
+};
+
 export type Contact = {
    __typename?: 'Contact',
-  phone?: Maybe<Scalars['String']>,
-  formattedPhone?: Maybe<Scalars['String']>,
-  twitter?: Maybe<Scalars['String']>,
-  instagram?: Maybe<Scalars['String']>,
-  facebook?: Maybe<Scalars['String']>,
-  facebookUsername?: Maybe<Scalars['String']>,
-  facebookName?: Maybe<Scalars['String']>,
+  phone: Array<KeyValuePair>,
+  website: Array<KeyValuePair>,
 };
 
 
+export type IPosition = {
+  lat: Scalars['Float'],
+  lng: Scalars['Float'],
+};
+
+export type KeyValuePair = {
+   __typename?: 'KeyValuePair',
+  label: Scalars['String'],
+  value: Scalars['String'],
+};
+
 export type Location = {
    __typename?: 'Location',
-  address?: Maybe<Scalars['String']>,
-  crossStreet?: Maybe<Scalars['String']>,
-  lat?: Maybe<Scalars['Float']>,
-  lng?: Maybe<Scalars['Float']>,
-  distance?: Maybe<Scalars['Float']>,
-  postalCode?: Maybe<Scalars['String']>,
-  cc?: Maybe<Scalars['String']>,
-  city: Scalars['String'],
-  state?: Maybe<Scalars['String']>,
-  country: Scalars['String'],
-  formattedAddress: Array<Scalars['String']>,
+  position: Position,
+  address: Address,
 };
 
 export type Mutation = {
@@ -113,6 +130,11 @@ export type MutationSetCommentArgs = {
   providerPlaceId: Scalars['String']
 };
 
+export type OpeningHours = {
+   __typename?: 'OpeningHours',
+  isOpen: Scalars['Boolean'],
+};
+
 export type Order = {
    __typename?: 'Order',
   id: Scalars['ID'],
@@ -124,7 +146,7 @@ export type Order = {
 export type Place = {
    __typename?: 'Place',
   id?: Maybe<Scalars['ID']>,
-  providerPlaceId: Scalars['ID'],
+  providerId: Scalars['ID'],
   user?: Maybe<User>,
   types?: Maybe<Array<PlaceType>>,
   priceLevel: PriceLevel,
@@ -135,7 +157,7 @@ export type Place = {
   updatedAt?: Maybe<Scalars['DateTime']>,
   visitCount: Scalars['Float'],
   averageScore: Scalars['Float'],
-  data: PlaceData,
+  details: PlaceDetails,
   hasVisited: Scalars['Boolean'],
   wantToVisit: Scalars['Boolean'],
 };
@@ -145,43 +167,29 @@ export type PlaceVisitsArgs = {
   limit?: Maybe<Scalars['Float']>
 };
 
-export type PlaceData = {
-   __typename?: 'PlaceData',
-  id: Scalars['String'],
+export type PlaceDetails = {
+   __typename?: 'PlaceDetails',
+  providerId: Scalars['String'],
   name: Scalars['String'],
-  contact: Contact,
   location: Location,
-  url?: Maybe<Scalars['String']>,
-  description?: Maybe<Scalars['String']>,
+  categories: Array<Category>,
+  contact: Contact,
+  openingHours: OpeningHours,
 };
 
-export type PlaceInput = {
-  id?: Maybe<Scalars['Float']>,
-  providerPlaceId: Scalars['String'],
-  priceLevel?: Maybe<PriceLevel>,
-  types: Array<PlaceType>,
-  tags: Array<Scalars['String']>,
-};
-
-export type PlaceSearchInput = {
-  query: Scalars['String'],
-  near?: Maybe<Scalars['String']>,
-  position?: Maybe<PositionInput>,
-};
-
-export type PlaceSearchItem = {
-   __typename?: 'PlaceSearchItem',
-  providerPlaceId: Scalars['String'],
+export type PlaceDetailsBasic = {
+   __typename?: 'PlaceDetailsBasic',
+  providerId: Scalars['String'],
   name: Scalars['String'],
   address: Scalars['String'],
   visits: Scalars['Float'],
-  coordinates: Position,
-  types: Array<Scalars['String']>,
+  position: Position,
+  categories: Array<Scalars['String']>,
 };
 
 export type PlaceSearchResult = {
    __typename?: 'PlaceSearchResult',
-  places: Array<PlaceSearchItem>,
+  places: Array<PlaceDetailsBasic>,
 };
 
 /** Type of place */
@@ -190,7 +198,7 @@ export enum PlaceType {
   Cafe = 'Cafe'
 }
 
-export type Position = {
+export type Position = IPosition & {
    __typename?: 'Position',
   lat: Scalars['Float'],
   lng: Scalars['Float'],
@@ -214,10 +222,10 @@ export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
   visit?: Maybe<Visit>,
+  searchPlace: PlaceSearchResult,
+  placeDetails: PlaceDetails,
   place?: Maybe<Place>,
-  placeBasicDetails?: Maybe<PlaceSearchItem>,
-  searchPlace?: Maybe<PlaceSearchResult>,
-  wantToVisitList: Array<PlaceSearchItem>,
+  wantToVisitList: Array<PlaceDetailsBasic>,
 };
 
 
@@ -226,18 +234,19 @@ export type QueryVisitArgs = {
 };
 
 
-export type QueryPlaceArgs = {
-  providerPlaceId: Scalars['String']
-};
-
-
-export type QueryPlaceBasicDetailsArgs = {
-  providerPlaceId: Scalars['String']
-};
-
-
 export type QuerySearchPlaceArgs = {
-  filter: PlaceSearchInput
+  position?: Maybe<PositionInput>,
+  query: Scalars['String']
+};
+
+
+export type QueryPlaceDetailsArgs = {
+  providerId: Scalars['String']
+};
+
+
+export type QueryPlaceArgs = {
+  providerId: Scalars['String']
 };
 
 export type Rate = {
@@ -311,45 +320,71 @@ export type WantToVisit = {
   createdAt: Scalars['String'],
   updatedAt: Scalars['String'],
 };
-export type PlaceFragment = (
-  { __typename?: 'Place' }
-  & Pick<Place, 'id' | 'providerPlaceId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'comment' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
-  & { tags: Array<{ __typename?: 'Tag' }
-    & PlaceTagFragment
-  >, data: { __typename?: 'PlaceData' }
-    & PlaceDataFragment
-  , user: Maybe<{ __typename?: 'User' }
-    & UserFragment
-  > }
-);
-
-export type PlaceBasicDetailsFragment = (
-  { __typename?: 'PlaceSearchItem' }
-  & Pick<PlaceSearchItem, 'providerPlaceId' | 'name' | 'address' | 'visits' | 'types'>
-  & { coordinates: (
-    { __typename?: 'Position' }
-    & Pick<Position, 'lat' | 'lng'>
-  ) }
-);
-
-export type PlaceDataFragment = (
-  { __typename?: 'PlaceData' }
-  & Pick<PlaceData, 'id' | 'name' | 'url' | 'description'>
-  & { contact: { __typename?: 'Contact' }
-    & ContactFragment
-  , location: { __typename?: 'Location' }
+export type PlaceDetailsFragment = (
+  { __typename?: 'PlaceDetails' }
+  & Pick<PlaceDetails, 'providerId' | 'name'>
+  & { location: { __typename?: 'Location' }
     & LocationFragment
+  , categories: Array<{ __typename?: 'Category' }
+    & CategoryFragment
+  >, contact: { __typename?: 'Contact' }
+    & ContactFragment
+  , openingHours: { __typename?: 'OpeningHours' }
+    & OpeningHoursFragment
    }
 );
 
 export type LocationFragment = (
   { __typename?: 'Location' }
-  & Pick<Location, 'address' | 'crossStreet' | 'lat' | 'lng' | 'distance' | 'postalCode' | 'cc' | 'city' | 'state' | 'country' | 'formattedAddress'>
+  & { address: (
+    { __typename?: 'Address' }
+    & Pick<Address, 'formatted' | 'house' | 'street' | 'district' | 'county' | 'country' | 'countryCode' | 'state' | 'city'>
+  ), position: (
+    { __typename?: 'Position' }
+    & Pick<Position, 'lat' | 'lng'>
+  ) }
 );
 
 export type ContactFragment = (
   { __typename?: 'Contact' }
-  & Pick<Contact, 'phone' | 'formattedPhone' | 'twitter' | 'instagram' | 'facebook' | 'facebookUsername' | 'facebookName'>
+  & { phone: Array<(
+    { __typename?: 'KeyValuePair' }
+    & Pick<KeyValuePair, 'label' | 'value'>
+  )>, website: Array<(
+    { __typename?: 'KeyValuePair' }
+    & Pick<KeyValuePair, 'label' | 'value'>
+  )> }
+);
+
+export type CategoryFragment = (
+  { __typename?: 'Category' }
+  & Pick<Category, 'id' | 'title'>
+);
+
+export type OpeningHoursFragment = (
+  { __typename?: 'OpeningHours' }
+  & Pick<OpeningHours, 'isOpen'>
+);
+
+export type PlaceDetailsBasicFragment = (
+  { __typename?: 'PlaceDetailsBasic' }
+  & Pick<PlaceDetailsBasic, 'providerId' | 'name' | 'address' | 'visits' | 'categories'>
+  & { position: (
+    { __typename?: 'Position' }
+    & Pick<Position, 'lat' | 'lng'>
+  ) }
+);
+
+export type PlaceFragment = (
+  { __typename?: 'Place' }
+  & Pick<Place, 'id' | 'providerId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'comment' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
+  & { tags: Array<{ __typename?: 'Tag' }
+    & PlaceTagFragment
+  >, details: { __typename?: 'PlaceDetails' }
+    & PlaceDetailsFragment
+  , user: Maybe<{ __typename?: 'User' }
+    & UserFragment
+  > }
 );
 
 export type PlaceTagFragment = (
@@ -535,8 +570,20 @@ export type MeVisitsQuery = (
   )> }
 );
 
+export type PlaceDetailsQueryVariables = {
+  providerId: Scalars['String']
+};
+
+
+export type PlaceDetailsQuery = (
+  { __typename?: 'Query' }
+  & { placeDetails: { __typename?: 'PlaceDetails' }
+    & PlaceDetailsFragment
+   }
+);
+
 export type PlaceQueryVariables = {
-  providerPlaceId: Scalars['String']
+  providerId: Scalars['String']
 };
 
 
@@ -552,31 +599,20 @@ export type PlaceQuery = (
   > }
 );
 
-export type PlaceBasicDetailsQueryVariables = {
-  providerPlaceId: Scalars['String']
-};
-
-
-export type PlaceBasicDetailsQuery = (
-  { __typename?: 'Query' }
-  & { placeBasicDetails: Maybe<{ __typename?: 'PlaceSearchItem' }
-    & PlaceBasicDetailsFragment
-  > }
-);
-
 export type SearchPlaceQueryVariables = {
-  filter: PlaceSearchInput
+  query: Scalars['String'],
+  position?: Maybe<PositionInput>
 };
 
 
 export type SearchPlaceQuery = (
   { __typename?: 'Query' }
-  & { searchPlace: Maybe<(
+  & { searchPlace: (
     { __typename?: 'PlaceSearchResult' }
-    & { places: Array<{ __typename?: 'PlaceSearchItem' }
-      & PlaceBasicDetailsFragment
+    & { places: Array<{ __typename?: 'PlaceDetailsBasic' }
+      & PlaceDetailsBasicFragment
     > }
-  )> }
+  ) }
 );
 
 export type VisitQueryVariables = {
@@ -596,21 +632,21 @@ export type WantToVisitListQueryVariables = {};
 
 export type WantToVisitListQuery = (
   { __typename?: 'Query' }
-  & { wantToVisitList: Array<{ __typename?: 'PlaceSearchItem' }
-    & PlaceBasicDetailsFragment
+  & { wantToVisitList: Array<{ __typename?: 'PlaceDetailsBasic' }
+    & PlaceDetailsBasicFragment
   > }
 );
-export const PlaceBasicDetailsFragmentDoc = gql`
-    fragment PlaceBasicDetails on PlaceSearchItem {
-  providerPlaceId
+export const PlaceDetailsBasicFragmentDoc = gql`
+    fragment PlaceDetailsBasic on PlaceDetailsBasic {
+  providerId
   name
   address
   visits
-  coordinates {
+  position {
     lat
     lng
   }
-  types
+  categories
 }
     `;
 export const TagFragmentDoc = gql`
@@ -660,51 +696,73 @@ export const PlaceTagFragmentDoc = gql`
   createdAt
 }
     `;
-export const ContactFragmentDoc = gql`
-    fragment Contact on Contact {
-  phone
-  formattedPhone
-  twitter
-  instagram
-  facebook
-  facebookUsername
-  facebookName
-}
-    `;
 export const LocationFragmentDoc = gql`
     fragment Location on Location {
-  address
-  crossStreet
-  lat
-  lng
-  distance
-  postalCode
-  cc
-  city
-  state
-  country
-  formattedAddress
+  address {
+    formatted
+    house
+    street
+    district
+    county
+    country
+    countryCode
+    state
+    city
+  }
+  position {
+    lat
+    lng
+  }
 }
     `;
-export const PlaceDataFragmentDoc = gql`
-    fragment PlaceData on PlaceData {
+export const CategoryFragmentDoc = gql`
+    fragment Category on Category {
   id
-  name
-  contact {
-    ...Contact
+  title
+}
+    `;
+export const ContactFragmentDoc = gql`
+    fragment Contact on Contact {
+  phone {
+    label
+    value
   }
+  website {
+    label
+    value
+  }
+}
+    `;
+export const OpeningHoursFragmentDoc = gql`
+    fragment OpeningHours on OpeningHours {
+  isOpen
+}
+    `;
+export const PlaceDetailsFragmentDoc = gql`
+    fragment PlaceDetails on PlaceDetails {
+  providerId
+  name
   location {
     ...Location
   }
-  url
-  description
+  categories {
+    ...Category
+  }
+  contact {
+    ...Contact
+  }
+  openingHours {
+    ...OpeningHours
+  }
 }
-    ${ContactFragmentDoc}
-${LocationFragmentDoc}`;
+    ${LocationFragmentDoc}
+${CategoryFragmentDoc}
+${ContactFragmentDoc}
+${OpeningHoursFragmentDoc}`;
 export const PlaceFragmentDoc = gql`
     fragment Place on Place {
   id
-  providerPlaceId
+  providerId
   priceLevel
   types
   averageScore
@@ -712,8 +770,8 @@ export const PlaceFragmentDoc = gql`
   tags {
     ...PlaceTag
   }
-  data {
-    ...PlaceData
+  details {
+    ...PlaceDetails
   }
   user {
     ...User
@@ -725,7 +783,7 @@ export const PlaceFragmentDoc = gql`
   updatedAt
 }
     ${PlaceTagFragmentDoc}
-${PlaceDataFragmentDoc}
+${PlaceDetailsFragmentDoc}
 ${UserFragmentDoc}`;
 export const VisitFragmentDoc = gql`
     fragment Visit on Visit {
@@ -930,9 +988,26 @@ export const MeVisitsDocument = gql`
       
 export type MeVisitsQueryHookResult = ReturnType<typeof useMeVisitsQuery>;
 export type MeVisitsQueryResult = ApolloReactCommon.QueryResult<MeVisitsQuery, MeVisitsQueryVariables>;
+export const PlaceDetailsDocument = gql`
+    query PlaceDetails($providerId: String!) {
+  placeDetails(providerId: $providerId) {
+    ...PlaceDetails
+  }
+}
+    ${PlaceDetailsFragmentDoc}`;
+
+    export function usePlaceDetailsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PlaceDetailsQuery, PlaceDetailsQueryVariables>) {
+      return ApolloReactHooks.useQuery<PlaceDetailsQuery, PlaceDetailsQueryVariables>(PlaceDetailsDocument, baseOptions);
+    }
+      export function usePlaceDetailsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PlaceDetailsQuery, PlaceDetailsQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<PlaceDetailsQuery, PlaceDetailsQueryVariables>(PlaceDetailsDocument, baseOptions);
+      }
+      
+export type PlaceDetailsQueryHookResult = ReturnType<typeof usePlaceDetailsQuery>;
+export type PlaceDetailsQueryResult = ApolloReactCommon.QueryResult<PlaceDetailsQuery, PlaceDetailsQueryVariables>;
 export const PlaceDocument = gql`
-    query Place($providerPlaceId: String!) {
-  place(providerPlaceId: $providerPlaceId) {
+    query Place($providerId: String!) {
+  place(providerId: $providerId) {
     ...Place
     visits {
       ...Visit
@@ -951,32 +1026,15 @@ ${VisitFragmentDoc}`;
       
 export type PlaceQueryHookResult = ReturnType<typeof usePlaceQuery>;
 export type PlaceQueryResult = ApolloReactCommon.QueryResult<PlaceQuery, PlaceQueryVariables>;
-export const PlaceBasicDetailsDocument = gql`
-    query PlaceBasicDetails($providerPlaceId: String!) {
-  placeBasicDetails(providerPlaceId: $providerPlaceId) {
-    ...PlaceBasicDetails
-  }
-}
-    ${PlaceBasicDetailsFragmentDoc}`;
-
-    export function usePlaceBasicDetailsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>) {
-      return ApolloReactHooks.useQuery<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>(PlaceBasicDetailsDocument, baseOptions);
-    }
-      export function usePlaceBasicDetailsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>(PlaceBasicDetailsDocument, baseOptions);
-      }
-      
-export type PlaceBasicDetailsQueryHookResult = ReturnType<typeof usePlaceBasicDetailsQuery>;
-export type PlaceBasicDetailsQueryResult = ApolloReactCommon.QueryResult<PlaceBasicDetailsQuery, PlaceBasicDetailsQueryVariables>;
 export const SearchPlaceDocument = gql`
-    query SearchPlace($filter: PlaceSearchInput!) {
-  searchPlace(filter: $filter) {
+    query SearchPlace($query: String!, $position: PositionInput) {
+  searchPlace(query: $query, position: $position) {
     places {
-      ...PlaceBasicDetails
+      ...PlaceDetailsBasic
     }
   }
 }
-    ${PlaceBasicDetailsFragmentDoc}`;
+    ${PlaceDetailsBasicFragmentDoc}`;
 
     export function useSearchPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchPlaceQuery, SearchPlaceQueryVariables>) {
       return ApolloReactHooks.useQuery<SearchPlaceQuery, SearchPlaceQueryVariables>(SearchPlaceDocument, baseOptions);
@@ -1007,10 +1065,10 @@ export type VisitQueryResult = ApolloReactCommon.QueryResult<VisitQuery, VisitQu
 export const WantToVisitListDocument = gql`
     query WantToVisitList {
   wantToVisitList {
-    ...PlaceBasicDetails
+    ...PlaceDetailsBasic
   }
 }
-    ${PlaceBasicDetailsFragmentDoc}`;
+    ${PlaceDetailsBasicFragmentDoc}`;
 
     export function useWantToVisitListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WantToVisitListQuery, WantToVisitListQueryVariables>) {
       return ApolloReactHooks.useQuery<WantToVisitListQuery, WantToVisitListQueryVariables>(WantToVisitListDocument, baseOptions);

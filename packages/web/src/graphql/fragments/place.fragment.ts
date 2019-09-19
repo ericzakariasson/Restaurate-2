@@ -5,7 +5,7 @@ import * as fragments from './';
 export default gql`
   fragment Place on Place {
     id
-    providerPlaceId
+    providerId
     priceLevel
     types
     averageScore
@@ -13,8 +13,8 @@ export default gql`
     tags {
       ...PlaceTag
     }
-    data {
-      ...PlaceData
+    details {
+      ...PlaceDetails
     }
     user {
       ...User
@@ -26,6 +26,6 @@ export default gql`
     updatedAt
   }
   ${fragments.placeTag}
-  ${fragments.placeData}
+  ${fragments.placeDetails}
   ${fragments.user}
 `;

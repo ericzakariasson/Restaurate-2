@@ -31,7 +31,7 @@ export const PlaceScene = ({
   }
 }: PlaceSceneProps) => {
   const { data, loading, error } = usePlaceQuery({
-    variables: { providerPlaceId }
+    variables: { providerId: providerPlaceId }
   });
 
   if (loading) {
@@ -45,7 +45,7 @@ export const PlaceScene = ({
   const place = data && data.place;
 
   const {
-    data: { name, location, url },
+    details: { name, location, contact },
     priceLevel,
     tags,
     comment,
@@ -56,14 +56,11 @@ export const PlaceScene = ({
     wantToVisit
   } = place!;
 
-  const formattedAddress = location.address
-    ? `${location.address}, ${location.city}`
-    : location.city;
-
   return (
-    <Page title={name} subTitle={formattedAddress}>
-      <PlaceMap lat={location.lat!} lng={location.lng!} />
-      {url && <Website url={url} />}
+    <Page title={name} subTitle={location.address.formatted}>
+      <PlaceMap lat={location.position.lat!} lng={location.position.lng} />
+      {contact.website &&
+        contact.website.map(w => <Website key={w.value} url={w.value} />)}
       <UserStats>
         <UserStat label="Besök" value={visitCount} />
         <UserStat label="Betyg" value={averageScore || '–'} />

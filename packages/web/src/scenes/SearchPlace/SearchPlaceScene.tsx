@@ -11,42 +11,27 @@ const NoResults = styled.p`
   color: #666;
 `;
 
-const getVariables = (
-  query: string,
-  location: string,
-  position: Position | null
-) => ({
-  filter: {
-    query,
-    ...(location && {
-      near: location
-    }),
-    ...(position && {
-      position: {
-        lat: position && position.coords.latitude,
-        lng: position && position.coords.longitude
-      }
-    })
-  }
+const getVariables = (query: string, position: Position | null) => ({
+  query,
+  ...(position && {
+    position: {
+      lat: position && position.coords.latitude,
+      lng: position && position.coords.longitude
+    }
+  })
 });
 
 export const SearchPlaceScene = () => {
   const [search, { called, loading, data }] = useSearchPlaceLazyQuery();
 
-  const handleSubmit = ({
-    query,
-    location,
-    position
-  }: SearchPlaceFormValues) => {
-    const isValid = !!(query && (location || position));
+  const handleSubmit = ({ query, position }: SearchPlaceFormValues) => {
+    const isValid = !!query;
 
     if (!isValid) {
       return;
     }
 
-    search({
-      variables: getVariables(query, location, position)
-    });
+    search({ variables: getVariables(query, position) });
   };
 
   const places = (data && data.searchPlace && data.searchPlace.places) || [];

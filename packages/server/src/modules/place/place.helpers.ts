@@ -30,7 +30,7 @@ function formatProviderSearchItemAddress(vicinity: string) {
 export const transformProviderSearchItem = (userPlaces: Place[]) => (
   item: HereSearchResultItem
 ) => {
-  const samePlace = userPlaces.find(place => place.providerPlaceId === item.id);
+  const samePlace = userPlaces.find(place => place.providerId === item.id);
 
   const [lat, lng] = item.position;
   const place = new PlaceDetailsBasic();
@@ -72,9 +72,7 @@ const transformLocation = (providerLocation: HereLocation) => {
   location.position = { lat, lng };
 
   const address = new Address();
-  address.formatted = formatProviderSearchItemAddress(
-    providerLocation.address.text
-  );
+  address.formatted = `${providerLocation.address.street} ${providerLocation.address.house}, ${providerLocation.address.city}`;
   address.house = providerLocation.address.house;
   address.street = providerLocation.address.street;
   address.postalCode = providerLocation.address.postalCode;
@@ -113,7 +111,7 @@ export const transformToBasicDetails = (userPlaces: Place[]) => (
   details: PlaceDetails
 ) => {
   const samePlace = userPlaces.find(
-    place => place.providerPlaceId === details.providerId
+    place => place.providerId === details.providerId
   );
 
   const basicDetails = new PlaceDetailsBasic();

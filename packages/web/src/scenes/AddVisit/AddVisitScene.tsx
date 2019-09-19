@@ -11,10 +11,10 @@ import {
 } from 'components';
 import Helmet from 'react-helmet';
 import {
-  usePlaceBasicDetailsQuery,
   useAddVisitMutation,
   MeVisitsDocument,
-  MePlacesDocument
+  MePlacesDocument,
+  usePlaceDetailsQuery
 } from 'graphql/types';
 import { useArray } from 'hooks';
 import { rateNodes } from './constants';
@@ -45,8 +45,8 @@ export const AddVisitScene = ({
     params: { providerPlaceId }
   }
 }: AddVisitSceneProps) => {
-  const { data, loading, error } = usePlaceBasicDetailsQuery({
-    variables: { providerPlaceId }
+  const { data, loading, error } = usePlaceDetailsQuery({
+    variables: { providerId: providerPlaceId }
   });
 
   const [orders, addOrder, removeOrder] = useArray<string>();
@@ -80,13 +80,13 @@ export const AddVisitScene = ({
     return <Loading />;
   }
 
-  const place = data && data.placeBasicDetails;
+  const place = data && data.placeDetails;
 
   if (!place || error) {
     return <GeneralError error={error} />;
   }
 
-  const { name, address } = place!;
+  const { name, location } = place!;
 
   const averageScore = calculateAverageScore(rateState);
 
@@ -97,7 +97,7 @@ export const AddVisitScene = ({
     setComment(e.target.value);
 
   return (
-    <Page title={name} subTitle={address}>
+    <Page title={name} subTitle={location.address.formatted}>
       <Helmet>
         <title>Nytt besök</title>
       </Helmet>

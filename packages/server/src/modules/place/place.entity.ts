@@ -25,7 +25,7 @@ export class Place {
 
   @Field(() => ID)
   @Column()
-  providerPlaceId: string;
+  providerId: string;
 
   @Field(() => User, { nullable: true })
   @ManyToOne(() => User, user => user.places)

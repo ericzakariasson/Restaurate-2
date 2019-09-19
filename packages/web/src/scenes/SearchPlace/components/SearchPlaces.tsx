@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { PlaceSearchItem } from 'graphql/types';
 import { PlaceItem } from './PlaceItem';
 import { PoweredBy } from 'components';
+import { PlaceDetailsBasic } from 'graphql/types';
 
 const Results = styled.ul`
   margin: 0 -10px;
@@ -11,7 +11,7 @@ const Results = styled.ul`
 `;
 
 interface SearchPlacesProps {
-  places: PlaceSearchItem[];
+  places: PlaceDetailsBasic[];
 }
 
 export const SearchPlaces = ({ places }: SearchPlacesProps) => {
@@ -19,7 +19,7 @@ export const SearchPlaces = ({ places }: SearchPlacesProps) => {
     <>
       <Results>
         {places.map(place => (
-          <PlaceItem key={place.providerPlaceId} place={place} />
+          <PlaceItem key={place.providerId} place={place} />
         ))}
       </Results>
       {places.length > 0 && <PoweredBy margin={['top']} />}

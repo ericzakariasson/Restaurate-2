@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Map as MapIcon } from 'react-feather';
-import { staticMapboxMapUrl } from 'utils';
+import { staticMapUrl } from 'utils';
 
 const MapWrapper = styled.div`
   position: relative;
@@ -61,7 +61,7 @@ interface PlaceMapProps {
 export const PlaceMap = ({ lat, lng }: PlaceMapProps) => {
   const mapHeight = window.innerHeight / 2;
 
-  const mapUrl = staticMapboxMapUrl({
+  const mapUrl = staticMapUrl({
     lat,
     lng,
     zoom: 13,

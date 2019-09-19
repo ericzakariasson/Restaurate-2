@@ -71,7 +71,7 @@ export class PlaceService {
 
   async findByProviderId(providerPlaceId: string) {
     const place = await this.placeRepository.findOne({
-      where: { providerPlaceId }
+      where: { providerId: providerPlaceId }
     });
 
     if (!place) {
@@ -107,7 +107,7 @@ export class PlaceService {
 
   async findByIdOrCreate(providerPlaceId: string, user: User) {
     const place = await this.placeRepository.findOne({
-      where: { providerPlaceId }
+      where: { providerId: providerPlaceId }
     });
 
     if (place) {
@@ -132,7 +132,7 @@ export class PlaceService {
     const createdPlace = this.placeRepository.create({
       user,
       userId: user.id,
-      providerPlaceId
+      providerId: providerPlaceId
     });
 
     return this.placeRepository.save(createdPlace);
@@ -147,7 +147,7 @@ export class PlaceService {
     return this.placeRepository.find({
       where: {
         userId,
-        providerPlaceId: In(providerPlaceIds)
+        providerId: In(providerPlaceIds)
       }
     });
   }

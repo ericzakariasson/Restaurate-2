@@ -49,10 +49,10 @@ export const MyPlacesScene = () => {
         <PlaceList>
           {places.map(place => (
             <CardWithScore
-              key={place.providerPlaceId}
-              name={place.data.name}
-              address={place.data.location.address || '–'}
-              to={placeRoute(place.providerPlaceId)}
+              key={place.providerId}
+              name={place.details.name}
+              address={place.details.location.address.formatted || '–'}
+              to={placeRoute(place.providerId)}
               score={place.averageScore}
             >
               <VisitCount>{place.visitCount} besök</VisitCount>
