@@ -19,7 +19,7 @@ const ButtonText = styled.span`
 const updateWantToVisit = (providerPlaceId: string) => (cache: DataProxy) => {
   const placeQuery = {
     query: PlaceDocument,
-    variables: { providerPlaceId }
+    variables: { providerId: providerPlaceId }
   };
 
   const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;

@@ -51,7 +51,7 @@ const updatePriceLevel = (providerPlaceId: string) => (
 
     const placeQuery = {
       query: PlaceDocument,
-      variables: { providerPlaceId }
+      variables: { providerId: providerPlaceId }
     };
 
     const data = cache.readQuery<PlaceQuery>(placeQuery);
@@ -73,7 +73,9 @@ const updatePriceLevel = (providerPlaceId: string) => (
       ...placeQuery,
       data: updatedData
     });
-  } catch {}
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 interface PriceLevelProps {

@@ -30,7 +30,7 @@ const updateComment = (providerPlaceId: string) => (
 
     const placeQuery = {
       query: PlaceDocument,
-      variables: { providerPlaceId }
+      variables: { providerId: providerPlaceId }
     };
 
     const data = cache.readQuery<PlaceQuery>(placeQuery);

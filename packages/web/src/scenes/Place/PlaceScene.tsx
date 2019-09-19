@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
-import { Loading, Page, NavButton, PoweredBy } from '../../components';
+import { Loading, Page, NavButton } from '../../components';
 import { GeneralError } from '../Error/GeneralError';
 import { usePlaceQuery } from '../../graphql/types';
 import { PlaceMap } from './components/Map';
@@ -13,6 +13,7 @@ import { WantToVisitButton } from './components/WantToVisitButton';
 import { PriceLevelPicker } from './components/PriceLevelPicker';
 import { Tags } from './components/Tags';
 import { Comment } from './components/Comment';
+import { Phone } from './components/Phone';
 
 const UserStats = styled.section`
   display: flex;
@@ -21,6 +22,10 @@ const UserStats = styled.section`
 
 const UserPlaceInputs = styled.section`
   margin-bottom: 30px;
+`;
+
+const Contact = styled.div`
+  margin-bottom: 20px;
 `;
 
 interface PlaceSceneProps extends RouteComponentProps<ProviderPlaceIdParam> {}
@@ -56,11 +61,16 @@ export const PlaceScene = ({
     wantToVisit
   } = place!;
 
+  const { website, phone } = contact;
+
   return (
     <Page title={name} subTitle={location.address.formatted}>
       <PlaceMap lat={location.position.lat!} lng={location.position.lng} />
-      {contact.website &&
-        contact.website.map(w => <Website key={w.value} url={w.value} />)}
+      <Contact>
+        {website && website.map(w => <Website key={w.value} url={w.value} />)}
+        {website && ' — '}
+        {phone && phone.map(w => <Phone key={w.value} nr={w.value} />)}
+      </Contact>
       <UserStats>
         <UserStat label="Besök" value={visitCount} />
         <UserStat label="Betyg" value={averageScore || '–'} />
@@ -85,10 +95,6 @@ export const PlaceScene = ({
         to={addVisitRoute(providerPlaceId)}
       />
       <Visits visits={visits} />
-      <PoweredBy
-        margin={['top']}
-        url={`http://foursquare.com/v/${providerPlaceId}`}
-      />
     </Page>
   );
 };

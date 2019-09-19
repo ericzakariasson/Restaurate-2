@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { formatURL } from 'utils/format';
 
 const Link = styled.a`
-  display: block;
-  margin-bottom: 20px;
   color: #222;
   text-decoration: none;
   font-size: ${p => p.theme.fontSize.large};
