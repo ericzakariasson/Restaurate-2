@@ -21,7 +21,9 @@ import {
   MyVisitsScene,
   MyPlacesScene,
   PlaceScene,
-  WantToVisitScene
+  WantToVisitScene,
+  SettingsScene,
+  NotFoundScene
 } from './scenes';
 import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 import { Navigation } from 'components/Navigation';
@@ -95,6 +97,12 @@ const App = () => {
                   component={WantToVisitScene}
                   exact={true}
                 />
+                <AuthRoute
+                  path={routes.settings}
+                  component={SettingsScene}
+                  exact={true}
+                />
+                <Route component={NotFoundScene} />
               </Switch>
               <GlobalStyle />
             </Wrapper>

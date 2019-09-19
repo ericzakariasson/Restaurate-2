@@ -48,6 +48,7 @@ export const Navigation = () => {
             <Link to={routes.visits}>Besök</Link>
             <Link to={routes.searchPlace}>Sök ställe</Link>
             <Link to={routes.wantToVisit}>Vill besöka</Link>
+            <Link to={routes.settings}>Inställningar</Link>
           </>
         ) : (
           <>

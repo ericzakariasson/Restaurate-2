@@ -13,7 +13,8 @@ export const routes = {
   visit: '/visit/:id',
   place: '/place/:providerPlaceId',
   searchPlace: '/search/place',
-  wantToVisit: '/want-to-visit'
+  wantToVisit: '/want-to-visit',
+  settings: '/settings'
 };
 
 export const visitRoute = (id: string) => `/visit/${id}`;

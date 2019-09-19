@@ -23,6 +23,12 @@ const Register = styled(Link)`
   color: #222;
 `;
 
+const TryAgain = styled.span`
+  margin-bottom: 10px;
+  color: ${p => p.theme.colors.error.default};
+  display: block;
+`;
+
 const initialValues = {
   email: '',
   password: ''
@@ -31,7 +37,8 @@ const initialValues = {
 export const LoginScene = ({ history }: RouteComponentProps) => {
   const { data } = useMeQuery();
 
-  const [login] = useLoginMutation();
+  const [login, { loading }] = useLoginMutation();
+  const [error, setError] = React.useState(false);
 
   if (data && data.me) {
     return <Redirect to={routes.dashboard} />;
@@ -51,6 +58,8 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
 
           if (data && data.login && data.login.id) {
             history.push(routes.dashboard);
+          } else {
+            setError(true);
           }
         }}
       >
@@ -74,10 +83,12 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
                 label="Lösenord"
               />
             </Fields>
+            {error && <TryAgain>Testa igen</TryAgain>}
             <Button
               variant="primary"
               size="large"
               disabled={!isValid}
+              loading={loading}
               type="submit"
               text="Logga in"
             />

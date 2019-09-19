@@ -75,8 +75,8 @@ export type Location = {
 export type Mutation = {
    __typename?: 'Mutation',
   login?: Maybe<User>,
+  logout: Scalars['Boolean'],
   register?: Maybe<User>,
-  logout?: Maybe<Scalars['Boolean']>,
   addVisit: AddVisitResponse,
   toggleWantToVisit: Scalars['Boolean'],
   setPriceLevel: PriceLevel,
@@ -316,7 +316,7 @@ export type Visit = {
 export type WantToVisit = {
    __typename?: 'WantToVisit',
   id: Scalars['ID'],
-  providerPlaceId: Scalars['String'],
+  placeProviderId: Scalars['String'],
   createdAt: Scalars['String'],
   updatedAt: Scalars['String'],
 };
@@ -469,6 +469,14 @@ export type LoginMutation = (
     { __typename?: 'User' }
     & Pick<User, 'id'>
   )> }
+);
+
+export type LogoutMutationVariables = {};
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
 );
 
 export type RegisterMutationVariables = {
@@ -858,6 +866,19 @@ export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, 
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = ApolloReactCommon.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+    export function useLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+      return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, baseOptions);
+    }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = ApolloReactCommon.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($data: UserRegisterInput!) {
   register(data: $data) {

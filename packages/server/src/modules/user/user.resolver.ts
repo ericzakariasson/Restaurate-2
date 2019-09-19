@@ -33,17 +33,17 @@ export class UserResolver {
     return this.userService.login(email, password, ctx.req);
   }
 
+  @Mutation(() => Boolean)
+  async logout(@Ctx() ctx: Context): Promise<boolean> {
+    return this.userService.logout(ctx.req);
+  }
+
   @Mutation(() => User, { nullable: true })
   async register(
     @Arg('data') data: UserRegisterInput,
     @Ctx() ctx: Context
   ): Promise<User | null> {
     return this.userService.register(data, ctx.req);
-  }
-
-  @Mutation(() => Boolean, { nullable: true })
-  async logout(@Ctx() ctx: Context): Promise<boolean> {
-    return this.userService.logout(ctx.req);
   }
 
   @FieldResolver(() => [Place])
