@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { WantToVisit } from './wantToVisit.entity';
 import { UserService } from '../../user/user.service';
+import { User } from '../../user/user.entity';
 
 @Service()
 export class WantToVisitService {
@@ -12,32 +13,58 @@ export class WantToVisitService {
     private readonly userService: UserService
   ) {}
 
-  async toggle(providerPlaceId: string, userId: number) {
+  async toggle(placeProviderId: string, userId: number) {
     const user = await this.userService.findById(userId);
 
     if (!user) {
       throw new Error('No user found');
     }
 
-    const exists = await this.findByProviderId(providerPlaceId, userId);
+    const exists = await this.findByProviderId(placeProviderId, userId);
 
     if (exists) {
-      await this.wtvRepository.remove(exists);
+      await this.remove(placeProviderId, user);
       return true;
     }
 
+    await this.add(placeProviderId, user);
+    return true;
+  }
+
+  async remove(providerId: string, user: User) {
+    const exists = await this.findByProviderId(providerId, user.id);
+
+    if (exists) {
+      return this.wtvRepository.remove(exists);
+    }
+
+    return null;
+  }
+
+  async add(providerId: string, user: User) {
     const wantToVisit = this.wtvRepository.create({
-      providerPlaceId,
+      placeProviderId: providerId,
       user,
       userId: user.id
     });
 
-    await this.wtvRepository.save(wantToVisit);
-
-    return true;
+    return this.wtvRepository.save(wantToVisit);
   }
 
-  async findByProviderId(providerPlaceId: string, userId: number) {
-    return this.wtvRepository.findOne({ where: { providerPlaceId, userId } });
+  async setVisited(providerId: string, user: User) {
+    const place = await this.findByProviderId(providerId, user.id);
+
+    if (place) {
+      await this.wtvRepository.update(place.id, { visited: true });
+      return true;
+    }
+
+    return false;
+  }
+
+  async findByProviderId(providerId: string, userId: number) {
+    return this.wtvRepository.findOne({
+      where: { placeProviderId: providerId, userId }
+    });
   }
 }

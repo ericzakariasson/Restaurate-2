@@ -18,7 +18,7 @@ export class WantToVisit {
 
   @Field()
   @Column()
-  providerPlaceId: string;
+  placeProviderId: string;
 
   user: User;
   @RelationColumn()

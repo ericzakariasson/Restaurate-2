@@ -86,11 +86,19 @@ export class UserService {
   }
 
   async getUserPlaces(userId: number) {
-    return this.placeRepository.find({ where: { userId } });
+    return this.placeRepository.find({
+      where: { userId },
+      order: {
+        updatedAt: 'DESC'
+      }
+    });
   }
 
   async getUserVisits(userId: number) {
-    return this.visitRepository.find({ where: { userId } });
+    return this.visitRepository.find({
+      where: { userId },
+      order: { visitDate: 'DESC' }
+    });
   }
 
   async getUserPlaceCount(userId: number) {

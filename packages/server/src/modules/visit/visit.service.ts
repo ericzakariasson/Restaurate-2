@@ -9,6 +9,7 @@ import { Rate } from './rate/rate.entity';
 import { AddVisitInput } from './visit.types';
 import { RateInput } from './rate/rate.types';
 import { round } from '../../utils';
+import { WantToVisitService } from '../place/wantToVisit/wantToVisit.service';
 
 @Service()
 export class VisitService {
@@ -18,7 +19,8 @@ export class VisitService {
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(Rate)
-    private readonly rateRepository: Repository<Rate>
+    private readonly rateRepository: Repository<Rate>,
+    private readonly wtvService: WantToVisitService
   ) {}
 
   async findById(id: string) {
@@ -74,6 +76,8 @@ export class VisitService {
       userId: user.id,
       ratings
     });
+
+    await this.wtvService.setVisited(place.providerId, user);
 
     return await this.visitRepository.save(visit);
   }
