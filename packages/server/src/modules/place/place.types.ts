@@ -81,31 +81,31 @@ export class Address {
   @Field()
   formatted: string;
 
-  @Field()
+  @Field({ nullable: true })
   house: string;
 
-  @Field()
+  @Field({ nullable: true })
   street: string;
 
-  @Field()
+  @Field({ nullable: true })
   postalCode: string;
 
-  @Field()
+  @Field({ nullable: true })
   district: string;
 
-  @Field()
+  @Field({ nullable: true })
   city: string;
 
-  @Field()
+  @Field({ nullable: true })
   county: string;
 
-  @Field()
+  @Field({ nullable: true })
   state: string;
 
-  @Field()
+  @Field({ nullable: true })
   country: string;
 
-  @Field()
+  @Field({ nullable: true })
   countryCode: string;
 }
 
@@ -129,11 +129,11 @@ export class KeyValuePair {
 
 @ObjectType()
 export class Contact {
-  @Field(() => [KeyValuePair])
-  phone: KeyValuePair[];
+  @Field(() => [KeyValuePair], { nullable: true })
+  phone?: KeyValuePair[];
 
-  @Field(() => [KeyValuePair])
-  website: KeyValuePair[];
+  @Field(() => [KeyValuePair], { nullable: true })
+  website?: KeyValuePair[];
 }
 
 @ObjectType()
@@ -168,6 +168,6 @@ export class PlaceDetails {
   @Field(() => Contact)
   contact: Contact;
 
-  @Field(() => OpeningHours)
-  openingHours: OpeningHours;
+  @Field(() => OpeningHours, { nullable: true })
+  openingHours?: OpeningHours;
 }

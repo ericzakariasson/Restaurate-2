@@ -102,7 +102,10 @@ export const transformProviderDetails = (item: HerePlaceDetails) => {
   details.categories = item.categories.map(transformCategory);
   details.contact = transformContacts(item.contacts);
   details.location = transformLocation(item.location);
-  details.openingHours = transformOpeningHours(item.extended.openingHours);
+  details.openingHours =
+    item.extended &&
+    item.extended.openingHours &&
+    transformOpeningHours(item.extended.openingHours);
 
   return details;
 };

@@ -17,15 +17,15 @@ export type Scalars = {
 export type Address = {
    __typename?: 'Address',
   formatted: Scalars['String'],
-  house: Scalars['String'],
-  street: Scalars['String'],
-  postalCode: Scalars['String'],
-  district: Scalars['String'],
-  city: Scalars['String'],
-  county: Scalars['String'],
-  state: Scalars['String'],
-  country: Scalars['String'],
-  countryCode: Scalars['String'],
+  house?: Maybe<Scalars['String']>,
+  street?: Maybe<Scalars['String']>,
+  postalCode?: Maybe<Scalars['String']>,
+  district?: Maybe<Scalars['String']>,
+  city?: Maybe<Scalars['String']>,
+  county?: Maybe<Scalars['String']>,
+  state?: Maybe<Scalars['String']>,
+  country?: Maybe<Scalars['String']>,
+  countryCode?: Maybe<Scalars['String']>,
 };
 
 export type AddVisitInput = {
@@ -50,8 +50,8 @@ export type Category = {
 
 export type Contact = {
    __typename?: 'Contact',
-  phone: Array<KeyValuePair>,
-  website: Array<KeyValuePair>,
+  phone?: Maybe<Array<KeyValuePair>>,
+  website?: Maybe<Array<KeyValuePair>>,
 };
 
 
@@ -174,7 +174,7 @@ export type PlaceDetails = {
   location: Location,
   categories: Array<Category>,
   contact: Contact,
-  openingHours: OpeningHours,
+  openingHours?: Maybe<OpeningHours>,
 };
 
 export type PlaceDetailsBasic = {
@@ -329,9 +329,9 @@ export type PlaceDetailsFragment = (
     & CategoryFragment
   >, contact: { __typename?: 'Contact' }
     & ContactFragment
-  , openingHours: { __typename?: 'OpeningHours' }
+  , openingHours: Maybe<{ __typename?: 'OpeningHours' }
     & OpeningHoursFragment
-   }
+  > }
 );
 
 export type LocationFragment = (
@@ -347,13 +347,13 @@ export type LocationFragment = (
 
 export type ContactFragment = (
   { __typename?: 'Contact' }
-  & { phone: Array<(
+  & { phone: Maybe<Array<(
     { __typename?: 'KeyValuePair' }
     & Pick<KeyValuePair, 'label' | 'value'>
-  )>, website: Array<(
+  )>>, website: Maybe<Array<(
     { __typename?: 'KeyValuePair' }
     & Pick<KeyValuePair, 'label' | 'value'>
-  )> }
+  )>> }
 );
 
 export type CategoryFragment = (

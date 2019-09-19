@@ -15,7 +15,7 @@ const PageWrapper = styled.section<PageWrapperProps>`
   ${p =>
     p.center &&
     css`
-      min-height: calc(100vh - 44px);
+      min-height: calc(100vh - 58px);
       justify-content: center;
     `}
 `;
