@@ -83,17 +83,19 @@ export function createInitialRateState(nodes: RateNode[]): ReducerState {
 type Node = { [key: string]: RateStateNode };
 
 export function transformToInput(state: Node): RateInput[] {
-  const inputs = Object.entries(state).map(([key, node]) => {
-    const calculatedScore =
-      calculateAverageNodeScore(Object.values(node.children || {})) || 0;
+  const inputs = Object.entries(state)
+    .map(([key, node]) => {
+      const calculatedScore =
+        calculateAverageNodeScore(Object.values(node.children || {})) || 0;
 
-    return {
-      name: node.name,
-      calculatedScore: node.controlled,
-      score: node.controlled ? calculatedScore : node.score || 0,
-      children: node.children ? transformToInput(node.children) : null
-    };
-  });
+      return {
+        name: node.name,
+        calculatedScore: node.controlled,
+        score: node.controlled ? calculatedScore : node.score || 0,
+        children: node.children ? transformToInput(node.children) : null
+      };
+    })
+    .filter(rating => rating.score !== 0);
 
   return inputs;
 }
