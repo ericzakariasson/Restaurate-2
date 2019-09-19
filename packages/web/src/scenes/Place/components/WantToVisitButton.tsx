@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button } from 'components';
 import { X, Plus } from 'react-feather';
 import styled from 'styled-components';
-import { ActionButton } from './ActionButton';
+import { ActionButton } from '../../../components/ActionButton';
 import {
   useToggleWantToVisitMutation,
   PlaceDocument,

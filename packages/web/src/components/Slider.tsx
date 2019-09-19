@@ -92,11 +92,18 @@ export const InputSlider = ({
 }: InputSliderProps) => {
   const [touched, setTouched] = React.useState(false);
   const [touching, setTouching] = React.useState(false);
-  const handleUpdate = (values: readonly number[]) =>
-    !controlled && onInput && onInput(values[0]);
 
-  const handleChange = (values: readonly number[]) =>
-    !controlled && onChange(values[0]);
+  const handleUpdate = (values: readonly number[]) => {
+    if (!controlled && onInput && touched) {
+      onInput(values[0]);
+    }
+  };
+
+  const handleChange = (values: readonly number[]) => {
+    if (!controlled && touching) {
+      onChange(values[0]);
+    }
+  };
 
   const handleSlideStart = (values: readonly number[]) => {
     onSlideStart && onSlideStart(values);
@@ -149,8 +156,9 @@ export const InputSlider = ({
             ))}
             <StepLines
               style={{
-                left: `${stepPercent}%`,
-                width: `calc(100% - ${HANDLE_WIDTH * 2}px - ${stepPercent}%)`
+                left: `calc(50% + ${HANDLE_WIDTH / 2}px)`,
+                width: `calc(100% - ${stepPercent * 2}% + 20px)`,
+                transform: `translateX(-50%)`
               }}
             >
               {Array.from({ length: stepLines }, (_, i) => (

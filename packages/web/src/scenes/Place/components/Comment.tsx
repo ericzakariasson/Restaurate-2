@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { InputBlock } from './InputBlock';
-import { ActionButton } from './ActionButton';
+import { ActionButton } from '../../../components/ActionButton';
 import { Edit2, Check, X, Loader } from 'react-feather';
 import { Textarea } from 'components';
 import styled from 'styled-components';

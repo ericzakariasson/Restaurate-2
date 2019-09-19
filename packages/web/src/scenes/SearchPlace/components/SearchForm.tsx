@@ -16,10 +16,8 @@ const SearchButton = styled.button`
   transition: ${p => p.theme.transition};
 
   &:disabled {
-    color: #222;
-    opacity: 0.8;
+    color: #444;
     transition: ${p => p.theme.transition};
-    box-shadow: none;
   }
 `;
 

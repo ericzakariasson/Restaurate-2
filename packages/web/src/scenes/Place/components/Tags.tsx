@@ -10,7 +10,7 @@ import {
   RemoveTagMutation
 } from 'graphql/types';
 import { InputBlock } from './InputBlock';
-import { ActionButton } from './ActionButton';
+import { ActionButton } from '../../../components/ActionButton';
 import { Check, X, Plus, Loader, Edit2 } from 'react-feather';
 import { DataProxy } from 'apollo-cache';
 import { FetchResult } from 'apollo-link';

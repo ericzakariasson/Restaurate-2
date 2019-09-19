@@ -4,6 +4,8 @@ import { SetRatePayload, RateStateNode } from '../rateReducer';
 import { InputSlider } from 'components/Slider';
 import { RateSliderChild } from './RateChild';
 import { calculateAverageNodeScore } from '../rateHelper';
+import { ActionButton } from 'components';
+import { X } from 'react-feather';
 
 const Wrapper = styled.article`
   display: flex;
@@ -37,29 +39,46 @@ const ChildArea = styled.ul`
   }
 `;
 
-interface RateHeaderProps {
-  label: string;
-  score: number | null;
-}
-
-export const RateHeader = ({ label, score }: RateHeaderProps) => (
-  <Text>
-    <span>{label}</span> – <Score>{score}</Score>
-  </Text>
-);
-
 const Text = styled.h2`
   margin-bottom: 5px;
   font-size: ${p => p.theme.fontSize.xxl};
   font-weight: 400;
   color: #222;
+  display: flex;
+  align-items: center;
 `;
 
-const Score = styled.span`
+const Separator = styled.span`
+  margin: 0 5px;
+`;
+
+interface ScoreProps {
+  disabled: boolean;
+}
+
+const Score = styled.span<ScoreProps>`
   font-size: 1.625rem;
   font-weight: 700;
-  color: #222;
+  color: ${p => (p.disabled ? '#CCC' : '#222')};
+  transition: ${p => p.theme.transition};
 `;
+
+interface RateHeaderProps {
+  label: string;
+  score: number | null;
+  resetScore?: () => void;
+}
+
+export const RateHeader = ({ label, score, resetScore }: RateHeaderProps) => (
+  <Text>
+    <span>{label}</span>
+    <Separator>–</Separator>
+    <Score disabled={score === 0}>{score}</Score>
+    {resetScore && score !== 0 && (
+      <ActionButton onClick={resetScore} icon={<X size={18} color="#666" />} />
+    )}
+  </Text>
+);
 
 export interface RateSliderProps {
   label: string;
@@ -81,14 +100,19 @@ export const RateSliderParent = ({
   children,
   controlled
 }: RateSliderParentProps) => {
-  const averageScore = calculateAverageNodeScore(children || []) || 0;
-
-  const s = controlled && children ? averageScore : score || 0;
+  const s =
+    controlled && children
+      ? calculateAverageNodeScore(children || []) || 0
+      : score || 0;
 
   return (
     <Wrapper>
       <ParentArea>
-        <RateHeader label={label} score={s} />
+        <RateHeader
+          label={label}
+          score={s}
+          resetScore={() => setScore({ name, score: 0 })}
+        />
         <InputSlider
           value={s}
           onChange={score => setScore({ name, score })}

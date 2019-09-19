@@ -8,7 +8,7 @@ import {
   SetPriceLevelMutation
 } from 'graphql/types';
 import { formatPriceLevel } from 'utils/format';
-import { ActionButton } from './ActionButton';
+import { ActionButton } from '../../../components/ActionButton';
 import { ChevronDown } from 'react-feather';
 import styled, { css } from 'styled-components';
 import { useDevice } from 'hooks';
