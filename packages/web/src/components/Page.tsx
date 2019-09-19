@@ -36,6 +36,7 @@ const Title = styled.h1<TitleProps>`
 
 const SubTitle = styled.p`
   font-size: 1rem;
+  margin-top: 3px;
 `;
 
 interface PageTitleProps {

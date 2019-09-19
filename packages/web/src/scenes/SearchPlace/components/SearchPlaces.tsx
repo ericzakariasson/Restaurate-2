@@ -4,9 +4,14 @@ import { PlaceItem } from './PlaceItem';
 import { PoweredBy } from 'components';
 import { PlaceDetailsBasic } from 'graphql/types';
 
+const Count = styled.p`
+  margin-top: 40px;
+  margin-bottom: 10px;
+`;
+
 const Results = styled.ul`
-  margin: 0 -10px;
-  padding: 20px 0;
+  margin: 0;
+  padding: 0 0 20px 0;
   list-style: none;
 `;
 
@@ -15,14 +20,15 @@ interface SearchPlacesProps {
 }
 
 export const SearchPlaces = ({ places }: SearchPlacesProps) => {
+  const hasResults = places.length > 0;
   return (
     <>
+      {hasResults && <Count>{places.length} resultat</Count>}
       <Results>
         {places.map(place => (
           <PlaceItem key={place.providerId} place={place} />
         ))}
       </Results>
-      {places.length > 0 && <PoweredBy margin={['top']} />}
     </>
   );
 };

@@ -50,8 +50,8 @@ const Map = styled.img<MapProps>`
   background-size: 100%;
   background-position: center;
   background-color: #eee;
-  width: 78px;
-  height: 78px;
+  width: 64px;
+  height: 64px;
 
   ${p =>
     p.touching &&
@@ -112,8 +112,8 @@ export const PlaceItem = ({
   const handleTouchEnd = () => setTouching(false);
 
   const size = {
-    width: 78,
-    height: 78
+    width: 64,
+    height: 64
   };
 
   const mapUrl = staticMapUrl({
