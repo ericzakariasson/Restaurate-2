@@ -107,10 +107,10 @@ export const PlaceScene = ({
       <UserPlaceInputs>
         <PriceLevelPicker
           priceLevel={priceLevel}
-          providerPlaceId={providerPlaceId}
+          providerId={providerPlaceId}
         />
-        <Tags tags={tags} providerPlaceId={providerPlaceId} />
-        <Comment comment={comment} providerPlaceId={providerPlaceId} />
+        <Tags tags={tags} providerId={providerPlaceId} />
+        <Comment comment={comment} providerId={providerPlaceId} />
       </UserPlaceInputs>
       {!hasVisited && (
         <WantToVisitButton

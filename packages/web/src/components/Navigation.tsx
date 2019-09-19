@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes } from 'routes';
 import { useMeQuery } from 'graphql/types';
@@ -45,8 +45,52 @@ const Link = styled(NavLink)`
   }
 `;
 
-export const Navigation = () => {
+const menuItems = [
+  {
+    to: routes.dashboard,
+    name: 'Översikt'
+  },
+  {
+    to: routes.places,
+    name: 'Ställen'
+  },
+  {
+    to: routes.visits,
+    name: 'Besök'
+  },
+  {
+    to: routes.searchPlace,
+    name: 'Sök ställe'
+  },
+  {
+    to: routes.wantToVisit,
+    name: 'Vill besöka'
+  },
+  {
+    to: routes.settings,
+    name: 'Inställningar'
+  }
+];
+
+export const Navigation = withRouter(({ location }) => {
   const { data, loading } = useMeQuery();
+
+  const refs = React.useRef<React.RefObject<HTMLLIElement>[]>(
+    menuItems.map(() => React.createRef<HTMLLIElement>())
+  );
+
+  React.useEffect(() => {
+    const found = refs.current.find(
+      ref => ref.current && ref.current.id === location.pathname
+    );
+
+    if (found && found.current) {
+      found.current.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center'
+      });
+    }
+  }, [location.pathname]);
 
   if (loading) {
     return null;
@@ -59,26 +103,11 @@ export const Navigation = () => {
       <Nav>
         <List>
           {authenticated ? (
-            <>
-              <Item>
-                <Link to={routes.dashboard}>Översikt</Link>
+            menuItems.map((item, i) => (
+              <Item key={item.to} ref={refs.current[i]} id={item.to}>
+                <Link to={item.to}>{item.name}</Link>
               </Item>
-              <Item>
-                <Link to={routes.places}>Ställen</Link>
-              </Item>
-              <Item>
-                <Link to={routes.visits}>Besök</Link>
-              </Item>
-              <Item>
-                <Link to={routes.searchPlace}>Sök ställe</Link>
-              </Item>
-              <Item>
-                <Link to={routes.wantToVisit}>Vill besöka</Link>
-              </Item>
-              <Item>
-                <Link to={routes.settings}>Inställningar</Link>
-              </Item>
-            </>
+            ))
           ) : (
             <>
               <Item>
@@ -93,4 +122,4 @@ export const Navigation = () => {
       </Nav>
     </header>
   );
-};
+});

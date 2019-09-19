@@ -89,7 +89,7 @@ export class HereService {
       }
     );
 
-    return data.results.items;
+    return data.results ? data.results.items : [];
   }
 
   public async details(id: string): Promise<HerePlaceDetails> {

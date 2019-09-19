@@ -105,12 +105,12 @@ export class PlaceResolver {
   @Authorized()
   @Mutation(() => PriceLevel)
   async setPriceLevel(
-    @Arg('providerPlaceId') providerPlaceId: string,
+    @Arg('providerId') providerId: string,
     @Arg('priceLevel') priceLevel: PriceLevel,
     @Ctx() ctx: Context
   ): Promise<PriceLevel> {
     return this.placeService.setPriceLevel(
-      providerPlaceId,
+      providerId,
       priceLevel,
       ctx.req.session.userId
     );
@@ -119,15 +119,11 @@ export class PlaceResolver {
   @Authorized()
   @Mutation(() => Tag)
   async addTag(
-    @Arg('providerPlaceId') providerPlaceId: string,
+    @Arg('providerId') providerId: string,
     @Arg('name') name: string,
     @Ctx() ctx: Context
   ): Promise<Tag> {
-    return this.placeService.addTag(
-      providerPlaceId,
-      name,
-      ctx.req.session.userId
-    );
+    return this.placeService.addTag(providerId, name, ctx.req.session.userId);
   }
 
   @Authorized()

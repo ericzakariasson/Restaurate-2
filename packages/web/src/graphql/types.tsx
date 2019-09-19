@@ -109,25 +109,25 @@ export type MutationToggleWantToVisitArgs = {
 
 export type MutationSetPriceLevelArgs = {
   priceLevel: Scalars['Float'],
-  providerPlaceId: Scalars['String']
+  providerId: Scalars['String']
 };
 
 
 export type MutationAddTagArgs = {
   name: Scalars['String'],
-  providerPlaceId: Scalars['String']
+  providerId: Scalars['String']
 };
 
 
 export type MutationRemoveTagArgs = {
   tagId: Scalars['Float'],
-  providerPlaceId: Scalars['String']
+  providerId: Scalars['String']
 };
 
 
 export type MutationSetCommentArgs = {
   comment: Scalars['String'],
-  providerPlaceId: Scalars['String']
+  providerId: Scalars['String']
 };
 
 export type OpeningHours = {
@@ -432,7 +432,7 @@ export type VisitRateFragment = (
 );
 
 export type AddTagMutationVariables = {
-  providerPlaceId: Scalars['String'],
+  providerId: Scalars['String'],
   name: Scalars['String']
 };
 
@@ -493,7 +493,7 @@ export type RegisterMutation = (
 );
 
 export type RemoveTagMutationVariables = {
-  providerPlaceId: Scalars['String'],
+  providerId: Scalars['String'],
   tagId: Scalars['Float']
 };
 
@@ -504,7 +504,7 @@ export type RemoveTagMutation = (
 );
 
 export type SetCommentMutationVariables = {
-  providerPlaceId: Scalars['String'],
+  providerId: Scalars['String'],
   comment: Scalars['String']
 };
 
@@ -515,7 +515,7 @@ export type SetCommentMutation = (
 );
 
 export type SetPriceLevelMutationVariables = {
-  providerPlaceId: Scalars['String'],
+  providerId: Scalars['String'],
   priceLevel: Scalars['Float']
 };
 
@@ -822,8 +822,8 @@ ${VisitRateFragmentDoc}
 ${UserFragmentDoc}
 ${PlaceFragmentDoc}`;
 export const AddTagDocument = gql`
-    mutation AddTag($providerPlaceId: String!, $name: String!) {
-  addTag(providerPlaceId: $providerPlaceId, name: $name) {
+    mutation AddTag($providerId: String!, $name: String!) {
+  addTag(providerId: $providerId, name: $name) {
     ...Tag
   }
 }
@@ -895,8 +895,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const RemoveTagDocument = gql`
-    mutation RemoveTag($providerPlaceId: String!, $tagId: Float!) {
-  removeTag(providerPlaceId: $providerPlaceId, tagId: $tagId)
+    mutation RemoveTag($providerId: String!, $tagId: Float!) {
+  removeTag(providerId: $providerId, tagId: $tagId)
 }
     `;
 export type RemoveTagMutationFn = ApolloReactCommon.MutationFunction<RemoveTagMutation, RemoveTagMutationVariables>;
@@ -908,8 +908,8 @@ export type RemoveTagMutationHookResult = ReturnType<typeof useRemoveTagMutation
 export type RemoveTagMutationResult = ApolloReactCommon.MutationResult<RemoveTagMutation>;
 export type RemoveTagMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTagMutation, RemoveTagMutationVariables>;
 export const SetCommentDocument = gql`
-    mutation SetComment($providerPlaceId: String!, $comment: String!) {
-  setComment(providerPlaceId: $providerPlaceId, comment: $comment)
+    mutation SetComment($providerId: String!, $comment: String!) {
+  setComment(providerId: $providerId, comment: $comment)
 }
     `;
 export type SetCommentMutationFn = ApolloReactCommon.MutationFunction<SetCommentMutation, SetCommentMutationVariables>;
@@ -921,8 +921,8 @@ export type SetCommentMutationHookResult = ReturnType<typeof useSetCommentMutati
 export type SetCommentMutationResult = ApolloReactCommon.MutationResult<SetCommentMutation>;
 export type SetCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<SetCommentMutation, SetCommentMutationVariables>;
 export const SetPriceLevelDocument = gql`
-    mutation SetPriceLevel($providerPlaceId: String!, $priceLevel: Float!) {
-  setPriceLevel(providerPlaceId: $providerPlaceId, priceLevel: $priceLevel)
+    mutation SetPriceLevel($providerId: String!, $priceLevel: Float!) {
+  setPriceLevel(providerId: $providerId, priceLevel: $priceLevel)
 }
     `;
 export type SetPriceLevelMutationFn = ApolloReactCommon.MutationFunction<SetPriceLevelMutation, SetPriceLevelMutationVariables>;

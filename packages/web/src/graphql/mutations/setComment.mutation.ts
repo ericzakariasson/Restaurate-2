@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  mutation SetComment($providerPlaceId: String!, $comment: String!) {
-    setComment(providerPlaceId: $providerPlaceId, comment: $comment)
+  mutation SetComment($providerId: String!, $comment: String!) {
+    setComment(providerId: $providerId, comment: $comment)
   }
 `;

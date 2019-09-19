@@ -57,19 +57,21 @@ const updateComment = (providerPlaceId: string) => (
 
 interface CommentProps {
   comment?: string | null;
-  providerPlaceId: string;
+  providerId: string;
 }
 
-export const Comment = ({ comment, providerPlaceId }: CommentProps) => {
+export const Comment = ({ comment, providerId }: CommentProps) => {
   const [editing, setEditing] = React.useState(false);
   const [value, setValue] = React.useState(comment || '');
 
   const [setComment, { loading: saving }] = useSetCommentMutation({
-    update: updateComment(providerPlaceId)
+    update: updateComment(providerId)
   });
 
   const handleClick = async () => {
-    await setComment({ variables: { providerPlaceId, comment: value } });
+    await setComment({
+      variables: { providerId, comment: value }
+    });
     setEditing(false);
   };
 

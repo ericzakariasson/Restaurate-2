@@ -87,6 +87,7 @@ const Info = styled.div`
   flex-direction: column;
   padding: 5px 0;
   min-width: 0;
+  justify-content: center;
 `;
 
 const Categories = styled.ul`
@@ -156,11 +157,13 @@ export const PlaceItem = ({
             {name}
           </Name>
           <Address>{address}</Address>
-          <Categories>
-            {categories.map(category => (
-              <Category key={category}>{category}</Category>
-            ))}
-          </Categories>
+          {categories && (
+            <Categories>
+              {categories.map(category => (
+                <Category key={category}>{category}</Category>
+              ))}
+            </Categories>
+          )}
         </Info>
       </Link>
     </Item>

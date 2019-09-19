@@ -80,15 +80,15 @@ const updatePriceLevel = (providerPlaceId: string) => (
 
 interface PriceLevelProps {
   priceLevel: PriceLevel;
-  providerPlaceId: string;
+  providerId: string;
 }
 
 export const PriceLevelPicker = ({
   priceLevel,
-  providerPlaceId
+  providerId
 }: PriceLevelProps) => {
   const [savePriceLevel] = useSetPriceLevelMutation({
-    update: updatePriceLevel(providerPlaceId)
+    update: updatePriceLevel(providerId)
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -98,7 +98,7 @@ export const PriceLevelPicker = ({
 
     savePriceLevel({
       variables: {
-        providerPlaceId,
+        providerId,
         priceLevel: priceLevelIndex
       }
     });

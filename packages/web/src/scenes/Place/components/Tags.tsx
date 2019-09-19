@@ -49,7 +49,7 @@ const TagName = styled.span`
 
 const TagInput = styled(Input)``;
 
-const updateAddTag = (providerPlaceId: string) => (
+const updateAddTag = (providerId: string) => (
   cache: DataProxy,
   { data: result }: FetchResult<AddTagMutation>
 ) => {
@@ -60,7 +60,7 @@ const updateAddTag = (providerPlaceId: string) => (
 
     const placeQuery = {
       query: PlaceDocument,
-      variables: { providerId: providerPlaceId }
+      variables: { providerId: providerId }
     };
 
     const data = cache.readQuery<PlaceQuery>(placeQuery);
@@ -95,7 +95,7 @@ const updateAddTag = (providerPlaceId: string) => (
   }
 };
 
-const updateRemoveTag = (providerPlaceId: string) => (
+const updateRemoveTag = (providerId: string) => (
   cache: DataProxy,
   { data: result }: FetchResult<RemoveTagMutation>
 ) => {
@@ -106,7 +106,7 @@ const updateRemoveTag = (providerPlaceId: string) => (
 
     const placeQuery = {
       query: PlaceDocument,
-      variables: { providerId: providerPlaceId }
+      variables: { providerId: providerId }
     };
 
     const data = cache.readQuery<PlaceQuery>(placeQuery);
@@ -136,21 +136,21 @@ const updateRemoveTag = (providerPlaceId: string) => (
 
 interface TagsProps {
   tags: PlaceTagFragment[];
-  providerPlaceId: string;
+  providerId: string;
 }
 
-export const Tags = ({ tags, providerPlaceId }: TagsProps) => {
+export const Tags = ({ tags, providerId }: TagsProps) => {
   const [editing, setEditing] = React.useState(false);
   const [input, setInput] = React.useState('');
 
   const toggleEditing = () => setEditing(editing => !editing);
 
   const [addTag, { loading: saving }] = useAddTagMutation({
-    update: updateAddTag(providerPlaceId)
+    update: updateAddTag(providerId)
   });
 
   const [removeTag] = useRemoveTagMutation({
-    update: updateRemoveTag(providerPlaceId)
+    update: updateRemoveTag(providerId)
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -163,12 +163,14 @@ export const Tags = ({ tags, providerPlaceId }: TagsProps) => {
       return;
     }
 
-    addTag({ variables: { providerPlaceId, name: input } });
+    addTag({ variables: { providerId, name: input } });
     setInput('');
   };
 
   const handleRemove = (id: string) => () => {
-    removeTag({ variables: { providerPlaceId, tagId: Number(id) } });
+    removeTag({
+      variables: { providerId, tagId: Number(id) }
+    });
   };
 
   const iconProps = { color: '#666', size: 18 };

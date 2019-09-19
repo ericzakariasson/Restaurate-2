@@ -22,7 +22,9 @@ export const WantToVisitScene = () => {
     <Page title="Vill besöka">
       <List>
         {list.length > 0 ? (
-          list.map(place => <PlaceItem place={place} imageSize={80} />)
+          list.map(place => (
+            <PlaceItem key={place.providerId} place={place} imageSize={80} />
+          ))
         ) : (
           <NoResult label="ställen du vill besöka" />
         )}
