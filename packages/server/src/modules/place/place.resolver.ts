@@ -133,12 +133,12 @@ export class PlaceResolver {
   @Authorized()
   @Mutation(() => Number)
   async removeTag(
-    @Arg('providerPlaceId') providerPlaceId: string,
+    @Arg('providerId') providerId: string,
     @Arg('tagId') tagId: number,
     @Ctx() ctx: Context
   ): Promise<number> {
     return this.placeService.removeTag(
-      providerPlaceId,
+      providerId,
       tagId,
       ctx.req.session.userId
     );
@@ -147,12 +147,12 @@ export class PlaceResolver {
   @Authorized()
   @Mutation(() => String)
   async setComment(
-    @Arg('providerPlaceId') providerPlaceId: string,
+    @Arg('providerId') providerId: string,
     @Arg('comment') comment: string,
     @Ctx() ctx: Context
   ): Promise<string> {
     return this.placeService.setComment(
-      providerPlaceId,
+      providerId,
       comment,
       ctx.req.session.userId
     );

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { useDevice } from 'hooks';
 
 const Wrapper = styled.div`
   display: block;
@@ -31,7 +32,11 @@ const Readable = styled.label`
   }
 `;
 
-const Input = styled.input`
+interface InputProps {
+  isMobile?: boolean;
+}
+
+const Input = styled.input<InputProps>`
   border-radius: 3px 0 0 3px;
   height: 50px;
   font-size: 1rem;
@@ -41,18 +46,30 @@ const Input = styled.input`
   text-align: center;
   margin-right: -30px;
 
-  -webkit-appearance: none;
-  appearance: none;
-  width: 0;
-  opacity: 0;
+  ${p =>
+    p.isMobile &&
+    css`
+      -webkit-appearance: none;
+      appearance: none;
+      width: 0;
+      opacity: 0;
 
-  &::-webkit-clear-button,
-  &::-webkit-calendar-picker-indicator,
-  &::-webkit-inner-spin-button,
-  &::-webkit-inner-spin-button,
-  &::-webkit-calendar-picker-indicato {
-    display: none;
-  }
+      &::-webkit-clear-button,
+      &::-webkit-calendar-picker-indicator,
+      &::-webkit-inner-spin-button,
+      &::-webkit-inner-spin-button,
+      &::-webkit-calendar-picker-indicato {
+        display: none;
+      }
+    `}
+
+  ${p =>
+    !p.isMobile &&
+    css`
+      position: absolute;
+      width: 180px;
+      text-align: left;
+    `}
 `;
 
 function toReadableDate(date: Date): string {
@@ -85,6 +102,8 @@ export const DateInput = ({
   const inputId = 'visit-date-input';
   const inputValue = date.toISOString().substring(0, 10);
 
+  const { isMobile } = useDevice();
+
   return (
     <Wrapper>
       <Input
@@ -92,6 +111,7 @@ export const DateInput = ({
         value={inputValue}
         onChange={handleChange}
         type="date"
+        isMobile={isMobile}
       />
       <Readable htmlFor={inputId}>{readable}</Readable>
     </Wrapper>

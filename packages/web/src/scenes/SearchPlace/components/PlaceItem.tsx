@@ -53,6 +53,7 @@ const Map = styled.div<MapProps>`
   background-position: center;
   background-color: #eee;
   width: ${p => p.size}px;
+  min-height: ${p => p.size}px;
   /* height: ${p => p.size}px; */
   background-image: url(${p => p.url});
   background-size: 100%;

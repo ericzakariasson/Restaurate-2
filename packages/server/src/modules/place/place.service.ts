@@ -63,7 +63,11 @@ export class PlaceService {
   async getVisits(id: number, { limit }: { limit?: number }) {
     const visits = await this.visitRepository.find({
       where: { placeId: id },
-      take: limit
+      take: limit,
+      order: {
+        visitDate: 'DESC',
+        createdAt: 'DESC'
+      }
     });
 
     return visits;

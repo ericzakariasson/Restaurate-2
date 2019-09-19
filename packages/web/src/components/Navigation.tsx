@@ -9,9 +9,24 @@ const Nav = styled.nav`
   max-width: ${p => p.theme.page.maxWidth};
   margin: 0 auto;
   overflow-x: scroll;
+  background: #fcfcfc;
   -webkit-overflow-scrolling: touch;
+
   &::-webkit-scrollbar {
     display: none;
+  }
+`;
+
+const List = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+`;
+
+const Item = styled.li`
+  &:not(:last-of-type) {
+    margin-right: 5px;
   }
 `;
 
@@ -20,12 +35,13 @@ const Link = styled(NavLink)`
   text-decoration: none;
   color: #222;
   font-size: ${p => p.theme.fontSize.large};
-  padding: 10px 20px;
+  padding: 8px 16px;
   font-weight: 700;
   white-space: nowrap;
+  border-radius: 10px;
 
   &.active {
-    border-bottom: 2px solid #222;
+    background: #eee;
   }
 `;
 
@@ -41,21 +57,39 @@ export const Navigation = () => {
   return (
     <header>
       <Nav>
-        {authenticated ? (
-          <>
-            <Link to={routes.dashboard}>Översikt</Link>
-            <Link to={routes.places}>Ställen</Link>
-            <Link to={routes.visits}>Besök</Link>
-            <Link to={routes.searchPlace}>Sök ställe</Link>
-            <Link to={routes.wantToVisit}>Vill besöka</Link>
-            <Link to={routes.settings}>Inställningar</Link>
-          </>
-        ) : (
-          <>
-            <Link to={routes.login}>Logga in</Link>
-            <Link to={routes.register}>Registrera</Link>
-          </>
-        )}
+        <List>
+          {authenticated ? (
+            <>
+              <Item>
+                <Link to={routes.dashboard}>Översikt</Link>
+              </Item>
+              <Item>
+                <Link to={routes.places}>Ställen</Link>
+              </Item>
+              <Item>
+                <Link to={routes.visits}>Besök</Link>
+              </Item>
+              <Item>
+                <Link to={routes.searchPlace}>Sök ställe</Link>
+              </Item>
+              <Item>
+                <Link to={routes.wantToVisit}>Vill besöka</Link>
+              </Item>
+              <Item>
+                <Link to={routes.settings}>Inställningar</Link>
+              </Item>
+            </>
+          ) : (
+            <>
+              <Item>
+                <Link to={routes.login}>Logga in</Link>
+              </Item>
+              <Item>
+                <Link to={routes.register}>Registrera</Link>
+              </Item>
+            </>
+          )}
+        </List>
       </Nav>
     </header>
   );
