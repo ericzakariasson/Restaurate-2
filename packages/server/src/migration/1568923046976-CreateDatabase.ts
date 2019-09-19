@@ -1,6 +1,6 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class CreateDatabase1568655455338 implements MigrationInterface {
+export class CreateDatabase1568923046976 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "role" character varying NOT NULL DEFAULT 'USER', "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "email" text NOT NULL, "password" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
@@ -9,8 +9,8 @@ export class CreateDatabase1568655455338 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "visit" ("id" SERIAL NOT NULL, "userId" integer, "comment" character varying, "visitDate" TIMESTAMP NOT NULL, "score" double precision NOT NULL, "placeId" integer, "private" boolean NOT NULL DEFAULT false, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_c9919ef5a07627657c535d8eb88" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "tag" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "userId" integer, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_8e4052373c579afc1471f526760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "place_types_enum" AS ENUM('RESTAURANT', 'CAFE')`);
-        await queryRunner.query(`CREATE TABLE "place" ("id" SERIAL NOT NULL, "providerPlaceId" character varying NOT NULL, "userId" integer, "types" "place_types_enum" array, "priceLevel" integer NOT NULL DEFAULT 0, "comment" character varying, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_96ab91d43aa89c5de1b59ee7cca" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "want_to_visit" ("id" SERIAL NOT NULL, "providerPlaceId" character varying NOT NULL, "userId" integer, "visited" boolean NOT NULL DEFAULT false, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_0e191f30e6e7390c7571853ecd2" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "place" ("id" SERIAL NOT NULL, "providerId" character varying NOT NULL, "userId" integer, "types" "place_types_enum" array, "priceLevel" integer NOT NULL DEFAULT 0, "comment" character varying, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_96ab91d43aa89c5de1b59ee7cca" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "want_to_visit" ("id" SERIAL NOT NULL, "placeProviderId" character varying NOT NULL, "userId" integer, "visited" boolean NOT NULL DEFAULT false, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_0e191f30e6e7390c7571853ecd2" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "place_tags_tag" ("placeId" integer NOT NULL, "tagId" integer NOT NULL, CONSTRAINT "PK_82382bb5127a733a1237151a885" PRIMARY KEY ("placeId", "tagId"))`);
         await queryRunner.query(`CREATE INDEX "IDX_1e777ee2e346998e941c0f886a" ON "place_tags_tag" ("placeId") `);
         await queryRunner.query(`CREATE INDEX "IDX_1af67ea67a5d14e8655880d062" ON "place_tags_tag" ("tagId") `);
