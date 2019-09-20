@@ -17,6 +17,7 @@ import { UserService } from '../user/user.service';
 import { VisitService } from './visit.service';
 import { AddVisitResponse, AddVisitInput } from './visit.types';
 import { Context } from '../../graphql/types';
+import { logger } from '../../utils/logger';
 // import { Rate } from './rate/rate.entity';
 // import { RateService } from './rate/rate.service';
 
@@ -52,6 +53,7 @@ export class VisitResolver {
     );
 
     const visit = await this.visitService.createVisit(input, place, user);
+    logger.info('Visit added', visit.id);
 
     return {
       saved: true,

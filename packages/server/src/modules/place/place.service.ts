@@ -141,6 +141,8 @@ export class PlaceService {
       providerId: providerPlaceId
     });
 
+    logger.info('Place created', { user: user.id, place: createdPlace.id });
+
     return this.placeRepository.save(createdPlace);
   }
 

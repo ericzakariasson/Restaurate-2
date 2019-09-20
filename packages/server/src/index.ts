@@ -9,9 +9,7 @@ import { generateSchema } from './schema';
 import { SessionRequest } from './graphql/types';
 import { Container } from 'typedi';
 import { createConnection } from './utils/createConnection';
-import * as morgan from 'morgan';
-import { logger, LogStream } from './utils/logger';
-import { isProduction } from './utils/env.helper';
+import { logger } from './utils/logger';
 
 dotenv.config();
 
@@ -51,14 +49,15 @@ const startServer = async (): Promise<void> => {
     })
   );
 
-  const logFormat = isProduction() ? 'combined' : 'dev';
-  app.use(morgan(logFormat, { stream: new LogStream() }));
-
   const schema = await generateSchema();
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }: { req: SessionRequest }) => ({ req })
+    context: ({ req }: { req: SessionRequest }) => ({ req }),
+    formatError: error => {
+      logger.error('Apollo Server Error', error);
+      return error;
+    }
   });
 
   server.applyMiddleware({ app, cors: corsOptions });

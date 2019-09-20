@@ -26,7 +26,7 @@ const productionTransports = [
 export const logger = createLogger({
   exitOnError: false,
   level,
-  transports: isProduction() ? productionTransports : defaultTransports,
+  transports: false ? productionTransports : defaultTransports,
   format: defaultFormat
 });
 
