@@ -61,14 +61,20 @@ export class PlaceResolver {
 
   @Authorized()
   @Query(() => Place, { nullable: true })
-  async place(@Arg('providerId') providerId: string): Promise<Place | null> {
+  async place(
+    @Arg('providerId') providerId: string,
+    @Ctx() ctx: Context
+  ): Promise<Place | null> {
     const placeDetails = await this.placeService.getPlaceDetails(providerId);
 
     if (!placeDetails) {
       return null;
     }
 
-    const userPlace = await this.placeService.findByProviderId(providerId);
+    const userPlace = await this.placeService.findByProviderId(
+      providerId,
+      ctx.req.session.userId
+    );
 
     if (!userPlace) {
       const place = new Place();
