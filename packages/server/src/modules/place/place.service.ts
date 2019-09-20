@@ -19,7 +19,7 @@ import { Coordinates } from '../../utils/utils.types';
 import { logger } from '../../utils/logger';
 // import { TagService } from './tag/tag.service';
 
-const placeDetailsKey = (key: string) => `placeDetails_providerId_${key}`;
+const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
 @Service()
 export class PlaceService {
@@ -90,7 +90,7 @@ export class PlaceService {
   }
 
   async getPlaceDetails(providerId: string) {
-    const cached = this.cacheService.get<PlaceDetails>(
+    const cached = await this.cacheService.getJSON<PlaceDetails>(
       placeDetailsKey(providerId)
     );
 
@@ -101,7 +101,7 @@ export class PlaceService {
     const data = await this.hereService.details(providerId);
     const placeDetails = transformProviderDetails(data);
 
-    const success = this.cacheService.set(
+    const success = await this.cacheService.setJSON(
       placeDetailsKey(providerId),
       placeDetails
     );

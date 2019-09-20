@@ -10,8 +10,12 @@ import { SessionRequest } from './graphql/types';
 import { Container } from 'typedi';
 import { createConnection } from './utils/createConnection';
 import { logger } from './utils/logger';
+import { redis } from './services/redis/redis';
+import * as connectRedis from 'connect-redis';
 
 dotenv.config();
+
+const RedisStore = connectRedis(session);
 
 const startServer = async (): Promise<void> => {
   useContainer(Container);
@@ -45,7 +49,11 @@ const startServer = async (): Promise<void> => {
         secure: process.env.NODE_ENV === 'production',
         maxAge: 1000 * 60 * 60 * 24 * 7 // 7 daysm
       },
-      proxy: true
+      proxy: true,
+      store: new RedisStore({
+        client: redis as any,
+        prefix: 'session:'
+      })
     })
   );
 

@@ -1,4 +1,5 @@
-import * as NodeCache from 'node-cache';
+import { logger } from '../../utils/logger';
+import { redis, RedisClient } from '../redis/redis';
 
 interface CacheServiceOptions {
   ttl?: number;
@@ -9,17 +10,79 @@ const defaultOptions: CacheServiceOptions = {
 };
 
 export class CacheService {
-  private cache: NodeCache;
+  private client: RedisClient;
+  constructor() {
+    this.client = redis;
 
-  constructor({ ttl = defaultOptions.ttl }: CacheServiceOptions) {
-    this.cache = new NodeCache({ stdTTL: ttl });
+    this.client.on('connect', this.onConnect);
+    this.client.on('error', this.onError);
   }
 
-  public get<T>(key: string) {
-    return this.cache.get<T>(key);
+  private onConnect() {
+    logger.debug('Cache service: Redis client connected');
   }
 
-  public set<T>(key: string, value: T) {
-    return this.cache.set(key, value);
+  private onError(error: any) {
+    logger.error('Cache service: Redis error', error);
+  }
+
+  public async getJSON<T>(key: string): Promise<T | null> {
+    try {
+      const value = await new Promise<string | null>(resolve => {
+        this.client.get(key, (error: any, result: string | null) => {
+          if (error) {
+            logger.error('Cache get error', error);
+            throw new Error(error);
+          }
+
+          resolve(result);
+        });
+      });
+
+      if (value === null) {
+        return value;
+      }
+
+      const parsed: T = JSON.parse(value);
+      return parsed;
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  public async get(key: string): Promise<string | null> {
+    try {
+      const value = await new Promise<string | null>(resolve => {
+        this.client.get(key, (error: any, result: string | null) => {
+          if (error) {
+            logger.error('Cache get error', error);
+            throw new Error(error);
+          }
+
+          resolve(result);
+        });
+      });
+
+      return value;
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  public set<T>(
+    key: string,
+    value: T,
+    expires = defaultOptions.ttl
+  ): Promise<string> {
+    return this.client.set(key, value, 'EX', expires);
+  }
+
+  public setJSON<T>(
+    key: string,
+    value: T,
+    expires = defaultOptions.ttl
+  ): Promise<string> {
+    const json = JSON.stringify(value);
+    return this.client.set(key, json, 'EX', expires);
   }
 }
