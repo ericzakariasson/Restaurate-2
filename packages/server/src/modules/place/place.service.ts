@@ -73,9 +73,12 @@ export class PlaceService {
     return visits;
   }
 
-  async findByProviderId(providerPlaceId: string) {
+  async findByProviderId(providerId: string, userId: number) {
     const place = await this.placeRepository.findOne({
-      where: { providerId: providerPlaceId }
+      where: {
+        providerId,
+        userId
+      }
     });
 
     if (!place) {
@@ -110,9 +113,7 @@ export class PlaceService {
   }
 
   async findByIdOrCreate(providerPlaceId: string, user: User) {
-    const place = await this.placeRepository.findOne({
-      where: { providerId: providerPlaceId }
-    });
+    const place = await this.findByProviderId(providerPlaceId, user.id);
 
     if (place) {
       return place;
