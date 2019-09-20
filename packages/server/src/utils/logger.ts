@@ -1,7 +1,7 @@
 import { createLogger, transports, format } from 'winston';
 import { isProduction } from './env.helper';
 
-const level = isProduction() ? process.env.LOG_LEVEL || 'info' : 'debug';
+const level = isProduction() ? process.env.LOG_LEVEL || 'warn' : 'debug';
 
 const defaultFormat = format.combine(format.colorize(), format.json());
 
@@ -14,19 +14,19 @@ const defaultTransports = [
 
 const productionTransports = [
   new transports.File({
-    filename: 'error.log',
+    filename: './logs/error/error.log',
     level: 'error',
     handleExceptions: true
   }),
   new transports.File({
-    filename: 'combined.log'
+    filename: './logs/combined/combined.log'
   })
 ];
 
 export const logger = createLogger({
   exitOnError: false,
   level,
-  transports: false ? productionTransports : defaultTransports,
+  transports: isProduction() ? productionTransports : defaultTransports,
   format: defaultFormat
 });
 

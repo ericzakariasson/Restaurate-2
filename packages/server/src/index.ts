@@ -23,7 +23,7 @@ const startServer = async (): Promise<void> => {
 
   const app = express();
 
-  logger.info('Allowed origins', process.env.ALLOWED_ORIGINS);
+  logger.debug('Allowed origins', process.env.ALLOWED_ORIGINS);
 
   const corsOptions = {
     credentials: true,
@@ -63,7 +63,7 @@ const startServer = async (): Promise<void> => {
   server.applyMiddleware({ app, cors: corsOptions });
 
   app.listen({ port: 4000 }, () =>
-    logger.info(`Server ready at http://localhost:4000${server.graphqlPath}`)
+    logger.debug(`Server ready at http://localhost:4000${server.graphqlPath}`)
   );
 };
 
