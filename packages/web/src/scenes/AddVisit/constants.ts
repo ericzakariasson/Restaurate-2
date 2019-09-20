@@ -3,8 +3,8 @@ import { RateNode } from './rateReducer';
 export const rateNodes: RateNode[] = [
   {
     order: 0,
-    label: 'Mat',
-    name: 'food',
+    label: 'Kök',
+    name: 'kitchen',
     score: null
     // children: [
     //   {
