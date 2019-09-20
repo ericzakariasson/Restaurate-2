@@ -16,6 +16,7 @@ import {
   transformProviderDetails
 } from './place.helpers';
 import { Coordinates } from '../../utils/utils.types';
+import { logger } from '../../utils/logger';
 // import { TagService } from './tag/tag.service';
 
 const placeDetailsKey = (key: string) => `placeDetails_providerId_${key}`;
@@ -106,7 +107,7 @@ export class PlaceService {
     );
 
     if (!success) {
-      console.error(`Error setting cache for "${providerId}"`);
+      logger.error(`Error setting cache for "${providerId}"`);
     }
 
     return placeDetails;

@@ -9,6 +9,9 @@ import { generateSchema } from './schema';
 import { SessionRequest } from './graphql/types';
 import { Container } from 'typedi';
 import { createConnection } from './utils/createConnection';
+import * as morgan from 'morgan';
+import { logger, LogStream } from './utils/logger';
+import { isProduction } from './utils/env.helper';
 
 dotenv.config();
 
@@ -17,12 +20,12 @@ const startServer = async (): Promise<void> => {
   const connection = await createConnection();
 
   if (!connection) {
-    console.error('Could not established connection to database');
+    logger.error('Could not established connection to database');
   }
 
   const app = express();
 
-  console.log('Allowed origins: ', process.env.ALLOWED_ORIGINS);
+  logger.info('Allowed origins', process.env.ALLOWED_ORIGINS);
 
   const corsOptions = {
     credentials: true,
@@ -48,6 +51,9 @@ const startServer = async (): Promise<void> => {
     })
   );
 
+  const logFormat = isProduction() ? 'combined' : 'dev';
+  app.use(morgan(logFormat, { stream: new LogStream() }));
+
   const schema = await generateSchema();
 
   const server = new ApolloServer({
@@ -58,12 +64,12 @@ const startServer = async (): Promise<void> => {
   server.applyMiddleware({ app, cors: corsOptions });
 
   app.listen({ port: 4000 }, () =>
-    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
+    logger.info(`Server ready at http://localhost:4000${server.graphqlPath}`)
   );
 };
 
 try {
   startServer();
 } catch (e) {
-  console.log('Error occured:', JSON.stringify(e, null, 4));
+  logger.error('Unexpected error occured:', e);
 }

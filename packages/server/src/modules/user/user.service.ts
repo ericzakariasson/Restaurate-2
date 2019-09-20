@@ -6,7 +6,8 @@ import { User } from './user.entity';
 import { UserRegisterInput } from './user.types';
 import { Place } from '../place/place.entity';
 import { Visit } from '../visit/visit.entity';
-import { SessionRequest } from 'src/graphql/types';
+import { SessionRequest } from '../../graphql/types';
+import { logger } from '../../utils/logger';
 
 @Service()
 export class UserService {
@@ -64,7 +65,7 @@ export class UserService {
     return new Promise((resolve, reject) => {
       return req.session.destroy(err => {
         if (err) {
-          console.error(err);
+          logger.error('Could not destroy session', err);
           return reject(false);
         }
 

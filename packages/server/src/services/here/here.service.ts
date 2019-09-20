@@ -7,6 +7,7 @@ import {
   Headers
 } from './here.types';
 import { Coordinates } from '../../utils/utils.types';
+import { logger } from '../../utils/logger';
 
 const getGeolocationHeader = ({ lat, lng }: Coordinates) => `geo:${lat},${lng}`;
 
@@ -56,7 +57,7 @@ class HereRepository {
     const response = await nodeFetch(endpoint, { headers });
 
     if (response.status !== 200) {
-      console.error(response.statusText);
+      logger.error('HERE response error', response.statusText);
     }
 
     const json: T = await response.json();
