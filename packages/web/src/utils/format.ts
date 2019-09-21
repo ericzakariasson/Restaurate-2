@@ -1,5 +1,5 @@
 import { PriceLevel, PlaceType } from '../graphql/types';
-import { rateNodes } from 'scenes/AddVisit/constants';
+import { rateNodes } from 'constants/rate.constants';
 
 export function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString('sv-SE', {

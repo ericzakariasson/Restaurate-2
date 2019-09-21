@@ -1,5 +1,5 @@
-import { rateNodes } from './constants';
 import { createInitialRateState } from './rateHelper';
+import { rateNodes } from 'constants/rate.constants';
 
 export interface SetRatePayload {
   score: number;

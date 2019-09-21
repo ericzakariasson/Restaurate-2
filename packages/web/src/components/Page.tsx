@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
+import Helmet from 'react-helmet';
 
 interface PageWrapperProps {
   center: boolean;
@@ -72,6 +73,9 @@ export const Page = ({
   center = false
 }: PageProps) => (
   <PageWrapper center={center}>
+    <Helmet>
+      <title>>{title}</title>
+    </Helmet>
     <PageTitle title={title} large={largeTitle} subTitle={subTitle} />
     {children}
   </PageWrapper>

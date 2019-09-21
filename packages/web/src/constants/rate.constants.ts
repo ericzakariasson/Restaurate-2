@@ -1,4 +1,4 @@
-import { RateNode } from './rateReducer';
+import { RateNode } from 'components/VisitForm/rateReducer';
 
 export const rateNodes: RateNode[] = [
   {
