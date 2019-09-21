@@ -7,6 +7,10 @@ export interface SetRatePayload {
   parent?: string;
 }
 
+export interface SetStatePayload {
+  rateState: ReducerState;
+}
+
 export interface RateNode {
   order: number;
   name: string;
@@ -34,10 +38,11 @@ export interface RateStateNode {
   };
 }
 
-type Payload = SetRatePayload;
+type ActionType = 'SET_RATE' | 'SET_STATE';
+type Payload = SetRatePayload | SetStatePayload;
 
 interface ReducerAction {
-  type: 'SET_RATE';
+  type: ActionType;
   payload: Payload;
 }
 
@@ -49,7 +54,11 @@ export function rateReducer(
 ): ReducerState {
   switch (action.type) {
     case 'SET_RATE':
-      const { name, score, parent: parentName } = action.payload;
+      const {
+        name,
+        score,
+        parent: parentName
+      } = action.payload as SetRatePayload;
 
       if (parentName) {
         const parent = state[parentName];
@@ -84,6 +93,9 @@ export function rateReducer(
         ...state,
         [name]: updatedNode
       };
+    case 'SET_STATE':
+      const { rateState } = action.payload as SetStatePayload;
+      return rateState;
     default:
       throw new Error();
   }

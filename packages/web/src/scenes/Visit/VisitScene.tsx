@@ -88,6 +88,8 @@ export const VisitScene = ({
     variables: { id }
   });
 
+  const [editing, setEditing] = React.useState(false);
+
   if (loading) {
     return <Loading />;
   }
