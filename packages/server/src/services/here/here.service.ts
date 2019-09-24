@@ -23,6 +23,11 @@ class HereRepository {
   private appCode: string;
 
   constructor() {
+
+    if (!process.env.HERE_APP_ID || !process.env.HERE_APP_ID) {
+      throw new Error('No credentials for HERE provided');
+    }
+
     this.appId = process.env.HERE_APP_ID as string;
     this.appCode = process.env.HERE_APP_CODE as string;
   }
