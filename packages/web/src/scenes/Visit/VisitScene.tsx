@@ -1,21 +1,12 @@
+import { Label, Loading, NavButton, Page } from 'components';
+import { rateNodes } from 'constants/rate.constants';
+import { Rate, useVisitQuery } from 'graphql/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { editVisitRoute, placeRoute, WithVisitId } from 'routes';
 import styled from 'styled-components';
-import { GeneralError } from '..';
-import {
-  Loading,
-  Page,
-  NavButton,
-  Label,
-  ActionButton,
-  Button
-} from 'components';
-import { useVisitQuery, Rate } from 'graphql/types';
-import { placeRoute, editVisitRoute, WithVisitId } from 'routes';
 import { formatDate, translateRateName } from 'utils/format';
-import { VisitForm } from 'components/VisitForm/VisitForm';
-import { useVisitForm } from 'components/VisitForm/useVisitForm';
-import { rateNodes } from 'constants/rate.constants';
+import { GeneralError } from '..';
 
 const Block = styled.article`
   &:not(:last-child) {

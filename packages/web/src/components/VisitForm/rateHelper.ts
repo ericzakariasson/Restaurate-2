@@ -1,5 +1,5 @@
-import { ReducerState, RateNode, RateStateNode } from './rateReducer';
-import { RateInput, VisitRateFragment } from 'graphql/types';
+import { RateInput } from 'graphql/types';
+import { RateNode, RateStateNode, ReducerState } from './rateReducer';
 
 function round(value: number, precision = 1) {
   var multiplier = Math.pow(10, precision || 0);

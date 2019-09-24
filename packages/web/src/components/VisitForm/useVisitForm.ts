@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { useArray } from 'hooks';
 import { rateNodes } from 'constants/rate.constants';
+import { Rate, VisitFragment } from 'graphql/types';
+import { useArray } from 'hooks';
+import * as React from 'react';
+import { calculateAverageScore, createInitialRateState } from './rateHelper';
 import {
+  RateNode,
   rateReducer,
-  SetRatePayload,
   ReducerState,
-  SetStatePayload,
-  RateNode
+  SetRatePayload,
+  SetStatePayload
 } from './rateReducer';
-import { createInitialRateState, calculateAverageScore } from './rateHelper';
-import { VisitRateFragment, Rate, VisitFragment } from 'graphql/types';
 
 export interface Handlers {
   addOrder: (name: string) => void;
@@ -32,13 +32,6 @@ interface UseVisitForm {
   values: Values;
   isValid: boolean;
 }
-
-// interface UseVisitFormInitialValues {
-//   orders: string[];
-//   ratings: Rate[];
-//   comment: string;
-//   visitDate: Date;
-// }
 
 type UseVisitFormInitialValues = VisitFragment | null;
 
@@ -94,7 +87,7 @@ export function useVisitForm(
 
       setRateState({ rateState: rs });
     }
-  }, [initialValues]);
+  }, [initialValues, setOrders]);
 
   const handlers: Handlers = {
     addOrder,
