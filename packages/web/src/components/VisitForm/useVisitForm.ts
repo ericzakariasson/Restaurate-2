@@ -9,7 +9,7 @@ import {
   RateNode
 } from './rateReducer';
 import { createInitialRateState, calculateAverageScore } from './rateHelper';
-import { VisitRateFragment, Rate } from 'graphql/types';
+import { VisitRateFragment, Rate, VisitFragment } from 'graphql/types';
 
 export interface Handlers {
   addOrder: (name: string) => void;
@@ -30,14 +30,17 @@ export interface Values {
 interface UseVisitForm {
   handlers: Handlers;
   values: Values;
+  isValid: boolean;
 }
 
-interface UseVisitFormInitialValues {
-  orders: string[];
-  ratings: Rate[];
-  comment: string;
-  visitDate: Date;
-}
+// interface UseVisitFormInitialValues {
+//   orders: string[];
+//   ratings: Rate[];
+//   comment: string;
+//   visitDate: Date;
+// }
+
+type UseVisitFormInitialValues = VisitFragment | null;
 
 const transformRateToRateNode = (rate: Rate): RateNode => {
   const children =
@@ -78,11 +81,17 @@ export function useVisitForm(
 
   React.useEffect(() => {
     if (initialValues) {
-      setOrders(initialValues.orders);
-      setComment(initialValues.comment);
+      setOrders(initialValues.orders.map(o => o.title));
+      setComment(initialValues.comment || '');
       setVisitDate(initialValues.visitDate);
-      const rateNodes = initialValues.ratings.map(transformRateToRateNode);
-      const rs = createInitialRateState(rateNodes);
+
+      const mappedRatings = initialValues.ratings.map(transformRateToRateNode);
+      const unmapped = rateNodes.filter(n =>
+        mappedRatings.some(r => r.name !== n.name)
+      );
+      const all = [...mappedRatings, ...unmapped].sort(p => p.order);
+      const rs = createInitialRateState(all);
+
       setRateState({ rateState: rs });
     }
   }, [initialValues]);
@@ -103,5 +112,7 @@ export function useVisitForm(
     averageScore
   };
 
-  return { handlers, values };
+  const isValid = Boolean(averageScore && averageScore > 0);
+
+  return { handlers, values, isValid };
 }

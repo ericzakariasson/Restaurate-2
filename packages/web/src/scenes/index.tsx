@@ -11,3 +11,4 @@ export * from './Place/PlaceScene';
 export * from './WantToVisit/WantToVisitScene';
 export * from './Settings/SettingsScene';
 export * from './NotFound/NotFoundScene';
+export * from './EditVisit/EditVisitScene';

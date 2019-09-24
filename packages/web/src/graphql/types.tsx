@@ -36,12 +36,6 @@ export type AddVisitInput = {
   ratings: Array<RateInput>,
 };
 
-export type AddVisitResponse = {
-   __typename?: 'AddVisitResponse',
-  saved: Scalars['Boolean'],
-  visit: Visit,
-};
-
 export type Category = {
    __typename?: 'Category',
   id: Scalars['String'],
@@ -54,6 +48,14 @@ export type Contact = {
   website?: Maybe<Array<KeyValuePair>>,
 };
 
+
+export type EditVisitInput = {
+  visitId: Scalars['String'],
+  visitDate: Scalars['DateTime'],
+  comment?: Maybe<Scalars['String']>,
+  orders: Array<Scalars['String']>,
+  ratings: Array<RateInput>,
+};
 
 export type IPosition = {
   lat: Scalars['Float'],
@@ -77,7 +79,8 @@ export type Mutation = {
   login?: Maybe<User>,
   logout: Scalars['Boolean'],
   register?: Maybe<User>,
-  addVisit: AddVisitResponse,
+  addVisit: VisitResponse,
+  editVisit: VisitResponse,
   toggleWantToVisit: Scalars['Boolean'],
   setPriceLevel: PriceLevel,
   addTag: Tag,
@@ -99,6 +102,11 @@ export type MutationRegisterArgs = {
 
 export type MutationAddVisitArgs = {
   data: AddVisitInput
+};
+
+
+export type MutationEditVisitArgs = {
+  data: EditVisitInput
 };
 
 
@@ -313,6 +321,12 @@ export type Visit = {
   user: User,
 };
 
+export type VisitResponse = {
+   __typename?: 'VisitResponse',
+  saved: Scalars['Boolean'],
+  visit: Visit,
+};
+
 export type WantToVisit = {
    __typename?: 'WantToVisit',
   id: Scalars['ID'],
@@ -452,8 +466,21 @@ export type AddVisitMutationVariables = {
 export type AddVisitMutation = (
   { __typename?: 'Mutation' }
   & { addVisit: (
-    { __typename?: 'AddVisitResponse' }
-    & Pick<AddVisitResponse, 'saved'>
+    { __typename?: 'VisitResponse' }
+    & Pick<VisitResponse, 'saved'>
+  ) }
+);
+
+export type EditVisitMutationVariables = {
+  data: EditVisitInput
+};
+
+
+export type EditVisitMutation = (
+  { __typename?: 'Mutation' }
+  & { editVisit: (
+    { __typename?: 'VisitResponse' }
+    & Pick<VisitResponse, 'saved'>
   ) }
 );
 
@@ -851,6 +878,21 @@ export type AddVisitMutationFn = ApolloReactCommon.MutationFunction<AddVisitMuta
 export type AddVisitMutationHookResult = ReturnType<typeof useAddVisitMutation>;
 export type AddVisitMutationResult = ApolloReactCommon.MutationResult<AddVisitMutation>;
 export type AddVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<AddVisitMutation, AddVisitMutationVariables>;
+export const EditVisitDocument = gql`
+    mutation EditVisit($data: EditVisitInput!) {
+  editVisit(data: $data) {
+    saved
+  }
+}
+    `;
+export type EditVisitMutationFn = ApolloReactCommon.MutationFunction<EditVisitMutation, EditVisitMutationVariables>;
+
+    export function useEditVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<EditVisitMutation, EditVisitMutationVariables>) {
+      return ApolloReactHooks.useMutation<EditVisitMutation, EditVisitMutationVariables>(EditVisitDocument, baseOptions);
+    }
+export type EditVisitMutationHookResult = ReturnType<typeof useEditVisitMutation>;
+export type EditVisitMutationResult = ApolloReactCommon.MutationResult<EditVisitMutation>;
+export type EditVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<EditVisitMutation, EditVisitMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {

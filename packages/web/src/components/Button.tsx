@@ -17,7 +17,8 @@ type Color =
   | 'warning'
   | 'error'
   | 'black'
-  | 'white';
+  | 'white'
+  | 'gray';
 
 interface Props {
   text: string | React.ReactNode;
@@ -67,7 +68,7 @@ interface Padding {
 const padding: Padding = {
   xxsmall: '4px 8px',
   xsmall: '4px 8px',
-  small: '5px 10px',
+  small: '10px 12px',
   normal: '14px 16px',
   large: '14px 16px'
 };
@@ -121,10 +122,19 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
       background-color: ${p.theme.colors[p.color].hues[0]};
       border-color: ${p.theme.colors[p.color].hues[0]};
     `}
+
+    ${p =>
+      p.variant === 'secondary' &&
+      p.color === 'gray' &&
+      css`
+        color: #666;
+        background-color: #f5f5f5;
+        border: none;
+      `}
   
   ${p =>
     p.variant === 'secondary' &&
-    p.color !== 'white' &&
+    !(['white', 'gray'] as Color[]).includes(p.color) &&
     css`
       background-color: ${p.theme.colors[p.color].hues[9]};
       border-color: ${p.theme.colors[p.color].hues[0]};
@@ -161,8 +171,8 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
       background-color: ${p.theme.colors[p.color].hues[0]};
       border-color: ${p.theme.colors[p.color].hues[0]};
     `}
+  
 
-    
   ${p =>
     p.disabled &&
     css`

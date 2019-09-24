@@ -2,10 +2,20 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { GeneralError } from '..';
-import { Loading, Page, NavButton, Label } from 'components';
-import { useVisitQuery } from 'graphql/types';
-import { placeRoute } from 'routes';
+import {
+  Loading,
+  Page,
+  NavButton,
+  Label,
+  ActionButton,
+  Button
+} from 'components';
+import { useVisitQuery, Rate } from 'graphql/types';
+import { placeRoute, editVisitRoute, WithVisitId } from 'routes';
 import { formatDate, translateRateName } from 'utils/format';
+import { VisitForm } from 'components/VisitForm/VisitForm';
+import { useVisitForm } from 'components/VisitForm/useVisitForm';
+import { rateNodes } from 'constants/rate.constants';
 
 const Block = styled.article`
   &:not(:last-child) {
@@ -77,7 +87,11 @@ const ChildRatingText = styled.h4`
   color: #222;
 `;
 
-type WithVisitId = { id: string };
+const sortRatings = (a: Rate, b: Rate) => {
+  const aNode = rateNodes.find(node => node.name === a.name)!;
+  const bNode = rateNodes.find(node => node.name === b.name)!;
+  return aNode.order > bNode.order ? 1 : -1;
+};
 
 export const VisitScene = ({
   match: {
@@ -87,8 +101,6 @@ export const VisitScene = ({
   const { data, loading, error } = useVisitQuery({
     variables: { id }
   });
-
-  const [editing, setEditing] = React.useState(false);
 
   if (loading) {
     return <Loading />;
@@ -120,7 +132,7 @@ export const VisitScene = ({
       <Block>
         <Label text="Betyg" />
         <Ratings>
-          {ratings.map(rate => {
+          {ratings.sort(sortRatings).map(rate => {
             return (
               <Rating key={rate.name}>
                 <RatingWrapper>
@@ -155,6 +167,15 @@ export const VisitScene = ({
         color="white"
         to={placeRoute(place.providerId)}
         text={`${place.details.name}`}
+        size="large"
+        margin={['bottom']}
+      />
+      <NavButton
+        text="Redigera"
+        color="gray"
+        variant="secondary"
+        to={editVisitRoute(id)}
+        size="normal"
       />
     </Page>
   );

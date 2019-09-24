@@ -11,6 +11,7 @@ export const routes = {
   register: '/register',
   login: '/login',
   visit: '/visit/:id',
+  editVisit: '/visit/:id/edit',
   place: '/place/:providerPlaceId',
   searchPlace: '/search/place',
   wantToVisit: '/want-to-visit',
@@ -22,3 +23,8 @@ export const placeRoute = (providerPlaceId: string) =>
   `/place/${providerPlaceId}`;
 export const addVisitRoute = (providerPlaceId: string) =>
   `/add-visit/${providerPlaceId}`;
+
+export const editVisitRoute = (id: string) =>
+  routes.editVisit.replace(':id', id);
+
+export type WithVisitId = { id: string };
