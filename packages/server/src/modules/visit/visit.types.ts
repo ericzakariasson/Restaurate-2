@@ -21,10 +21,28 @@ export class AddVisitInput {
 }
 
 @ObjectType()
-export class AddVisitResponse {
+export class VisitResponse {
   @Field()
   saved: boolean;
 
   @Field(() => Visit)
   visit: Visit;
+}
+
+@InputType()
+export class EditVisitInput {
+  @Field()
+  visitId: string;
+
+  @Field()
+  visitDate: Date;
+
+  @Field({ nullable: true })
+  comment?: string;
+
+  @Field(() => [String])
+  orders: string[];
+
+  @Field(() => [RateInput])
+  ratings: RateInput[];
 }

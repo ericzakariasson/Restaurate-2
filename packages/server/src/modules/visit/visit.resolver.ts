@@ -15,7 +15,7 @@ import { Service } from 'typedi';
 import { PlaceService } from '../place/place.service';
 import { UserService } from '../user/user.service';
 import { VisitService } from './visit.service';
-import { AddVisitResponse, AddVisitInput } from './visit.types';
+import { VisitResponse, AddVisitInput, EditVisitInput } from './visit.types';
 import { Context } from '../../graphql/types';
 import { logger } from '../../utils/logger';
 // import { Rate } from './rate/rate.entity';
@@ -36,11 +36,11 @@ export class VisitResolver {
   }
 
   @Authorized()
-  @Mutation(() => AddVisitResponse)
+  @Mutation(() => VisitResponse)
   async addVisit(
     @Arg('data') input: AddVisitInput,
     @Ctx() ctx: Context
-  ): Promise<AddVisitResponse> {
+  ): Promise<VisitResponse> {
     const user = await this.userService.findById(ctx.req.session.userId);
 
     if (!user) {
@@ -54,6 +54,32 @@ export class VisitResolver {
 
     const visit = await this.visitService.createVisit(input, place, user);
     logger.info('Visit added', visit.id);
+
+    return {
+      saved: true,
+      visit
+    };
+  }
+
+  @Authorized()
+  @Mutation(() => VisitResponse)
+  async editVisit(
+    @Arg('data') input: EditVisitInput,
+    @Ctx() ctx: Context
+  ): Promise<VisitResponse> {
+    const user = await this.userService.findById(ctx.req.session.userId);
+
+    if (!user) {
+      throw new Error('No user found');
+    }
+
+    const visit = await this.visitService.editVisit(input, user);
+
+    if (!visit) {
+      throw new Error('Error editing visit');
+    }
+
+    logger.info('Visit edited', visit.id);
 
     return {
       saved: true,
