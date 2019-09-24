@@ -39,7 +39,7 @@ export function calculateAverageScore(state: ReducerState) {
       if (node.score) {
         score.totalScore += node.score;
         score.entries += 1;
-      } else if (node.children) {
+      } else if (node.children && Object.entries(node.children).length !== 0) {
         const childArray = Object.values(node.children);
         const averageNodeScore = calculateAverageNodeScore(childArray);
 
