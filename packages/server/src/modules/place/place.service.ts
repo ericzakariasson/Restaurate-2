@@ -17,7 +17,6 @@ import {
 } from './place.helpers';
 import { Coordinates } from '../../utils/utils.types';
 import { logger } from '../../utils/logger';
-// import { TagService } from './tag/tag.service';
 
 const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
@@ -141,7 +140,7 @@ export class PlaceService {
       providerId: providerPlaceId
     });
 
-    logger.info('Place created', { user: user.id, place: createdPlace.id });
+    logger.info('Place created', { place: createdPlace.id });
 
     return this.placeRepository.save(createdPlace);
   }
@@ -174,6 +173,8 @@ export class PlaceService {
     const place = await this.findByIdOrCreate(providerPlaceId, user);
     await this.placeRepository.update(place.id, { priceLevel });
 
+    logger.info('Price level updated', { place: place.id, priceLevel });
+
     return priceLevel;
   }
 
@@ -191,6 +192,8 @@ export class PlaceService {
 
     await this.placeRepository.save(place);
 
+    logger.info('Tag added', { place: place.id, tag: tag.id });
+
     return tag;
   }
 
@@ -206,6 +209,8 @@ export class PlaceService {
 
     await this.placeRepository.save(place);
 
+    logger.info('Tag removed', { place: place.id, tag: tagId });
+
     return tagId;
   }
 
@@ -220,6 +225,8 @@ export class PlaceService {
     place.comment = comment;
 
     await this.placeRepository.save(place);
+
+    logger.info('Comment set', { place: place.id });
 
     return comment;
   }

@@ -43,6 +43,8 @@ export class UserService {
 
     req.session.userId = user.id;
 
+    logger.info('User login', { user: user.id });
+
     return user;
   }
 
@@ -58,6 +60,8 @@ export class UserService {
 
     req.session.userId = user.id;
 
+    logger.info('User register', { user: user.id });
+
     return user;
   }
 
@@ -69,6 +73,7 @@ export class UserService {
           return reject(false);
         }
 
+        logger.info('User logout');
         resolve(true);
       });
     });

@@ -10,6 +10,7 @@ import { AddVisitInput, EditVisitInput } from './visit.types';
 import { round } from '../../utils';
 import { WantToVisitService } from '../place/wantToVisit/wantToVisit.service';
 import { RateInput } from './rate/rate.types';
+import { logger } from '../../utils';
 
 @Service()
 export class VisitService {
@@ -57,6 +58,8 @@ export class VisitService {
     });
 
     await this.wtvService.setVisited(place.providerId, user);
+
+    logger.info('Visit created', { visit: visit.id });
 
     return await this.visitRepository.save(visit);
   }
@@ -126,6 +129,8 @@ export class VisitService {
       comment: input.comment,
       visitDate: input.visitDate
     });
+
+    logger.info('Visit edited', { visit: visit.id });
 
     return this.visitRepository.findOne(updatedVisit.id);
   }
