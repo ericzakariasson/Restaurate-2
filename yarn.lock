@@ -14457,6 +14457,11 @@ schema-utils@^2.0.0, schema-utils@^2.0.1, schema-utils@^2.1.0:
     ajv "^6.10.2"
     ajv-keywords "^3.4.1"
 
+scroll-behavior-polyfill@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/scroll-behavior-polyfill/-/scroll-behavior-polyfill-2.0.12.tgz#b5aa993e613e7ace957787ff8e7edf901059475d"
+  integrity sha512-y0GKcLsgXw/TnyWzSRMb7mtzFyhxbMl2zs/t2eoc9Fq4KYfy9YO+p9UYI+Q9pTwZNkWIhDs+cTM/g2bPVedDSA==
+
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"

@@ -3,6 +3,7 @@ import { NavLink, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes } from 'routes';
 import { useMeQuery } from 'graphql/types';
+import 'scroll-behavior-polyfill';
 
 const Nav = styled.nav`
   display: flex;
@@ -12,6 +13,7 @@ const Nav = styled.nav`
   background: #fcfcfc;
   -webkit-overflow-scrolling: touch;
 
+  scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -21,10 +23,12 @@ const List = styled.ul`
   list-style: none;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 0 10px;
 `;
 
 const Item = styled.li`
+  padding: 10px 0;
+
   &:not(:last-of-type) {
     margin-right: 5px;
   }
@@ -39,9 +43,11 @@ const Link = styled(NavLink)`
   font-weight: 700;
   white-space: nowrap;
   border-radius: 10px;
+  transition: ${p => p.theme.transition};
 
   &.active {
     background: #eee;
+    transition: ${p => p.theme.transition};
   }
 `;
 
