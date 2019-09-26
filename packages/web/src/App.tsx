@@ -28,12 +28,15 @@ import {
 } from './scenes';
 import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 import { Navigation } from 'components/Navigation';
+import { useTrackPageView } from 'hooks/analytics';
 
 const Wrapper = styled.div`
   height: 100%;
 `;
 
 const App = () => {
+  useTrackPageView();
+
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>

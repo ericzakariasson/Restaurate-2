@@ -44,9 +44,8 @@
     "winston-daily-rotate-file": "^4.1.0"
   },
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "start": "ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
     "clean": "rimraf ./dist",
     "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts"
   },
