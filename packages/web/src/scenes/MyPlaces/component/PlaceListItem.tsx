@@ -1,6 +1,7 @@
 import * as React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { PlaceTagFragment } from 'graphql/types';
 
 export const Card = styled.div`
   padding: 15px;
@@ -23,7 +24,8 @@ const NeutralLink = styled(Link)`
 `;
 
 const Place = styled.div`
-  margin-right: 10px;
+  margin-right: 15px;
+  min-width: 0;
 `;
 
 const Name = styled.h3`
@@ -32,9 +34,9 @@ const Name = styled.h3`
 `;
 
 const Address = styled.p`
-  font-weight: 600;
-  color: #aaa;
-  font-size: ${p => p.theme.fontSize.small};
+  /* font-weight: 600; */
+  color: #666;
+  font-size: ${p => p.theme.fontSize.normal};
 `;
 
 const Score = styled.h4`
@@ -50,58 +52,49 @@ const ScoreArea = styled.div`
   display: flex;
 `;
 
-interface ScoreBarProps {
-  score: number;
-}
-
-const ScoreBar = styled.div<ScoreBarProps>`
-  width: 3px;
-  background: #eee;
-  border-radius: 3px;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: ${p => p.theme.colors.primary.default};
-    transform: scaleY(${p => p.score / 10});
-    transform-origin: 0 100%;
-  }
+const VisitCount = styled.h5`
+  margin-bottom: -5px;
 `;
 
-interface PlaceCardProps {
+const Tags = styled.p`
+  margin-top: 10px;
+  font-size: ${p => p.theme.fontSize.small};
+  color: #666;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+`;
+
+interface PlaceListItemProps {
   name: string;
   address: string;
-  score: number;
+  visitCount: number;
   to: string;
-  children?: React.ReactNode;
-  as?: keyof JSX.IntrinsicElements | React.ComponentType<any>; // From Styled Component source
+  averageScore: number;
+  tags: PlaceTagFragment[];
 }
 
-export const CardWithScore = ({
+export const PlaceListItem = ({
   name,
   to,
   address,
-  score,
-  children,
-  as = 'li'
-}: PlaceCardProps) => (
-  <Card as={as}>
+  visitCount,
+  averageScore,
+  tags
+}: PlaceListItemProps) => (
+  <Card>
     <NeutralLink to={to}>
       <Place>
         <Name>{name}</Name>
         <Address>{address}</Address>
+        {tags.length > 0 && <Tags>{tags.map(t => t.name).join(', ')}</Tags>}
       </Place>
       <ScoreArea>
         <Numbers>
-          {children}
-          <Score>{score || '–'}</Score>
+          <VisitCount>{visitCount} besök</VisitCount>
+          <Score>{averageScore || '–'}</Score>
         </Numbers>
-        <ScoreBar score={score || 0} />
       </ScoreArea>
     </NeutralLink>
   </Card>

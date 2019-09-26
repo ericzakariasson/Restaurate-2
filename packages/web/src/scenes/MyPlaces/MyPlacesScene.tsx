@@ -7,13 +7,10 @@ import { placeRoute } from '../../routes';
 import { GeneralError } from '../Error/GeneralError';
 import { useMePlacesQuery } from '../../graphql/types';
 import { SkeletonCards } from '../../components/Skeleton';
+import { PlaceListItem } from './component/PlaceListItem';
 
 const PlaceList = styled.ul`
   list-style: none;
-`;
-
-const VisitCount = styled.h5`
-  margin-bottom: -5px;
 `;
 
 export const MyPlacesScene = () => {
@@ -48,15 +45,15 @@ export const MyPlacesScene = () => {
       ) : (
         <PlaceList>
           {places.map(place => (
-            <CardWithScore
+            <PlaceListItem
               key={place.providerId}
               name={place.details.name}
-              address={place.details.location.address.formatted || '–'}
+              address={place.details.location.address.formatted}
+              visitCount={place.visitCount}
+              averageScore={place.averageScore}
               to={placeRoute(place.providerId)}
-              score={place.averageScore}
-            >
-              <VisitCount>{place.visitCount} besök</VisitCount>
-            </CardWithScore>
+              tags={place.tags}
+            />
           ))}
         </PlaceList>
       )}
