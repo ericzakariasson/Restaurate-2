@@ -53,7 +53,7 @@ export class VisitResolver {
     );
 
     const visit = await this.visitService.createVisit(input, place, user);
-    logger.info('Visit added', visit.id);
+    logger.info('Visit created', { visit: visit.id });
 
     return {
       saved: true,
