@@ -48,7 +48,7 @@ const Numbers = styled.div``;
 
 const ScoreArea = styled.div`
   display: flex;
-  flex: 1 0 auto;
+  flex-shrink: 0;
 `;
 
 const VisitCount = styled.h5`

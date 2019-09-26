@@ -1,12 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { CardWithScore, Page } from '../../components';
-
+import { Page } from '../../components';
 import { NoResult } from '../../components/NoResult';
+import { SkeletonCards } from '../../components/Skeleton';
+import { useMePlacesQuery } from '../../graphql/types';
 import { placeRoute } from '../../routes';
 import { GeneralError } from '../Error/GeneralError';
-import { useMePlacesQuery } from '../../graphql/types';
-import { SkeletonCards } from '../../components/Skeleton';
 import { PlaceListItem } from './component/PlaceListItem';
 
 const PlaceList = styled.ul`
