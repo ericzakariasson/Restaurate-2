@@ -37,7 +37,7 @@ const Wrapper = styled.div`
 
 const App = () => {
   React.useEffect(() => {
-    ReactGA.initialize(process.env.GA_TRACKING_ID as string);
+    ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID as string);
   }, []);
 
   useTrackPageView();
