@@ -1,4 +1,4 @@
-import ReactGA, { EventArgs } from 'react-ga';
+import ReactGA from 'react-ga';
 
 type Category = 'Form' | 'CTA' | 'Search' | 'User';
 

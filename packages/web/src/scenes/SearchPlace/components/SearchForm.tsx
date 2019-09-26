@@ -65,6 +65,7 @@ export const SearchForm = ({ onSubmit }: SearchFormProps) => {
       <InputField>
         <Label text="Namn och plats" htmlFor="place" />
         <Input
+          autoFocus
           id="place"
           value={query}
           onChange={handleQueryChange}

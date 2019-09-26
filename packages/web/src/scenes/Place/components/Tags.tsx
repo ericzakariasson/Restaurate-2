@@ -204,7 +204,12 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
       </InputBlock>
       {editing && (
         <Form onSubmit={handleAdd}>
-          <TagInput value={input} onChange={handleChange} fontSize="normal" />
+          <TagInput
+            autoFocus
+            value={input}
+            onChange={handleChange}
+            fontSize="normal"
+          />
           <ActionButton
             disabled={saving}
             type="submit"

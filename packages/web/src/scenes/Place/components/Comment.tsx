@@ -93,7 +93,7 @@ export const Comment = ({ comment, providerId }: CommentProps) => {
       </InputBlock>
       {editing && (
         <div>
-          <Textarea value={value} onChange={handleChange} rows={3} />
+          <Textarea autoFocus value={value} onChange={handleChange} rows={3} />
           <Wrapper>
             <ActionButton
               onClick={() => setEditing(false)}

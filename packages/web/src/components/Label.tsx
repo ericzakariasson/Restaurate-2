@@ -20,7 +20,7 @@ interface LabelStyleProps {
 const Normal = styled.label<LabelStyleProps>`
   display: block;
   font-size: ${p => p.theme.fontSize[p.size]};
-  color: ${p => (p.error ? p.theme.colors.error.default : '#CCC')};
+  color: ${p => (p.error ? p.theme.colors.error.default : '#999')};
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1rem;
