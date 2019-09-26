@@ -44,7 +44,12 @@ const App = () => {
 
   return (
     <>
-      <Helmet defaultTitle="Restaurate" titleTemplate="Restaurate – %s" />
+      <Helmet defaultTitle="Restaurate" titleTemplate="%s – Restaurate">
+        <meta
+          name="description"
+          content="Betygsätt dina restaurang- och cafébesök"
+        />
+      </Helmet>
       <Navigation />
       <Wrapper>
         <Switch>

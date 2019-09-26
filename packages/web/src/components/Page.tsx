@@ -74,7 +74,7 @@ export const Page = ({
 }: PageProps) => (
   <PageWrapper center={center}>
     <Helmet>
-      <title>>{title}</title>
+      <title>{title}</title>
     </Helmet>
     <PageTitle title={title} large={largeTitle} subTitle={subTitle} />
     {children}
