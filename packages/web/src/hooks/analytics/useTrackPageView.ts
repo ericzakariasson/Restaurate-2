@@ -10,5 +10,5 @@ export function useTrackPageView(options: FieldsObject = {}) {
   React.useEffect(() => {
     ReactGA.set({ page, ...options });
     ReactGA.pageview(page);
-  }, [page]);
+  }, [page, options]);
 }
