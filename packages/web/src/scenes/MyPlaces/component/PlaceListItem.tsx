@@ -44,12 +44,11 @@ const Score = styled.h4`
   font-weight: 400;
 `;
 
-const Numbers = styled.div`
-  margin-right: 10px;
-`;
+const Numbers = styled.div``;
 
 const ScoreArea = styled.div`
   display: flex;
+  flex: 1 0 auto;
 `;
 
 const VisitCount = styled.h5`
