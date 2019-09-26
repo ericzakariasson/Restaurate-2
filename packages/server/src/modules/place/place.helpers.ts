@@ -72,7 +72,8 @@ const transformLocation = (providerLocation: HereLocation) => {
   location.position = { lat, lng };
 
   const address = new Address();
-  address.formatted = `${providerLocation.address.street} ${providerLocation.address.house}, ${providerLocation.address.city}`;
+  address.formatted = `${providerLocation.address.street} ${providerLocation
+    .address.house || ''}, ${providerLocation.address.city}`;
   address.house = providerLocation.address.house;
   address.street = providerLocation.address.street;
   address.postalCode = providerLocation.address.postalCode;

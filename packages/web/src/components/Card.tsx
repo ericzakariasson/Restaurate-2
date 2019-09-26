@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { formatScore } from 'utils/format';
 
 export const Card = styled.div`
   padding: 15px;
@@ -37,11 +38,6 @@ const Address = styled.p`
   font-size: ${p => p.theme.fontSize.small};
 `;
 
-const Score = styled.h4`
-  font-size: 2.4rem;
-  font-weight: 400;
-`;
-
 const Numbers = styled.div`
   margin-right: 10px;
 `;
@@ -73,6 +69,15 @@ const ScoreBar = styled.div<ScoreBarProps>`
   }
 `;
 
+interface ScoreCharacterProps {
+  number: boolean;
+}
+
+const ScoreCharacter = styled.span<ScoreCharacterProps>`
+  display: inline-block;
+  width: ${p => (p.number ? 23 : 7)}px;
+`;
+
 interface PlaceCardProps {
   name: string;
   address: string;
@@ -99,10 +104,32 @@ export const CardWithScore = ({
       <ScoreArea>
         <Numbers>
           {children}
-          <Score>{score || '–'}</Score>
+          <Score score={score} />
         </Numbers>
         <ScoreBar score={score || 0} />
       </ScoreArea>
     </NeutralLink>
   </Card>
+);
+
+const ScoreText = styled.h4`
+  font-size: 2.4rem;
+  font-weight: 400;
+  white-space: pre;
+`;
+
+interface ScoreProps {
+  score: number;
+}
+
+export const Score = ({ score }: ScoreProps) => (
+  <ScoreText>
+    {formatScore(score)
+      .split('')
+      .map((c, i) => (
+        <ScoreCharacter key={c} number={i % 2 === 0}>
+          {c}
+        </ScoreCharacter>
+      )) || '–'}
+  </ScoreText>
 );

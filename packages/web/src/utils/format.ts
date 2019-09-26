@@ -41,3 +41,7 @@ export function formatPlaceType(type: PlaceType) {
 export function formatURL(url: string): string {
   return new URL(url).hostname;
 }
+
+export function formatScore(score: number) {
+  return score.toFixed(1);
+}

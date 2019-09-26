@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { PlaceTagFragment } from 'graphql/types';
+import { Score } from 'components/Card';
 
 export const Card = styled.div`
   padding: 15px;
@@ -37,11 +38,6 @@ const Address = styled.p`
   /* font-weight: 600; */
   color: #666;
   font-size: ${p => p.theme.fontSize.normal};
-`;
-
-const Score = styled.h4`
-  font-size: 2.4rem;
-  font-weight: 400;
 `;
 
 const Numbers = styled.div``;
@@ -92,7 +88,7 @@ export const PlaceListItem = ({
       <ScoreArea>
         <Numbers>
           <VisitCount>{visitCount} besök</VisitCount>
-          <Score>{averageScore || '–'}</Score>
+          <Score score={averageScore} />
         </Numbers>
       </ScoreArea>
     </NeutralLink>
