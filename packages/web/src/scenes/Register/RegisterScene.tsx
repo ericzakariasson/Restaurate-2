@@ -12,6 +12,8 @@ import {
   MeDocument,
   useMeQuery
 } from '../../graphql/types';
+import { trackEvent } from 'analytics/trackEvent';
+import { OutboundLink } from 'react-ga';
 
 const Fields = styled.div`
   margin-bottom: 30px;
@@ -32,7 +34,7 @@ const Links = styled.div`
   margin-top: 10px;
 `;
 
-const Href = styled.a`
+const Href = styled(OutboundLink)`
   color: #222;
 `;
 
@@ -78,6 +80,10 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
           });
 
           if (data && data.register && data.register.id) {
+            trackEvent({
+              category: 'User',
+              action: 'Register'
+            });
             history.push(routes.dashboard);
           }
         }}
@@ -134,11 +140,19 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
               Har du redan ett konto? <Login to={routes.login}>Logga in</Login>
             </LoginText>
             <Links>
-              <Href href="/privacy-policy.html" target="_blank">
+              <Href
+                eventLabel="Privacy Policy"
+                to="/privacy-policy.html"
+                target="_blank"
+              >
                 Integritetspolicy
               </Href>
               ∙
-              <Href href="/terms-and-conditions.html" target="_blank">
+              <Href
+                eventLabel="Terms & Conditions"
+                to="/terms-and-conditions.html"
+                target="_blank"
+              >
                 Användarvillkor
               </Href>
             </Links>

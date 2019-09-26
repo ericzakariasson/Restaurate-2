@@ -28,7 +28,7 @@ import {
 } from './scenes';
 import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 import { Navigation } from 'components/Navigation';
-import { useTrackPageView } from 'hooks/analytics';
+import { useTrackPageView } from 'analytics';
 import ReactGA from 'react-ga';
 
 const Wrapper = styled.div`

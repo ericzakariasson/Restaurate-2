@@ -8,6 +8,7 @@ import { Button, InputField, Page } from '../../components';
 import { routes } from '../../routes';
 import { useLoginMutation, MeDocument, useMeQuery } from '../../graphql/types';
 import { loginValidationSchema } from './loginValidationSchema';
+import { trackEvent } from 'analytics/trackEvent';
 
 const Fields = styled.div`
   margin-bottom: 30px;
@@ -57,6 +58,10 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
           });
 
           if (data && data.login && data.login.id) {
+            trackEvent({
+              category: 'User',
+              action: 'Login'
+            });
             history.push(routes.dashboard);
           } else {
             setError(true);

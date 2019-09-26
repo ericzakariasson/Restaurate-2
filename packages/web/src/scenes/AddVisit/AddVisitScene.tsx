@@ -13,9 +13,10 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { ProviderPlaceIdParam, routes } from 'routes';
 import { GeneralError } from 'scenes/Error/GeneralError';
 import { transformToInput } from '../../components/VisitForm/rateHelper';
+import { trackEvent } from 'analytics/trackEvent';
 
 interface AddVisitSceneProps
-  extends RouteComponentProps<ProviderPlaceIdParam> {}
+  extends RouteComponentProps<ProviderPlaceIdParam> { }
 
 export const AddVisitScene = ({
   match: {
@@ -44,6 +45,14 @@ export const AddVisitScene = ({
     refetchQueries: [{ query: MeVisitsDocument }, { query: MePlacesDocument }]
   });
 
+  const handleSave = () => {
+    trackEvent({
+      category: "Form",
+      action: "Add Visit"
+    });
+    addVisit();
+  }
+
   if (addVisitData && addVisitData.addVisit.saved) {
     return <Redirect to={routes.dashboard} />;
   }
@@ -68,7 +77,7 @@ export const AddVisitScene = ({
       <VisitForm handlers={handlers} values={values} />
       <Button
         variant="primary"
-        onClick={() => addVisit()}
+        onClick={handleSave}
         text={'Lägg till besök'}
         size="large"
         loading={saving}

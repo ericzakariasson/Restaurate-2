@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Input, Label } from 'components';
 import { usePosition } from 'hooks';
+import { trackEvent } from 'analytics/trackEvent';
 
 const SearchButton = styled.button`
   padding: 10px 35px;
@@ -50,6 +51,11 @@ export const SearchForm = ({ onSubmit }: SearchFormProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit({ query, position });
+
+    trackEvent({
+      category: 'Search',
+      action: 'Search Place'
+    });
   };
 
   const isValid = !!query;

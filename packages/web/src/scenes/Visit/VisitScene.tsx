@@ -7,6 +7,7 @@ import { editVisitRoute, placeRoute, WithVisitId } from 'routes';
 import styled from 'styled-components';
 import { formatDate, translateRateName } from 'utils/format';
 import { GeneralError } from '..';
+import { trackEvent } from 'analytics/trackEvent';
 
 const Block = styled.article`
   &:not(:last-child) {
@@ -162,6 +163,7 @@ export const VisitScene = ({
         margin={['bottom']}
       />
       <NavButton
+        onClick={() => trackEvent({ category: 'Form', action: 'Edit Visit' })}
         text="Redigera"
         color="gray"
         variant="secondary"

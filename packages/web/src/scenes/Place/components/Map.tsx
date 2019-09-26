@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Map as MapIcon } from 'react-feather';
 import { staticMapUrl } from 'utils';
+import { OutboundLink } from 'react-ga';
 
 const MapWrapper = styled.div`
   position: relative;
@@ -37,7 +38,7 @@ const MapCard = styled.div<MapCardProps>`
   }
 `;
 
-const GetDirections = styled.a`
+const GetDirections = styled(OutboundLink)`
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -73,7 +74,12 @@ export const PlaceMap = ({ lat, lng }: PlaceMapProps) => {
 
   return (
     <MapWrapper>
-      <GetDirections target="_blank" href={directionUrl} rel="noopener">
+      <GetDirections
+        eventLabel="Place Map"
+        target="_blank"
+        to={directionUrl}
+        rel="noopener"
+      >
         <MapIcon color="#FFF" size={20} />
       </GetDirections>
       <MapCard url={mapUrl} />

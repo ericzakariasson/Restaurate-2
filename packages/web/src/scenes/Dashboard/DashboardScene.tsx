@@ -5,6 +5,7 @@ import { PlacesAndVisits } from './components/PlacesAndVisits';
 import { useMeQuery } from '../../graphql/types';
 import { GeneralError } from '../Error/GeneralError';
 import { Loading, Page, NavButton } from 'components';
+import { trackEvent } from 'analytics/trackEvent';
 
 export const DashboardScene = () => {
   const { data, loading, error } = useMeQuery();
@@ -25,6 +26,7 @@ export const DashboardScene = () => {
     <Page title={firstName}>
       <PlacesAndVisits placeCount={placeCount} visitCount={visitCount} />
       <NavButton
+        onClick={() => trackEvent({ category: "CTA", action: "Search Place CTA" })}
         variant="primary"
         to={routes.searchPlace}
         text="Sök ställe"

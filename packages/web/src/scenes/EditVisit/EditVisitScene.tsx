@@ -13,6 +13,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { visitRoute, WithVisitId } from 'routes';
 import { formatDate } from 'utils/format';
 import { GeneralError } from '..';
+import { trackEvent } from 'analytics/trackEvent';
 
 export const EditVisitScene = ({
   match: {
@@ -42,6 +43,11 @@ export const EditVisitScene = ({
     awaitRefetchQueries: true
   });
 
+  const handleSave = () => {
+    trackEvent({ category: 'Form', action: 'Save Edit Visit' });
+    editVisit();
+  };
+
   if (editVisitDate && editVisitDate.editVisit.saved) {
     return <Redirect to={visitRoute(id)} />;
   }
@@ -68,7 +74,7 @@ export const EditVisitScene = ({
       <VisitForm handlers={handlers} values={values} />
       <Button
         variant="primary"
-        onClick={() => editVisit()}
+        onClick={handleSave}
         text={'Spara ändringar'}
         size="large"
         loading={saving}
