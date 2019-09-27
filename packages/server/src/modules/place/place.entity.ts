@@ -33,12 +33,13 @@ export class Place {
   @RelationColumn()
   userId: number;
 
-  // @Field()
-  // @Column()
-  // slug: string;
-
   @Field(() => [PlaceType], { nullable: true })
-  @Column({ type: 'enum', enum: PlaceType, array: true, nullable: true })
+  @Column({
+    type: 'enum',
+    enum: PlaceType,
+    array: true,
+    nullable: true
+  })
   types: PlaceType[];
 
   @Field(() => PriceLevel)

@@ -3,7 +3,9 @@ import { Coordinates } from '../../utils/utils.types';
 
 export enum PlaceType {
   Restaurant = 'RESTAURANT',
-  Cafe = 'CAFE' // 4bf58dd8d48988d16d941735
+  Cafe = 'CAFE',
+  PubBar = 'PUB_BAR',
+  FoodTruck = 'FOOD_TRUCK'
 }
 
 export enum PriceLevel {

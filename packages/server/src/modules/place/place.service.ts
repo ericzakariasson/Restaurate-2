@@ -6,7 +6,7 @@ import { round } from '../../utils';
 import { User } from '../user/user.entity';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserService } from '../user/user.service';
-import { PriceLevel, PlaceDetails } from './place.types';
+import { PriceLevel, PlaceDetails, PlaceType } from './place.types';
 import { CacheService } from '../../services/cache/cache.service';
 import { TagService } from './tag/tag.service';
 import { WantToVisit } from './wantToVisit/wantToVisit.entity';
@@ -255,5 +255,68 @@ export class PlaceService {
 
     const transformWithUserPlaces = transformProviderSearchItem(userPlaces);
     return results.map(transformWithUserPlaces);
+  }
+
+  async removeType(
+    providerId: string,
+    type: PlaceType,
+    userId: number
+  ): Promise<PlaceType[]> {
+    const place = await this.findByProviderId(providerId, userId);
+
+    if (!place) {
+      throw new Error('No place found');
+    }
+
+    const foundType = Object.entries(PlaceType).find(([key]) => key === type);
+
+    if (!foundType) {
+      logger.error(`No place type found matching "${type}"`, { type });
+      throw new Error(`No place type found matching "${type}"`);
+    }
+
+    const [, value] = foundType;
+
+    const updatedTypes = (place.types || []).filter(t => t !== value);
+
+    await this.placeRepository.update(place.id, {
+      types: updatedTypes
+    });
+
+    logger.info('Type removed', { place: place.id, user: userId, type });
+
+    return updatedTypes;
+  }
+
+  async addType(
+    providerId: string,
+    type: PlaceType,
+    userId: number
+  ): Promise<PlaceType[]> {
+    const place = await this.findByProviderId(providerId, userId);
+
+    if (!place) {
+      logger.error('No place found', { providerId, user: userId });
+      throw new Error(`No place found for provider id "${providerId}"`);
+    }
+
+    const foundType = Object.entries(PlaceType).find(([key]) => key === type);
+
+    if (!foundType) {
+      logger.error(`No place type found matching "${type}"`, { type });
+      throw new Error(`No place type found matching "${type}"`);
+    }
+
+    const [, value] = foundType;
+
+    const updatedTypes = (place.types || []).concat(value);
+
+    await this.placeRepository.update(place.id, {
+      types: updatedTypes
+    });
+
+    logger.info('Type added', { place: place.id, user: userId, type });
+
+    return updatedTypes;
   }
 }

@@ -17,7 +17,8 @@ import {
   PriceLevel,
   PlaceDetails,
   PlaceDetailsBasic,
-  PositionInput
+  PositionInput,
+  PlaceType
 } from './place.types';
 import { Context } from '../../graphql/types';
 import { UserService } from '../user/user.service';
@@ -123,6 +124,29 @@ export class PlaceResolver {
   }
 
   @Authorized()
+  @Mutation(() => [PlaceType])
+  async addType(
+    @Arg('providerId') providerId: string,
+    @Arg('type') type: PlaceType,
+    @Ctx() ctx: Context
+  ): Promise<PlaceType[]> {
+    return this.placeService.addType(providerId, type, ctx.req.session.userId);
+  }
+
+  @Authorized()
+  @Mutation(() => [PlaceType])
+  async removeType(
+    @Arg('providerId') providerId: string,
+    @Arg('type') type: PlaceType,
+    @Ctx() ctx: Context
+  ): Promise<PlaceType[]> {
+    return this.placeService.removeType(
+      providerId,
+      type,
+      ctx.req.session.userId
+    );
+  }
+  @Authorized()
   @Mutation(() => Tag)
   async addTag(
     @Arg('providerId') providerId: string,
@@ -158,6 +182,12 @@ export class PlaceResolver {
       comment,
       ctx.req.session.userId
     );
+  }
+
+  @Authorized()
+  @Query(() => [PlaceType])
+  async allPlaceTypes(): Promise<PlaceType[]> {
+    return Object.values(PlaceType);
   }
 
   @FieldResolver()
