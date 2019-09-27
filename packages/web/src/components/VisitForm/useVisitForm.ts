@@ -17,6 +17,8 @@ export interface Handlers {
   setComment: (text: string) => void;
   setVisitDate: (date: Date) => void;
   setScore: (payload: SetRatePayload) => void;
+  setTakeAway: (value: boolean) => void;
+  setPrivate: (value: boolean) => void;
 }
 
 export interface Values {
@@ -25,6 +27,8 @@ export interface Values {
   visitDate: Date;
   rateState: ReducerState;
   averageScore: number | null;
+  isTakeAway: boolean;
+  isPrivate: boolean;
 }
 
 interface UseVisitForm {
@@ -61,6 +65,9 @@ export function useVisitForm(
   const [comment, setComment] = React.useState('');
   const [visitDate, setVisitDate] = React.useState(new Date());
 
+  const [isPrivate, setIsPrivate] = React.useState(false);
+  const [isTakeAway, setIsTakeAway] = React.useState(false);
+
   const initialRateState = createInitialRateState(rateNodes);
   const [rateState, dispatch] = React.useReducer(rateReducer, initialRateState);
 
@@ -94,7 +101,9 @@ export function useVisitForm(
     removeOrder,
     setComment,
     setVisitDate,
-    setScore
+    setScore,
+    setPrivate: setIsPrivate,
+    setTakeAway: setIsTakeAway
   };
 
   const values: Values = {
@@ -102,7 +111,9 @@ export function useVisitForm(
     comment,
     visitDate,
     rateState,
-    averageScore
+    averageScore,
+    isPrivate,
+    isTakeAway
   };
 
   const isValid = Boolean(averageScore && averageScore > 0);

@@ -36,7 +36,9 @@ export const EditVisitScene = ({
         visitDate: values.visitDate,
         comment: values.comment,
         orders: values.orders,
-        ratings: transformToInput(values.rateState)
+        ratings: transformToInput(values.rateState),
+        isPrivate: values.isPrivate,
+        isTakeAway: values.isTakeAway
       }
     },
     refetchQueries: [{ query: VisitDocument, variables: { id } }],

@@ -34,6 +34,8 @@ export type AddVisitInput = {
   comment?: Maybe<Scalars['String']>,
   orders?: Maybe<Array<Scalars['String']>>,
   ratings: Array<RateInput>,
+  isPrivate: Scalars['Boolean'],
+  isTakeAway: Scalars['Boolean'],
 };
 
 export type Category = {
@@ -55,6 +57,8 @@ export type EditVisitInput = {
   comment?: Maybe<Scalars['String']>,
   orders: Array<Scalars['String']>,
   ratings: Array<RateInput>,
+  isPrivate: Scalars['Boolean'],
+  isTakeAway: Scalars['Boolean'],
 };
 
 export type IPosition = {
@@ -315,6 +319,7 @@ export type Visit = {
   ratings: Array<Rate>,
   score: Scalars['Float'],
   private: Scalars['Boolean'],
+  takeAway: Scalars['Boolean'],
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   place: Place,
@@ -418,7 +423,7 @@ export type UserFragment = (
 
 export type VisitFragment = (
   { __typename?: 'Visit' }
-  & Pick<Visit, 'id' | 'score' | 'comment' | 'visitDate' | 'createdAt' | 'updatedAt'>
+  & Pick<Visit, 'id' | 'score' | 'comment' | 'takeAway' | 'visitDate' | 'createdAt' | 'updatedAt'>
   & { orders: Array<{ __typename?: 'Order' }
     & VisitOrderFragment
   >, ratings: Array<(
@@ -837,6 +842,7 @@ export const VisitFragmentDoc = gql`
     ...User
   }
   comment
+  takeAway
   visitDate
   place {
     ...Place

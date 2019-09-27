@@ -4,6 +4,7 @@ import { rateNodes } from 'constants/rate.constants';
 import { ListInput, Label, Textarea, DateInput } from 'components';
 import { RateSliderParent, RateHeader } from './components/RateParent';
 import { Values, Handlers } from './useVisitForm';
+import { Switch } from 'components/Switch';
 
 const RateTotal = styled.article`
   margin-top: 30px;
@@ -11,6 +12,20 @@ const RateTotal = styled.article`
 
 const Section = styled.section`
   margin-bottom: 30px;
+`;
+
+const SwitchArticle = styled.article`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+`;
+
+const SwitchLabel = styled.p`
+  margin-right: 20px;
 `;
 
 interface VisitFormProps {
@@ -70,6 +85,20 @@ export const VisitForm = ({ handlers, values }: VisitFormProps) => {
       <Section>
         <Label text="Datum" />
         <DateInput onChange={handlers.setVisitDate} />
+      </Section>
+      <Section>
+        <Label text="Övrigt" />
+        <SwitchArticle>
+          <SwitchLabel>Privat besök (bara du kan se det)</SwitchLabel>
+          <Switch onChange={handlers.setPrivate} defaultOn={values.isPrivate} />
+        </SwitchArticle>
+        <SwitchArticle>
+          <SwitchLabel>Take away</SwitchLabel>
+          <Switch
+            onChange={handlers.setTakeAway}
+            defaultOn={values.isTakeAway}
+          />
+        </SwitchArticle>
       </Section>
     </>
   );

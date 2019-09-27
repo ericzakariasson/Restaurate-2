@@ -16,7 +16,7 @@ import { transformToInput } from '../../components/VisitForm/rateHelper';
 import { trackEvent } from 'analytics/trackEvent';
 
 interface AddVisitSceneProps
-  extends RouteComponentProps<ProviderPlaceIdParam> { }
+  extends RouteComponentProps<ProviderPlaceIdParam> {}
 
 export const AddVisitScene = ({
   match: {
@@ -27,7 +27,7 @@ export const AddVisitScene = ({
     variables: { providerId: providerPlaceId }
   });
 
-  const { values, handlers } = useVisitForm();
+  const { values, handlers, isValid } = useVisitForm();
 
   const [
     addVisit,
@@ -39,7 +39,9 @@ export const AddVisitScene = ({
         visitDate: values.visitDate,
         comment: values.comment,
         orders: values.orders,
-        ratings: transformToInput(values.rateState)
+        ratings: transformToInput(values.rateState),
+        isPrivate: values.isPrivate,
+        isTakeAway: values.isTakeAway
       }
     },
     refetchQueries: [{ query: MeVisitsDocument }, { query: MePlacesDocument }]
@@ -47,11 +49,11 @@ export const AddVisitScene = ({
 
   const handleSave = () => {
     trackEvent({
-      category: "Form",
-      action: "Add Visit"
+      category: 'Form',
+      action: 'Add Visit'
     });
     addVisit();
-  }
+  };
 
   if (addVisitData && addVisitData.addVisit.saved) {
     return <Redirect to={routes.dashboard} />;
@@ -81,6 +83,7 @@ export const AddVisitScene = ({
         text={'Lägg till besök'}
         size="large"
         loading={saving}
+        disabled={!isValid}
       />
     </Page>
   );
