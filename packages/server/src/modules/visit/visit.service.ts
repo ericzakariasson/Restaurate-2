@@ -54,7 +54,9 @@ export class VisitService {
       user,
       score,
       userId: user.id,
-      ratings
+      ratings,
+      private: input.isPrivate,
+      takeAway: input.isTakeAway
     });
 
     await this.wtvService.setVisited(place.providerId, user);
@@ -127,7 +129,9 @@ export class VisitService {
     await this.visitRepository.update(updatedVisit.id, {
       score,
       comment: input.comment,
-      visitDate: input.visitDate
+      visitDate: input.visitDate,
+      private: input.isPrivate,
+      takeAway: input.isTakeAway
     });
 
     logger.info('Visit edited', { visit: visit.id });

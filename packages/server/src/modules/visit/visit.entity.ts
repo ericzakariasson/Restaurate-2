@@ -62,6 +62,10 @@ export class Visit {
   @Column({ default: false })
   private: boolean;
 
+  @Field()
+  @Column({ default: false })
+  takeAway: boolean;
+
   @Field(() => Date)
   @CreateDateColumn()
   createdAt: string;

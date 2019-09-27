@@ -18,6 +18,12 @@ export class AddVisitInput {
 
   @Field(() => [RateInput])
   ratings: RateInput[];
+
+  @Field()
+  isPrivate: boolean;
+
+  @Field()
+  isTakeAway: boolean;
 }
 
 @ObjectType()
@@ -30,7 +36,7 @@ export class VisitResponse {
 }
 
 @InputType()
-export class EditVisitInput {
+export class EditVisitInput implements Partial<AddVisitInput> {
   @Field()
   visitId: string;
 
@@ -45,4 +51,10 @@ export class EditVisitInput {
 
   @Field(() => [RateInput])
   ratings: RateInput[];
+
+  @Field()
+  isPrivate: boolean;
+
+  @Field()
+  isTakeAway: boolean;
 }
