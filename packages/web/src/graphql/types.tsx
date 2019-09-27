@@ -423,7 +423,7 @@ export type UserFragment = (
 
 export type VisitFragment = (
   { __typename?: 'Visit' }
-  & Pick<Visit, 'id' | 'score' | 'comment' | 'takeAway' | 'visitDate' | 'createdAt' | 'updatedAt'>
+  & Pick<Visit, 'id' | 'score' | 'comment' | 'visitDate' | 'takeAway' | 'private' | 'createdAt' | 'updatedAt'>
   & { orders: Array<{ __typename?: 'Order' }
     & VisitOrderFragment
   >, ratings: Array<(
@@ -842,8 +842,9 @@ export const VisitFragmentDoc = gql`
     ...User
   }
   comment
-  takeAway
   visitDate
+  takeAway
+  private
   place {
     ...Place
   }

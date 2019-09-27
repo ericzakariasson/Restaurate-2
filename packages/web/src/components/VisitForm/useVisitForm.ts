@@ -93,6 +93,8 @@ export function useVisitForm(
       const rs = createInitialRateState(all);
 
       setRateState({ rateState: rs });
+      setIsPrivate(initialValues.private);
+      setIsTakeAway(initialValues.takeAway);
     }
   }, [initialValues, setOrders]);
 

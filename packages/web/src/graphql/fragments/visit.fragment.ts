@@ -19,8 +19,9 @@ export default gql`
       ...User
     }
     comment
-    takeAway
     visitDate
+    takeAway
+    private
     place {
       ...Place
     }

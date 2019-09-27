@@ -1,4 +1,4 @@
-import { Label, Loading, NavButton, Page } from 'components';
+import { Label, Loading, NavButton, Page, Score } from 'components';
 import { rateNodes } from 'constants/rate.constants';
 import { Rate, useVisitQuery } from 'graphql/types';
 import * as React from 'react';
@@ -35,6 +35,7 @@ const OrderTitle = styled.span`
 
 const Comment = styled.p`
   line-height: 1.5;
+  font-size: ${p => p.theme.fontSize.large};
 `;
 
 const Ratings = styled.ul`
@@ -42,7 +43,7 @@ const Ratings = styled.ul`
 `;
 
 const RatingText = styled.h3`
-  font-size: ${p => p.theme.fontSize.xxl};
+  font-size: ${p => p.theme.fontSize.xl};
   font-weight: 400;
   color: #222;
 `;
@@ -74,9 +75,18 @@ const ChildRating = styled(Rating)`
 `;
 
 const ChildRatingText = styled.h4`
-  font-size: ${p => p.theme.fontSize.xl};
+  font-size: ${p => p.theme.fontSize.large};
   font-weight: 400;
   color: #222;
+`;
+
+const Private = styled.h4`
+  background: #222;
+  color: #fff;
+  border-radius: 4px;
+  padding: 8px 13px;
+  margin-bottom: 20px;
+  align-self: flex-start;
 `;
 
 const sortRatings = (a: Rate, b: Rate) => {
@@ -103,10 +113,20 @@ export const VisitScene = ({
   }
 
   const visit = data && data.visit;
-  const { place, visitDate, orders, comment, ratings } = visit!;
+  const {
+    place,
+    visitDate,
+    orders,
+    comment,
+    ratings,
+    score,
+    private: isPrivate,
+    takeAway
+  } = visit!;
 
   return (
     <Page title={place.details.name} subTitle={formatDate(visitDate)}>
+      {isPrivate && <Private>Privat</Private>}
       <Block>
         <Label text="Beställningar" />
         {orders && orders.length > 0 ? (
@@ -149,10 +169,23 @@ export const VisitScene = ({
             );
           })}
         </Ratings>
+        <Score score={score} />
       </Block>
       <Block>
         <Label text="Kommentar" />
         <Comment>{comment || '–'}</Comment>
+      </Block>
+      <Block>
+        <Label text="Övrigt" />
+        {takeAway ? (
+          <OrderList>
+            <OrderItem>
+              <OrderTitle>– Take away</OrderTitle>
+            </OrderItem>
+          </OrderList>
+        ) : (
+          '–'
+        )}
       </Block>
       <NavButton
         variant="secondary"

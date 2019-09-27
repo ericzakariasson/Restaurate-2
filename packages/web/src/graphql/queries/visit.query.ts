@@ -7,5 +7,6 @@ export default gql`
       ...Visit
     }
   }
+  ${fragments.visit}
   ${fragments.place}
 `;
