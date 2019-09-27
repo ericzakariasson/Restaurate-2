@@ -90,14 +90,11 @@ export const VisitForm = ({ handlers, values }: VisitFormProps) => {
         <Label text="Övrigt" />
         <SwitchArticle>
           <SwitchLabel>Privat besök (bara du kan se det)</SwitchLabel>
-          <Switch onChange={handlers.setPrivate} defaultOn={values.isPrivate} />
+          <Switch onChange={handlers.setPrivate} on={values.isPrivate} />
         </SwitchArticle>
         <SwitchArticle>
           <SwitchLabel>Take away</SwitchLabel>
-          <Switch
-            onChange={handlers.setTakeAway}
-            defaultOn={values.isTakeAway}
-          />
+          <Switch onChange={handlers.setTakeAway} on={values.isTakeAway} />
         </SwitchArticle>
       </Section>
     </>

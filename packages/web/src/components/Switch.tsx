@@ -60,6 +60,7 @@ const Label = styled.span<LabelProps>`
 
 interface SwitchProps {
   onChange: (on: boolean) => void;
+  on?: boolean;
   defaultOn?: boolean;
   offLabel?: string;
   onLabel?: string;
@@ -67,26 +68,33 @@ interface SwitchProps {
 
 export const Switch = ({
   onChange,
+  on,
   defaultOn = false,
   onLabel = 'Ja',
   offLabel = 'Nej'
 }: SwitchProps) => {
-  const [touched, setTouched] = React.useState(false);
-  const [on, setOn] = React.useState(defaultOn);
+  const [touched, setTouched] = React.useState(on !== undefined);
+  const [isOn, setIsOn] = React.useState(defaultOn);
 
   React.useEffect(() => {
-    onChange(on);
-  }, [on, onChange]);
+    onChange(isOn);
+  }, [isOn, onChange]);
+
+  React.useEffect(() => {
+    if (on !== undefined) {
+      setIsOn(on);
+    }
+  }, [on]);
 
   const set = (value: boolean) => {
-    setOn(value);
+    setIsOn(value);
     if (!touched) {
       setTouched(true);
     }
   };
 
   const toggle = () => {
-    setOn(state => !state);
+    setIsOn(state => !state);
     if (!touched) {
       setTouched(true);
     }
@@ -94,13 +102,13 @@ export const Switch = ({
 
   return (
     <Wrapper>
-      <Label active={touched && !on} onClick={() => set(false)}>
+      <Label active={touched && !isOn} onClick={() => set(false)}>
         {offLabel}
       </Label>
-      <Base onClick={toggle} on={on}>
-        <Toggle on={on} />
+      <Base onClick={toggle} on={isOn}>
+        <Toggle on={isOn} />
       </Base>
-      <Label active={touched && on} onClick={() => set(true)}>
+      <Label active={touched && isOn} onClick={() => set(true)}>
         {onLabel}
       </Label>
     </Wrapper>
