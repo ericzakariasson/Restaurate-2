@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { useDevice } from 'hooks';
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
 
 const Wrapper = styled.div`
   display: block;
@@ -67,18 +69,24 @@ const Input = styled.input<InputProps>`
     !p.isMobile &&
     css`
       position: absolute;
-      width: 180px;
+      width: 240px;
       text-align: left;
     `}
 `;
 
 function toReadableDate(date: Date): string {
+  const currentYear = new Date().getFullYear();
   return date.toLocaleDateString('sv-SE', {
+    year: date.getFullYear() !== currentYear ? 'numeric' : undefined,
     weekday: 'long',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
   });
 }
+
+const FORMAT = "yyyy-MM-dd'T'HH:mm";
 
 interface DateInputProps {
   onChange: (date: Date) => void;
@@ -92,25 +100,25 @@ export const DateInput = ({
   const [date, setDate] = React.useState<Date>(initialDate);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDate = new Date(e.target.value);
-    setDate(newDate);
-    onChange(newDate);
+    const parsedDate = parse(e.target.value, FORMAT, new Date());
+    setDate(parsedDate);
+    onChange(parsedDate);
   };
+
+  const { isMobile } = useDevice();
 
   const readable = toReadableDate(date);
 
   const inputId = 'visit-date-input';
-  const inputValue = date.toISOString().substring(0, 10);
-
-  const { isMobile } = useDevice();
+  const formatted = format(date, FORMAT);
 
   return (
     <Wrapper>
       <Input
         id={inputId}
-        value={inputValue}
+        value={formatted}
         onChange={handleChange}
-        type="date"
+        type="datetime-local"
         isMobile={isMobile}
       />
       <Readable htmlFor={inputId}>{readable}</Readable>

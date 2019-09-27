@@ -69,15 +69,6 @@ const ScoreBar = styled.div<ScoreBarProps>`
   }
 `;
 
-interface ScoreCharacterProps {
-  number: boolean;
-}
-
-const ScoreCharacter = styled.span<ScoreCharacterProps>`
-  display: inline-block;
-  width: ${p => (p.number ? 23 : 7)}px;
-`;
-
 interface PlaceCardProps {
   name: string;
   address: string;
@@ -118,18 +109,33 @@ const ScoreText = styled.h4`
   white-space: pre;
 `;
 
+const ScoreCharacter = styled.span`
+  display: inline-block;
+
+  &:nth-child(1) {
+    width: 24px;
+    text-align: right;
+  }
+
+  &:nth-child(2) {
+    width: 7px;
+  }
+
+  &:nth-child(3) {
+    width: 24px;
+  }
+`;
+
 interface ScoreProps {
   score: number;
 }
 
 export const Score = ({ score }: ScoreProps) => (
   <ScoreText>
-    {formatScore(score)
-      .split('')
-      .map((c, i) => (
-        <ScoreCharacter key={c} number={i % 2 === 0}>
-          {c}
-        </ScoreCharacter>
-      )) || '–'}
+    {score !== 0
+      ? formatScore(score)
+          .split('')
+          .map(c => <ScoreCharacter key={c}>{c}</ScoreCharacter>)
+      : '–'}
   </ScoreText>
 );
