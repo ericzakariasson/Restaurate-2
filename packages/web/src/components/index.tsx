@@ -9,3 +9,4 @@ export * from './DateInput';
 export * from './Card';
 export * from './PoweredBy';
 export * from './ActionButton';
+export * from './Switch';
