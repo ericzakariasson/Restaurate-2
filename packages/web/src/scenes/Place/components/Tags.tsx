@@ -1,20 +1,10 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import {
-  PlaceTagFragment,
-  useAddTagMutation,
-  AddTagMutation,
-  PlaceDocument,
-  PlaceQuery,
-  useRemoveTagMutation,
-  RemoveTagMutation
-} from 'graphql/types';
-import { InputBlock } from './InputBlock';
-import { ActionButton } from '../../../components/ActionButton';
-import { Check, X, Plus, Loader, Edit2 } from 'react-feather';
-import { DataProxy } from 'apollo-cache';
-import { FetchResult } from 'apollo-link';
 import { Input } from 'components';
+import { PlaceTagFragment, useUpdatePlaceMutation } from 'graphql/types';
+import * as React from 'react';
+import { Check, Edit2, Loader, Plus, X } from 'react-feather';
+import styled from 'styled-components';
+import { ActionButton } from '../../../components/ActionButton';
+import { InputBlock } from './InputBlock';
 
 const Form = styled.form`
   display: flex;
@@ -49,91 +39,6 @@ const TagName = styled.span`
 
 const TagInput = styled(Input)``;
 
-const updateAddTag = (providerId: string) => (
-  cache: DataProxy,
-  { data: result }: FetchResult<AddTagMutation>
-) => {
-  try {
-    if (!result) {
-      throw new Error('No result');
-    }
-
-    const placeQuery = {
-      query: PlaceDocument,
-      variables: { providerId: providerId }
-    };
-
-    const data = cache.readQuery<PlaceQuery>(placeQuery);
-
-    if (!data || !data.place) {
-      throw new Error('No query data');
-    }
-
-    const { place } = data;
-
-    const newTag = result.addTag;
-
-    const duplicate = place.tags.some(tag => tag.id === newTag.id);
-
-    if (duplicate) {
-      return;
-    }
-
-    const updatedData = {
-      place: {
-        ...place,
-        tags: [...(place.tags || []), newTag]
-      }
-    };
-
-    cache.writeQuery({
-      ...placeQuery,
-      data: updatedData
-    });
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const updateRemoveTag = (providerId: string) => (
-  cache: DataProxy,
-  { data: result }: FetchResult<RemoveTagMutation>
-) => {
-  try {
-    if (!result) {
-      throw new Error('No result');
-    }
-
-    const placeQuery = {
-      query: PlaceDocument,
-      variables: { providerId: providerId }
-    };
-
-    const data = cache.readQuery<PlaceQuery>(placeQuery);
-
-    if (!data || !data.place) {
-      throw new Error('No query data');
-    }
-
-    const { place } = data;
-    const removedId = result.removeTag;
-
-    const updatedData = {
-      place: {
-        ...place,
-        tags: place.tags.filter(tag => tag.id !== removedId.toString())
-      }
-    };
-
-    cache.writeQuery({
-      ...placeQuery,
-      data: updatedData
-    });
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 interface TagsProps {
   tags: PlaceTagFragment[];
   providerId: string;
@@ -143,34 +48,40 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
   const [editing, setEditing] = React.useState(false);
   const [input, setInput] = React.useState('');
 
+  const [updatePlace, { loading: saving }] = useUpdatePlaceMutation();
+
   const toggleEditing = () => setEditing(editing => !editing);
-
-  const [addTag, { loading: saving }] = useAddTagMutation({
-    update: updateAddTag(providerId)
-  });
-
-  const [removeTag] = useRemoveTagMutation({
-    update: updateRemoveTag(providerId)
-  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setInput(e.target.value);
 
+  const updateTags = async (tags: string[]) => {
+    await updatePlace({
+      variables: {
+        providerId,
+        data: {
+          tags
+        }
+      }
+    });
+  };
+
   const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (input === '') {
+    if (input.trim() === '') {
       return;
     }
 
-    addTag({ variables: { providerId, name: input } });
+    const updatedTags = tags.map(tag => tag.name).concat(input.trim());
+
+    updateTags(updatedTags);
     setInput('');
   };
 
   const handleRemove = (id: string) => () => {
-    removeTag({
-      variables: { providerId, tagId: Number(id) }
-    });
+    const updatedTags = tags.filter(tag => tag.id !== id).map(tag => tag.name);
+    updateTags(updatedTags);
   };
 
   const iconProps = { color: '#666', size: 18 };

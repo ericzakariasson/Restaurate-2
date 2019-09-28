@@ -18,11 +18,16 @@ const BlockText = styled.h4`
 interface InputBlockProps {
   label: string;
   children: React.ReactNode;
+  noMargin?: boolean;
 }
 
-export const InputBlock = ({ children, label }: InputBlockProps) => (
+export const InputBlock = ({
+  children,
+  label,
+  noMargin = true
+}: InputBlockProps) => (
   <Block>
-    <Label text={label} noMargin />
+    <Label text={label} noMargin={noMargin} />
     <BlockText>{children}</BlockText>
   </Block>
 );

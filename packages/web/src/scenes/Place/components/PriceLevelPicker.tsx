@@ -1,19 +1,11 @@
+import { PriceLevel, useUpdatePlaceMutation } from 'graphql/types';
+import { useDevice } from 'hooks';
 import * as React from 'react';
-import { InputBlock } from './InputBlock';
-import {
-  PriceLevel,
-  useSetPriceLevelMutation,
-  PlaceDocument,
-  PlaceQuery,
-  SetPriceLevelMutation
-} from 'graphql/types';
-import { formatPriceLevel } from 'utils/format';
-import { ActionButton } from '../../../components/ActionButton';
 import { ChevronDown } from 'react-feather';
 import styled, { css } from 'styled-components';
-import { useDevice } from 'hooks';
-import { DataProxy } from 'apollo-cache';
-import { FetchResult } from 'apollo-link';
+import { formatPriceLevel } from 'utils/format';
+import { ActionButton } from '../../../components/ActionButton';
+import { InputBlock } from './InputBlock';
 
 interface SelectProps {
   hide: boolean;
@@ -40,44 +32,6 @@ const StyledSelect = styled.select<SelectProps>`
 
 const priceLevelArray = Object.values(PriceLevel);
 
-const updatePriceLevel = (providerPlaceId: string) => (
-  cache: DataProxy,
-  { data: result }: FetchResult<SetPriceLevelMutation>
-) => {
-  try {
-    if (!result) {
-      throw new Error('No result');
-    }
-
-    const placeQuery = {
-      query: PlaceDocument,
-      variables: { providerId: providerPlaceId }
-    };
-
-    const data = cache.readQuery<PlaceQuery>(placeQuery);
-
-    if (!data || !data.place) {
-      throw new Error('No query data');
-    }
-
-    const { place } = data;
-
-    const updatedData = {
-      place: {
-        ...place,
-        priceLevel: result.setPriceLevel
-      }
-    };
-
-    cache.writeQuery({
-      ...placeQuery,
-      data: updatedData
-    });
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 interface PriceLevelProps {
   priceLevel: PriceLevel;
   providerId: string;
@@ -87,19 +41,19 @@ export const PriceLevelPicker = ({
   priceLevel,
   providerId
 }: PriceLevelProps) => {
-  const [savePriceLevel] = useSetPriceLevelMutation({
-    update: updatePriceLevel(providerId)
-  });
+  const [updatePlace] = useUpdatePlaceMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const priceLevelIndex = priceLevelArray.findIndex(
       pl => pl === e.target.value
     );
 
-    savePriceLevel({
+    updatePlace({
       variables: {
         providerId,
-        priceLevel: priceLevelIndex
+        data: {
+          priceLevel: priceLevelIndex
+        }
       }
     });
   };

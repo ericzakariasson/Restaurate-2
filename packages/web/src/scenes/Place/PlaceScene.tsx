@@ -14,6 +14,7 @@ import { PriceLevelPicker } from './components/PriceLevelPicker';
 import { Tags } from './components/Tags';
 import { Comment } from './components/Comment';
 import { Phone } from './components/Phone';
+import { Types } from './components/Types';
 
 const UserStats = styled.section`
   display: flex;
@@ -27,25 +28,6 @@ const UserPlaceInputs = styled.section`
 
 const Contact = styled.div`
   margin-bottom: 15px;
-`;
-
-const Categories = styled.ul`
-  list-style: none;
-  margin-bottom: 15px;
-`;
-
-const Category = styled.li`
-  display: inline-block;
-  font-size: 14px;
-  padding: 6px 8px;
-  background: #f5f5f5;
-  color: #222;
-  font-weight: 700;
-  border-radius: 6px;
-
-  &:not(:last-child) {
-    margin-right: 5px;
-  }
 `;
 
 interface PlaceSceneProps extends RouteComponentProps<ProviderPlaceIdParam> {}
@@ -70,7 +52,7 @@ export const PlaceScene = ({
   const place = data && data.place;
 
   const {
-    details: { name, location, contact, categories },
+    details: { name, location, contact },
     priceLevel,
     tags,
     comment,
@@ -78,7 +60,8 @@ export const PlaceScene = ({
     averageScore,
     visits,
     hasVisited,
-    wantToVisit
+    wantToVisit,
+    types
   } = place!;
 
   const { website, phone } = contact;
@@ -93,18 +76,12 @@ export const PlaceScene = ({
           {phone && phone.map(w => <Phone key={w.value} nr={w.value} />)}
         </Contact>
       )}
-      {categories && (
-        <Categories>
-          {categories.map(category => (
-            <Category key={category.id}>{category.title}</Category>
-          ))}
-        </Categories>
-      )}
       <UserStats>
         <UserStat label="Besök" value={visitCount} />
         <UserStat label="Betyg" value={averageScore || '–'} />
       </UserStats>
       <UserPlaceInputs>
+        <Types types={types} providerId={providerPlaceId} />
         <PriceLevelPicker
           priceLevel={priceLevel}
           providerId={providerPlaceId}

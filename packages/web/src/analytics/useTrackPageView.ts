@@ -8,7 +8,9 @@ export function useTrackPageView(options: FieldsObject = {}) {
   const page = location.pathname;
 
   React.useEffect(() => {
-    ReactGA.set({ page, ...options });
-    ReactGA.pageview(page);
+    if (process.env.NODE_ENV === 'production') {
+      ReactGA.set({ page, ...options });
+      ReactGA.pageview(page);
+    }
   }, [page, options]);
 }

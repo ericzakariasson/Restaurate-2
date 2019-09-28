@@ -4,3 +4,4 @@ export { default as me } from './me.query';
 export { default as mePlaces } from './mePlaces.query';
 export { default as meVisits } from './meVisits.query';
 export { default as placeDetails } from './place.details.query';
+export { default as allPlaceTypes } from './allPlaceTypes.query';

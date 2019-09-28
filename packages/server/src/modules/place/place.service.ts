@@ -1,22 +1,22 @@
-import { Repository, In } from 'typeorm';
-import { Place } from './place.entity';
 import { Service } from 'typedi';
-import { Visit } from '../visit/visit.entity';
-import { round } from '../../utils';
-import { User } from '../user/user.entity';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { UserService } from '../user/user.service';
-import { PriceLevel, PlaceDetails, PlaceType } from './place.types';
 import { CacheService } from '../../services/cache/cache.service';
+import { HereService } from '../../services/here/here.service';
+import { round } from '../../utils';
+import { logger } from '../../utils/logger';
+import { Coordinates } from '../../utils/utils.types';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { Visit } from '../visit/visit.entity';
+import { Place } from './place.entity';
+import {
+  transformProviderDetails,
+  transformProviderSearchItem
+} from './place.helpers';
+import { PlaceDetails, UpdatePlaceInput } from './place.types';
 import { TagService } from './tag/tag.service';
 import { WantToVisit } from './wantToVisit/wantToVisit.entity';
-import { HereService } from '../../services/here/here.service';
-import {
-  transformProviderSearchItem,
-  transformProviderDetails
-} from './place.helpers';
-import { Coordinates } from '../../utils/utils.types';
-import { logger } from '../../utils/logger';
 
 const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
@@ -159,78 +159,6 @@ export class PlaceService {
     });
   }
 
-  async setPriceLevel(
-    providerPlaceId: string,
-    priceLevel: PriceLevel,
-    userId: number
-  ) {
-    const user = await this.userService.findById(userId);
-
-    if (!user) {
-      throw new Error('No user found');
-    }
-
-    const place = await this.findByIdOrCreate(providerPlaceId, user);
-    await this.placeRepository.update(place.id, { priceLevel });
-
-    logger.info('Price level updated', { place: place.id, priceLevel });
-
-    return priceLevel;
-  }
-
-  async addTag(providerPlaceId: string, name: string, userId: number) {
-    const user = await this.userService.findById(userId);
-
-    if (!user) {
-      throw new Error('No user found');
-    }
-
-    const place = await this.findByIdOrCreate(providerPlaceId, user);
-    const tag = await this.tagService.findByNameOrCreate(name, place, user);
-
-    place.tags = place.tags ? place.tags.concat(tag) : [tag];
-
-    await this.placeRepository.save(place);
-
-    logger.info('Tag added', { place: place.id, tag: tag.id });
-
-    return tag;
-  }
-
-  async removeTag(providerPlaceId: string, tagId: number, userId: number) {
-    const user = await this.userService.findById(userId);
-
-    if (!user) {
-      throw new Error('No user found');
-    }
-
-    const place = await this.findByIdOrCreate(providerPlaceId, user);
-    place.tags = place.tags.filter(tag => tag.id !== tagId);
-
-    await this.placeRepository.save(place);
-
-    logger.info('Tag removed', { place: place.id, tag: tagId });
-
-    return tagId;
-  }
-
-  async setComment(providerPlaceId: string, comment: string, userId: number) {
-    const user = await this.userService.findById(userId);
-
-    if (!user) {
-      throw new Error('No user found');
-    }
-
-    const place = await this.findByIdOrCreate(providerPlaceId, user);
-    place.comment = comment;
-
-    await this.placeRepository.save(place);
-
-    logger.info('Comment set', { place: place.id });
-
-    return comment;
-  }
-
   async getWantToVisitList(userId: number) {
     const wantToVisit = await this.wtvRepository.find({ where: { userId } });
 
@@ -257,66 +185,71 @@ export class PlaceService {
     return results.map(transformWithUserPlaces);
   }
 
-  async removeType(
-    providerId: string,
-    type: PlaceType,
-    userId: number
-  ): Promise<PlaceType[]> {
-    const place = await this.findByProviderId(providerId, userId);
+  async setTags(place: Place, tagNames: string[], user: User) {
+    place.tags = place.tags.filter(tag => tagNames.includes(tag.name));
 
-    if (!place) {
-      throw new Error('No place found');
-    }
+    const newTagNames = tagNames.filter(tagName =>
+      place.tags.some(tag => tag.name === tagName)
+    );
 
-    const foundType = Object.entries(PlaceType).find(([key]) => key === type);
+    await Promise.all(
+      newTagNames.map(async tagName => {
+        const tag = await this.tagService.findByNameOrCreate(
+          tagName,
+          place,
+          user
+        );
+        place.tags.concat(tag);
+      })
+    );
 
-    if (!foundType) {
-      logger.error(`No place type found matching "${type}"`, { type });
-      throw new Error(`No place type found matching "${type}"`);
-    }
-
-    const [, value] = foundType;
-
-    const updatedTypes = (place.types || []).filter(t => t !== value);
-
-    await this.placeRepository.update(place.id, {
-      types: updatedTypes
+    logger.info('Updated place tags', {
+      place: place.id,
+      tags: place.tags.map(tag => tag.id)
     });
 
-    logger.info('Type removed', { place: place.id, user: userId, type });
-
-    return updatedTypes;
+    return place;
   }
 
-  async addType(
-    providerId: string,
-    type: PlaceType,
-    userId: number
-  ): Promise<PlaceType[]> {
+  async update(providerId: string, input: UpdatePlaceInput, userId: number) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      logger.error('No user found', { providerId, user: userId });
+      throw new Error(`No user found with id "${providerId}"`);
+    }
+
     const place = await this.findByProviderId(providerId, userId);
 
     if (!place) {
       logger.error('No place found', { providerId, user: userId });
-      throw new Error(`No place found for provider id "${providerId}"`);
+      throw new Error(`No place found with provider id "${providerId}"`);
     }
 
-    const foundType = Object.entries(PlaceType).find(([key]) => key === type);
-
-    if (!foundType) {
-      logger.error(`No place type found matching "${type}"`, { type });
-      throw new Error(`No place type found matching "${type}"`);
+    if (input.comment) {
+      place.comment = input.comment;
+      logger.info('Place comment updated', { place: place.id, user: userId });
     }
 
-    const [, value] = foundType;
+    if (input.priceLevel) {
+      place.priceLevel = input.priceLevel;
+      logger.info('Place price level updated', {
+        place: place.id,
+        user: userId
+      });
+    }
 
-    const updatedTypes = (place.types || []).concat(value);
+    if (input.types) {
+      place.types = input.types;
+      logger.info('Types added', { place: place.id, types: input.types });
+    }
 
-    await this.placeRepository.update(place.id, {
-      types: updatedTypes
-    });
+    if (input.tags) {
+      this.setTags(place, input.tags, user);
+    }
 
-    logger.info('Type added', { place: place.id, user: userId, type });
+    await this.placeRepository.save(place);
 
-    return updatedTypes;
+    return place;
   }
 }

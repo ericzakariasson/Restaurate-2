@@ -1,59 +1,16 @@
-import * as React from 'react';
-import { InputBlock } from './InputBlock';
-import { ActionButton } from '../../../components/ActionButton';
-import { Edit2, Check, X, Loader } from 'react-feather';
 import { Textarea } from 'components';
+import { useUpdatePlaceMutation } from 'graphql/types';
+import * as React from 'react';
+import { Check, Edit2, Loader, X } from 'react-feather';
 import styled from 'styled-components';
-import {
-  useSetCommentMutation,
-  PlaceDocument,
-  PlaceQuery,
-  SetCommentMutation
-} from 'graphql/types';
-import { DataProxy } from 'apollo-cache';
-import { FetchResult } from 'apollo-link';
+import { ActionButton } from '../../../components/ActionButton';
+import { InputBlock } from './InputBlock';
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
 `;
-
-const updateComment = (providerPlaceId: string) => (
-  cache: DataProxy,
-  { data: result }: FetchResult<SetCommentMutation>
-) => {
-  try {
-    if (!result) {
-      throw new Error('No result');
-    }
-
-    const placeQuery = {
-      query: PlaceDocument,
-      variables: { providerId: providerPlaceId }
-    };
-
-    const data = cache.readQuery<PlaceQuery>(placeQuery);
-
-    if (!data || !data.place) {
-      throw new Error('No query data');
-    }
-
-    const { place } = data;
-
-    const updatedData = {
-      place: {
-        ...place,
-        comment: result.setComment
-      }
-    };
-
-    cache.writeQuery({
-      ...placeQuery,
-      data: updatedData
-    });
-  } catch {}
-};
 
 interface CommentProps {
   comment?: string | null;
@@ -64,13 +21,16 @@ export const Comment = ({ comment, providerId }: CommentProps) => {
   const [editing, setEditing] = React.useState(false);
   const [value, setValue] = React.useState(comment || '');
 
-  const [setComment, { loading: saving }] = useSetCommentMutation({
-    update: updateComment(providerId)
-  });
+  const [updatePlace, { loading: saving }] = useUpdatePlaceMutation();
 
   const handleClick = async () => {
-    await setComment({
-      variables: { providerId, comment: value }
+    await updatePlace({
+      variables: {
+        providerId,
+        data: {
+          comment: value
+        }
+      }
     });
     setEditing(false);
   };

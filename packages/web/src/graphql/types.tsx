@@ -86,10 +86,7 @@ export type Mutation = {
   addVisit: VisitResponse,
   editVisit: VisitResponse,
   toggleWantToVisit: Scalars['Boolean'],
-  setPriceLevel: PriceLevel,
-  addTag: Tag,
-  removeTag: Scalars['Float'],
-  setComment: Scalars['String'],
+  updatePlace: Place,
 };
 
 
@@ -119,26 +116,8 @@ export type MutationToggleWantToVisitArgs = {
 };
 
 
-export type MutationSetPriceLevelArgs = {
-  priceLevel: Scalars['Float'],
-  providerId: Scalars['String']
-};
-
-
-export type MutationAddTagArgs = {
-  name: Scalars['String'],
-  providerId: Scalars['String']
-};
-
-
-export type MutationRemoveTagArgs = {
-  tagId: Scalars['Float'],
-  providerId: Scalars['String']
-};
-
-
-export type MutationSetCommentArgs = {
-  comment: Scalars['String'],
+export type MutationUpdatePlaceArgs = {
+  data: UpdatePlaceInput,
   providerId: Scalars['String']
 };
 
@@ -207,7 +186,9 @@ export type PlaceSearchResult = {
 /** Type of place */
 export enum PlaceType {
   Restaurant = 'Restaurant',
-  Cafe = 'Cafe'
+  Cafe = 'Cafe',
+  PubBar = 'PubBar',
+  FoodTruck = 'FoodTruck'
 }
 
 export type Position = IPosition & {
@@ -238,6 +219,7 @@ export type Query = {
   placeDetails: PlaceDetails,
   place?: Maybe<Place>,
   wantToVisitList: Array<PlaceDetailsBasic>,
+  allPlaceTypes: Array<PlaceType>,
 };
 
 
@@ -285,6 +267,13 @@ export type Tag = {
   name: Scalars['String'],
   createdAt: Scalars['String'],
   updatedAt: Scalars['String'],
+};
+
+export type UpdatePlaceInput = {
+  comment?: Maybe<Scalars['String']>,
+  priceLevel?: Maybe<Scalars['Float']>,
+  types?: Maybe<Array<PlaceType>>,
+  tags?: Maybe<Array<Scalars['String']>>,
 };
 
 export type User = {
@@ -450,19 +439,6 @@ export type VisitRateFragment = (
   & Pick<Rate, 'id' | 'name' | 'score' | 'calculatedScore' | 'createdAt' | 'updatedAt'>
 );
 
-export type AddTagMutationVariables = {
-  providerId: Scalars['String'],
-  name: Scalars['String']
-};
-
-
-export type AddTagMutation = (
-  { __typename?: 'Mutation' }
-  & { addTag: { __typename?: 'Tag' }
-    & TagFragment
-   }
-);
-
 export type AddVisitMutationVariables = {
   data: AddVisitInput
 };
@@ -524,39 +500,6 @@ export type RegisterMutation = (
   )> }
 );
 
-export type RemoveTagMutationVariables = {
-  providerId: Scalars['String'],
-  tagId: Scalars['Float']
-};
-
-
-export type RemoveTagMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'removeTag'>
-);
-
-export type SetCommentMutationVariables = {
-  providerId: Scalars['String'],
-  comment: Scalars['String']
-};
-
-
-export type SetCommentMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'setComment'>
-);
-
-export type SetPriceLevelMutationVariables = {
-  providerId: Scalars['String'],
-  priceLevel: Scalars['Float']
-};
-
-
-export type SetPriceLevelMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'setPriceLevel'>
-);
-
 export type ToggleWantToVisitMutationVariables = {
   providerPlaceId: Scalars['String']
 };
@@ -565,6 +508,27 @@ export type ToggleWantToVisitMutationVariables = {
 export type ToggleWantToVisitMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'toggleWantToVisit'>
+);
+
+export type UpdatePlaceMutationVariables = {
+  providerId: Scalars['String'],
+  data: UpdatePlaceInput
+};
+
+
+export type UpdatePlaceMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePlace: { __typename?: 'Place' }
+    & PlaceFragment
+   }
+);
+
+export type AllPlaceTypesQueryVariables = {};
+
+
+export type AllPlaceTypesQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'allPlaceTypes'>
 );
 
 export type MeQueryVariables = {};
@@ -855,21 +819,6 @@ export const VisitFragmentDoc = gql`
 ${VisitRateFragmentDoc}
 ${UserFragmentDoc}
 ${PlaceFragmentDoc}`;
-export const AddTagDocument = gql`
-    mutation AddTag($providerId: String!, $name: String!) {
-  addTag(providerId: $providerId, name: $name) {
-    ...Tag
-  }
-}
-    ${TagFragmentDoc}`;
-export type AddTagMutationFn = ApolloReactCommon.MutationFunction<AddTagMutation, AddTagMutationVariables>;
-
-    export function useAddTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddTagMutation, AddTagMutationVariables>) {
-      return ApolloReactHooks.useMutation<AddTagMutation, AddTagMutationVariables>(AddTagDocument, baseOptions);
-    }
-export type AddTagMutationHookResult = ReturnType<typeof useAddTagMutation>;
-export type AddTagMutationResult = ApolloReactCommon.MutationResult<AddTagMutation>;
-export type AddTagMutationOptions = ApolloReactCommon.BaseMutationOptions<AddTagMutation, AddTagMutationVariables>;
 export const AddVisitDocument = gql`
     mutation AddVisit($data: AddVisitInput!) {
   addVisit(data: $data) {
@@ -943,45 +892,6 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMuta
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
-export const RemoveTagDocument = gql`
-    mutation RemoveTag($providerId: String!, $tagId: Float!) {
-  removeTag(providerId: $providerId, tagId: $tagId)
-}
-    `;
-export type RemoveTagMutationFn = ApolloReactCommon.MutationFunction<RemoveTagMutation, RemoveTagMutationVariables>;
-
-    export function useRemoveTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveTagMutation, RemoveTagMutationVariables>) {
-      return ApolloReactHooks.useMutation<RemoveTagMutation, RemoveTagMutationVariables>(RemoveTagDocument, baseOptions);
-    }
-export type RemoveTagMutationHookResult = ReturnType<typeof useRemoveTagMutation>;
-export type RemoveTagMutationResult = ApolloReactCommon.MutationResult<RemoveTagMutation>;
-export type RemoveTagMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTagMutation, RemoveTagMutationVariables>;
-export const SetCommentDocument = gql`
-    mutation SetComment($providerId: String!, $comment: String!) {
-  setComment(providerId: $providerId, comment: $comment)
-}
-    `;
-export type SetCommentMutationFn = ApolloReactCommon.MutationFunction<SetCommentMutation, SetCommentMutationVariables>;
-
-    export function useSetCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetCommentMutation, SetCommentMutationVariables>) {
-      return ApolloReactHooks.useMutation<SetCommentMutation, SetCommentMutationVariables>(SetCommentDocument, baseOptions);
-    }
-export type SetCommentMutationHookResult = ReturnType<typeof useSetCommentMutation>;
-export type SetCommentMutationResult = ApolloReactCommon.MutationResult<SetCommentMutation>;
-export type SetCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<SetCommentMutation, SetCommentMutationVariables>;
-export const SetPriceLevelDocument = gql`
-    mutation SetPriceLevel($providerId: String!, $priceLevel: Float!) {
-  setPriceLevel(providerId: $providerId, priceLevel: $priceLevel)
-}
-    `;
-export type SetPriceLevelMutationFn = ApolloReactCommon.MutationFunction<SetPriceLevelMutation, SetPriceLevelMutationVariables>;
-
-    export function useSetPriceLevelMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetPriceLevelMutation, SetPriceLevelMutationVariables>) {
-      return ApolloReactHooks.useMutation<SetPriceLevelMutation, SetPriceLevelMutationVariables>(SetPriceLevelDocument, baseOptions);
-    }
-export type SetPriceLevelMutationHookResult = ReturnType<typeof useSetPriceLevelMutation>;
-export type SetPriceLevelMutationResult = ApolloReactCommon.MutationResult<SetPriceLevelMutation>;
-export type SetPriceLevelMutationOptions = ApolloReactCommon.BaseMutationOptions<SetPriceLevelMutation, SetPriceLevelMutationVariables>;
 export const ToggleWantToVisitDocument = gql`
     mutation ToggleWantToVisit($providerPlaceId: String!) {
   toggleWantToVisit(providerPlaceId: $providerPlaceId)
@@ -995,6 +905,36 @@ export type ToggleWantToVisitMutationFn = ApolloReactCommon.MutationFunction<Tog
 export type ToggleWantToVisitMutationHookResult = ReturnType<typeof useToggleWantToVisitMutation>;
 export type ToggleWantToVisitMutationResult = ApolloReactCommon.MutationResult<ToggleWantToVisitMutation>;
 export type ToggleWantToVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>;
+export const UpdatePlaceDocument = gql`
+    mutation UpdatePlace($providerId: String!, $data: UpdatePlaceInput!) {
+  updatePlace(providerId: $providerId, data: $data) {
+    ...Place
+  }
+}
+    ${PlaceFragmentDoc}`;
+export type UpdatePlaceMutationFn = ApolloReactCommon.MutationFunction<UpdatePlaceMutation, UpdatePlaceMutationVariables>;
+
+    export function useUpdatePlaceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePlaceMutation, UpdatePlaceMutationVariables>) {
+      return ApolloReactHooks.useMutation<UpdatePlaceMutation, UpdatePlaceMutationVariables>(UpdatePlaceDocument, baseOptions);
+    }
+export type UpdatePlaceMutationHookResult = ReturnType<typeof useUpdatePlaceMutation>;
+export type UpdatePlaceMutationResult = ApolloReactCommon.MutationResult<UpdatePlaceMutation>;
+export type UpdatePlaceMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePlaceMutation, UpdatePlaceMutationVariables>;
+export const AllPlaceTypesDocument = gql`
+    query AllPlaceTypes {
+  allPlaceTypes
+}
+    `;
+
+    export function useAllPlaceTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>) {
+      return ApolloReactHooks.useQuery<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>(AllPlaceTypesDocument, baseOptions);
+    }
+      export function useAllPlaceTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>(AllPlaceTypesDocument, baseOptions);
+      }
+      
+export type AllPlaceTypesQueryHookResult = ReturnType<typeof useAllPlaceTypesQuery>;
+export type AllPlaceTypesQueryResult = ApolloReactCommon.QueryResult<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

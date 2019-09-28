@@ -1,4 +1,4 @@
-import { InputType, Field, ObjectType, InterfaceType } from 'type-graphql';
+import { Field, InputType, InterfaceType, ObjectType } from 'type-graphql';
 import { Coordinates } from '../../utils/utils.types';
 
 export enum PlaceType {
@@ -172,4 +172,19 @@ export class PlaceDetails {
 
   @Field(() => OpeningHours, { nullable: true })
   openingHours?: OpeningHours;
+}
+
+@InputType()
+export class UpdatePlaceInput {
+  @Field({ nullable: true })
+  comment?: string;
+
+  @Field({ nullable: true })
+  priceLevel?: PriceLevel;
+
+  @Field(() => [PlaceType], { nullable: true })
+  types?: PlaceType[];
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
 }

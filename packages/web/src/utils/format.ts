@@ -31,7 +31,9 @@ type PlaceTypeMap = { [key in PlaceType]: string };
 
 const placeTypeMap: PlaceTypeMap = {
   [PlaceType.Cafe]: 'Café',
-  [PlaceType.Restaurant]: 'Restaurang'
+  [PlaceType.Restaurant]: 'Restaurang',
+  [PlaceType.FoodTruck]: 'Food truck',
+  [PlaceType.PubBar]: 'Pub/Bar'
 };
 
 export function formatPlaceType(type: PlaceType) {

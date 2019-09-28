@@ -1,31 +1,31 @@
 import {
-  Resolver,
   Arg,
-  Query,
-  FieldResolver,
-  Root,
-  Ctx,
   Authorized,
-  Mutation
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root
 } from 'type-graphql';
-import { Place } from './place.entity';
-import { Visit } from '../visit/visit.entity';
-import { PlaceService } from './place.service';
 import { Service } from 'typedi';
+import { Context } from '../../graphql/types';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { Visit } from '../visit/visit.entity';
+import { Place } from './place.entity';
+import { transformToBasicDetails } from './place.helpers';
+import { PlaceService } from './place.service';
 import {
-  PlaceSearchResult,
-  PriceLevel,
   PlaceDetails,
   PlaceDetailsBasic,
+  PlaceSearchResult,
+  PlaceType,
   PositionInput,
-  PlaceType
+  PriceLevel,
+  UpdatePlaceInput
 } from './place.types';
-import { Context } from '../../graphql/types';
-import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
-import { Tag } from './tag/tag.entity';
-import { transformToBasicDetails } from './place.helpers';
 
 @Service()
 @Resolver(Place)
@@ -110,78 +110,13 @@ export class PlaceResolver {
   }
 
   @Authorized()
-  @Mutation(() => PriceLevel)
-  async setPriceLevel(
+  @Mutation(() => Place)
+  async updatePlace(
     @Arg('providerId') providerId: string,
-    @Arg('priceLevel') priceLevel: PriceLevel,
+    @Arg('data') input: UpdatePlaceInput,
     @Ctx() ctx: Context
-  ): Promise<PriceLevel> {
-    return this.placeService.setPriceLevel(
-      providerId,
-      priceLevel,
-      ctx.req.session.userId
-    );
-  }
-
-  @Authorized()
-  @Mutation(() => [PlaceType])
-  async addType(
-    @Arg('providerId') providerId: string,
-    @Arg('type') type: PlaceType,
-    @Ctx() ctx: Context
-  ): Promise<PlaceType[]> {
-    return this.placeService.addType(providerId, type, ctx.req.session.userId);
-  }
-
-  @Authorized()
-  @Mutation(() => [PlaceType])
-  async removeType(
-    @Arg('providerId') providerId: string,
-    @Arg('type') type: PlaceType,
-    @Ctx() ctx: Context
-  ): Promise<PlaceType[]> {
-    return this.placeService.removeType(
-      providerId,
-      type,
-      ctx.req.session.userId
-    );
-  }
-  @Authorized()
-  @Mutation(() => Tag)
-  async addTag(
-    @Arg('providerId') providerId: string,
-    @Arg('name') name: string,
-    @Ctx() ctx: Context
-  ): Promise<Tag> {
-    return this.placeService.addTag(providerId, name, ctx.req.session.userId);
-  }
-
-  @Authorized()
-  @Mutation(() => Number)
-  async removeTag(
-    @Arg('providerId') providerId: string,
-    @Arg('tagId') tagId: number,
-    @Ctx() ctx: Context
-  ): Promise<number> {
-    return this.placeService.removeTag(
-      providerId,
-      tagId,
-      ctx.req.session.userId
-    );
-  }
-
-  @Authorized()
-  @Mutation(() => String)
-  async setComment(
-    @Arg('providerId') providerId: string,
-    @Arg('comment') comment: string,
-    @Ctx() ctx: Context
-  ): Promise<string> {
-    return this.placeService.setComment(
-      providerId,
-      comment,
-      ctx.req.session.userId
-    );
+  ): Promise<Place> {
+    return this.placeService.update(providerId, input, ctx.req.session.userId);
   }
 
   @Authorized()

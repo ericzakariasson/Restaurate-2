@@ -7,5 +7,8 @@ export const client = new ApolloClient({
     uri: process.env.REACT_APP_API_URL,
     credentials: 'include'
   }),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    freezeResults: true
+  }),
+  assumeImmutableResults: true
 });

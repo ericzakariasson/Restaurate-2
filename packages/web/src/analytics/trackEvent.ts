@@ -12,5 +12,7 @@ interface EventOptions {
 }
 
 export function trackEvent(options: EventOptions) {
-  ReactGA.event(options);
+  if (process.env.NODE_ENV === 'production') {
+    ReactGA.event(options);
+  }
 }
