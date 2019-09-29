@@ -85,6 +85,7 @@ export type Mutation = {
   register?: Maybe<User>,
   addVisit: VisitResponse,
   editVisit: VisitResponse,
+  createPlace?: Maybe<Place>,
   toggleWantToVisit: Scalars['Boolean'],
   updatePlace: Place,
 };
@@ -108,6 +109,11 @@ export type MutationAddVisitArgs = {
 
 export type MutationEditVisitArgs = {
   data: EditVisitInput
+};
+
+
+export type MutationCreatePlaceArgs = {
+  providerId: Scalars['String']
 };
 
 
@@ -178,6 +184,14 @@ export type PlaceDetailsBasic = {
   categories: Array<Scalars['String']>,
 };
 
+export type PlacePreview = {
+   __typename?: 'PlacePreview',
+  id: Scalars['ID'],
+  details: PlaceDetails,
+  wantToVisit: Scalars['Boolean'],
+  placeId?: Maybe<Scalars['Float']>,
+};
+
 export type PlaceSearchResult = {
    __typename?: 'PlaceSearchResult',
   places: Array<PlaceDetailsBasic>,
@@ -218,6 +232,7 @@ export type Query = {
   searchPlace: PlaceSearchResult,
   placeDetails: PlaceDetails,
   place?: Maybe<Place>,
+  previewPlace?: Maybe<PlacePreview>,
   wantToVisitList: Array<PlaceDetailsBasic>,
   allPlaceTypes: Array<PlaceType>,
 };
@@ -241,6 +256,11 @@ export type QueryPlaceDetailsArgs = {
 
 export type QueryPlaceArgs = {
   providerId: Scalars['String']
+};
+
+
+export type QueryPreviewPlaceArgs = {
+  providerId?: Maybe<Scalars['String']>
 };
 
 export type Rate = {
@@ -395,6 +415,14 @@ export type PlaceFragment = (
   > }
 );
 
+export type PlacePreviewFragment = (
+  { __typename?: 'PlacePreview' }
+  & Pick<PlacePreview, 'id' | 'wantToVisit' | 'placeId'>
+  & { details: { __typename?: 'PlaceDetails' }
+    & PlaceDetailsFragment
+   }
+);
+
 export type PlaceTagFragment = (
   { __typename?: 'Tag' }
   & Pick<Tag, 'id' | 'name' | 'createdAt'>
@@ -450,6 +478,18 @@ export type AddVisitMutation = (
     { __typename?: 'VisitResponse' }
     & Pick<VisitResponse, 'saved'>
   ) }
+);
+
+export type CreatePlaceMutationVariables = {
+  providerId: Scalars['String']
+};
+
+
+export type CreatePlaceMutation = (
+  { __typename?: 'Mutation' }
+  & { createPlace: Maybe<{ __typename?: 'Place' }
+    & PlaceFragment
+  > }
 );
 
 export type EditVisitMutationVariables = {
@@ -603,6 +643,18 @@ export type PlaceQuery = (
   > }
 );
 
+export type PreviewPlaceQueryVariables = {
+  providerId: Scalars['String']
+};
+
+
+export type PreviewPlaceQuery = (
+  { __typename?: 'Query' }
+  & { previewPlace: Maybe<{ __typename?: 'PlacePreview' }
+    & PlacePreviewFragment
+  > }
+);
+
 export type SearchPlaceQueryVariables = {
   query: Scalars['String'],
   position?: Maybe<PositionInput>
@@ -651,53 +703,6 @@ export const PlaceDetailsBasicFragmentDoc = gql`
     lng
   }
   categories
-}
-    `;
-export const TagFragmentDoc = gql`
-    fragment Tag on Tag {
-  id
-  name
-  createdAt
-  updatedAt
-}
-    `;
-export const VisitOrderFragmentDoc = gql`
-    fragment VisitOrder on Order {
-  id
-  title
-  createdAt
-  updatedAt
-}
-    `;
-export const VisitRateFragmentDoc = gql`
-    fragment VisitRate on Rate {
-  id
-  name
-  score
-  calculatedScore
-  createdAt
-  updatedAt
-}
-    `;
-export const UserFragmentDoc = gql`
-    fragment User on User {
-  id
-  name
-  firstName
-  lastName
-  role
-  email
-  createdAt
-  updatedAt
-  placeCount
-  visitCount
-}
-    `;
-export const PlaceTagFragmentDoc = gql`
-    fragment PlaceTag on Tag {
-  id
-  name
-  createdAt
 }
     `;
 export const LocationFragmentDoc = gql`
@@ -763,6 +768,63 @@ export const PlaceDetailsFragmentDoc = gql`
 ${CategoryFragmentDoc}
 ${ContactFragmentDoc}
 ${OpeningHoursFragmentDoc}`;
+export const PlacePreviewFragmentDoc = gql`
+    fragment PlacePreview on PlacePreview {
+  id
+  details {
+    ...PlaceDetails
+  }
+  wantToVisit
+  placeId
+}
+    ${PlaceDetailsFragmentDoc}`;
+export const TagFragmentDoc = gql`
+    fragment Tag on Tag {
+  id
+  name
+  createdAt
+  updatedAt
+}
+    `;
+export const VisitOrderFragmentDoc = gql`
+    fragment VisitOrder on Order {
+  id
+  title
+  createdAt
+  updatedAt
+}
+    `;
+export const VisitRateFragmentDoc = gql`
+    fragment VisitRate on Rate {
+  id
+  name
+  score
+  calculatedScore
+  createdAt
+  updatedAt
+}
+    `;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  name
+  firstName
+  lastName
+  role
+  email
+  createdAt
+  updatedAt
+  placeCount
+  visitCount
+}
+    `;
+export const PlaceTagFragmentDoc = gql`
+    fragment PlaceTag on Tag {
+  id
+  name
+  createdAt
+}
+    `;
 export const PlaceFragmentDoc = gql`
     fragment Place on Place {
   id
@@ -834,6 +896,21 @@ export type AddVisitMutationFn = ApolloReactCommon.MutationFunction<AddVisitMuta
 export type AddVisitMutationHookResult = ReturnType<typeof useAddVisitMutation>;
 export type AddVisitMutationResult = ApolloReactCommon.MutationResult<AddVisitMutation>;
 export type AddVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<AddVisitMutation, AddVisitMutationVariables>;
+export const CreatePlaceDocument = gql`
+    mutation CreatePlace($providerId: String!) {
+  createPlace(providerId: $providerId) {
+    ...Place
+  }
+}
+    ${PlaceFragmentDoc}`;
+export type CreatePlaceMutationFn = ApolloReactCommon.MutationFunction<CreatePlaceMutation, CreatePlaceMutationVariables>;
+
+    export function useCreatePlaceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePlaceMutation, CreatePlaceMutationVariables>) {
+      return ApolloReactHooks.useMutation<CreatePlaceMutation, CreatePlaceMutationVariables>(CreatePlaceDocument, baseOptions);
+    }
+export type CreatePlaceMutationHookResult = ReturnType<typeof useCreatePlaceMutation>;
+export type CreatePlaceMutationResult = ApolloReactCommon.MutationResult<CreatePlaceMutation>;
+export type CreatePlaceMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePlaceMutation, CreatePlaceMutationVariables>;
 export const EditVisitDocument = gql`
     mutation EditVisit($data: EditVisitInput!) {
   editVisit(data: $data) {
@@ -1036,6 +1113,23 @@ ${VisitFragmentDoc}`;
       
 export type PlaceQueryHookResult = ReturnType<typeof usePlaceQuery>;
 export type PlaceQueryResult = ApolloReactCommon.QueryResult<PlaceQuery, PlaceQueryVariables>;
+export const PreviewPlaceDocument = gql`
+    query PreviewPlace($providerId: String!) {
+  previewPlace(providerId: $providerId) {
+    ...PlacePreview
+  }
+}
+    ${PlacePreviewFragmentDoc}`;
+
+    export function usePreviewPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PreviewPlaceQuery, PreviewPlaceQueryVariables>) {
+      return ApolloReactHooks.useQuery<PreviewPlaceQuery, PreviewPlaceQueryVariables>(PreviewPlaceDocument, baseOptions);
+    }
+      export function usePreviewPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PreviewPlaceQuery, PreviewPlaceQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<PreviewPlaceQuery, PreviewPlaceQueryVariables>(PreviewPlaceDocument, baseOptions);
+      }
+      
+export type PreviewPlaceQueryHookResult = ReturnType<typeof usePreviewPlaceQuery>;
+export type PreviewPlaceQueryResult = ApolloReactCommon.QueryResult<PreviewPlaceQuery, PreviewPlaceQueryVariables>;
 export const SearchPlaceDocument = gql`
     query SearchPlace($query: String!, $position: PositionInput) {
   searchPlace(query: $query, position: $position) {

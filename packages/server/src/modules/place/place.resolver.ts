@@ -26,6 +26,7 @@ import {
   UpdatePlaceInput
 } from './place.types';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
+import { PlacePreview } from './preview/place.preview.types';
 
 @Service()
 @Resolver(Place)
@@ -64,28 +65,75 @@ export class PlaceResolver {
   @Query(() => Place, { nullable: true })
   async place(
     @Arg('providerId') providerId: string,
+    // @Arg('userId', { nullable: true }) userId?: number
     @Ctx() ctx: Context
   ): Promise<Place | null> {
-    const placeDetails = await this.placeService.getPlaceDetails(providerId);
-
-    if (!placeDetails) {
-      return null;
-    }
-
-    const userPlace = await this.placeService.findByProviderId(
+    const place = await this.placeService.findByProviderId(
       providerId,
       ctx.req.session.userId
     );
 
-    if (!userPlace) {
-      const place = new Place();
-      place.providerId = placeDetails.providerId;
-      place.priceLevel = PriceLevel.NotSet;
-      place.tags = [];
-      return place;
+    if (!place) {
+      const details = await this.placeService.getPlaceDetails(providerId);
+      const preview = new Place();
+
+      preview.providerId = details.providerId;
+      preview.priceLevel = PriceLevel.NotSet;
+      preview.tags = [];
+      return preview;
     }
 
-    return userPlace;
+    if (place.userId !== ctx.req.session.userId) {
+      return null;
+    }
+
+    return place;
+  }
+
+  @Authorized()
+  @Query(() => PlacePreview, { nullable: true })
+  async previewPlace(
+    @Arg('providerId', { nullable: true }) providerId: string,
+    @Ctx() ctx: Context
+  ): Promise<PlacePreview | null> {
+    const { userId } = ctx.req.session;
+    const details = await this.placeService.getPlaceDetails(providerId);
+
+    const place = await this.placeService.findByProviderId(
+      details.providerId,
+      userId
+    );
+
+    const wantToVisit = await this.wtvService.findByProviderId(
+      details.providerId,
+      userId
+    );
+
+    const preview = new PlacePreview();
+    preview.id = details.providerId;
+    preview.details = details;
+    preview.wantToVisit = Boolean(wantToVisit);
+    preview.placeId = place ? place.id : null;
+
+    return preview;
+  }
+
+  @Authorized()
+  @Mutation(() => Place, { nullable: true })
+  async createPlace(
+    @Arg('providerId') providerId: string,
+    @Ctx() ctx: Context
+  ): Promise<Place | null> {
+    const { userId } = ctx.req.session;
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new Error(`No user found with id "${userId}"`);
+    }
+
+    const place = await this.placeService.createPlace(providerId, user);
+
+    return place;
   }
 
   @Authorized()

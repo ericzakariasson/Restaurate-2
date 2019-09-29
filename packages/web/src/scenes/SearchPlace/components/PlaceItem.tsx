@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
-
-import { staticMapUrl } from '../../../utils';
-import { NavLink } from 'react-router-dom';
-import { placeRoute } from 'routes';
 import { PlaceDetailsBasic } from 'graphql/types';
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import styled, { css } from 'styled-components';
+import { staticMapUrl } from '../../../utils';
 
 interface ItemProps {
   touching: boolean;
@@ -17,6 +15,7 @@ const Item = styled.li<ItemProps>`
   transition: 0.15s ease-in-out;
   box-shadow: ${p => p.theme.boxShadow};
   border: 1px solid #f5f5f5;
+  position: relative;
 
   ${p =>
     p.touching &&
@@ -119,14 +118,32 @@ const Category = styled.li`
   }
 `;
 
+const VisitCount = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #222;
+  color: ${p => p.theme.colors.primary.default};
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(5px, -5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+`;
+
 interface PlaceItemProps {
   place: PlaceDetailsBasic;
   imageSize?: number;
+  to: string;
 }
 
 export const PlaceItem = ({
-  place: { providerId, name, address, position, categories },
-  imageSize = 64
+  place: { providerId, name, address, position, categories, visits },
+  imageSize = 64,
+  to
 }: PlaceItemProps) => {
   const [touching, setTouching] = useState(false);
 
@@ -150,7 +167,8 @@ export const PlaceItem = ({
 
   return (
     <Item touching={touching}>
-      <Link to={placeRoute(providerId)}>
+      {visits > 0 && <VisitCount>{visits}</VisitCount>}
+      <Link to={to}>
         <Map touching={touching} url={mapUrl} size={imageSize} />
         <Info>
           <Name onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>

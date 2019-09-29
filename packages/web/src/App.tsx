@@ -24,7 +24,8 @@ import {
   WantToVisitScene,
   SettingsScene,
   NotFoundScene,
-  EditVisitScene
+  EditVisitScene,
+  PlacePreviewScene
 } from './scenes';
 import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 import { Navigation } from 'components/Navigation';
@@ -83,7 +84,16 @@ const App = () => {
             exact={true}
           />
           <AuthRoute path={routes.visit} component={VisitScene} exact={true} />
-          <AuthRoute path={routes.place} component={PlaceScene} exact={true} />
+          <AuthRoute
+            path={routes.myPlace}
+            component={PlaceScene}
+            exact={true}
+          />
+          <AuthRoute
+            path={routes.previewPlace}
+            component={PlacePreviewScene}
+            exact={true}
+          />
           <AuthRoute
             path={routes.addVisit}
             component={AddVisitScene}

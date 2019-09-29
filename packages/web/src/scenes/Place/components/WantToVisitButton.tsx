@@ -39,17 +39,17 @@ const updateWantToVisit = (providerPlaceId: string) => (cache: DataProxy) => {
 };
 
 interface WantToVisitButtonProps {
-  providerPlaceId: string;
+  providerId: string;
   wantToVisit: boolean;
 }
 
 export const WantToVisitButton = ({
-  providerPlaceId,
+  providerId,
   wantToVisit
 }: WantToVisitButtonProps) => {
   const [toggleWantToVisit, { loading }] = useToggleWantToVisitMutation({
-    variables: { providerPlaceId },
-    update: updateWantToVisit(providerPlaceId),
+    variables: { providerPlaceId: providerId },
+    update: updateWantToVisit(providerId),
     refetchQueries: [{ query: WantToVisitListDocument }]
   });
 

@@ -137,7 +137,8 @@ export class PlaceService {
     const createdPlace = this.placeRepository.create({
       user,
       userId: user.id,
-      providerId: providerPlaceId
+      providerId: providerPlaceId,
+      tags: []
     });
 
     logger.info('Place created', { place: createdPlace.id });
@@ -155,7 +156,8 @@ export class PlaceService {
       where: {
         userId,
         providerId: In(providerPlaceIds)
-      }
+      },
+      relations: ['visits']
     });
   }
 
@@ -219,7 +221,7 @@ export class PlaceService {
       throw new Error(`No user found with id "${providerId}"`);
     }
 
-    const place = await this.findByProviderId(providerId, userId);
+    const place = await this.findByIdOrCreate(providerId, user);
 
     if (!place) {
       logger.error('No place found', { providerId, user: userId });
@@ -235,7 +237,8 @@ export class PlaceService {
       place.priceLevel = input.priceLevel;
       logger.info('Place price level updated', {
         place: place.id,
-        user: userId
+        user: userId,
+        priceLevel: place.priceLevel
       });
     }
 
@@ -245,7 +248,7 @@ export class PlaceService {
     }
 
     if (input.tags) {
-      this.setTags(place, input.tags, user);
+      await this.setTags(place, input.tags, user);
     }
 
     await this.placeRepository.save(place);

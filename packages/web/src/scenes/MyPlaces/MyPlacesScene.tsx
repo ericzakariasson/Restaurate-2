@@ -4,7 +4,7 @@ import { Page } from '../../components';
 import { NoResult } from '../../components/NoResult';
 import { SkeletonCards } from '../../components/Skeleton';
 import { useMePlacesQuery } from '../../graphql/types';
-import { placeRoute } from '../../routes';
+import { myPlaceRoute } from '../../routes';
 import { GeneralError } from '../Error/GeneralError';
 import { PlaceListItem } from './component/PlaceListItem';
 
@@ -50,7 +50,7 @@ export const MyPlacesScene = () => {
               address={place.details.location.address.formatted}
               visitCount={place.visitCount}
               averageScore={place.averageScore}
-              to={placeRoute(place.providerId)}
+              to={myPlaceRoute({ providerId: place.providerId })}
               tags={place.tags}
             />
           ))}

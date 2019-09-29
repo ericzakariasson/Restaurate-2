@@ -21,10 +21,6 @@ export class UserService {
   ) {}
 
   async findById(id: number) {
-    if (!id) {
-      throw new Error('No user id provided');
-    }
-
     return this.userRepository.findOne(id);
   }
 

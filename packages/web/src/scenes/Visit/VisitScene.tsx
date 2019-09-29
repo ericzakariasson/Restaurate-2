@@ -3,7 +3,7 @@ import { rateNodes } from 'constants/rate.constants';
 import { Rate, useVisitQuery } from 'graphql/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { editVisitRoute, placeRoute, WithVisitId } from 'routes';
+import { editVisitRoute, WithVisitId, myPlaceRoute } from 'routes';
 import styled from 'styled-components';
 import { formatDate, translateRateName } from 'utils/format';
 import { GeneralError } from '..';
@@ -190,7 +190,7 @@ export const VisitScene = ({
       <NavButton
         variant="secondary"
         color="white"
-        to={placeRoute(place.providerId)}
+        to={myPlaceRoute({ providerId: place.providerId })}
         text={`${place.details.name}`}
         size="large"
         margin={['bottom']}

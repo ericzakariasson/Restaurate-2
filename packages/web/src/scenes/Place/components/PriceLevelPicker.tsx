@@ -1,4 +1,8 @@
-import { PriceLevel, useUpdatePlaceMutation } from 'graphql/types';
+import {
+  PreviewPlaceDocument,
+  PriceLevel,
+  useUpdatePlaceMutation
+} from 'graphql/types';
 import { useDevice } from 'hooks';
 import * as React from 'react';
 import { ChevronDown } from 'react-feather';
@@ -32,6 +36,10 @@ const StyledSelect = styled.select<SelectProps>`
 
 const priceLevelArray = Object.values(PriceLevel);
 
+const refetchPreview = (providerId: string) => ({
+  refetchQueries: [{ query: PreviewPlaceDocument, variables: { providerId } }]
+});
+
 interface PriceLevelProps {
   priceLevel: PriceLevel;
   providerId: string;
@@ -54,7 +62,8 @@ export const PriceLevelPicker = ({
         data: {
           priceLevel: priceLevelIndex
         }
-      }
+      },
+      ...refetchPreview(providerId)
     });
   };
 

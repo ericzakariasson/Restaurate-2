@@ -131,10 +131,19 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
         background-color: #f5f5f5;
         border: none;
       `}
+
+    ${p =>
+      p.variant === 'secondary' &&
+      p.color === 'black' &&
+      css`
+        color: #fff;
+        background-color: ${p.theme.colors.black.default};
+        border: none;
+      `}
   
   ${p =>
     p.variant === 'secondary' &&
-    !(['white', 'gray'] as Color[]).includes(p.color) &&
+    !(['white', 'gray', 'black'] as Color[]).includes(p.color) &&
     css`
       background-color: ${p.theme.colors[p.color].hues[9]};
       border-color: ${p.theme.colors[p.color].hues[0]};

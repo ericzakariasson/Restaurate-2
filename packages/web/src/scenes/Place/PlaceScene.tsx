@@ -8,13 +8,14 @@ import { PlaceMap } from './components/Map';
 import { Visits } from './components/Visits';
 import { UserStat } from './components/UserStat';
 import { Website } from './components/Website';
-import { ProviderPlaceIdParam, addVisitRoute } from 'routes';
+import { PlaceProviderIdParam, addVisitRoute } from 'routes';
 import { WantToVisitButton } from './components/WantToVisitButton';
 import { PriceLevelPicker } from './components/PriceLevelPicker';
 import { Tags } from './components/Tags';
 import { Comment } from './components/Comment';
 import { Phone } from './components/Phone';
 import { Types } from './components/Types';
+import { NotFoundScene } from 'scenes/NotFound/NotFoundScene';
 
 const UserStats = styled.section`
   display: flex;
@@ -30,15 +31,15 @@ const Contact = styled.div`
   margin-bottom: 15px;
 `;
 
-interface PlaceSceneProps extends RouteComponentProps<ProviderPlaceIdParam> {}
+interface PlaceSceneProps extends RouteComponentProps<PlaceProviderIdParam> {}
 
 export const PlaceScene = ({
   match: {
-    params: { providerPlaceId }
+    params: { providerId }
   }
 }: PlaceSceneProps) => {
   const { data, loading, error } = usePlaceQuery({
-    variables: { providerId: providerPlaceId }
+    variables: { providerId }
   });
 
   if (loading) {
@@ -51,6 +52,10 @@ export const PlaceScene = ({
 
   const place = data && data.place;
 
+  if (!place) {
+    return <NotFoundScene />;
+  }
+
   const {
     details: { name, location, contact },
     priceLevel,
@@ -62,7 +67,7 @@ export const PlaceScene = ({
     hasVisited,
     wantToVisit,
     types
-  } = place!;
+  } = place;
 
   const { website, phone } = contact;
 
@@ -81,24 +86,18 @@ export const PlaceScene = ({
         <UserStat label="Betyg" value={averageScore || '–'} />
       </UserStats>
       <UserPlaceInputs>
-        <Types types={types} providerId={providerPlaceId} />
-        <PriceLevelPicker
-          priceLevel={priceLevel}
-          providerId={providerPlaceId}
-        />
-        <Tags tags={tags} providerId={providerPlaceId} />
-        <Comment comment={comment} providerId={providerPlaceId} />
+        <Types types={types} providerId={providerId} />
+        <PriceLevelPicker priceLevel={priceLevel} providerId={providerId} />
+        <Tags tags={tags} providerId={providerId} />
+        <Comment comment={comment} providerId={providerId} />
       </UserPlaceInputs>
       {!hasVisited && (
-        <WantToVisitButton
-          providerPlaceId={providerPlaceId}
-          wantToVisit={wantToVisit}
-        />
+        <WantToVisitButton providerId={providerId} wantToVisit={wantToVisit} />
       )}
       <NavButton
         text="Nytt besök"
         variant="primary"
-        to={addVisitRoute(providerPlaceId)}
+        to={addVisitRoute(providerId)}
       />
       <Visits visits={visits} />
     </Page>

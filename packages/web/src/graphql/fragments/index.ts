@@ -1,4 +1,5 @@
 export { default as place } from './place.fragment';
+export { default as placePreview } from './place.preview.fragment';
 export { default as placeDetailsBasic } from './place.detailsBasic.fragment';
 export { default as placeDetails } from './place.details.fragment';
 export { default as placeTag } from './placeTag.fragment';

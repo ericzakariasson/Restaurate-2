@@ -1,3 +1,4 @@
+import { trackEvent } from 'analytics/trackEvent';
 import { Button, Loading, Page } from 'components';
 import { useVisitForm } from 'components/VisitForm/useVisitForm';
 import { VisitForm } from 'components/VisitForm/VisitForm';
@@ -10,21 +11,20 @@ import {
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
-import { ProviderPlaceIdParam, routes } from 'routes';
+import { myPlaceRoute, PlaceProviderIdParam } from 'routes';
 import { GeneralError } from 'scenes/Error/GeneralError';
 import { transformToInput } from '../../components/VisitForm/rateHelper';
-import { trackEvent } from 'analytics/trackEvent';
 
 interface AddVisitSceneProps
-  extends RouteComponentProps<ProviderPlaceIdParam> {}
+  extends RouteComponentProps<PlaceProviderIdParam> {}
 
 export const AddVisitScene = ({
   match: {
-    params: { providerPlaceId }
+    params: { providerId }
   }
 }: AddVisitSceneProps) => {
   const { data, loading, error } = usePlaceDetailsQuery({
-    variables: { providerId: providerPlaceId }
+    variables: { providerId }
   });
 
   const { values, handlers, isValid } = useVisitForm();
@@ -35,7 +35,7 @@ export const AddVisitScene = ({
   ] = useAddVisitMutation({
     variables: {
       data: {
-        providerPlaceId,
+        providerPlaceId: providerId,
         visitDate: values.visitDate,
         comment: values.comment,
         orders: values.orders,
@@ -56,7 +56,7 @@ export const AddVisitScene = ({
   };
 
   if (addVisitData && addVisitData.addVisit.saved) {
-    return <Redirect to={routes.dashboard} />;
+    return <Redirect to={myPlaceRoute({ providerId })} />;
   }
 
   if (loading) {
