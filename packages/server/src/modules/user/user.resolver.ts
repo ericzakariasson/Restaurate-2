@@ -5,7 +5,9 @@ import {
   FieldResolver,
   Root,
   Mutation,
-  Arg
+  Arg,
+  UseMiddleware,
+  Authorized
 } from 'type-graphql';
 import { User } from './user.entity';
 import { Place } from '../place/place.entity';
@@ -14,6 +16,7 @@ import { Context } from '../../graphql/types';
 import { Service } from 'typedi';
 import { UserService } from './user.service';
 import { UserRegisterInput } from './user.types';
+import { rateLimit } from '../../utils/rateLimit';
 
 @Service()
 @Resolver(User)
@@ -21,9 +24,10 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: Context): Promise<User | null> {
-    return this.userService.getMe(ctx.req.session.userId);
+    return this.userService.getMe(ctx.req.session.userId!);
   }
 
+  @UseMiddleware(rateLimit(20))
   @Mutation(() => User, { nullable: true })
   async login(
     @Arg('email') email: string,
@@ -33,11 +37,14 @@ export class UserResolver {
     return this.userService.login(email, password, ctx.req);
   }
 
+  @UseMiddleware(rateLimit(20))
+  @Authorized()
   @Mutation(() => Boolean)
   async logout(@Ctx() ctx: Context): Promise<boolean> {
     return this.userService.logout(ctx.req);
   }
 
+  @UseMiddleware(rateLimit(10))
   @Mutation(() => User, { nullable: true })
   async register(
     @Arg('data') data: UserRegisterInput,

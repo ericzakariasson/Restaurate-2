@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 interface Session extends Express.Session {
-  userId: number;
+  userId?: number;
 }
 
 export interface SessionRequest extends Request {

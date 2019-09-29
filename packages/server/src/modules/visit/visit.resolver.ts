@@ -6,7 +6,8 @@ import {
   Root,
   Mutation,
   Authorized,
-  Ctx
+  Ctx,
+  UseMiddleware
 } from 'type-graphql';
 import { Visit } from './visit.entity';
 import { Place } from '../place/place.entity';
@@ -18,8 +19,7 @@ import { VisitService } from './visit.service';
 import { VisitResponse, AddVisitInput, EditVisitInput } from './visit.types';
 import { Context } from '../../graphql/types';
 import { logger } from '../../utils/logger';
-// import { Rate } from './rate/rate.entity';
-// import { RateService } from './rate/rate.service';
+import { rateLimitAuthenticated } from '../../utils/rateLimit';
 
 @Service()
 @Resolver(Visit)
@@ -35,13 +35,14 @@ export class VisitResolver {
     return this.visitService.findById(id);
   }
 
+  @UseMiddleware(rateLimitAuthenticated(100))
   @Authorized()
   @Mutation(() => VisitResponse)
   async addVisit(
     @Arg('data') input: AddVisitInput,
     @Ctx() ctx: Context
   ): Promise<VisitResponse> {
-    const user = await this.userService.findById(ctx.req.session.userId);
+    const user = await this.userService.findById(ctx.req.session.userId!);
 
     if (!user) {
       throw new Error('No user found');
@@ -61,13 +62,14 @@ export class VisitResolver {
     };
   }
 
+  @UseMiddleware(rateLimitAuthenticated(500))
   @Authorized()
   @Mutation(() => VisitResponse)
   async editVisit(
     @Arg('data') input: EditVisitInput,
     @Ctx() ctx: Context
   ): Promise<VisitResponse> {
-    const user = await this.userService.findById(ctx.req.session.userId);
+    const user = await this.userService.findById(ctx.req.session.userId!);
 
     if (!user) {
       throw new Error('No user found');

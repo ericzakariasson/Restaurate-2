@@ -6,7 +6,8 @@ import {
   Mutation,
   Query,
   Resolver,
-  Root
+  Root,
+  UseMiddleware
 } from 'type-graphql';
 import { Service } from 'typedi';
 import { Context } from '../../graphql/types';
@@ -26,6 +27,7 @@ import {
 } from './place.types';
 import { PlacePreview } from './preview/place.preview.types';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
+import { rateLimitAuthenticated } from '../../utils/rateLimit';
 
 @Service()
 @Resolver(Place)
@@ -44,7 +46,7 @@ export class PlaceResolver {
     @Arg('position', { nullable: true }) position?: PositionInput
   ): Promise<PlaceSearchResult> {
     const places = await this.placeService.searchPlaces(
-      ctx.req.session.userId,
+      ctx.req.session.userId!,
       query,
       position
     );
@@ -75,7 +77,7 @@ export class PlaceResolver {
 
     const place = await this.placeService.findByProviderId(
       providerId,
-      userId ? parsedUserId : ctx.req.session.userId
+      userId ? parsedUserId : ctx.req.session.userId!
     );
 
     if (!place) {
@@ -100,7 +102,7 @@ export class PlaceResolver {
 
     const place = await this.placeService.findByProviderId(
       details.providerId,
-      userId
+      userId!
     );
 
     const preview = new PlacePreview();
@@ -109,6 +111,7 @@ export class PlaceResolver {
     return preview;
   }
 
+  @UseMiddleware(rateLimitAuthenticated(100))
   @Authorized()
   @Mutation(() => Place, { nullable: true })
   async createPlace(
@@ -116,7 +119,7 @@ export class PlaceResolver {
     @Ctx() ctx: Context
   ): Promise<Place | null> {
     const { userId } = ctx.req.session;
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findById(userId!);
 
     if (!user) {
       throw new Error(`No user found with id "${userId}"`);
@@ -131,7 +134,7 @@ export class PlaceResolver {
   @Query(() => [PlaceDetailsBasic])
   async wantToVisitList(@Ctx() ctx: Context): Promise<PlaceDetailsBasic[]> {
     const placeDetailsList = await this.placeService.getWantToVisitList(
-      ctx.req.session.userId
+      ctx.req.session.userId!
     );
 
     const transform = transformToBasicDetails([]);
@@ -145,7 +148,7 @@ export class PlaceResolver {
     @Arg('providerPlaceId') providerPlaceId: string,
     @Ctx() ctx: Context
   ): Promise<boolean> {
-    return this.wtvService.toggle(providerPlaceId, ctx.req.session.userId);
+    return this.wtvService.toggle(providerPlaceId, ctx.req.session.userId!);
   }
 
   @Authorized()
@@ -156,12 +159,13 @@ export class PlaceResolver {
   ): Promise<boolean> {
     const wtv = await this.wtvService.findByProviderId(
       providerId,
-      ctx.req.session.userId
+      ctx.req.session.userId!
     );
 
     return Boolean(wtv);
   }
 
+  @UseMiddleware(rateLimitAuthenticated(500))
   @Authorized()
   @Mutation(() => Place)
   async updatePlace(
@@ -169,7 +173,7 @@ export class PlaceResolver {
     @Arg('data') input: UpdatePlaceInput,
     @Ctx() ctx: Context
   ): Promise<Place> {
-    return this.placeService.update(providerId, input, ctx.req.session.userId);
+    return this.placeService.update(providerId, input, ctx.req.session.userId!);
   }
 
   @Authorized()
@@ -228,7 +232,7 @@ export class PlaceResolver {
   ): Promise<boolean> {
     const wantToVisit = await this.wtvService.findByProviderId(
       place.providerId,
-      ctx.req.session.userId
+      ctx.req.session.userId!
     );
 
     return Boolean(wantToVisit);
