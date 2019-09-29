@@ -12,6 +12,7 @@ import { createConnection } from './utils/createConnection';
 import { logger } from './utils/logger';
 import { redis } from './services/redis/redis';
 import * as connectRedis from 'connect-redis';
+import * as helmet from 'helmet';
 
 dotenv.config();
 
@@ -26,6 +27,8 @@ const startServer = async (): Promise<void> => {
   }
 
   const app = express();
+
+  app.use(helmet());
 
   logger.debug('Allowed origins', process.env.ALLOWED_ORIGINS);
 
