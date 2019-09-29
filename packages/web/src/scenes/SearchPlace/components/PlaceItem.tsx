@@ -169,7 +169,6 @@ export const PlaceItem = ({
   return (
     <Item touching={touching}>
       {visits > 0 && <VisitCount>{visits}</VisitCount>}
-      {hasPlace && <span>Has PLce</span>}
       <Link to={to}>
         <Map touching={touching} url={mapUrl} size={imageSize} />
         <Info>

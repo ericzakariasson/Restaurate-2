@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { addVisitRoute, routes } from 'routes';
 import styled from 'styled-components';
-import { Loading, NavButton, Page, ActionButton } from '../../components';
+import { Loading, NavButton, Page } from '../../components';
 import { PlaceQueryVariables, usePlaceDetailsQuery } from '../../graphql/types';
 import { GeneralError } from '../Error/GeneralError';
 import { Details } from './components/Details';
