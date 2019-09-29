@@ -1,17 +1,7 @@
-import { Field, ID, ObjectType } from 'type-graphql';
-import { PlaceDetails } from '../place.types';
+import { Field, ObjectType, ID } from 'type-graphql';
 
 @ObjectType()
 export class PlacePreview {
-  @Field(() => ID)
-  id: string;
-
-  @Field(() => PlaceDetails)
-  details: PlaceDetails;
-
-  @Field()
-  wantToVisit: boolean;
-
-  @Field(() => Number, { nullable: true })
+  @Field(() => ID, { nullable: true })
   placeId: number | null;
 }

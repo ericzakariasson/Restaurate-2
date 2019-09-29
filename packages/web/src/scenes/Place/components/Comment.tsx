@@ -47,7 +47,8 @@ export const Comment = ({ comment, providerId }: CommentProps) => {
         {!editing && (
           <ActionButton
             onClick={() => setEditing(true)}
-            icon={<Edit2 {...iconProps} size={16} />}
+            icon={Edit2}
+            iconProps={{ ...iconProps, size: 16 }}
           />
         )}
       </InputBlock>
@@ -57,13 +58,13 @@ export const Comment = ({ comment, providerId }: CommentProps) => {
           <Wrapper>
             <ActionButton
               onClick={() => setEditing(false)}
-              icon={<X {...iconProps} />}
+              icon={X}
+              iconProps={iconProps}
             />
             <ActionButton
               onClick={handleClick}
-              icon={
-                saving ? <Loader {...iconProps} /> : <Check {...iconProps} />
-              }
+              icon={saving ? Loader : Check}
+              iconProps={iconProps}
             />
           </Wrapper>
         </div>

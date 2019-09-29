@@ -97,7 +97,8 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
                   {editing ? (
                     <ActionButton
                       onClick={handleRemove(tag.id)}
-                      icon={<X {...iconProps} size={16} />}
+                      icon={X}
+                      iconProps={{ ...iconProps, size: 16 }}
                     />
                   ) : (
                     i !== tags.length - 1 && ','
@@ -108,7 +109,8 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
           {!editing && (
             <ActionButton
               onClick={toggleEditing}
-              icon={<Edit2 {...iconProps} size={16} />}
+              icon={Edit2}
+              iconProps={{ ...iconProps, size: 16 }}
             />
           )}
         </List>
@@ -124,11 +126,13 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
           <ActionButton
             disabled={saving}
             type="submit"
-            icon={saving ? <Loader {...iconProps} /> : <Plus {...iconProps} />}
+            icon={saving ? Loader : Plus}
+            iconProps={iconProps}
           />
           <ActionButton
             onClick={() => setEditing(false)}
-            icon={<Check {...iconProps} />}
+            icon={Check}
+            iconProps={iconProps}
           />
         </Form>
       )}

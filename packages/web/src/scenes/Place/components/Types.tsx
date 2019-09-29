@@ -87,13 +87,8 @@ export const Types = ({ types, providerId }: TypesProps) => {
         )}
         <ActionButton
           onClick={toggleEditing}
-          icon={
-            editing ? (
-              <Check {...iconProps} size={16} />
-            ) : (
-              <Edit2 {...iconProps} size={16} />
-            )
-          }
+          icon={editing ? Check : Edit2}
+          iconProps={{ ...iconProps, size: 16 }}
         />
       </InputBlock>
     </>

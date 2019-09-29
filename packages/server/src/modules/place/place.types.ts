@@ -61,6 +61,9 @@ export class PlaceDetailsBasic {
   @Field()
   visits: number;
 
+  @Field()
+  hasPlace: boolean;
+
   @Field(() => Position)
   position: Position;
 

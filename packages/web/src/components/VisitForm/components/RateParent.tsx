@@ -75,7 +75,11 @@ export const RateHeader = ({ label, score, resetScore }: RateHeaderProps) => (
     <Separator>–</Separator>
     <Score disabled={score === 0}>{score}</Score>
     {resetScore && score !== 0 && (
-      <ActionButton onClick={resetScore} icon={<X size={18} color="#666" />} />
+      <ActionButton
+        onClick={resetScore}
+        icon={X}
+        iconProps={{ size: 18, color: '#666' }}
+      />
     )}
   </Text>
 );

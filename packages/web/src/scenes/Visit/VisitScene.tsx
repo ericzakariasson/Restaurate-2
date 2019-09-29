@@ -90,8 +90,18 @@ const Private = styled.h4`
 `;
 
 const sortRatings = (a: Rate, b: Rate) => {
-  const aNode = rateNodes.find(node => node.name === a.name)!;
-  const bNode = rateNodes.find(node => node.name === b.name)!;
+  const aNode = rateNodes.find(node => node.name === a.name);
+
+  if (!aNode) {
+    return 1;
+  }
+
+  const bNode = rateNodes.find(node => node.name === b.name);
+
+  if (!bNode) {
+    return 1;
+  }
+
   return aNode.order > bNode.order ? 1 : -1;
 };
 
@@ -144,7 +154,7 @@ export const VisitScene = ({
       <Block>
         <Label text="Betyg" />
         <Ratings>
-          {ratings.sort(sortRatings).map(rate => {
+          {[...ratings].sort(sortRatings).map(rate => {
             return (
               <Rating key={rate.name}>
                 <RatingWrapper>

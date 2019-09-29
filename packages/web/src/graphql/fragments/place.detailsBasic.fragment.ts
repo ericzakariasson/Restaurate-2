@@ -6,6 +6,7 @@ export default gql`
     name
     address
     visits
+    hasPlace
     position {
       lat
       lng

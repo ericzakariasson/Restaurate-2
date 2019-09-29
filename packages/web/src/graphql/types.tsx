@@ -180,16 +180,14 @@ export type PlaceDetailsBasic = {
   name: Scalars['String'],
   address: Scalars['String'],
   visits: Scalars['Float'],
+  hasPlace: Scalars['Boolean'],
   position: Position,
   categories: Array<Scalars['String']>,
 };
 
 export type PlacePreview = {
    __typename?: 'PlacePreview',
-  id: Scalars['ID'],
-  details: PlaceDetails,
-  wantToVisit: Scalars['Boolean'],
-  placeId?: Maybe<Scalars['Float']>,
+  placeId?: Maybe<Scalars['ID']>,
 };
 
 export type PlaceSearchResult = {
@@ -234,6 +232,7 @@ export type Query = {
   place?: Maybe<Place>,
   previewPlace?: Maybe<PlacePreview>,
   wantToVisitList: Array<PlaceDetailsBasic>,
+  wantToVisitPlace: Scalars['Boolean'],
   allPlaceTypes: Array<PlaceType>,
 };
 
@@ -255,12 +254,18 @@ export type QueryPlaceDetailsArgs = {
 
 
 export type QueryPlaceArgs = {
+  userId?: Maybe<Scalars['String']>,
   providerId: Scalars['String']
 };
 
 
 export type QueryPreviewPlaceArgs = {
   providerId?: Maybe<Scalars['String']>
+};
+
+
+export type QueryWantToVisitPlaceArgs = {
+  providerId: Scalars['String']
 };
 
 export type Rate = {
@@ -396,7 +401,7 @@ export type OpeningHoursFragment = (
 
 export type PlaceDetailsBasicFragment = (
   { __typename?: 'PlaceDetailsBasic' }
-  & Pick<PlaceDetailsBasic, 'providerId' | 'name' | 'address' | 'visits' | 'categories'>
+  & Pick<PlaceDetailsBasic, 'providerId' | 'name' | 'address' | 'visits' | 'hasPlace' | 'categories'>
   & { position: (
     { __typename?: 'Position' }
     & Pick<Position, 'lat' | 'lng'>
@@ -417,10 +422,7 @@ export type PlaceFragment = (
 
 export type PlacePreviewFragment = (
   { __typename?: 'PlacePreview' }
-  & Pick<PlacePreview, 'id' | 'wantToVisit' | 'placeId'>
-  & { details: { __typename?: 'PlaceDetails' }
-    & PlaceDetailsFragment
-   }
+  & Pick<PlacePreview, 'placeId'>
 );
 
 export type PlaceTagFragment = (
@@ -627,7 +629,8 @@ export type PlaceDetailsQuery = (
 );
 
 export type PlaceQueryVariables = {
-  providerId: Scalars['String']
+  providerId: Scalars['String'],
+  userId?: Maybe<Scalars['String']>
 };
 
 
@@ -692,17 +695,80 @@ export type WantToVisitListQuery = (
     & PlaceDetailsBasicFragment
   > }
 );
+
+export type WantToVisitPlaceQueryVariables = {
+  providerId: Scalars['String']
+};
+
+
+export type WantToVisitPlaceQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'wantToVisitPlace'>
+);
 export const PlaceDetailsBasicFragmentDoc = gql`
     fragment PlaceDetailsBasic on PlaceDetailsBasic {
   providerId
   name
   address
   visits
+  hasPlace
   position {
     lat
     lng
   }
   categories
+}
+    `;
+export const PlacePreviewFragmentDoc = gql`
+    fragment PlacePreview on PlacePreview {
+  placeId
+}
+    `;
+export const TagFragmentDoc = gql`
+    fragment Tag on Tag {
+  id
+  name
+  createdAt
+  updatedAt
+}
+    `;
+export const VisitOrderFragmentDoc = gql`
+    fragment VisitOrder on Order {
+  id
+  title
+  createdAt
+  updatedAt
+}
+    `;
+export const VisitRateFragmentDoc = gql`
+    fragment VisitRate on Rate {
+  id
+  name
+  score
+  calculatedScore
+  createdAt
+  updatedAt
+}
+    `;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  name
+  firstName
+  lastName
+  role
+  email
+  createdAt
+  updatedAt
+  placeCount
+  visitCount
+}
+    `;
+export const PlaceTagFragmentDoc = gql`
+    fragment PlaceTag on Tag {
+  id
+  name
+  createdAt
 }
     `;
 export const LocationFragmentDoc = gql`
@@ -768,63 +834,6 @@ export const PlaceDetailsFragmentDoc = gql`
 ${CategoryFragmentDoc}
 ${ContactFragmentDoc}
 ${OpeningHoursFragmentDoc}`;
-export const PlacePreviewFragmentDoc = gql`
-    fragment PlacePreview on PlacePreview {
-  id
-  details {
-    ...PlaceDetails
-  }
-  wantToVisit
-  placeId
-}
-    ${PlaceDetailsFragmentDoc}`;
-export const TagFragmentDoc = gql`
-    fragment Tag on Tag {
-  id
-  name
-  createdAt
-  updatedAt
-}
-    `;
-export const VisitOrderFragmentDoc = gql`
-    fragment VisitOrder on Order {
-  id
-  title
-  createdAt
-  updatedAt
-}
-    `;
-export const VisitRateFragmentDoc = gql`
-    fragment VisitRate on Rate {
-  id
-  name
-  score
-  calculatedScore
-  createdAt
-  updatedAt
-}
-    `;
-export const UserFragmentDoc = gql`
-    fragment User on User {
-  id
-  name
-  firstName
-  lastName
-  role
-  email
-  createdAt
-  updatedAt
-  placeCount
-  visitCount
-}
-    `;
-export const PlaceTagFragmentDoc = gql`
-    fragment PlaceTag on Tag {
-  id
-  name
-  createdAt
-}
-    `;
 export const PlaceFragmentDoc = gql`
     fragment Place on Place {
   id
@@ -1093,8 +1102,8 @@ export const PlaceDetailsDocument = gql`
 export type PlaceDetailsQueryHookResult = ReturnType<typeof usePlaceDetailsQuery>;
 export type PlaceDetailsQueryResult = ApolloReactCommon.QueryResult<PlaceDetailsQuery, PlaceDetailsQueryVariables>;
 export const PlaceDocument = gql`
-    query Place($providerId: String!) {
-  place(providerId: $providerId) {
+    query Place($providerId: String!, $userId: String) {
+  place(providerId: $providerId, userId: $userId) {
     ...Place
     visits {
       ...Visit
@@ -1183,3 +1192,18 @@ export const WantToVisitListDocument = gql`
       
 export type WantToVisitListQueryHookResult = ReturnType<typeof useWantToVisitListQuery>;
 export type WantToVisitListQueryResult = ApolloReactCommon.QueryResult<WantToVisitListQuery, WantToVisitListQueryVariables>;
+export const WantToVisitPlaceDocument = gql`
+    query WantToVisitPlace($providerId: String!) {
+  wantToVisitPlace(providerId: $providerId)
+}
+    `;
+
+    export function useWantToVisitPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>) {
+      return ApolloReactHooks.useQuery<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>(WantToVisitPlaceDocument, baseOptions);
+    }
+      export function useWantToVisitPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>(WantToVisitPlaceDocument, baseOptions);
+      }
+      
+export type WantToVisitPlaceQueryHookResult = ReturnType<typeof useWantToVisitPlaceQuery>;
+export type WantToVisitPlaceQueryResult = ApolloReactCommon.QueryResult<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>;

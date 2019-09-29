@@ -190,20 +190,18 @@ export class PlaceService {
   async setTags(place: Place, tagNames: string[], user: User) {
     place.tags = place.tags.filter(tag => tagNames.includes(tag.name));
 
-    const newTagNames = tagNames.filter(tagName =>
-      place.tags.some(tag => tag.name === tagName)
+    const newTagNames = tagNames.filter(
+      tagName => !place.tags.some(tag => tag.name === tagName)
     );
 
-    await Promise.all(
-      newTagNames.map(async tagName => {
-        const tag = await this.tagService.findByNameOrCreate(
-          tagName,
-          place,
-          user
-        );
-        place.tags.concat(tag);
-      })
+    const newTags = await Promise.all(
+      newTagNames.map(
+        async tagName =>
+          await this.tagService.findByNameOrCreate(tagName, place, user)
+      )
     );
+
+    newTags.forEach(t => place.tags.push(t));
 
     logger.info('Updated place tags', {
       place: place.id,
@@ -233,7 +231,7 @@ export class PlaceService {
       logger.info('Place comment updated', { place: place.id, user: userId });
     }
 
-    if (input.priceLevel) {
+    if (input.priceLevel !== undefined) {
       place.priceLevel = input.priceLevel;
       logger.info('Place price level updated', {
         place: place.id,

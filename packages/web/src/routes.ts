@@ -13,9 +13,9 @@ export const routes = {
   login: '/login',
   visit: '/visit/:id',
   editVisit: '/visit/:id/edit',
-  previewPlace: '/place/preview/:providerId',
-  myPlace: '/place/me/:providerId',
-  place: '/place/:userId/:providerId',
+  place: '/place/:providerId/:userId',
+  previewPlace: '/place/:providerId/preview',
+  myPlace: '/place/:providerId/me',
   searchPlace: '/search/place',
   wantToVisit: '/want-to-visit',
   settings: '/settings'

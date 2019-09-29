@@ -79,10 +79,7 @@ export const PriceLevelPicker = ({
         {isMobile && (
           <>
             {!!priceLevel ? formatPriceLevel(priceLevel) : '–'}
-            <ActionButton
-              onClick={handleClick}
-              icon={<ChevronDown size={20} color="#666" />}
-            />
+            <ActionButton onClick={handleClick} icon={ChevronDown} />
           </>
         )}
         <StyledSelect

@@ -24,7 +24,7 @@ export class WantToVisitService {
 
     if (exists) {
       await this.remove(placeProviderId, user);
-      return true;
+      return false;
     }
 
     await this.add(placeProviderId, user);

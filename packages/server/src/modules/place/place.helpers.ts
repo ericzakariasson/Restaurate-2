@@ -43,6 +43,8 @@ export const transformProviderSearchItem = (userPlaces: Place[]) => (
     ? item.categories.map(category => category.title)
     : [];
 
+  place.hasPlace = Boolean(samePlace);
+
   place.visits = samePlace
     ? samePlace.visits
       ? samePlace.visits.length
@@ -124,6 +126,8 @@ export const transformToBasicDetails = (userPlaces: Place[]) => (
   basicDetails.name = details.name;
   basicDetails.providerId = details.providerId;
   basicDetails.position = details.location.position;
+
+  basicDetails.hasPlace = Boolean(samePlace);
 
   basicDetails.visits = samePlace
     ? samePlace.visits

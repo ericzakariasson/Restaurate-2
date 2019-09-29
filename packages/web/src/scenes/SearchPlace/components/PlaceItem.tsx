@@ -118,7 +118,8 @@ const Category = styled.li`
   }
 `;
 
-const VisitCount = styled.div`
+const VisitCount = styled.span`
+  display: block;
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -141,7 +142,7 @@ interface PlaceItemProps {
 }
 
 export const PlaceItem = ({
-  place: { providerId, name, address, position, categories, visits },
+  place: { providerId, name, address, position, categories, visits, hasPlace },
   imageSize = 64,
   to
 }: PlaceItemProps) => {
@@ -168,6 +169,7 @@ export const PlaceItem = ({
   return (
     <Item touching={touching}>
       {visits > 0 && <VisitCount>{visits}</VisitCount>}
+      {hasPlace && <span>Has PLce</span>}
       <Link to={to}>
         <Map touching={touching} url={mapUrl} size={imageSize} />
         <Info>

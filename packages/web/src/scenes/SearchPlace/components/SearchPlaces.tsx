@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { PlaceItem } from './PlaceItem';
 import { PlaceDetailsBasic } from 'graphql/types';
-import { previewPlaceRoute } from 'routes';
+import { previewPlaceRoute, myPlaceRoute } from 'routes';
 
 const Count = styled.p`
   margin-top: 40px;
@@ -28,7 +28,11 @@ export const SearchPlaces = ({ places }: SearchPlacesProps) => {
         {places.map(place => (
           <PlaceItem
             key={place.providerId}
-            to={previewPlaceRoute({ providerId: place.providerId })}
+            to={
+              place.hasPlace
+                ? myPlaceRoute({ providerId: place.providerId })
+                : previewPlaceRoute({ providerId: place.providerId })
+            }
             place={place}
           />
         ))}

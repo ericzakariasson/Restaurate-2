@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { Icon } from 'react-feather';
+
 const Background = styled.button`
   background: #f5f5f5;
   border-radius: 4px;
@@ -17,24 +19,34 @@ const Background = styled.button`
   box-shadow: ${p => p.theme.boxShadow};
 `;
 
+interface IconProps {
+  size: number;
+  color: string;
+}
+
 interface ActionButtonProps {
-  icon: React.ReactNode;
+  icon: Icon;
+  iconProps?: IconProps;
   onClick?: () => void;
+  content?: React.ReactNode;
   as?: 'button' | 'span' | 'div';
   type?: 'button' | 'submit';
   disabled?: boolean;
 }
 
 export const ActionButton = ({
-  icon,
   onClick,
+  icon: Icon,
+  iconProps = { size: 20, color: '#666' },
+  content,
   type = 'button',
   as = 'button',
   disabled
 }: ActionButtonProps) => {
   return (
     <Background as={as} onClick={onClick} type={type} disabled={disabled}>
-      {icon}
+      {content}
+      <Icon {...iconProps} />
     </Background>
   );
 };

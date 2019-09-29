@@ -1,15 +1,17 @@
-import * as React from 'react';
 import { Button } from 'components';
-import { X, Plus } from 'react-feather';
+import {
+  usePlaceQuery,
+  useToggleWantToVisitMutation,
+  useWantToVisitPlaceQuery,
+  WantToVisitListDocument,
+  WantToVisitPlaceDocument,
+  WantToVisitPlaceQuery,
+  WantToVisitPlaceQueryVariables
+} from 'graphql/types';
+import * as React from 'react';
+import { Plus, X } from 'react-feather';
 import styled from 'styled-components';
 import { ActionButton } from '../../../components/ActionButton';
-import {
-  useToggleWantToVisitMutation,
-  PlaceDocument,
-  PlaceQuery,
-  WantToVisitListDocument
-} from 'graphql/types';
-import { DataProxy } from 'apollo-cache';
 
 const ButtonText = styled.span`
   display: flex;
@@ -17,63 +19,70 @@ const ButtonText = styled.span`
   align-items: center;
 `;
 
-const updateWantToVisit = (providerPlaceId: string) => (cache: DataProxy) => {
-  const placeQuery = {
-    query: PlaceDocument,
-    variables: { providerId: providerPlaceId }
-  };
-
-  const { place } = cache.readQuery<PlaceQuery>(placeQuery)!;
-
-  const updatedQuery = {
-    ...placeQuery,
-    data: {
-      place: {
-        ...place,
-        wantToVisit: !place!.wantToVisit
-      }
-    }
-  };
-
-  cache.writeQuery(updatedQuery);
-};
-
 interface WantToVisitButtonProps {
   providerId: string;
-  wantToVisit: boolean;
 }
 
-export const WantToVisitButton = ({
-  providerId,
-  wantToVisit
-}: WantToVisitButtonProps) => {
-  const [toggleWantToVisit, { loading }] = useToggleWantToVisitMutation({
-    variables: { providerPlaceId: providerId },
-    update: updateWantToVisit(providerId),
-    refetchQueries: [{ query: WantToVisitListDocument }]
-  });
+export const WantToVisitButton = ({ providerId }: WantToVisitButtonProps) => {
+  const { data, loading } = usePlaceQuery({ variables: { providerId } });
+
+  const {
+    data: wantToVisitData,
+    loading: loadingWantToVisit
+  } = useWantToVisitPlaceQuery({ variables: { providerId } });
+
+  const [toggleWantToVisit, { loading: saving }] = useToggleWantToVisitMutation(
+    {
+      variables: { providerPlaceId: providerId },
+      refetchQueries: [{ query: WantToVisitListDocument }],
+      update(cache, { data }) {
+        try {
+          cache.writeQuery<
+            WantToVisitPlaceQuery,
+            WantToVisitPlaceQueryVariables
+          >({
+            query: WantToVisitPlaceDocument,
+            variables: { providerId },
+            data: {
+              wantToVisitPlace: data!.toggleWantToVisit
+            }
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  );
+
+  if (loading || loadingWantToVisit) {
+    return null;
+  }
+
+  const hasVisited = data && data.place && data.place.hasVisited;
+
+  if (hasVisited) {
+    return null;
+  }
+
+  const wantToVisit = wantToVisitData && wantToVisitData.wantToVisitPlace;
 
   return (
     <Button
       text={
         <ButtonText>
-          {wantToVisit ? 'Vill besöka' : 'Lägg till i vill besöka'}
+          {wantToVisit ? 'Ta bort' : 'Vill besöka'}
           <ActionButton
             as="span"
-            icon={
-              wantToVisit ? (
-                <X size={16} color="#666" />
-              ) : (
-                <Plus size={16} color="#666" />
-              )
-            }
+            icon={wantToVisit ? X : Plus}
+            iconProps={{ size: 16, color: '#666' }}
           />
         </ButtonText>
       }
       variant="secondary"
       color="white"
-      margin={['bottom']}
-      loading={loading}
+      size="normal"
+      margin={['right']}
+      loading={saving}
       onClick={() => toggleWantToVisit()}
     />
   );

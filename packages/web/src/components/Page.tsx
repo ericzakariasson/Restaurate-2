@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 
 interface PageWrapperProps {
   center: boolean;
+  paddingBottom?: boolean;
 }
 
 const PageWrapper = styled.section<PageWrapperProps>`
@@ -12,13 +13,19 @@ const PageWrapper = styled.section<PageWrapperProps>`
   padding: ${p => p.theme.page.padding};
   display: flex;
   flex-direction: column;
-
+  background: #fefefe;
   ${p =>
     p.center &&
     css`
       min-height: calc(100vh - 58px);
       justify-content: center;
-    `}
+    `};
+
+  ${p =>
+    p.paddingBottom &&
+    css`
+      padding-bottom: 80px;
+    `};
 `;
 
 const PageTitleWrapper = styled.div`
@@ -63,6 +70,7 @@ interface PageProps {
   largeTitle?: boolean;
   subTitle?: string;
   center?: boolean;
+  paddingBottom?: boolean;
 }
 
 export const Page = ({
@@ -70,9 +78,10 @@ export const Page = ({
   children,
   subTitle,
   largeTitle = false,
-  center = false
+  center = false,
+  paddingBottom = false
 }: PageProps) => (
-  <PageWrapper center={center}>
+  <PageWrapper center={center} paddingBottom={paddingBottom}>
     <Helmet>
       <title>{title}</title>
     </Helmet>

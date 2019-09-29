@@ -22,11 +22,10 @@ import {
   PlaceSearchResult,
   PlaceType,
   PositionInput,
-  PriceLevel,
   UpdatePlaceInput
 } from './place.types';
-import { WantToVisitService } from './wantToVisit/wantToVisit.service';
 import { PlacePreview } from './preview/place.preview.types';
+import { WantToVisitService } from './wantToVisit/wantToVisit.service';
 
 @Service()
 @Resolver(Place)
@@ -64,23 +63,23 @@ export class PlaceResolver {
   @Authorized()
   @Query(() => Place, { nullable: true })
   async place(
+    @Ctx() ctx: Context,
     @Arg('providerId') providerId: string,
-    // @Arg('userId', { nullable: true }) userId?: number
-    @Ctx() ctx: Context
+    @Arg('userId', { nullable: true }) userId?: string
   ): Promise<Place | null> {
+    const parsedUserId = Number(userId);
+
+    if (userId && isNaN(parsedUserId)) {
+      throw new Error('is NaN');
+    }
+
     const place = await this.placeService.findByProviderId(
       providerId,
-      ctx.req.session.userId
+      userId ? parsedUserId : ctx.req.session.userId
     );
 
     if (!place) {
-      const details = await this.placeService.getPlaceDetails(providerId);
-      const preview = new Place();
-
-      preview.providerId = details.providerId;
-      preview.priceLevel = PriceLevel.NotSet;
-      preview.tags = [];
-      return preview;
+      return null;
     }
 
     if (place.userId !== ctx.req.session.userId) {
@@ -104,15 +103,7 @@ export class PlaceResolver {
       userId
     );
 
-    const wantToVisit = await this.wtvService.findByProviderId(
-      details.providerId,
-      userId
-    );
-
     const preview = new PlacePreview();
-    preview.id = details.providerId;
-    preview.details = details;
-    preview.wantToVisit = Boolean(wantToVisit);
     preview.placeId = place ? place.id : null;
 
     return preview;
@@ -155,6 +146,20 @@ export class PlaceResolver {
     @Ctx() ctx: Context
   ): Promise<boolean> {
     return this.wtvService.toggle(providerPlaceId, ctx.req.session.userId);
+  }
+
+  @Authorized()
+  @Query(() => Boolean)
+  async wantToVisitPlace(
+    @Arg('providerId') providerId: string,
+    @Ctx() ctx: Context
+  ): Promise<boolean> {
+    const wtv = await this.wtvService.findByProviderId(
+      providerId,
+      ctx.req.session.userId
+    );
+
+    return Boolean(wtv);
   }
 
   @Authorized()

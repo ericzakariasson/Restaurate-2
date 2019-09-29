@@ -8,7 +8,6 @@ export * from './Login/LoginScene';
 export * from './Default/DefaultScene';
 export * from './MyPlaces/MyPlacesScene';
 export * from './Place/PlaceScene';
-export * from './PlacePreview/PlacePreviewScene';
 export * from './WantToVisit/WantToVisitScene';
 export * from './Settings/SettingsScene';
 export * from './NotFound/NotFoundScene';
