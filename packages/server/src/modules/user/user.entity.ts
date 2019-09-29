@@ -54,6 +54,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: false })
+  confirmed: boolean;
+
   @OneToMany(() => Visit, visit => visit.user)
   visits: Visit[];
 

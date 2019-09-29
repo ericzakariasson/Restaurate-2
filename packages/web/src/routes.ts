@@ -18,7 +18,8 @@ export const routes = {
   myPlace: '/place/:providerId/me',
   searchPlace: '/search/place',
   wantToVisit: '/want-to-visit',
-  settings: '/settings'
+  settings: '/settings',
+  confirmUser: '/user/confirm/:token'
 };
 
 export const visitRoute = (id: string) => `/visit/${id}`;

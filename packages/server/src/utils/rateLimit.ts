@@ -1,8 +1,9 @@
 import { MiddlewareFn } from 'type-graphql';
 import { redis } from '../services/redis/redis';
 import { Context } from '../graphql/types';
+import { days } from './constants';
 
-const ONE_DAY = 60 * 60 * 24;
+const ONE_DAY = days(1);
 
 export const rateLimitAuthenticated: (
   limit?: number

@@ -24,7 +24,8 @@ import {
   WantToVisitScene,
   SettingsScene,
   NotFoundScene,
-  EditVisitScene
+  EditVisitScene,
+  ConfirmUserScene
 } from './scenes';
 import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 import { Navigation } from 'components/Navigation';
@@ -64,6 +65,11 @@ const App = () => {
           <Route
             path={routes.register}
             component={RegisterScene}
+            exact={true}
+          />
+          <Route
+            path={routes.confirmUser}
+            component={ConfirmUserScene}
             exact={true}
           />
           <Route path={routes.login} component={LoginScene} exact={true} />

@@ -80,6 +80,7 @@ export type Location = {
 
 export type Mutation = {
    __typename?: 'Mutation',
+  confirmUser: Scalars['Boolean'],
   login?: Maybe<User>,
   logout: Scalars['Boolean'],
   register?: Maybe<User>,
@@ -88,6 +89,11 @@ export type Mutation = {
   createPlace?: Maybe<Place>,
   toggleWantToVisit: Scalars['Boolean'],
   updatePlace: Place,
+};
+
+
+export type MutationConfirmUserArgs = {
+  token: Scalars['String']
 };
 
 
@@ -480,6 +486,16 @@ export type AddVisitMutation = (
     { __typename?: 'VisitResponse' }
     & Pick<VisitResponse, 'saved'>
   ) }
+);
+
+export type ConfirmUserMutationVariables = {
+  token: Scalars['String']
+};
+
+
+export type ConfirmUserMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'confirmUser'>
 );
 
 export type CreatePlaceMutationVariables = {
@@ -905,6 +921,19 @@ export type AddVisitMutationFn = ApolloReactCommon.MutationFunction<AddVisitMuta
 export type AddVisitMutationHookResult = ReturnType<typeof useAddVisitMutation>;
 export type AddVisitMutationResult = ApolloReactCommon.MutationResult<AddVisitMutation>;
 export type AddVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<AddVisitMutation, AddVisitMutationVariables>;
+export const ConfirmUserDocument = gql`
+    mutation ConfirmUser($token: String!) {
+  confirmUser(token: $token)
+}
+    `;
+export type ConfirmUserMutationFn = ApolloReactCommon.MutationFunction<ConfirmUserMutation, ConfirmUserMutationVariables>;
+
+    export function useConfirmUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ConfirmUserMutation, ConfirmUserMutationVariables>) {
+      return ApolloReactHooks.useMutation<ConfirmUserMutation, ConfirmUserMutationVariables>(ConfirmUserDocument, baseOptions);
+    }
+export type ConfirmUserMutationHookResult = ReturnType<typeof useConfirmUserMutation>;
+export type ConfirmUserMutationResult = ApolloReactCommon.MutationResult<ConfirmUserMutation>;
+export type ConfirmUserMutationOptions = ApolloReactCommon.BaseMutationOptions<ConfirmUserMutation, ConfirmUserMutationVariables>;
 export const CreatePlaceDocument = gql`
     mutation CreatePlace($providerId: String!) {
   createPlace(providerId: $providerId) {

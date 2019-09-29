@@ -13,8 +13,11 @@ import { logger } from './utils/logger';
 import { redis } from './services/redis/redis';
 import * as connectRedis from 'connect-redis';
 import * as helmet from 'helmet';
+import * as sendgrid from '@sendgrid/mail';
 
 dotenv.config();
+
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 const RedisStore = connectRedis(session);
 

@@ -28,6 +28,15 @@ export class UserResolver {
   }
 
   @UseMiddleware(rateLimit(20))
+  @Mutation(() => Boolean)
+  async confirmUser(
+    @Arg('token') token: string,
+    @Ctx() ctx: Context
+  ): Promise<boolean> {
+    return this.userService.confirmUser(token, ctx.req);
+  }
+
+  @UseMiddleware(rateLimit(20))
   @Mutation(() => User, { nullable: true })
   async login(
     @Arg('email') email: string,

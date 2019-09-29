@@ -7,7 +7,9 @@ import { UserRegisterInput } from './user.types';
 import { Place } from '../place/place.entity';
 import { Visit } from '../visit/visit.entity';
 import { SessionRequest } from '../../graphql/types';
-import { logger } from '../../utils/logger';
+import { logger, sendEmail } from '../../utils';
+import { createConfirmationUrl } from './user.helper';
+import { redis } from '../../services/redis/redis';
 
 @Service()
 export class UserService {
@@ -37,11 +39,32 @@ export class UserService {
       return null;
     }
 
+    if (!user.confirmed) {
+      return null;
+    }
+
     req.session.userId = user.id;
 
     logger.info('User login', { user: user.id });
 
     return user;
+  }
+
+  async confirmUser(token: string, req: SessionRequest) {
+    const userId = await redis.get(token);
+
+    if (!userId) {
+      return false;
+    }
+
+    await this.userRepository.update(userId, { confirmed: true });
+    await redis.del(token);
+
+    req.session.userId = Number(userId);
+
+    logger.info('User confirmed', { user: userId });
+
+    return true;
   }
 
   async register(input: UserRegisterInput, req: SessionRequest) {
@@ -57,6 +80,18 @@ export class UserService {
     req.session.userId = user.id;
 
     logger.info('User register', { user: user.id });
+
+    const confirmUserUrl = await createConfirmationUrl(user.id);
+
+    await sendEmail({
+      from: 'Restaurate <hej@restaurate.se>',
+      to: user.email,
+      template: 'confirmUser',
+      data: {
+        confirm_user_url: confirmUserUrl,
+        first_name: user.firstName
+      }
+    });
 
     return user;
   }
