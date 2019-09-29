@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeConsumer } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Karla:400,700|Overpass+Mono:400,600&display=swap');
@@ -127,6 +127,7 @@ export const theme = {
       ]
     },
     black: {
+      rgba: (opacity: number) => `rgb(34, 34, 34, ${opacity / 100})`,
       default: '#222',
       hues: [
         '#222222',
@@ -157,6 +158,26 @@ export const theme = {
     xl: '1.25rem',
     xxl: '1.5rem',
     xxxxl: '2.25rem'
+  },
+  notification: {}
+};
+
+theme.notification = {
+  success: {
+    background: theme.colors.success.default,
+    color: '#FFF'
+  },
+  warning: {
+    background: theme.colors.warning.default,
+    color: '#FFF'
+  },
+  error: {
+    background: theme.colors.error.default,
+    color: '#FFF'
+  },
+  info: {
+    background: '#FFF',
+    color: '#222'
   }
 };
 

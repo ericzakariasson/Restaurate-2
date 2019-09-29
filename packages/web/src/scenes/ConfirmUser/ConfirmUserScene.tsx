@@ -4,6 +4,7 @@ import { useConfirmUserMutation, MeDocument } from 'graphql/types';
 import { Loading } from 'components';
 import { routes } from 'routes';
 import { GeneralError } from 'scenes/Error/GeneralError';
+import { notify } from 'components/Notification';
 
 export const ConfirmUserScene = () => {
   const { token } = useParams();
@@ -25,6 +26,7 @@ export const ConfirmUserScene = () => {
   }
 
   if (success) {
+    notify({ title: 'Konto bekräftat', level: 'success' });
     return <Redirect to={routes.dashboard} />;
   }
 

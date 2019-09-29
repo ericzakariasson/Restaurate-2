@@ -31,6 +31,7 @@ import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 import { Navigation } from 'components/Navigation';
 import { useTrackPageView } from 'analytics';
 import ReactGA from 'react-ga';
+import { NotificationContainer, notify } from 'components/Notification';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -47,6 +48,7 @@ const App = () => {
 
   return (
     <>
+      <NotificationContainer />
       <Helmet defaultTitle="Restaurate" titleTemplate="%s – Restaurate">
         <meta
           name="description"
