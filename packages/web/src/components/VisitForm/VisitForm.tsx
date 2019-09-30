@@ -84,7 +84,7 @@ export const VisitForm = ({ handlers, values }: VisitFormProps) => {
       </Section>
       <Section>
         <Label text="Datum" />
-        <DateInput onChange={handlers.setVisitDate} />
+        <DateInput onChange={handlers.setVisitDate} value={values.visitDate} />
       </Section>
       <Section>
         <Label text="Övrigt" />

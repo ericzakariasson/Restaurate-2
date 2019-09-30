@@ -90,20 +90,23 @@ const FORMAT = "yyyy-MM-dd'T'HH:mm";
 
 interface DateInputProps {
   onChange: (date: Date) => void;
-  initialDate?: Date;
+  value?: Date;
 }
 
-export const DateInput = ({
-  onChange,
-  initialDate = new Date()
-}: DateInputProps) => {
-  const [date, setDate] = React.useState<Date>(initialDate);
+export const DateInput = ({ onChange, value = new Date() }: DateInputProps) => {
+  const [date, setDate] = React.useState<Date>(value);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const parsedDate = parse(e.target.value, FORMAT, new Date());
     setDate(parsedDate);
     onChange(parsedDate);
   };
+
+  React.useEffect(() => {
+    if (value) {
+      setDate(new Date(value));
+    }
+  }, [value]);
 
   const { isMobile } = useDevice();
 
