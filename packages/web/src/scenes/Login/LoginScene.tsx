@@ -67,7 +67,11 @@ export const LoginScene = () => {
         onSubmit={async values => {
           const { data: response } = await login({ variables: { ...values } });
 
-          if (response && response.login.messages) {
+          if (
+            response &&
+            response.login.messages &&
+            response.login.code !== LoginResponseCode.Success
+          ) {
             const level =
               response.login.code === LoginResponseCode.NotConfirmed
                 ? 'info'
