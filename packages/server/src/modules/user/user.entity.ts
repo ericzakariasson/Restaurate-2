@@ -34,7 +34,7 @@ export class User {
     array: true,
     default: [UserRole.User]
   })
-  role: UserRole[];
+  roles: UserRole[];
 
   @Field()
   @Column()
