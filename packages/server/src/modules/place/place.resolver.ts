@@ -27,7 +27,7 @@ import {
 } from './place.types';
 import { PlacePreview } from './preview/place.preview.types';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
-import { rateLimitAuthenticated } from '../../utils/rateLimit';
+import { RateLimitAuthenticated } from '../middleware/rateLimit';
 
 @Service()
 @Resolver(Place)
@@ -111,7 +111,7 @@ export class PlaceResolver {
     return preview;
   }
 
-  @UseMiddleware(rateLimitAuthenticated(100))
+  @UseMiddleware(RateLimitAuthenticated(100))
   @Authorized()
   @Mutation(() => Place, { nullable: true })
   async createPlace(
@@ -165,7 +165,7 @@ export class PlaceResolver {
     return Boolean(wtv);
   }
 
-  @UseMiddleware(rateLimitAuthenticated(500))
+  @UseMiddleware(RateLimitAuthenticated(500))
   @Authorized()
   @Mutation(() => Place)
   async updatePlace(

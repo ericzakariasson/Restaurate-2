@@ -1,12 +1,12 @@
 import { MiddlewareFn } from 'type-graphql';
-import { redis } from '../services/redis/redis';
-import { Context } from '../graphql/types';
-import { days } from './constants';
-import { isProduction } from './env.helper';
+import { redis } from '../../services/redis/redis';
+import { Context } from '../../graphql/types';
+import { days } from '../../utils/constants';
+import { isProduction } from '../../utils/env.helper';
 
 const ONE_DAY = days(1);
 
-export const rateLimitAuthenticated: (
+export const RateLimitAuthenticated: (
   limit?: number
 ) => MiddlewareFn<Context> = (limit = 50) => async (
   { context: { req }, info },
@@ -28,7 +28,7 @@ export const rateLimitAuthenticated: (
   return next();
 };
 
-export const rateLimit: (limit?: number) => MiddlewareFn<Context> = (
+export const RateLimit: (limit?: number) => MiddlewareFn<Context> = (
   limit = 50
 ) => async ({ context: { req }, info }, next) => {
   if (!isProduction()) {

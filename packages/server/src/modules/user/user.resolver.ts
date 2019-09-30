@@ -20,7 +20,7 @@ import {
   LoginMutationResponse,
   LoginResponseCode
 } from './user.types';
-import { rateLimit } from '../../utils/rateLimit';
+import { RateLimit } from '../middleware/rateLimit';
 
 @Service()
 @Resolver(User)
@@ -31,7 +31,7 @@ export class UserResolver {
     return this.userService.getMe(ctx.req.session.userId!);
   }
 
-  @UseMiddleware(rateLimit(20))
+  @UseMiddleware(RateLimit(20))
   @Mutation(() => Boolean)
   async confirmUser(
     @Arg('token') token: string,
@@ -40,7 +40,7 @@ export class UserResolver {
     return this.userService.confirmUser(token, ctx.req);
   }
 
-  @UseMiddleware(rateLimit(20))
+  @UseMiddleware(RateLimit(20))
   @Mutation(() => LoginMutationResponse)
   async login(
     @Arg('email') email: string,
@@ -70,14 +70,14 @@ export class UserResolver {
     }
   }
 
-  @UseMiddleware(rateLimit(20))
+  @UseMiddleware(RateLimit(20))
   @Authorized()
   @Mutation(() => Boolean)
   async logout(@Ctx() ctx: Context): Promise<boolean> {
     return this.userService.logout(ctx.req);
   }
 
-  @UseMiddleware(rateLimit(20))
+  @UseMiddleware(RateLimit(20))
   @Mutation(() => Boolean)
   async sendConfirmationEmail(@Arg('email') email: string): Promise<boolean> {
     const user = await this.userService.findByEmail(email);
@@ -89,7 +89,7 @@ export class UserResolver {
     return this.userService.sendConfirmationEmail(user);
   }
 
-  @UseMiddleware(rateLimit(10))
+  @UseMiddleware(RateLimit(10))
   @Mutation(() => User, { nullable: true })
   async register(
     @Arg('data') data: UserRegisterInput,

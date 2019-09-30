@@ -19,7 +19,7 @@ import { VisitService } from './visit.service';
 import { VisitResponse, AddVisitInput, EditVisitInput } from './visit.types';
 import { Context } from '../../graphql/types';
 import { logger } from '../../utils/logger';
-import { rateLimitAuthenticated } from '../../utils/rateLimit';
+import { RateLimitAuthenticated } from '../middleware/rateLimit';
 
 @Service()
 @Resolver(Visit)
@@ -35,7 +35,7 @@ export class VisitResolver {
     return this.visitService.findById(id);
   }
 
-  @UseMiddleware(rateLimitAuthenticated(100))
+  @UseMiddleware(RateLimitAuthenticated(100))
   @Authorized()
   @Mutation(() => VisitResponse)
   async addVisit(
@@ -62,7 +62,7 @@ export class VisitResolver {
     };
   }
 
-  @UseMiddleware(rateLimitAuthenticated(500))
+  @UseMiddleware(RateLimitAuthenticated(500))
   @Authorized()
   @Mutation(() => VisitResponse)
   async editVisit(
@@ -89,7 +89,7 @@ export class VisitResolver {
     };
   }
 
-  @UseMiddleware(rateLimitAuthenticated(500))
+  @UseMiddleware(RateLimitAuthenticated(500))
   @Authorized()
   @Mutation(() => Boolean)
   async deleteVisit(
