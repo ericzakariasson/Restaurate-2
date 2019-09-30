@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { useParams, Redirect } from 'react-router-dom';
-import { useConfirmUserMutation, MeDocument } from 'graphql/types';
 import { Loading } from 'components';
-import { routes } from 'routes';
-import { GeneralError } from 'scenes/Error/GeneralError';
 import { notify } from 'components/Notification';
+import { MeDocument, useConfirmUserMutation } from 'graphql/types';
+import * as React from 'react';
+import { Redirect, useParams } from 'react-router-dom';
+import { routes } from 'routes';
 
 export const ConfirmUserScene = () => {
   const { token } = useParams();
@@ -19,7 +18,7 @@ export const ConfirmUserScene = () => {
 
   React.useEffect(() => {
     confirmUser(token);
-  }, []);
+  }, [confirmUser, token]);
 
   if (loading) {
     return <Loading />;
@@ -31,7 +30,7 @@ export const ConfirmUserScene = () => {
   }
 
   if (called && !success) {
-    console.log('Could not confirm user');
+    notify({ title: 'Något gick fel', level: 'error' });
   }
 
   return null;

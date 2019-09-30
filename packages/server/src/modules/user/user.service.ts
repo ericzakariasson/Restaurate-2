@@ -11,6 +11,10 @@ import { logger, sendEmail } from '../../utils';
 import { createConfirmationUrl } from './user.helper';
 import { redis } from '../../services/redis/redis';
 
+export class UserNotConfirmedError {}
+export class UserPasswordIsNotValid {}
+export class UserNotFound {}
+
 @Service()
 export class UserService {
   constructor(
@@ -26,21 +30,25 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
 
+  async findByEmail(email: string) {
+    return this.userRepository.findOne({ email });
+  }
+
   async login(email: string, password: string, req: SessionRequest) {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      return null;
+      throw new UserNotFound();
     }
 
     const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {
-      return null;
+      throw new UserPasswordIsNotValid();
     }
 
     if (!user.confirmed) {
-      return null;
+      throw new UserNotConfirmedError();
     }
 
     req.session.userId = user.id;
@@ -81,6 +89,12 @@ export class UserService {
 
     logger.info('User register', { user: user.id });
 
+    this.sendConfirmationEmail(user);
+
+    return user;
+  }
+
+  async sendConfirmationEmail(user: User) {
     const confirmUserUrl = await createConfirmationUrl(user.id);
 
     await sendEmail({
@@ -93,7 +107,7 @@ export class UserService {
       }
     });
 
-    return user;
+    return true;
   }
 
   async logout(req: SessionRequest): Promise<boolean> {

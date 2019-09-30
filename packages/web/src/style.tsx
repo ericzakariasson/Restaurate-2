@@ -1,4 +1,4 @@
-import { createGlobalStyle, ThemeConsumer } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Karla:400,700|Overpass+Mono:400,600&display=swap');
@@ -176,8 +176,8 @@ theme.notification = {
     color: '#FFF'
   },
   info: {
-    background: '#FFF',
-    color: '#222'
+    background: '#222',
+    color: '#fff'
   }
 };
 

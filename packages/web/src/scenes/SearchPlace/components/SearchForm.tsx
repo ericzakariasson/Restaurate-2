@@ -47,28 +47,32 @@ export const SearchForm = ({ onSubmit }: SearchFormProps) => {
 
   const [query, setQuery] = React.useState('');
 
-  const search = (values: SearchPlaceFormValues) => {
-    onSubmit(values);
+  const search = React.useCallback(
+    (values: SearchPlaceFormValues) => {
+      onSubmit(values);
 
-    const searchParams = qs.stringify({ q: values.query });
+      const searchParams = qs.stringify({ q: values.query });
 
-    history.push({ search: searchParams });
+      history.push({ search: searchParams });
 
-    trackEvent({
-      category: 'Search',
-      action: 'Search Place'
-    });
-  };
+      trackEvent({
+        category: 'Search',
+        action: 'Search Place'
+      });
+    },
+    [history, onSubmit]
+  );
 
   React.useEffect(() => {
     const { search: searchParams } = location;
     const parsed = qs.parse(searchParams);
-    setQuery(parsed.q as string);
+    const q = (parsed.q as string) || '';
+    setQuery(q);
 
     if (parsed.q) {
-      search({ query: parsed.q as string, position });
+      search({ query: q, position });
     }
-  }, []);
+  }, [location, position, search]);
 
   const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) {
@@ -78,11 +82,8 @@ export const SearchForm = ({ onSubmit }: SearchFormProps) => {
     search({ query, position });
   };
 
-  const handleChange = (fn: (value: string) => void) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => fn(e.target.value);
-
-  const handleQueryChange = handleChange(setQuery);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setQuery(e.target.value);
 
   const isValid = !!query;
 
@@ -94,7 +95,7 @@ export const SearchForm = ({ onSubmit }: SearchFormProps) => {
           autoFocus
           id="place"
           value={query}
-          onChange={handleQueryChange}
+          onChange={handleChange}
           placeholder="Namn på ställe"
         />
       </InputField>

@@ -1,37 +1,33 @@
-import * as React from 'react';
-import styled, { ThemeProvider } from 'styled-components';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Helmet from 'react-helmet';
 import { ApolloProvider } from '@apollo/react-hooks';
-
+import { useTrackPageView } from 'analytics';
+import { Navigation } from 'components/Navigation';
+import { NotificationContainer } from 'components/Notification';
+import * as React from 'react';
+import ReactGA from 'react-ga';
+import Helmet from 'react-helmet';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
+import styled, { ThemeProvider } from 'styled-components';
 import { client } from './apollo';
-
-import { GlobalStyle, theme } from './style';
-import { routes } from './routes';
-
 import { AuthRoute } from './components/AuthRoute';
-
+import { routes } from './routes';
 import {
   AddVisitScene,
+  ConfirmUserScene,
   DashboardScene,
-  VisitScene,
-  RegisterScene,
   DefaultScene,
-  LoginScene,
-  MyVisitsScene,
-  MyPlacesScene,
-  PlaceScene,
-  WantToVisitScene,
-  SettingsScene,
-  NotFoundScene,
   EditVisitScene,
-  ConfirmUserScene
+  LoginScene,
+  MyPlacesScene,
+  MyVisitsScene,
+  NotFoundScene,
+  PlaceScene,
+  RegisterScene,
+  SettingsScene,
+  VisitScene,
+  WantToVisitScene
 } from './scenes';
-import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
-import { Navigation } from 'components/Navigation';
-import { useTrackPageView } from 'analytics';
-import ReactGA from 'react-ga';
-import { NotificationContainer, notify } from 'components/Notification';
+import { GlobalStyle, theme } from './style';
 
 const Wrapper = styled.div`
   height: 100%;

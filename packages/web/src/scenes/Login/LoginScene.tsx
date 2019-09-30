@@ -1,14 +1,20 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Formik, Form, Field } from 'formik';
-import { RouteComponentProps, Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
-import { Button, InputField, Page } from '../../components';
-
-import { routes } from '../../routes';
-import { useLoginMutation, MeDocument, useMeQuery } from '../../graphql/types';
-import { loginValidationSchema } from './loginValidationSchema';
 import { trackEvent } from 'analytics/trackEvent';
+import { notify } from 'components/Notification';
+import { Field, Form, Formik } from 'formik';
+import * as React from 'react';
+import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { Button, InputField, Page } from '../../components';
+import {
+  LoginResponseCode,
+  useLoginMutation,
+  useMeQuery,
+  useSendConfirmationEmailMutation
+} from '../../graphql/types';
+import { routes } from '../../routes';
+import { loginValidationSchema } from './loginValidationSchema';
+import { toast } from 'react-toastify';
 
 const Fields = styled.div`
   margin-bottom: 30px;
@@ -24,51 +30,59 @@ const Register = styled(Link)`
   color: #222;
 `;
 
-const TryAgain = styled.span`
-  margin-bottom: 10px;
-  color: ${p => p.theme.colors.error.default};
-  display: block;
-`;
-
 const initialValues = {
   email: '',
   password: ''
 };
 
-export const LoginScene = ({ history }: RouteComponentProps) => {
-  const { data } = useMeQuery();
+export const LoginScene = () => {
+  const { data: meData } = useMeQuery();
 
-  const [login, { loading }] = useLoginMutation();
-  const [error, setError] = React.useState(false);
+  const notificationId = React.useRef<string>('');
 
-  if (data && data.me) {
+  const [login, { data: loginData, loading }] = useLoginMutation();
+
+  const [
+    sendConfirmationEmail,
+    { loading: sending }
+  ] = useSendConfirmationEmailMutation();
+
+  if (meData && meData.me) {
+    return <Redirect to={routes.dashboard} />;
+  }
+
+  if (loginData && loginData.login && loginData.login.success) {
+    trackEvent({
+      category: 'User',
+      action: 'Login'
+    });
     return <Redirect to={routes.dashboard} />;
   }
 
   return (
-    <Page title="Logga in" center>
+    <Page title="Logga in">
       <Formik
         initialValues={initialValues}
         validationSchema={loginValidationSchema}
         onSubmit={async values => {
-          const { data } = await login({
-            variables: { ...values },
-            refetchQueries: [{ query: MeDocument }],
-            awaitRefetchQueries: true
-          });
+          const { data: response } = await login({ variables: { ...values } });
 
-          if (data && data.login && data.login.id) {
-            trackEvent({
-              category: 'User',
-              action: 'Login'
+          if (response && response.login.messages) {
+            const level =
+              response.login.code === LoginResponseCode.NotConfirmed
+                ? 'info'
+                : 'warning';
+
+            const id = notify({
+              title: response.login.messages.join(', '),
+              level
             });
-            history.push(routes.dashboard);
-          } else {
-            setError(true);
+
+            notificationId.current = id.toString();
           }
         }}
       >
-        {({ isValid }) => (
+        {({ isValid, values }) => (
           <Form>
             <Fields>
               <Field
@@ -88,7 +102,6 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
                 label="Lösenord"
               />
             </Fields>
-            {error && <TryAgain>Testa igen</TryAgain>}
             <Button
               variant="primary"
               size="large"
@@ -97,6 +110,44 @@ export const LoginScene = ({ history }: RouteComponentProps) => {
               type="submit"
               text="Logga in"
             />
+            {loginData &&
+              loginData.login &&
+              loginData.login.code === LoginResponseCode.NotConfirmed && (
+                <Button
+                  variant="secondary"
+                  color="white"
+                  size="normal"
+                  text={'Skicka bekräftelsemail'}
+                  onClick={async () => {
+                    if (values.email) {
+                      toast.dismiss(notificationId.current);
+
+                      try {
+                        await sendConfirmationEmail({
+                          variables: { email: values.email }
+                        });
+
+                        trackEvent({
+                          category: 'User',
+                          action: 'Resend Confirm Mail'
+                        });
+
+                        notify({
+                          title: 'Bekräftelsemail skickat',
+                          level: 'success'
+                        });
+                      } catch (e) {
+                        notify({
+                          title: 'Kunde inte skicka mail',
+                          level: 'error'
+                        });
+                      }
+                    }
+                  }}
+                  margin={['top']}
+                  loading={sending}
+                />
+              )}
             <RegisterText>
               Inget konto?{' '}
               <Register to={routes.register}>Registrera dig</Register>

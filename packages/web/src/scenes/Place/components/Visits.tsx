@@ -60,7 +60,7 @@ export const Visits = ({ visits }: VisitsProps) => {
           <VisitItem key={visit.id}>
             <VisitLink to={visitRoute(visit.id)}>
               <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
-              <VisitScore>{visit.score}</VisitScore>
+              <VisitScore>{visit.score.toFixed(1)}</VisitScore>
             </VisitLink>
           </VisitItem>
         ))}

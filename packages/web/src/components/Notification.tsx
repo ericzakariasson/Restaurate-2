@@ -1,9 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
-
-import { toast, ToastContainer, Slide, ToastOptions } from 'react-toastify';
+import { Slide, toast, ToastContainer, ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import styled from 'styled-components';
 
 export const NotificationContainer = styled(ToastContainer)`
   .Toastify__toast {
@@ -40,7 +38,7 @@ interface LevelProps {
 const Wrapper = styled.article<LevelProps>`
   border-radius: 10px;
   background: ${p => p.theme.notification[p.level].background};
-  padding: 20px;
+  padding: 18px 20px;
   box-shadow: ${p => p.theme.boxShadow};
   position: relative;
   backdrop-filter: blur(3px);
@@ -48,8 +46,10 @@ const Wrapper = styled.article<LevelProps>`
 
 const Title = styled.h1<LevelProps>`
   color: #fff;
-  font-size: ${p => p.theme.fontSize.xl};
+  font-size: ${p => p.theme.fontSize.large};
   color: ${p => p.theme.notification[p.level].color};
+  text-align: center;
+  font-weight: 400;
 `;
 
 const Description = styled.p<LevelProps>`
@@ -65,14 +65,7 @@ interface NotificationProps {
   level: NotificationLevel;
 }
 
-const Notification = ({
-  title,
-  description,
-  level,
-  ...rest
-}: NotificationProps) => {
-  console.log(rest);
-
+const Notification = ({ title, description, level }: NotificationProps) => {
   return (
     <Wrapper level={level}>
       <Title level={level}>{title}</Title>
@@ -85,7 +78,7 @@ interface NotifyProps extends NotificationProps {
   options?: ToastOptions;
 }
 
-export const notify = ({ options, ...props }: NotifyProps) => {
+export const notify = ({ options, ...props }: NotifyProps): number | string =>
   toast(<Notification {...props} />, {
     position: toast.POSITION.BOTTOM_CENTER,
     autoClose: 5000,
@@ -94,4 +87,3 @@ export const notify = ({ options, ...props }: NotifyProps) => {
     transition: Slide,
     ...options
   });
-};

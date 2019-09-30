@@ -14,8 +14,12 @@ import { Place } from '../place/place.entity';
 import { Visit } from '../visit/visit.entity';
 import { Context } from '../../graphql/types';
 import { Service } from 'typedi';
-import { UserService } from './user.service';
-import { UserRegisterInput } from './user.types';
+import { UserService, UserNotConfirmedError } from './user.service';
+import {
+  UserRegisterInput,
+  LoginMutationResponse,
+  LoginResponseCode
+} from './user.types';
 import { rateLimit } from '../../utils/rateLimit';
 
 @Service()
@@ -37,13 +41,33 @@ export class UserResolver {
   }
 
   @UseMiddleware(rateLimit(20))
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => LoginMutationResponse)
   async login(
     @Arg('email') email: string,
     @Arg('password') password: string,
     @Ctx() ctx: Context
-  ): Promise<User | null> {
-    return this.userService.login(email, password, ctx.req);
+  ): Promise<LoginMutationResponse> {
+    const response = new LoginMutationResponse();
+    response.messages = [];
+    try {
+      const user = await this.userService.login(email, password, ctx.req);
+
+      response.code = LoginResponseCode.Success;
+      response.user = user;
+      response.success = true;
+    } catch (e) {
+      response.code = LoginResponseCode.NotFound;
+      response.user = null;
+      response.success = false;
+      response.messages = ['Kunde inte hitta någon användare'];
+
+      if (e instanceof UserNotConfirmedError) {
+        response.code = LoginResponseCode.NotConfirmed;
+        response.messages = ['Ditt konto behöver bekräftas'];
+      }
+    } finally {
+      return response;
+    }
   }
 
   @UseMiddleware(rateLimit(20))
@@ -51,6 +75,18 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async logout(@Ctx() ctx: Context): Promise<boolean> {
     return this.userService.logout(ctx.req);
+  }
+
+  @UseMiddleware(rateLimit(20))
+  @Mutation(() => Boolean)
+  async sendConfirmationEmail(@Arg('email') email: string): Promise<boolean> {
+    const user = await this.userService.findByEmail(email);
+
+    if (!user) {
+      throw new Error('No user found');
+    }
+
+    return this.userService.sendConfirmationEmail(user);
   }
 
   @UseMiddleware(rateLimit(10))

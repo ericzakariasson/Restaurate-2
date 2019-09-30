@@ -78,11 +78,27 @@ export type Location = {
   address: Address,
 };
 
+export type LoginMutationResponse = {
+   __typename?: 'LoginMutationResponse',
+  success: Scalars['Boolean'],
+  messages: Array<Scalars['String']>,
+  code: LoginResponseCode,
+  user?: Maybe<User>,
+};
+
+/** Response code for login resolver */
+export enum LoginResponseCode {
+  Success = 'Success',
+  NotFound = 'NotFound',
+  NotConfirmed = 'NotConfirmed'
+}
+
 export type Mutation = {
    __typename?: 'Mutation',
   confirmUser: Scalars['Boolean'],
-  login?: Maybe<User>,
+  login: LoginMutationResponse,
   logout: Scalars['Boolean'],
+  sendConfirmationEmail: Scalars['Boolean'],
   register?: Maybe<User>,
   addVisit: VisitResponse,
   editVisit: VisitResponse,
@@ -99,6 +115,11 @@ export type MutationConfirmUserArgs = {
 
 export type MutationLoginArgs = {
   password: Scalars['String'],
+  email: Scalars['String']
+};
+
+
+export type MutationSendConfirmationEmailArgs = {
   email: Scalars['String']
 };
 
@@ -131,6 +152,12 @@ export type MutationToggleWantToVisitArgs = {
 export type MutationUpdatePlaceArgs = {
   data: UpdatePlaceInput,
   providerId: Scalars['String']
+};
+
+export type MutationResponse = {
+   __typename?: 'MutationResponse',
+  success: Scalars['Boolean'],
+  messages: Array<Scalars['String']>,
 };
 
 export type OpeningHours = {
@@ -337,13 +364,13 @@ export type Visit = {
   visitDate: Scalars['DateTime'],
   orders: Array<Order>,
   ratings: Array<Rate>,
-  score: Scalars['Float'],
   private: Scalars['Boolean'],
   takeAway: Scalars['Boolean'],
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   place: Place,
   user: User,
+  score: Scalars['Float'],
 };
 
 export type VisitResponse = {
@@ -531,10 +558,13 @@ export type LoginMutationVariables = {
 
 export type LoginMutation = (
   { __typename?: 'Mutation' }
-  & { login: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id'>
-  )> }
+  & { login: (
+    { __typename?: 'LoginMutationResponse' }
+    & Pick<LoginMutationResponse, 'code' | 'success' | 'messages'>
+    & { user: Maybe<{ __typename?: 'User' }
+      & UserFragment
+    > }
+  ) }
 );
 
 export type LogoutMutationVariables = {};
@@ -556,6 +586,16 @@ export type RegisterMutation = (
     { __typename?: 'User' }
     & Pick<User, 'id'>
   )> }
+);
+
+export type SendConfirmationEmailMutationVariables = {
+  email: Scalars['String']
+};
+
+
+export type SendConfirmationEmailMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'sendConfirmationEmail'>
 );
 
 export type ToggleWantToVisitMutationVariables = {
@@ -967,10 +1007,15 @@ export type EditVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<Edi
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
-    id
+    code
+    success
+    messages
+    user {
+      ...User
+    }
   }
 }
-    `;
+    ${UserFragmentDoc}`;
 export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, LoginMutationVariables>;
 
     export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
@@ -1007,6 +1052,19 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMuta
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const SendConfirmationEmailDocument = gql`
+    mutation SendConfirmationEmail($email: String!) {
+  sendConfirmationEmail(email: $email)
+}
+    `;
+export type SendConfirmationEmailMutationFn = ApolloReactCommon.MutationFunction<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>;
+
+    export function useSendConfirmationEmailMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>) {
+      return ApolloReactHooks.useMutation<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>(SendConfirmationEmailDocument, baseOptions);
+    }
+export type SendConfirmationEmailMutationHookResult = ReturnType<typeof useSendConfirmationEmailMutation>;
+export type SendConfirmationEmailMutationResult = ApolloReactCommon.MutationResult<SendConfirmationEmailMutation>;
+export type SendConfirmationEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>;
 export const ToggleWantToVisitDocument = gql`
     mutation ToggleWantToVisit($providerPlaceId: String!) {
   toggleWantToVisit(providerPlaceId: $providerPlaceId)
