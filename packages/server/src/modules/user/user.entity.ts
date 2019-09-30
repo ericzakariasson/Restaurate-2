@@ -11,8 +11,8 @@ import { Visit } from '../visit/visit.entity';
 import { Place } from '../place/place.entity';
 
 export enum UserRole {
-  ADMIN = 'ADMIN',
-  USER = 'USER'
+  Admin = 'ADMIN',
+  User = 'USER'
 }
 
 registerEnumType(UserRole, {
@@ -27,12 +27,14 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
+  @Field(() => [UserRole])
   @Column({
+    type: 'enum',
     enum: UserRole,
-    default: UserRole.USER
+    array: true,
+    default: [UserRole.User]
   })
-  role: UserRole;
+  role: UserRole[];
 
   @Field()
   @Column()
