@@ -87,11 +87,16 @@ export class VisitService {
       throw new Error('You do not own this visit');
     }
 
-    const rates = await this.rateRepository.find({
+    const ratings = await this.rateRepository.find({
       where: { visitId: visit.id }
     });
 
-    await this.rateRepository.remove(rates);
+    const orders = await this.orderRepository.find({
+      where: { visitId: visit.id }
+    });
+
+    await this.rateRepository.remove(ratings);
+    await this.orderRepository.remove(orders);
     await this.visitRepository.delete(visit.id);
 
     logger.info('Visit deleted', { visit: visit.id, user: user.id });
