@@ -5,15 +5,18 @@ import { VisitForm } from 'components/VisitForm/VisitForm';
 import {
   useEditVisitMutation,
   useVisitQuery,
-  VisitDocument
+  VisitDocument,
+  useDeleteVisitMutation,
+  MeVisitsDocument
 } from 'graphql/types';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
-import { visitRoute, WithVisitId } from 'routes';
+import { visitRoute, WithVisitId, routes } from 'routes';
 import { formatDate } from 'utils/format';
 import { GeneralError } from '..';
 import { trackEvent } from 'analytics/trackEvent';
+import { notify } from 'components/Notification';
 
 export const EditVisitScene = ({
   match: {
@@ -45,6 +48,15 @@ export const EditVisitScene = ({
     awaitRefetchQueries: true
   });
 
+  const [
+    deleteVisit,
+    { data: deleteVisitData, loading: deleting }
+  ] = useDeleteVisitMutation({
+    variables: { id },
+    refetchQueries: [{ query: MeVisitsDocument }],
+    awaitRefetchQueries: true
+  });
+
   const handleSave = () => {
     trackEvent({ category: 'Form', action: 'Save Edit Visit' });
     editVisit();
@@ -52,6 +64,15 @@ export const EditVisitScene = ({
 
   if (editVisitDate && editVisitDate.editVisit.saved) {
     return <Redirect to={visitRoute(id)} />;
+  }
+
+  if (deleteVisitData && deleteVisitData.deleteVisit) {
+    notify({
+      title: 'Besök raderat',
+      level: 'success',
+      options: { autoClose: 3000 }
+    });
+    return <Redirect to={routes.visits} />;
   }
 
   if (loading) {
@@ -81,6 +102,14 @@ export const EditVisitScene = ({
         size="large"
         loading={saving}
         disabled={!isValid}
+        margin={['bottom']}
+      />
+      <Button
+        text="Radera besök"
+        color="error"
+        variant="secondary"
+        onClick={() => deleteVisit()}
+        loading={deleting}
       />
     </Page>
   );

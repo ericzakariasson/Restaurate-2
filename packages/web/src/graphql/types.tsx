@@ -102,6 +102,7 @@ export type Mutation = {
   register?: Maybe<User>,
   addVisit: VisitResponse,
   editVisit: VisitResponse,
+  deleteVisit: Scalars['Boolean'],
   createPlace?: Maybe<Place>,
   toggleWantToVisit: Scalars['Boolean'],
   updatePlace: Place,
@@ -136,6 +137,11 @@ export type MutationAddVisitArgs = {
 
 export type MutationEditVisitArgs = {
   data: EditVisitInput
+};
+
+
+export type MutationDeleteVisitArgs = {
+  id: Scalars['String']
 };
 
 
@@ -364,13 +370,13 @@ export type Visit = {
   visitDate: Scalars['DateTime'],
   orders: Array<Order>,
   ratings: Array<Rate>,
+  score: Scalars['Float'],
   private: Scalars['Boolean'],
   takeAway: Scalars['Boolean'],
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   place: Place,
   user: User,
-  score: Scalars['Float'],
 };
 
 export type VisitResponse = {
@@ -535,6 +541,16 @@ export type CreatePlaceMutation = (
   & { createPlace: Maybe<{ __typename?: 'Place' }
     & PlaceFragment
   > }
+);
+
+export type DeleteVisitMutationVariables = {
+  id: Scalars['String']
+};
+
+
+export type DeleteVisitMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteVisit'>
 );
 
 export type EditVisitMutationVariables = {
@@ -989,6 +1005,19 @@ export type CreatePlaceMutationFn = ApolloReactCommon.MutationFunction<CreatePla
 export type CreatePlaceMutationHookResult = ReturnType<typeof useCreatePlaceMutation>;
 export type CreatePlaceMutationResult = ApolloReactCommon.MutationResult<CreatePlaceMutation>;
 export type CreatePlaceMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePlaceMutation, CreatePlaceMutationVariables>;
+export const DeleteVisitDocument = gql`
+    mutation DeleteVisit($id: String!) {
+  deleteVisit(id: $id)
+}
+    `;
+export type DeleteVisitMutationFn = ApolloReactCommon.MutationFunction<DeleteVisitMutation, DeleteVisitMutationVariables>;
+
+    export function useDeleteVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteVisitMutation, DeleteVisitMutationVariables>) {
+      return ApolloReactHooks.useMutation<DeleteVisitMutation, DeleteVisitMutationVariables>(DeleteVisitDocument, baseOptions);
+    }
+export type DeleteVisitMutationHookResult = ReturnType<typeof useDeleteVisitMutation>;
+export type DeleteVisitMutationResult = ApolloReactCommon.MutationResult<DeleteVisitMutation>;
+export type DeleteVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteVisitMutation, DeleteVisitMutationVariables>;
 export const EditVisitDocument = gql`
     mutation EditVisit($data: EditVisitInput!) {
   editVisit(data: $data) {

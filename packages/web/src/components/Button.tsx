@@ -146,7 +146,8 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
     !(['white', 'gray', 'black'] as Color[]).includes(p.color) &&
     css`
       background-color: ${p.theme.colors[p.color].hues[9]};
-      border-color: ${p.theme.colors[p.color].hues[0]};
+      color: ${p.theme.colors[p.color].hues[0]};
+      border: none;
 
       &:hover {
         background: ${p.theme.colors[p.color].hues[8]};

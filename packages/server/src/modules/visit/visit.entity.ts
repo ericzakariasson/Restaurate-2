@@ -38,14 +38,16 @@ export class Visit {
   @OneToMany(() => Order, order => order.visit, {
     cascade: true,
     eager: true,
-    nullable: true
+    nullable: true,
+    onDelete: 'CASCADE'
   })
   orders: Order[];
 
   @Field(() => [Rate])
   @OneToMany(() => Rate, rate => rate.visit, {
     cascade: true,
-    eager: true
+    eager: true,
+    onDelete: 'CASCADE'
   })
   ratings: Rate[];
 

@@ -11,6 +11,7 @@ import { round } from '../../utils';
 import { WantToVisitService } from '../place/wantToVisit/wantToVisit.service';
 import { RateInput } from './rate/rate.types';
 import { logger } from '../../utils';
+import { UserService } from '../user/user.service';
 
 @Service()
 export class VisitService {
@@ -21,10 +22,11 @@ export class VisitService {
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(Rate)
     private readonly rateRepository: Repository<Rate>,
-    private readonly wtvService: WantToVisitService
+    private readonly wtvService: WantToVisitService,
+    private readonly userService: UserService
   ) {}
 
-  async findById(id: string) {
+  async findById(id: string | number) {
     return this.visitRepository.findOne(id);
   }
 
@@ -64,6 +66,37 @@ export class VisitService {
     logger.info('Visit created', { visit: visit.id });
 
     return await this.visitRepository.save(visit);
+  }
+
+  async deleteVisit(id: string | number, userId: number) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      logger.error('No user found', { user: userId });
+      throw new Error('No user found');
+    }
+
+    const visit = await this.findById(id);
+
+    if (!visit) {
+      logger.error('No visit found', { visit: id });
+      throw new Error('No visit found');
+    }
+
+    if (visit.userId !== user.id) {
+      throw new Error('You do not own this visit');
+    }
+
+    const rates = await this.rateRepository.find({
+      where: { visitId: visit.id }
+    });
+
+    await this.rateRepository.remove(rates);
+    await this.visitRepository.delete(visit.id);
+
+    logger.info('Visit deleted', { visit: visit.id, user: user.id });
+
+    return true;
   }
 
   async editVisit(input: EditVisitInput, user: User) {

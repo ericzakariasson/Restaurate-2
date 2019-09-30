@@ -89,6 +89,16 @@ export class VisitResolver {
     };
   }
 
+  @UseMiddleware(rateLimitAuthenticated(500))
+  @Authorized()
+  @Mutation(() => Boolean)
+  async deleteVisit(
+    @Arg('id') id: string,
+    @Ctx() ctx: Context
+  ): Promise<boolean> {
+    return this.visitService.deleteVisit(id, ctx.req.session.userId!);
+  }
+
   @FieldResolver(() => Place)
   async place(@Root() visit: Visit): Promise<Place | undefined> {
     return this.placeService.findById(visit.placeId);
