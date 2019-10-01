@@ -93,6 +93,14 @@ export enum LoginResponseCode {
   NotConfirmed = 'NotConfirmed'
 }
 
+export type Metrics = {
+   __typename?: 'Metrics',
+  registeredUsers: Scalars['Float'],
+  confirmedUsers: Scalars['Float'],
+  /** Users with at least one visit */
+  activeUsers: Scalars['Float'],
+};
+
 export type Mutation = {
    __typename?: 'Mutation',
   confirmUser: Scalars['Boolean'],
@@ -273,6 +281,7 @@ export type Query = {
   wantToVisitList: Array<PlaceDetailsBasic>,
   wantToVisitPlace: Scalars['Boolean'],
   allPlaceTypes: Array<PlaceType>,
+  metrics: Metrics,
 };
 
 
@@ -343,7 +352,7 @@ export type UpdatePlaceInput = {
 export type User = {
    __typename?: 'User',
   id: Scalars['ID'],
-  role: Scalars['String'],
+  roles: Array<UserRole>,
   firstName: Scalars['String'],
   lastName: Scalars['String'],
   name: Scalars['String'],
@@ -362,6 +371,12 @@ export type UserRegisterInput = {
   email: Scalars['String'],
   password: Scalars['String'],
 };
+
+/** User role */
+export enum UserRole {
+  Admin = 'Admin',
+  User = 'User'
+}
 
 export type Visit = {
    __typename?: 'Visit',
@@ -476,7 +491,7 @@ export type TagFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'firstName' | 'lastName' | 'role' | 'email' | 'createdAt' | 'updatedAt' | 'placeCount' | 'visitCount'>
+  & Pick<User, 'id' | 'name' | 'firstName' | 'lastName' | 'roles' | 'email' | 'createdAt' | 'updatedAt' | 'placeCount' | 'visitCount'>
 );
 
 export type VisitFragment = (
@@ -635,6 +650,17 @@ export type UpdatePlaceMutation = (
   & { updatePlace: { __typename?: 'Place' }
     & PlaceFragment
    }
+);
+
+export type MetricsQueryVariables = {};
+
+
+export type MetricsQuery = (
+  { __typename?: 'Query' }
+  & { metrics: (
+    { __typename?: 'Metrics' }
+    & Pick<Metrics, 'registeredUsers' | 'confirmedUsers' | 'activeUsers'>
+  ) }
 );
 
 export type AllPlaceTypesQueryVariables = {};
@@ -828,7 +854,7 @@ export const UserFragmentDoc = gql`
   name
   firstName
   lastName
-  role
+  roles
   email
   createdAt
   updatedAt
@@ -1122,6 +1148,25 @@ export type UpdatePlaceMutationFn = ApolloReactCommon.MutationFunction<UpdatePla
 export type UpdatePlaceMutationHookResult = ReturnType<typeof useUpdatePlaceMutation>;
 export type UpdatePlaceMutationResult = ApolloReactCommon.MutationResult<UpdatePlaceMutation>;
 export type UpdatePlaceMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePlaceMutation, UpdatePlaceMutationVariables>;
+export const MetricsDocument = gql`
+    query Metrics {
+  metrics {
+    registeredUsers
+    confirmedUsers
+    activeUsers
+  }
+}
+    `;
+
+    export function useMetricsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MetricsQuery, MetricsQueryVariables>) {
+      return ApolloReactHooks.useQuery<MetricsQuery, MetricsQueryVariables>(MetricsDocument, baseOptions);
+    }
+      export function useMetricsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MetricsQuery, MetricsQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<MetricsQuery, MetricsQueryVariables>(MetricsDocument, baseOptions);
+      }
+      
+export type MetricsQueryHookResult = ReturnType<typeof useMetricsQuery>;
+export type MetricsQueryResult = ApolloReactCommon.QueryResult<MetricsQuery, MetricsQueryVariables>;
 export const AllPlaceTypesDocument = gql`
     query AllPlaceTypes {
   allPlaceTypes

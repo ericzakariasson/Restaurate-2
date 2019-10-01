@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { routes } from 'routes';
-import { useMeQuery } from 'graphql/types';
+import { useMeQuery, UserRole } from 'graphql/types';
 import 'scroll-behavior-polyfill';
 
 const Nav = styled.nav`
@@ -123,6 +123,11 @@ export const Navigation = withRouter(({ location }) => {
                 <Link to={routes.register}>Registrera</Link>
               </Item>
             </>
+          )}
+          {authenticated && authenticated.roles.includes(UserRole.Admin) && (
+            <Item>
+              <Link to={routes.admin.metrics}>Metrics</Link>
+            </Item>
           )}
         </List>
       </Nav>

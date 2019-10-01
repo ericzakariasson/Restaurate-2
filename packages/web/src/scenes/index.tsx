@@ -13,3 +13,4 @@ export * from './Settings/SettingsScene';
 export * from './NotFound/NotFoundScene';
 export * from './EditVisit/EditVisitScene';
 export * from './ConfirmUser/ConfirmUserScene';
+export * from './Admin/';

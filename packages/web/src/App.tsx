@@ -1,11 +1,13 @@
 import { ApolloProvider } from '@apollo/react-hooks';
 import { useTrackPageView } from 'analytics';
+import { AdminRoute } from 'components/AdminRoute';
 import { Navigation } from 'components/Navigation';
 import { NotificationContainer } from 'components/Notification';
 import * as React from 'react';
 import ReactGA from 'react-ga';
 import Helmet from 'react-helmet';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { MetricsScene } from 'scenes/Admin';
 import { SearchPlaceScene } from 'scenes/SearchPlace/SearchPlaceScene';
 import styled, { ThemeProvider } from 'styled-components';
 import { client } from './apollo';
@@ -106,6 +108,11 @@ const App = () => {
           <AuthRoute
             path={routes.editVisit}
             component={EditVisitScene}
+            exact={true}
+          />
+          <AdminRoute
+            path={routes.admin.metrics}
+            component={MetricsScene}
             exact={true}
           />
           <Route component={NotFoundScene} />

@@ -6,7 +6,7 @@ export default gql`
     name
     firstName
     lastName
-    role
+    roles
     email
     createdAt
     updatedAt

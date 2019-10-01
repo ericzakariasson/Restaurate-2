@@ -19,7 +19,10 @@ export const routes = {
   searchPlace: '/search/place',
   wantToVisit: '/want-to-visit',
   settings: '/settings',
-  confirmUser: '/user/confirm/:token'
+  confirmUser: '/user/confirm/:token',
+  admin: {
+    metrics: '/admin/metrics'
+  }
 };
 
 export const visitRoute = (id: string) => `/visit/${id}`;
