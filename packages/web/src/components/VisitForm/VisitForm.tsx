@@ -1,10 +1,11 @@
+import { DateInput, Label, ListInput, Textarea } from 'components';
+import { Switch } from 'components/Switch';
+import { UploadImage } from 'components/UploadImage/UploadImage';
+import { rateNodes } from 'constants/rate.constants';
 import * as React from 'react';
 import styled from 'styled-components';
-import { rateNodes } from 'constants/rate.constants';
-import { ListInput, Label, Textarea, DateInput } from 'components';
-import { RateSliderParent, RateHeader } from './components/RateParent';
-import { Values, Handlers } from './useVisitForm';
-import { Switch } from 'components/Switch';
+import { RateHeader, RateSliderParent } from './components/RateParent';
+import { Handlers, Values } from './useVisitForm';
 
 const RateTotal = styled.article`
   margin-top: 30px;
@@ -71,6 +72,10 @@ export const VisitForm = ({ handlers, values }: VisitFormProps) => {
         <RateTotal>
           <RateHeader label="Betyg" score={values.averageScore} />
         </RateTotal>
+      </Section>
+      <Section>
+        <Label text="Bilder" />
+        <UploadImage />
       </Section>
       <Section>
         <Label text="Kommentar" />
