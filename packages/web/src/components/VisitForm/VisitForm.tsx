@@ -1,6 +1,6 @@
 import { DateInput, Label, ListInput, Textarea } from 'components';
 import { Switch } from 'components/Switch';
-import { UploadImage } from 'components/UploadImage/UploadImage';
+import { UploadImages } from 'components/UploadImage/UploadImages';
 import { rateNodes } from 'constants/rate.constants';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -75,7 +75,11 @@ export const VisitForm = ({ handlers, values }: VisitFormProps) => {
       </Section>
       <Section>
         <Label text="Bilder" />
-        <UploadImage />
+        <UploadImages
+          onAdd={handlers.addImage}
+          onRemove={handlers.removeImage}
+          images={values.images}
+        />
       </Section>
       <Section>
         <Label text="Kommentar" />

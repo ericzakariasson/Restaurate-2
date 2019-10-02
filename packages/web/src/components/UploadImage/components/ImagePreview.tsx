@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { X } from 'react-feather';
-import { PreviewImage } from '../UploadImage';
+import { PreviewImage } from '../UploadImages';
 
 const ImagePreviewCard = styled.article`
   background-size: cover;

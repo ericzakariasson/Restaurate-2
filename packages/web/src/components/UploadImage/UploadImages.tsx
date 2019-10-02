@@ -64,8 +64,20 @@ export interface PreviewImage {
   file: File;
 }
 
-export const UploadImage = () => {
-  const [images, setImages] = React.useState<PreviewImage[]>([]);
+interface UploadImagesProps {
+  images: PreviewImage[];
+  onAdd: (image: PreviewImage) => void;
+  onRemove: (image: PreviewImage) => void;
+}
+
+export const UploadImages = ({
+  images = [],
+  onAdd,
+  onRemove
+}: UploadImagesProps) => {
+  const [imagePreviews, setImagesPreviews] = React.useState<PreviewImage[]>(
+    images
+  );
 
   const handleChange = ({
     target: { files }
@@ -79,25 +91,40 @@ export const UploadImage = () => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const src = URL.createObjectURL(file);
-      images.push({ src, file });
+      const image = { src, file };
+      images.push(image);
+      onAdd(image);
     }
 
-    setImages(i => [...i, ...images]);
+    setImagesPreviews(i => [...i, ...images]);
   };
 
-  const removeImage = (name: string) =>
-    setImages(images => images.filter(image => image.file.name !== name));
+  const removeImage = (name: string) => {
+    const image = imagePreviews.find(i => i.file.name === name);
+
+    if (image) {
+      onRemove(image);
+    }
+
+    setImagesPreviews(images =>
+      images.filter(image => image.file.name !== name)
+    );
+  };
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const openDialog = () => inputRef.current && inputRef.current.click();
 
-  const hasImages = images.length > 0;
+  const hasImages = imagePreviews.length > 0;
 
   return (
     <Wrapper>
       <Scrollable>
-        {images.map(image => (
-          <ImagePreview {...image} onRemove={removeImage} />
+        {imagePreviews.map(image => (
+          <ImagePreview
+            key={image.file.name}
+            {...image}
+            onRemove={removeImage}
+          />
         ))}
         <UploadArea large={!hasImages} onClick={openDialog}>
           {!hasImages && <ImageText>Ta kort eller ladda upp bilder</ImageText>}

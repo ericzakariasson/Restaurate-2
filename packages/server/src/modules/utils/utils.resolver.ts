@@ -1,13 +1,12 @@
 import { v2 as cloudinary } from 'cloudinary';
-
 import {
   Arg,
   Authorized,
   Field,
-  InputType,
   Mutation,
   ObjectType,
-  Resolver
+  Resolver,
+  InputType
 } from 'type-graphql';
 import { Service } from 'typedi';
 
@@ -37,33 +36,45 @@ class SignImageInput {
   tags: string[];
 }
 
+@InputType()
+class SignImagesInput {
+  @Field(() => [SignImageInput])
+  images: SignImageInput[];
+}
+
 @Service()
 @Resolver()
 export class UtilsResolver {
   constructor() {}
 
   @Authorized()
-  @Mutation(() => SignImageData)
-  async signImageData(
+  @Mutation(() => [SignImageData])
+  async signImagesData(
     @Arg('data')
-    input: SignImageInput
-  ): Promise<SignImageData> {
-    const timestamp = Math.round(Date.now() / 1000);
+    input: SignImagesInput
+  ): Promise<SignImageData[]> {
+    const signedImagesData = input.images.map(data => {
+      const timestamp = Math.round(Date.now() / 1000);
 
-    const apiUrl = cloudinary.utils.api_url('upload', {
-      resource_type: 'auto'
+      const apiUrl = cloudinary.utils.api_url('upload', {
+        resource_type: 'auto'
+      });
+
+      const query = cloudinary.utils.sign_request({
+        public_id: data.name,
+        folder: data.placeProviderId,
+        tags: data.tags.join(','),
+        timestamp,
+        format: 'jpg'
+      });
+
+      const payload = new SignImageData({
+        apiUrl,
+        query: JSON.stringify(query)
+      });
+      return payload;
     });
 
-    const query = cloudinary.utils.sign_request({
-      public_id: input.name,
-      folder: input.placeProviderId,
-      tags: input.tags.join(','),
-      timestamp,
-      format: 'jpg'
-    });
-
-    const payload = new SignImageData({ apiUrl, query: JSON.stringify(query) });
-
-    return payload;
+    return signedImagesData;
   }
 }

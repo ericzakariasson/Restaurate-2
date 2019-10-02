@@ -6,7 +6,8 @@ import {
   MePlacesDocument,
   MeVisitsDocument,
   useAddVisitMutation,
-  usePlaceDetailsQuery
+  usePlaceDetailsQuery,
+  useSignImagesDataMutation
 } from 'graphql/types';
 import * as React from 'react';
 import Helmet from 'react-helmet';
@@ -14,6 +15,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { myPlaceRoute, PlaceProviderIdParam } from 'routes';
 import { GeneralError } from 'scenes/Error/GeneralError';
 import { transformToInput } from '../../components/VisitForm/rateHelper';
+import { format } from 'date-fns';
 
 interface AddVisitSceneProps
   extends RouteComponentProps<PlaceProviderIdParam> {}
@@ -47,12 +49,49 @@ export const AddVisitScene = ({
     refetchQueries: [{ query: MeVisitsDocument }, { query: MePlacesDocument }]
   });
 
-  const handleSave = () => {
-    trackEvent({
-      category: 'Form',
-      action: 'Add Visit'
+  const [signImages] = useSignImagesDataMutation();
+
+  const handleSave = async () => {
+    const { data } = await signImages({
+      variables: {
+        data: {
+          images: values.images.map(() => ({
+            name: `${providerId}-visit-${format(new Date(), 'yyyyMMdd')}`,
+            tags: values.orders,
+            placeProviderId: providerId
+          }))
+        }
+      }
     });
-    addVisit();
+
+    if (data && data.signImagesData) {
+      const imagePromises = data.signImagesData.map((signedData, i) => {
+        const formData = new FormData();
+
+        const { file } = values.images[i];
+        formData.append('file', file);
+
+        const params = JSON.parse(signedData.query);
+        Object.entries<string | Blob>(params).forEach(([key, value]) =>
+          formData.append(key, value)
+        );
+
+        return fetch(signedData.apiUrl, {
+          method: 'POST',
+          body: formData
+        }).then(res => res.json());
+      });
+
+      const result = await Promise.all(imagePromises);
+      console.log(result);
+
+      // addVisit();
+
+      trackEvent({
+        category: 'Form',
+        action: 'Add Visit'
+      });
+    }
   };
 
   if (addVisitData && addVisitData.addVisit.saved) {

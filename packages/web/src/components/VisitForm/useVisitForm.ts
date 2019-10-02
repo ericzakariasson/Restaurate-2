@@ -10,6 +10,7 @@ import {
   SetRatePayload,
   SetStatePayload
 } from './rateReducer';
+import { PreviewImage } from 'components/UploadImage/UploadImages';
 
 export interface Handlers {
   addOrder: (name: string) => void;
@@ -19,6 +20,8 @@ export interface Handlers {
   setScore: (payload: SetRatePayload) => void;
   setTakeAway: (value: boolean) => void;
   setPrivate: (value: boolean) => void;
+  addImage: (image: PreviewImage) => void;
+  removeImage: (image: PreviewImage) => void;
 }
 
 export interface Values {
@@ -29,6 +32,7 @@ export interface Values {
   averageScore: number | null;
   isTakeAway: boolean;
   isPrivate: boolean;
+  images: PreviewImage[];
 }
 
 interface UseVisitForm {
@@ -68,6 +72,8 @@ export function useVisitForm(
   const [isPrivate, setIsPrivate] = React.useState(false);
   const [isTakeAway, setIsTakeAway] = React.useState(false);
 
+  const [images, addImage, removeImage] = useArray<PreviewImage>();
+
   const initialRateState = createInitialRateState(rateNodes);
   const [rateState, dispatch] = React.useReducer(rateReducer, initialRateState);
 
@@ -105,7 +111,9 @@ export function useVisitForm(
     setVisitDate,
     setScore,
     setPrivate: setIsPrivate,
-    setTakeAway: setIsTakeAway
+    setTakeAway: setIsTakeAway,
+    addImage,
+    removeImage
   };
 
   const values: Values = {
@@ -115,7 +123,8 @@ export function useVisitForm(
     rateState,
     averageScore,
     isPrivate,
-    isTakeAway
+    isTakeAway,
+    images
   };
 
   const isValid = Boolean(averageScore && averageScore > 0);

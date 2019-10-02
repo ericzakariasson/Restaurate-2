@@ -114,6 +114,7 @@ export type Mutation = {
   createPlace?: Maybe<Place>,
   toggleWantToVisit: Scalars['Boolean'],
   updatePlace: Place,
+  signImagesData: Array<SignImageData>,
 };
 
 
@@ -166,6 +167,11 @@ export type MutationToggleWantToVisitArgs = {
 export type MutationUpdatePlaceArgs = {
   data: UpdatePlaceInput,
   providerId: Scalars['String']
+};
+
+
+export type MutationSignImagesDataArgs = {
+  data: SignImagesInput
 };
 
 export type MutationResponse = {
@@ -332,6 +338,22 @@ export type RateInput = {
   score: Scalars['Float'],
   calculatedScore?: Maybe<Scalars['Boolean']>,
   children?: Maybe<Array<RateInput>>,
+};
+
+export type SignImageData = {
+   __typename?: 'SignImageData',
+  apiUrl: Scalars['String'],
+  query: Scalars['String'],
+};
+
+export type SignImageInput = {
+  name: Scalars['String'],
+  placeProviderId: Scalars['String'],
+  tags: Array<Scalars['String']>,
+};
+
+export type SignImagesInput = {
+  images: Array<SignImageInput>,
 };
 
 export type Tag = {
@@ -627,6 +649,19 @@ export type SendConfirmationEmailMutationVariables = {
 export type SendConfirmationEmailMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'sendConfirmationEmail'>
+);
+
+export type SignImagesDataMutationVariables = {
+  data: SignImagesInput
+};
+
+
+export type SignImagesDataMutation = (
+  { __typename?: 'Mutation' }
+  & { signImagesData: Array<(
+    { __typename?: 'SignImageData' }
+    & Pick<SignImageData, 'apiUrl' | 'query'>
+  )> }
 );
 
 export type ToggleWantToVisitMutationVariables = {
@@ -1120,6 +1155,22 @@ export type SendConfirmationEmailMutationFn = ApolloReactCommon.MutationFunction
 export type SendConfirmationEmailMutationHookResult = ReturnType<typeof useSendConfirmationEmailMutation>;
 export type SendConfirmationEmailMutationResult = ApolloReactCommon.MutationResult<SendConfirmationEmailMutation>;
 export type SendConfirmationEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>;
+export const SignImagesDataDocument = gql`
+    mutation SignImagesData($data: SignImagesInput!) {
+  signImagesData(data: $data) {
+    apiUrl
+    query
+  }
+}
+    `;
+export type SignImagesDataMutationFn = ApolloReactCommon.MutationFunction<SignImagesDataMutation, SignImagesDataMutationVariables>;
+
+    export function useSignImagesDataMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignImagesDataMutation, SignImagesDataMutationVariables>) {
+      return ApolloReactHooks.useMutation<SignImagesDataMutation, SignImagesDataMutationVariables>(SignImagesDataDocument, baseOptions);
+    }
+export type SignImagesDataMutationHookResult = ReturnType<typeof useSignImagesDataMutation>;
+export type SignImagesDataMutationResult = ApolloReactCommon.MutationResult<SignImagesDataMutation>;
+export type SignImagesDataMutationOptions = ApolloReactCommon.BaseMutationOptions<SignImagesDataMutation, SignImagesDataMutationVariables>;
 export const ToggleWantToVisitDocument = gql`
     mutation ToggleWantToVisit($providerPlaceId: String!) {
   toggleWantToVisit(providerPlaceId: $providerPlaceId)
