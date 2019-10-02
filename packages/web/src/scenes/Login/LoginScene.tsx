@@ -1,4 +1,4 @@
-import { trackEvent } from 'analytics/trackEvent';
+import { trackEvent, setUser } from 'analytics/trackEvent';
 import { notify } from 'components/Notification';
 import { Field, Form, Formik } from 'formik';
 import * as React from 'react';
@@ -10,7 +10,10 @@ import {
   LoginResponseCode,
   useLoginMutation,
   useMeQuery,
-  useSendConfirmationEmailMutation
+  useSendConfirmationEmailMutation,
+  MeDocument,
+  MeQuery,
+  LoginMutationResponse
 } from '../../graphql/types';
 import { routes } from '../../routes';
 import { loginValidationSchema } from './loginValidationSchema';
@@ -30,6 +33,50 @@ const Register = styled(Link)`
   color: #222;
 `;
 
+const handleLoginCode = (
+  data: LoginMutationResponse | undefined,
+  code: LoginResponseCode | undefined,
+  sendConfirmationEmail: () => Promise<void>,
+  sending: boolean
+): string | undefined => {
+  if (!data) {
+    return;
+  }
+
+  switch (code) {
+    case LoginResponseCode.Success:
+      trackEvent({
+        category: 'User',
+        action: 'Login'
+      });
+      setUser(data.user!.id);
+      break;
+    case LoginResponseCode.NotConfirmed:
+      return notify({
+        title: data.messages.join(', '),
+        level: 'info',
+        content: (
+          <Button
+            variant="secondary"
+            color="white"
+            onClick={sendConfirmationEmail}
+            text="Skicka bekräftelsemail"
+            loading={sending}
+            size="normal"
+          />
+        )
+      }).toString();
+    case LoginResponseCode.NotFound:
+      notify({
+        title: data.messages.join(', '),
+        level: 'warning'
+      }).toString();
+      break;
+    default:
+      break;
+  }
+};
+
 const initialValues = {
   email: '',
   password: ''
@@ -40,7 +87,46 @@ export const LoginScene = () => {
 
   const notificationId = React.useRef<string>('');
 
-  const [login, { data: loginData, loading }] = useLoginMutation();
+  const [login, { data: loginData, loading }] = useLoginMutation({
+    update(cache, { data }) {
+      if (!(data && data.login.success)) {
+        return;
+      }
+
+      try {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: { me: { ...data!.login.user! } }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  });
+
+  const sendConfirmation = async (email: string) => {
+    if (email) {
+      toast.dismiss(notificationId.current);
+      try {
+        await sendConfirmationEmail({
+          variables: { email }
+        });
+        trackEvent({
+          category: 'User',
+          action: 'Resend Confirm Mail'
+        });
+        notify({
+          title: 'Bekräftelsemail skickat',
+          level: 'success'
+        });
+      } catch (e) {
+        notify({
+          title: 'Kunde inte skicka mail',
+          level: 'error'
+        });
+      }
+    }
+  };
 
   const [
     sendConfirmationEmail,
@@ -52,10 +138,6 @@ export const LoginScene = () => {
   }
 
   if (loginData && loginData.login && loginData.login.success) {
-    trackEvent({
-      category: 'User',
-      action: 'Login'
-    });
     return <Redirect to={routes.dashboard} />;
   }
 
@@ -67,22 +149,17 @@ export const LoginScene = () => {
         onSubmit={async values => {
           const { data: response } = await login({ variables: { ...values } });
 
-          if (
-            response &&
-            response.login.messages &&
-            response.login.code !== LoginResponseCode.Success
-          ) {
-            const level =
-              response.login.code === LoginResponseCode.NotConfirmed
-                ? 'info'
-                : 'warning';
+          const code = response && response.login.code;
 
-            const id = notify({
-              title: response.login.messages.join(', '),
-              level
-            });
+          const id = handleLoginCode(
+            response && response.login,
+            code,
+            () => sendConfirmation(values.email),
+            sending
+          );
 
-            notificationId.current = id.toString();
+          if (id) {
+            notificationId.current = id;
           }
         }}
       >
@@ -114,44 +191,6 @@ export const LoginScene = () => {
               type="submit"
               text="Logga in"
             />
-            {loginData &&
-              loginData.login &&
-              loginData.login.code === LoginResponseCode.NotConfirmed && (
-                <Button
-                  variant="secondary"
-                  color="white"
-                  size="normal"
-                  text={'Skicka bekräftelsemail'}
-                  onClick={async () => {
-                    if (values.email) {
-                      toast.dismiss(notificationId.current);
-
-                      try {
-                        await sendConfirmationEmail({
-                          variables: { email: values.email }
-                        });
-
-                        trackEvent({
-                          category: 'User',
-                          action: 'Resend Confirm Mail'
-                        });
-
-                        notify({
-                          title: 'Bekräftelsemail skickat',
-                          level: 'success'
-                        });
-                      } catch (e) {
-                        notify({
-                          title: 'Kunde inte skicka mail',
-                          level: 'error'
-                        });
-                      }
-                    }
-                  }}
-                  margin={['top']}
-                  loading={sending}
-                />
-              )}
             <RegisterText>
               Inget konto?{' '}
               <Register to={routes.register}>Registrera dig</Register>

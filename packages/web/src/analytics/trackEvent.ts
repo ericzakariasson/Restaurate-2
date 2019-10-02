@@ -16,3 +16,9 @@ export function trackEvent(options: EventOptions) {
     ReactGA.event(options);
   }
 }
+
+export function setUser(userId: string) {
+  if (process.env.NODE_ENV === 'production') {
+    ReactGA.set({ userId });
+  }
+}

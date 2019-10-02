@@ -58,11 +58,16 @@ export const EditVisitScene = ({
   });
 
   const handleSave = () => {
-    trackEvent({ category: 'Form', action: 'Save Edit Visit' });
+    trackEvent({ category: 'Form', action: 'Edit Visit' });
     editVisit();
   };
 
   if (editVisitDate && editVisitDate.editVisit.saved) {
+    notify({
+      title: 'Ändringar sparade',
+      level: 'success',
+      options: { autoClose: 3000 }
+    });
     return <Redirect to={visitRoute(id)} />;
   }
 
