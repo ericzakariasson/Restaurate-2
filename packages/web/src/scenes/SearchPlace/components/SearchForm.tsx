@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Input, Label } from 'components';
 import { usePosition } from 'hooks';
 import { trackEvent } from 'analytics/trackEvent';
-import * as qs from 'query-string';
 import { useHistory, useLocation } from 'react-router-dom';
 
 const SearchButton = styled.button`
@@ -42,44 +41,53 @@ export const SearchForm = ({ onSubmit }: SearchFormProps) => {
     initiateOnMount: true
   });
 
+  const [searched, setSearched] = React.useState(false);
+
   const history = useHistory();
   const location = useLocation();
 
   const [query, setQuery] = React.useState('');
 
   const search = React.useCallback(
-    (values: SearchPlaceFormValues) => {
-      onSubmit(values);
+    (query: string) => {
+      if (!query.trim()) {
+        return;
+      }
 
-      const searchParams = qs.stringify({ q: values.query });
+      const searchParams = new URLSearchParams({ q: query });
+      history.push({ search: searchParams.toString() });
 
-      history.push({ search: searchParams });
-
+      onSubmit({ query, position });
       trackEvent({
         category: 'Search',
         action: 'Search Place'
       });
+
+      setSearched(true);
     },
-    [history, onSubmit]
+    [history, onSubmit, position]
   );
 
   React.useEffect(() => {
-    const { search: searchParams } = location;
-    const parsed = qs.parse(searchParams);
-    const q = (parsed.q as string) || '';
-    setQuery(q);
-
-    if (parsed.q) {
-      search({ query: q, position });
+    if (searched) {
+      return;
     }
-  }, [location, position, search]);
+
+    const searchParams = new URLSearchParams(location.search);
+    const urlQuery = searchParams.get('q');
+
+    if (urlQuery && query === '') {
+      setQuery(urlQuery);
+      search(urlQuery);
+    }
+  }, [location, query, searched, search]);
 
   const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) {
       e.preventDefault();
     }
 
-    search({ query, position });
+    search(query);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
