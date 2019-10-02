@@ -14,8 +14,10 @@ import { redis } from './services/redis/redis';
 import * as connectRedis from 'connect-redis';
 import * as helmet from 'helmet';
 import * as sendgrid from '@sendgrid/mail';
+import { v2 as cloudinary } from 'cloudinary';
 
 dotenv.config();
+cloudinary.config(true);
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string);
 

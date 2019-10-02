@@ -6,6 +6,11 @@ import { ImagePreview } from './components/ImagePreview';
 const Wrapper = styled.div`
   overflow-x: scroll;
   margin: -20px;
+
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Scrollable = styled.section`
