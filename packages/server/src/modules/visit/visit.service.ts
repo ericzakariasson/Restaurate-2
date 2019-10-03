@@ -12,6 +12,7 @@ import { WantToVisitService } from '../place/wantToVisit/wantToVisit.service';
 import { RateInput } from './rate/rate.types';
 import { logger } from '../../utils';
 import { UserService } from '../user/user.service';
+import { VisitImage } from './image/visit.image.entity';
 
 @Service()
 export class VisitService {
@@ -44,6 +45,20 @@ export class VisitService {
       ? await this.createOrders(input.orders, user)
       : [];
 
+    console.log('orders', orders);
+    console.log('images', input.images);
+
+    const images = input.images.map(i => {
+      const image = new VisitImage();
+      image.placeProviderId = input.providerPlaceId;
+      image.url = i.url;
+      image.publicId = i.publicId;
+      image.orders = orders.filter(order => i.orders.includes(order.title));
+      image.user = user;
+      image.userId = image.userId;
+      return image;
+    });
+
     const ratings = await this.createRatings(input.ratings);
 
     const score = this.calculateScore(ratings);
@@ -58,7 +73,8 @@ export class VisitService {
       userId: user.id,
       ratings,
       private: input.isPrivate,
-      takeAway: input.isTakeAway
+      takeAway: input.isTakeAway,
+      images
     });
 
     await this.wtvService.setVisited(place.providerId, user);

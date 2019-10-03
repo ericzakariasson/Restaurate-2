@@ -7,7 +7,7 @@ import { RateResolver } from './modules/visit/rate/rate.resolver';
 import { authChecker } from './modules/middleware/authorization';
 import { Container } from 'typedi';
 import { MetricsResolver } from './modules/admin/metrics/metrics.resolver';
-import { UtilsResolver } from './modules/utils/utils.resolver';
+import { ImageResolver } from './modules/image/image.resolver';
 
 export const generateSchema = async () =>
   await buildSchema({
@@ -17,7 +17,7 @@ export const generateSchema = async () =>
       PlaceResolver,
       RateResolver,
       MetricsResolver,
-      UtilsResolver
+      ImageResolver
     ],
     authChecker,
     container: Container

@@ -20,8 +20,7 @@ export interface Handlers {
   setScore: (payload: SetRatePayload) => void;
   setTakeAway: (value: boolean) => void;
   setPrivate: (value: boolean) => void;
-  addImage: (image: PreviewImage) => void;
-  removeImage: (image: PreviewImage) => void;
+  onImagesChange: (images: PreviewImage[]) => void;
 }
 
 export interface Values {
@@ -72,7 +71,7 @@ export function useVisitForm(
   const [isPrivate, setIsPrivate] = React.useState(false);
   const [isTakeAway, setIsTakeAway] = React.useState(false);
 
-  const [images, addImage, removeImage] = useArray<PreviewImage>();
+  const [images, setImages] = React.useState<PreviewImage[]>([]);
 
   const initialRateState = createInitialRateState(rateNodes);
   const [rateState, dispatch] = React.useReducer(rateReducer, initialRateState);
@@ -84,6 +83,11 @@ export function useVisitForm(
     dispatch({ type: 'SET_RATE', payload });
 
   const averageScore = calculateAverageScore(rateState);
+
+  const onImagesChange = React.useCallback(
+    (images: PreviewImage[]) => setImages(images),
+    []
+  );
 
   React.useEffect(() => {
     if (initialValues) {
@@ -112,8 +116,7 @@ export function useVisitForm(
     setScore,
     setPrivate: setIsPrivate,
     setTakeAway: setIsTakeAway,
-    addImage,
-    removeImage
+    onImagesChange
   };
 
   const values: Values = {

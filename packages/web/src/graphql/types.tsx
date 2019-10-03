@@ -34,6 +34,7 @@ export type AddVisitInput = {
   comment?: Maybe<Scalars['String']>,
   orders?: Maybe<Array<Scalars['String']>>,
   ratings: Array<RateInput>,
+  images: Array<VisitImageInput>,
   isPrivate: Scalars['Boolean'],
   isTakeAway: Scalars['Boolean'],
 };
@@ -60,6 +61,12 @@ export type EditVisitInput = {
   isPrivate: Scalars['Boolean'],
   isTakeAway: Scalars['Boolean'],
 };
+
+/** Type of image */
+export enum ImageType {
+  Visit = 'Visit',
+  Place = 'Place'
+}
 
 export type IPosition = {
   lat: Scalars['Float'],
@@ -347,7 +354,7 @@ export type SignImageData = {
 };
 
 export type SignImageInput = {
-  name: Scalars['String'],
+  type: ImageType,
   placeProviderId: Scalars['String'],
   tags: Array<Scalars['String']>,
 };
@@ -414,6 +421,12 @@ export type Visit = {
   updatedAt: Scalars['DateTime'],
   place: Place,
   user: User,
+};
+
+export type VisitImageInput = {
+  publicId: Scalars['String'],
+  url: Scalars['String'],
+  orders: Array<Scalars['String']>,
 };
 
 export type VisitResponse = {

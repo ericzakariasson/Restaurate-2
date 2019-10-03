@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Image as ImageIcon, Plus } from 'react-feather';
 import styled, { css } from 'styled-components';
 import { ImagePreview } from './components/ImagePreview';
+import { notify } from 'components/Notification';
 
 const Wrapper = styled.div`
   overflow-x: scroll;
@@ -28,6 +29,8 @@ const UploadArea = styled.article<{ large: boolean }>`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  max-height: 120px;
+
   ${p =>
     p.large &&
     css`
@@ -62,18 +65,19 @@ const ImageIconWrapper = styled.div`
 export interface PreviewImage {
   src: string;
   file: File;
+  orders: string[];
 }
 
 interface UploadImagesProps {
   images: PreviewImage[];
-  onAdd: (image: PreviewImage) => void;
-  onRemove: (image: PreviewImage) => void;
+  onChange: (images: PreviewImage[]) => void;
+  orders: string[];
 }
 
 export const UploadImages = ({
   images = [],
-  onAdd,
-  onRemove
+  onChange,
+  orders
 }: UploadImagesProps) => {
   const [imagePreviews, setImagesPreviews] = React.useState<PreviewImage[]>(
     images
@@ -86,30 +90,57 @@ export const UploadImages = ({
       return;
     }
 
-    const images: PreviewImage[] = [];
+    const validFiles = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const src = URL.createObjectURL(file);
-      const image = { src, file };
-      images.push(image);
-      onAdd(image);
+      // 10485760 is Cloudinarys max limit
+      if (file.size <= 10485760) {
+        validFiles.push(file);
+      }
     }
+
+    const excludedImages = files.length - validFiles.length;
+
+    if (excludedImages > 0) {
+      notify({
+        title:
+          excludedImages === 1
+            ? '1 bild var för stor'
+            : `${excludedImages} bild var för stora`,
+        level: 'warning'
+      });
+    }
+
+    const images = validFiles.map(file => {
+      const src = URL.createObjectURL(file);
+      return { src, file, orders: [] };
+    });
 
     setImagesPreviews(i => [...i, ...images]);
   };
 
-  const removeImage = (name: string) => {
-    const image = imagePreviews.find(i => i.file.name === name);
-
-    if (image) {
-      onRemove(image);
-    }
-
+  const removeImage = (name: string) =>
     setImagesPreviews(images =>
       images.filter(image => image.file.name !== name)
     );
-  };
+
+  const onOrderChange = React.useCallback(
+    (selected: string[], name: string) => {
+      setImagesPreviews(previews =>
+        previews.map(preview =>
+          preview.file.name === name
+            ? { ...preview, orders: selected }
+            : preview
+        )
+      );
+    },
+    [setImagesPreviews]
+  );
+
+  React.useEffect(() => {
+    onChange(imagePreviews);
+  }, [imagePreviews, onChange]);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const openDialog = () => inputRef.current && inputRef.current.click();
@@ -124,6 +155,8 @@ export const UploadImages = ({
             key={image.file.name}
             {...image}
             onRemove={removeImage}
+            orders={orders}
+            onOrderChange={onOrderChange}
           />
         ))}
         <UploadArea large={!hasImages} onClick={openDialog}>

@@ -76,9 +76,9 @@ export const VisitForm = ({ handlers, values }: VisitFormProps) => {
       <Section>
         <Label text="Bilder" />
         <UploadImages
-          onAdd={handlers.addImage}
-          onRemove={handlers.removeImage}
+          onChange={handlers.onImagesChange}
           images={values.images}
+          orders={values.orders}
         />
       </Section>
       <Section>

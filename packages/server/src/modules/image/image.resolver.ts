@@ -1,50 +1,12 @@
 import { v2 as cloudinary } from 'cloudinary';
-import {
-  Arg,
-  Authorized,
-  Field,
-  Mutation,
-  ObjectType,
-  Resolver,
-  InputType
-} from 'type-graphql';
+import { format } from 'date-fns';
+import { Arg, Authorized, Mutation, Resolver } from 'type-graphql';
 import { Service } from 'typedi';
-
-@ObjectType()
-class SignImageData {
-  constructor({ apiUrl, query }: SignImageData) {
-    this.apiUrl = apiUrl;
-    this.query = query;
-  }
-
-  @Field()
-  apiUrl: string;
-
-  @Field()
-  query: string;
-}
-
-@InputType()
-class SignImageInput {
-  @Field(() => String)
-  name: string;
-
-  @Field(() => String)
-  placeProviderId: string;
-
-  @Field(() => [String])
-  tags: string[];
-}
-
-@InputType()
-class SignImagesInput {
-  @Field(() => [SignImageInput])
-  images: SignImageInput[];
-}
+import { SignImageData, SignImagesInput } from './image.types';
 
 @Service()
 @Resolver()
-export class UtilsResolver {
+export class ImageResolver {
   constructor() {}
 
   @Authorized()
@@ -61,7 +23,7 @@ export class UtilsResolver {
       });
 
       const query = cloudinary.utils.sign_request({
-        public_id: data.name,
+        public_id: `${data.type}-${format(new Date(), 'yyyyMMdd')}`,
         folder: data.placeProviderId,
         tags: data.tags.join(','),
         timestamp,
@@ -72,6 +34,7 @@ export class UtilsResolver {
         apiUrl,
         query: JSON.stringify(query)
       });
+
       return payload;
     });
 
