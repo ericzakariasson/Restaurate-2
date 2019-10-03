@@ -16,6 +16,7 @@ import { myPlaceRoute, PlaceProviderIdParam } from 'routes';
 import { GeneralError } from 'scenes/Error/GeneralError';
 import { transformToInput } from '../../components/VisitForm/rateHelper';
 import { format } from 'date-fns';
+import { transformPreviewToPromise } from './transformPreviewToPromise';
 
 interface AddVisitSceneProps
   extends RouteComponentProps<PlaceProviderIdParam> {}
@@ -29,12 +30,13 @@ export const AddVisitScene = ({
     variables: { providerId }
   });
 
+  const [uploadProgress, setUploadProgress] = React.useState(0);
+
+  const [saving, setSaving] = React.useState(false);
+
   const { values, handlers, isValid } = useVisitForm();
 
-  const [
-    addVisit,
-    { loading: saving, data: addVisitData }
-  ] = useAddVisitMutation({
+  const [addVisit, { data: addVisitData }] = useAddVisitMutation({
     variables: {
       data: {
         providerPlaceId: providerId,
@@ -52,6 +54,7 @@ export const AddVisitScene = ({
   const [signImages] = useSignImagesDataMutation();
 
   const handleSave = async () => {
+    setSaving(true);
     const { data } = await signImages({
       variables: {
         data: {
@@ -65,25 +68,13 @@ export const AddVisitScene = ({
     });
 
     if (data && data.signImagesData) {
-      const imagePromises = data.signImagesData.map((signedData, i) => {
-        const formData = new FormData();
+      const imagePromises = data.signImagesData.map((signedData, i) =>
+        transformPreviewToPromise(signedData, values.images[i]).then(() =>
+          setUploadProgress(progress => progress + 1 / values.images.length)
+        )
+      );
 
-        const { file } = values.images[i];
-        formData.append('file', file);
-
-        const params = JSON.parse(signedData.query);
-        Object.entries<string | Blob>(params).forEach(([key, value]) =>
-          formData.append(key, value)
-        );
-
-        return fetch(signedData.apiUrl, {
-          method: 'POST',
-          body: formData
-        }).then(res => res.json());
-      });
-
-      const result = await Promise.all(imagePromises);
-      console.log(result);
+      const uploadResult = await Promise.all(imagePromises);
 
       // addVisit();
 
@@ -91,6 +82,8 @@ export const AddVisitScene = ({
         category: 'Form',
         action: 'Add Visit'
       });
+
+      setSaving(false);
     }
   };
 
