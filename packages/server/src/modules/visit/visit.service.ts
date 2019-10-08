@@ -48,16 +48,17 @@ export class VisitService {
     console.log('orders', orders);
     console.log('images', input.images);
 
-    const images = input.images.map(i => {
-      const image = new VisitImage();
-      image.placeProviderId = input.providerPlaceId;
-      image.url = i.url;
-      image.publicId = i.publicId;
-      image.orders = orders.filter(order => i.orders.includes(order.title));
-      image.user = user;
-      image.userId = image.userId;
-      return image;
-    });
+    const images = input.images.map(
+      image =>
+        new VisitImage({
+          placeProviderId: input.providerPlaceId,
+          url: image.url,
+          publicId: image.publicId,
+          orders: orders.filter(order => image.orders.includes(order.title)),
+          user,
+          userId: user.id
+        })
+    );
 
     const ratings = await this.createRatings(input.ratings);
 

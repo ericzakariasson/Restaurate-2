@@ -17,6 +17,10 @@ import { Order } from '../order/order.entity';
 @ObjectType()
 @Entity()
 export class VisitImage {
+  constructor(initializer?: Partial<VisitImage>) {
+    Object.assign(this, initializer);
+  }
+
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
