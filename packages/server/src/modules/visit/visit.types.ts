@@ -39,8 +39,7 @@ export class VisitResponse {
 }
 
 @InputType()
-export class EditVisitInput
-  implements Omit<AddVisitInput, 'providerPlaceId' | 'images'> {
+export class EditVisitInput implements Omit<AddVisitInput, 'providerPlaceId'> {
   @Field()
   visitId: string;
 
@@ -61,6 +60,9 @@ export class EditVisitInput
 
   @Field()
   isTakeAway: boolean;
+
+  @Field(() => [VisitImageInput])
+  images: VisitImageInput[];
 }
 
 @InputType()

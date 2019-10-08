@@ -1,8 +1,8 @@
+import { notify } from 'components/Notification';
 import * as React from 'react';
 import { Image as ImageIcon, Plus } from 'react-feather';
 import styled, { css } from 'styled-components';
 import { ImagePreview } from './components/ImagePreview';
-import { notify } from 'components/Notification';
 
 const Wrapper = styled.div`
   overflow-x: scroll;
@@ -64,25 +64,22 @@ const ImageIconWrapper = styled.div`
 
 export interface PreviewImage {
   src: string;
-  file: File;
   orders: string[];
+  file?: File;
+  publicId?: string;
 }
 
 interface UploadImagesProps {
-  images: PreviewImage[];
-  onChange: (images: PreviewImage[]) => void;
+  previewImages: PreviewImage[];
+  onPreviewChange: (previewImages: PreviewImage[]) => void;
   orders: string[];
 }
 
 export const UploadImages = ({
-  images = [],
-  onChange,
+  previewImages = [],
+  onPreviewChange,
   orders
 }: UploadImagesProps) => {
-  const [imagePreviews, setImagesPreviews] = React.useState<PreviewImage[]>(
-    images
-  );
-
   const handleChange = ({
     target: { files }
   }: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,46 +114,51 @@ export const UploadImages = ({
       return { src, file, orders: [] };
     });
 
-    setImagesPreviews(i => [...i, ...images]);
+    const updatedPreviews = [...previewImages, ...images];
+
+    onPreviewChange(updatedPreviews);
   };
 
-  const removeImage = (name: string) =>
-    setImagesPreviews(images =>
-      images.filter(image => image.file.name !== name)
+  const removeImage = (name: string) => {
+    const updatedPreviews = previewImages.filter(image =>
+      image.file ? image.file.name !== name : image.publicId! !== name
     );
 
-  const onOrderChange = React.useCallback(
-    (selected: string[], name: string) => {
-      setImagesPreviews(previews =>
-        previews.map(preview =>
-          preview.file.name === name
-            ? { ...preview, orders: selected }
-            : preview
-        )
-      );
-    },
-    [setImagesPreviews]
-  );
+    onPreviewChange(updatedPreviews);
+  };
 
-  React.useEffect(() => {
-    onChange(imagePreviews);
-  }, [imagePreviews, onChange]);
+  const onOrderChange = (selected: string[], name: string) => {
+    const updatedPreviews = previewImages.map(preview =>
+      (preview.file
+      ? preview.file.name === name
+      : preview.publicId === name)
+        ? { ...preview, orders: selected }
+        : { ...preview }
+    );
+
+    onPreviewChange(updatedPreviews);
+  };
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const openDialog = () => inputRef.current && inputRef.current.click();
 
-  const hasImages = imagePreviews.length > 0;
+  const hasImages = previewImages.length > 0;
+
+  console.log(previewImages);
 
   return (
     <Wrapper>
       <Scrollable>
-        {imagePreviews.map(image => (
+        {previewImages.map(image => (
           <ImagePreview
-            key={image.file.name}
-            {...image}
-            onRemove={removeImage}
+            key={image.file ? image.file!.name : image.publicId!}
+            src={image.src}
+            name={image.file ? image.file!.name : image.publicId!}
             orders={orders}
+            onRemove={removeImage}
             onOrderChange={onOrderChange}
+            isImage={Boolean(image.publicId)}
+            selectedOrders={image.orders}
           />
         ))}
         <UploadArea large={!hasImages} onClick={openDialog}>

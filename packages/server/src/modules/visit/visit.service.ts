@@ -45,9 +45,6 @@ export class VisitService {
       ? await this.createOrders(input.orders, user)
       : [];
 
-    console.log('orders', orders);
-    console.log('images', input.images);
-
     const images = input.images.map(
       image =>
         new VisitImage({

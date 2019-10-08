@@ -1,13 +1,13 @@
-import { Label, Loading, NavButton, Page, Score } from 'components';
+import { trackEvent } from 'analytics/trackEvent';
+import { Label, Loading, NavButton, Page, Score, Image } from 'components';
 import { rateNodes } from 'constants/rate.constants';
 import { Rate, useVisitQuery } from 'graphql/types';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { editVisitRoute, WithVisitId, myPlaceRoute } from 'routes';
+import { useParams } from 'react-router-dom';
+import { editVisitRoute, myPlaceRoute } from 'routes';
 import styled from 'styled-components';
 import { formatDate, translateRateName } from 'utils/format';
 import { GeneralError } from '..';
-import { trackEvent } from 'analytics/trackEvent';
 
 const Block = styled.article`
   &:not(:last-child) {
@@ -105,11 +105,9 @@ const sortRatings = (a: Rate, b: Rate) => {
   return aNode.order > bNode.order ? 1 : -1;
 };
 
-export const VisitScene = ({
-  match: {
-    params: { id }
-  }
-}: RouteComponentProps<WithVisitId>) => {
+export const VisitScene = () => {
+  const { id } = useParams();
+
   const { data, loading, error } = useVisitQuery({
     variables: { id }
   });
@@ -129,6 +127,7 @@ export const VisitScene = ({
     orders,
     comment,
     ratings,
+    images,
     score,
     private: isPrivate,
     takeAway
@@ -180,6 +179,14 @@ export const VisitScene = ({
           })}
         </Ratings>
         <Score score={score} />
+      </Block>
+      <Block>
+        <Label text="Bilder" />
+        <section>
+          {images.map(image => (
+            <Image key={image.id} publicId={image.publicId} />
+          ))}
+        </section>
       </Block>
       <Block>
         <Label text="Kommentar" />

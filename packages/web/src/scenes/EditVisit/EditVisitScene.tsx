@@ -7,7 +7,10 @@ import {
   useVisitQuery,
   VisitDocument,
   useDeleteVisitMutation,
-  MeVisitsDocument
+  MeVisitsDocument,
+  useSignImagesDataMutation,
+  ImageType,
+  VisitImageInput
 } from 'graphql/types';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
@@ -17,6 +20,7 @@ import { formatDate } from 'utils/format';
 import { GeneralError } from '..';
 import { trackEvent } from 'analytics/trackEvent';
 import { notify } from 'components/Notification';
+import { transformPreviewToPromise } from 'scenes/AddVisit/transformPreviewToPromise';
 
 export const EditVisitScene = ({
   match: {
@@ -29,21 +33,11 @@ export const EditVisitScene = ({
 
   const { handlers, values, isValid } = useVisitForm(data && data.visit);
 
-  const [
-    editVisit,
-    { data: editVisitDate, loading: saving }
-  ] = useEditVisitMutation({
-    variables: {
-      data: {
-        visitId: id,
-        visitDate: values.visitDate,
-        comment: values.comment,
-        orders: values.orders,
-        ratings: transformToInput(values.rateState),
-        isPrivate: values.isPrivate,
-        isTakeAway: values.isTakeAway
-      }
-    },
+  const [signImages] = useSignImagesDataMutation();
+
+  const [saving, setSaving] = React.useState(false);
+
+  const [editVisit, { data: editVisitDate }] = useEditVisitMutation({
     refetchQueries: [{ query: VisitDocument, variables: { id } }],
     awaitRefetchQueries: true
   });
@@ -57,7 +51,70 @@ export const EditVisitScene = ({
     awaitRefetchQueries: true
   });
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setSaving(true);
+    const placeProviderId = data!.visit!.place.providerId;
+
+    const oldImages: VisitImageInput[] = values.images.map(image => ({
+      orders: image.orders.map(o => o.title),
+      publicId: image.publicId,
+      url: image.publicId
+    }));
+
+    const newImages = values.previewImages.filter(
+      image => !Boolean(image.publicId)
+    );
+
+    const { data: signData } = await signImages({
+      variables: {
+        data: {
+          images: newImages.map(preview => ({
+            type: ImageType.Visit,
+            tags: preview.orders,
+            placeProviderId
+          }))
+        }
+      }
+    });
+
+    if (signData && signData.signImagesData) {
+      const imagePromises = signData.signImagesData.map((signedData, i) =>
+        transformPreviewToPromise(signedData, newImages[i])
+      );
+
+      const uploadResult = await Promise.all(imagePromises);
+
+      const newVisitImages: VisitImageInput[] = uploadResult.map(result => ({
+        publicId: result.public_id,
+        orders: result.tags,
+        url: result.secure_url
+      }));
+
+      const visitImages = [...oldImages, ...newVisitImages];
+
+      editVisit({
+        variables: {
+          data: {
+            visitId: id,
+            visitDate: values.visitDate,
+            comment: values.comment,
+            orders: values.orders,
+            ratings: transformToInput(values.rateState),
+            isPrivate: values.isPrivate,
+            isTakeAway: values.isTakeAway,
+            images: visitImages
+          }
+        }
+      });
+
+      trackEvent({
+        category: 'Form',
+        action: 'Add Visit'
+      });
+
+      setSaving(false);
+    }
+
     trackEvent({ category: 'Form', action: 'Save Edit Visit' });
     editVisit();
   };

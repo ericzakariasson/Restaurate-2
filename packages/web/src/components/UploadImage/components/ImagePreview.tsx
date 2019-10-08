@@ -1,9 +1,11 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { X, Plus } from 'react-feather';
-import { PreviewImage } from '../UploadImages';
-import { useArray } from 'hooks';
+import { Cloudinary } from 'cloudinary-core';
 import { ActionButton } from 'components';
+import * as React from 'react';
+import { Plus, X } from 'react-feather';
+import styled from 'styled-components';
+import { PreviewImage } from '../UploadImages';
+
+const cloudinary = new Cloudinary({ cloud_name: 'restaurate' });
 
 const ImagePreviewCard = styled.div`
   background-size: cover;
@@ -16,8 +18,8 @@ const ImagePreviewCard = styled.div`
   min-width: 220px;
 
   margin-right: 20px;
-  padding: 10px;
   position: relative;
+  overflow: hidden;
 `;
 
 const RemovePreview = styled(X)`
@@ -30,39 +32,46 @@ const RemovePreview = styled(X)`
   backdrop-filter: blur(4px);
 `;
 
-interface ImagePreviewProps extends PreviewImage {
+interface ImagePreviewProps extends Pick<PreviewImage, 'src'> {
   onRemove: (name: string) => void;
   onOrderChange: (orders: string[], name: string) => void;
   orders: string[];
+  selectedOrders: string[];
+  name: string;
+  isImage: boolean;
 }
 
 export const ImagePreview = ({
   src,
-  file,
+  name,
   onRemove,
   orders,
-  onOrderChange
+  selectedOrders,
+  onOrderChange,
+  isImage
 }: ImagePreviewProps) => {
-  const [selectedOrders, selectOrder, deselectOrder] = useArray<string>();
+  const addOrder = (order: string) => {
+    onOrderChange([...orders, order], name);
+  };
 
-  React.useEffect(() => {
-    onOrderChange(selectedOrders, file.name);
-  }, [selectedOrders, onOrderChange, file.name]);
+  const removeOrder = (order: string) => {
+    onOrderChange(orders.filter(o => o !== order), name);
+  };
+
+  const imageUrl = isImage
+    ? cloudinary.url(name, { width: 320, crop: 'scale' })
+    : src;
 
   return (
     <article>
-      <ImagePreviewCard style={{ backgroundImage: `url(${src})` }}>
-        <RemovePreview
-          size={24}
-          color="#222"
-          onClick={() => onRemove(file.name)}
-        />
+      <ImagePreviewCard style={{ backgroundImage: `url(${imageUrl})` }}>
+        <RemovePreview size={24} color="#222" onClick={() => onRemove(name)} />
       </ImagePreviewCard>
       <SelectOrders
         orders={orders}
         selected={selectedOrders}
-        select={selectOrder}
-        deselect={deselectOrder}
+        select={addOrder}
+        deselect={removeOrder}
       />
     </article>
   );

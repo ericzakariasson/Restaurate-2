@@ -60,6 +60,7 @@ export type EditVisitInput = {
   ratings: Array<RateInput>,
   isPrivate: Scalars['Boolean'],
   isTakeAway: Scalars['Boolean'],
+  images: Array<VisitImageInput>,
 };
 
 /** Type of image */
@@ -196,6 +197,7 @@ export type Order = {
    __typename?: 'Order',
   id: Scalars['ID'],
   title: Scalars['String'],
+  images: Array<VisitImage>,
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
 };
@@ -414,6 +416,7 @@ export type Visit = {
   visitDate: Scalars['DateTime'],
   orders: Array<Order>,
   ratings: Array<Rate>,
+  images: Array<VisitImage>,
   score: Scalars['Float'],
   private: Scalars['Boolean'],
   takeAway: Scalars['Boolean'],
@@ -421,6 +424,17 @@ export type Visit = {
   updatedAt: Scalars['DateTime'],
   place: Place,
   user: User,
+};
+
+export type VisitImage = {
+   __typename?: 'VisitImage',
+  id: Scalars['ID'],
+  placeProviderId: Scalars['String'],
+  publicId: Scalars['String'],
+  url: Scalars['String'],
+  orders: Array<Order>,
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
 };
 
 export type VisitImageInput = {
@@ -543,9 +557,20 @@ export type VisitFragment = (
     & VisitRateFragment
   >, user: { __typename?: 'User' }
     & UserFragment
-  , place: { __typename?: 'Place' }
+  , images: Array<{ __typename?: 'VisitImage' }
+    & VisitImageFragment
+  >, place: { __typename?: 'Place' }
     & PlaceFragment
    }
+);
+
+export type VisitImageFragment = (
+  { __typename?: 'VisitImage' }
+  & Pick<VisitImage, 'id' | 'url' | 'publicId'>
+  & { orders: Array<(
+    { __typename?: 'Order' }
+    & Pick<Order, 'id' | 'title'>
+  )> }
 );
 
 export type VisitOrderFragment = (
@@ -910,6 +935,17 @@ export const UserFragmentDoc = gql`
   visitCount
 }
     `;
+export const VisitImageFragmentDoc = gql`
+    fragment VisitImage on VisitImage {
+  id
+  url
+  publicId
+  orders {
+    id
+    title
+  }
+}
+    `;
 export const PlaceTagFragmentDoc = gql`
     fragment PlaceTag on Tag {
   id
@@ -1022,6 +1058,9 @@ export const VisitFragmentDoc = gql`
   user {
     ...User
   }
+  images {
+    ...VisitImage
+  }
   comment
   visitDate
   takeAway
@@ -1035,6 +1074,7 @@ export const VisitFragmentDoc = gql`
     ${VisitOrderFragmentDoc}
 ${VisitRateFragmentDoc}
 ${UserFragmentDoc}
+${VisitImageFragmentDoc}
 ${PlaceFragmentDoc}`;
 export const AddVisitDocument = gql`
     mutation AddVisit($data: AddVisitInput!) {

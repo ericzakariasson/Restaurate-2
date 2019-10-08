@@ -46,7 +46,7 @@ export const AddVisitScene = ({
     const { data } = await signImages({
       variables: {
         data: {
-          images: values.images.map(preview => ({
+          images: values.previewImages.map(preview => ({
             type: ImageType.Visit,
             tags: preview.orders,
             placeProviderId: providerId
@@ -57,7 +57,7 @@ export const AddVisitScene = ({
 
     if (data && data.signImagesData) {
       const imagePromises = data.signImagesData.map((signedData, i) =>
-        transformPreviewToPromise(signedData, values.images[i])
+        transformPreviewToPromise(signedData, values.previewImages[i])
       );
 
       const uploadResult = await Promise.all(imagePromises);

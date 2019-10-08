@@ -7,7 +7,9 @@ export const transformPreviewToPromise = (
 ) => {
   const formData = new FormData();
 
-  formData.append('file', file);
+  if (file) {
+    formData.append('file', file);
+  }
 
   const params = JSON.parse(signedData.query);
   Object.entries<string | Blob>(params).forEach(([key, value]) =>

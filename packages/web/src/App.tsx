@@ -30,6 +30,7 @@ import {
   WantToVisitScene
 } from './scenes';
 import { GlobalStyle, theme } from './style';
+import { CloudinaryContext } from 'cloudinary-react';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -128,7 +129,9 @@ const Bootstrap = () => {
     <ApolloProvider client={client}>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <App />
+          <CloudinaryContext cloudName="restaurate">
+            <App />
+          </CloudinaryContext>
         </ThemeProvider>
       </BrowserRouter>
     </ApolloProvider>
