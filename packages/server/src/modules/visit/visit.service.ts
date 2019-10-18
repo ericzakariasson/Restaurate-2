@@ -148,6 +148,7 @@ export class VisitService {
     const ordersToCreate = input.orders.filter(
       title => !visit.orders.some(o => o.title === title)
     );
+
     const ordersToDelete = visit.orders.filter(
       order => !input.orders.some(title => title === order.title)
     );
@@ -169,6 +170,7 @@ export class VisitService {
           i.orders.length > 0
             ? await this.orderRepository.find({
                 where: {
+                  visitId: visit.id,
                   title: In(i.orders)
                 }
               })
@@ -231,8 +233,6 @@ export class VisitService {
       private: input.isPrivate,
       takeAway: input.isTakeAway
     });
-
-    logger.info('Visit edited', { visit: visit.id });
 
     return this.visitRepository.findOne(updatedVisit.id);
   }

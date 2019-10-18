@@ -89,6 +89,17 @@ const Private = styled.h4`
   align-self: flex-start;
 `;
 
+const Images = styled.section`
+  margin: 0 -20px;
+  overflow-x: scroll;
+`;
+
+const ImageList = styled.ul`
+  display: flex;
+  padding: 0 20px;
+  list-style: none;
+`;
+
 const sortRatings = (a: Rate, b: Rate) => {
   const aNode = rateNodes.find(node => node.name === a.name);
 
@@ -182,11 +193,16 @@ export const VisitScene = () => {
       </Block>
       <Block>
         <Label text="Bilder" />
-        <section>
-          {images.map(image => (
-            <Image key={image.id} publicId={image.publicId} />
-          ))}
-        </section>
+        <Images>
+          <ImageList>
+            {images.map(image => (
+              <li>
+                {image.orders.join(', ')}
+                <Image key={image.id} publicId={image.publicId} />
+              </li>
+            ))}
+          </ImageList>
+        </Images>
       </Block>
       <Block>
         <Label text="Kommentar" />

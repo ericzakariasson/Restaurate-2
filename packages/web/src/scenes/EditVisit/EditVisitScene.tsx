@@ -61,7 +61,9 @@ export const EditVisitScene = ({
       )
       .map(image => ({
         id: Number(image.id),
-        orders: image.orders.map(o => o.title),
+        orders: values.previewImages.find(
+          preview => preview.publicId === image.publicId
+        )!.orders,
         publicId: image.publicId,
         url: image.url
       }));
@@ -99,12 +101,8 @@ export const EditVisitScene = ({
         }));
 
         visitImages = [...oldImages, ...newVisitImages];
-
-        console.log('New added');
       }
     }
-
-    console.log(visitImages);
 
     await editVisit({
       variables: {
