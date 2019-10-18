@@ -19,6 +19,9 @@ export class AddVisitInput {
   @Field(() => [RateInput])
   ratings: RateInput[];
 
+  @Field(() => [VisitImageInput])
+  images: VisitImageInput[];
+
   @Field()
   isPrivate: boolean;
 
@@ -36,7 +39,7 @@ export class VisitResponse {
 }
 
 @InputType()
-export class EditVisitInput implements Partial<AddVisitInput> {
+export class EditVisitInput implements Omit<AddVisitInput, 'providerPlaceId'> {
   @Field()
   visitId: string;
 
@@ -57,4 +60,22 @@ export class EditVisitInput implements Partial<AddVisitInput> {
 
   @Field()
   isTakeAway: boolean;
+
+  @Field(() => [VisitImageInput])
+  images: VisitImageInput[];
+}
+
+@InputType()
+export class VisitImageInput {
+  @Field({ nullable: true })
+  id?: number;
+
+  @Field()
+  publicId: string;
+
+  @Field()
+  url: string;
+
+  @Field(() => [String])
+  orders: string[];
 }

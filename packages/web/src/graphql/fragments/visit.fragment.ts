@@ -18,6 +18,9 @@ export default gql`
     user {
       ...User
     }
+    images {
+      ...VisitImage
+    }
     comment
     visitDate
     takeAway
@@ -30,6 +33,7 @@ export default gql`
   }
   ${fragments.visitOrder}
   ${fragments.visitRate}
+  ${fragments.visitImage}
   ${fragments.user}
   ${fragments.place}
 `;

@@ -3,10 +3,13 @@ import { Button, Loading, Page } from 'components';
 import { useVisitForm } from 'components/VisitForm/useVisitForm';
 import { VisitForm } from 'components/VisitForm/VisitForm';
 import {
+  ImageType,
   MePlacesDocument,
   MeVisitsDocument,
   useAddVisitMutation,
-  usePlaceDetailsQuery
+  usePlaceDetailsQuery,
+  useSignImagesDataMutation,
+  VisitImageInput
 } from 'graphql/types';
 import * as React from 'react';
 import Helmet from 'react-helmet';
@@ -14,6 +17,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { myPlaceRoute, PlaceProviderIdParam } from 'routes';
 import { GeneralError } from 'scenes/Error/GeneralError';
 import { transformToInput } from '../../components/VisitForm/rateHelper';
+import { transformPreviewToPromise } from './transformPreviewToPromise';
 
 interface AddVisitSceneProps
   extends RouteComponentProps<PlaceProviderIdParam> {}
@@ -27,32 +31,65 @@ export const AddVisitScene = ({
     variables: { providerId }
   });
 
+  const [saving, setSaving] = React.useState(false);
+
   const { values, handlers, isValid } = useVisitForm();
 
-  const [
-    addVisit,
-    { loading: saving, data: addVisitData }
-  ] = useAddVisitMutation({
-    variables: {
-      data: {
-        providerPlaceId: providerId,
-        visitDate: values.visitDate,
-        comment: values.comment,
-        orders: values.orders,
-        ratings: transformToInput(values.rateState),
-        isPrivate: values.isPrivate,
-        isTakeAway: values.isTakeAway
-      }
-    },
+  const [addVisit, { data: addVisitData }] = useAddVisitMutation({
     refetchQueries: [{ query: MeVisitsDocument }, { query: MePlacesDocument }]
   });
 
-  const handleSave = () => {
-    trackEvent({
-      category: 'Form',
-      action: 'Add Visit'
+  const [signImages] = useSignImagesDataMutation();
+
+  const handleSave = async () => {
+    setSaving(true);
+    const { data } = await signImages({
+      variables: {
+        data: {
+          images: values.previewImages.map(preview => ({
+            type: ImageType.Visit,
+            tags: preview.orders,
+            placeProviderId: providerId
+          }))
+        }
+      }
     });
-    addVisit();
+
+    if (data && data.signImagesData) {
+      const imagePromises = data.signImagesData.map((signedData, i) =>
+        transformPreviewToPromise(signedData, values.previewImages[i])
+      );
+
+      const uploadResult = await Promise.all(imagePromises);
+
+      const visitImages: VisitImageInput[] = uploadResult.map(result => ({
+        publicId: result.public_id,
+        orders: result.tags,
+        url: result.secure_url
+      }));
+
+      addVisit({
+        variables: {
+          data: {
+            providerPlaceId: providerId,
+            visitDate: values.visitDate,
+            comment: values.comment,
+            orders: values.orders,
+            ratings: transformToInput(values.rateState),
+            isPrivate: values.isPrivate,
+            isTakeAway: values.isTakeAway,
+            images: visitImages
+          }
+        }
+      });
+
+      trackEvent({
+        category: 'Form',
+        action: 'Add Visit'
+      });
+
+      setSaving(false);
+    }
   };
 
   if (addVisitData && addVisitData.addVisit.saved) {

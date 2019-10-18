@@ -13,6 +13,7 @@ import { Order } from './order/order.entity';
 import { RelationColumn } from '../utils';
 import { Rate } from './rate/rate.entity';
 import { Place } from '../place/place.entity';
+import { VisitImage } from './image/visit.image.entity';
 
 @ObjectType()
 @Entity()
@@ -50,6 +51,13 @@ export class Visit {
     onDelete: 'CASCADE'
   })
   ratings: Rate[];
+
+  @Field(() => [VisitImage])
+  @OneToMany(() => VisitImage, visitImage => visitImage.visit, {
+    cascade: true,
+    eager: true
+  })
+  images: VisitImage[];
 
   @Field()
   @Column({ type: 'float' })

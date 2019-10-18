@@ -34,6 +34,7 @@ export type AddVisitInput = {
   comment?: Maybe<Scalars['String']>,
   orders?: Maybe<Array<Scalars['String']>>,
   ratings: Array<RateInput>,
+  images: Array<VisitImageInput>,
   isPrivate: Scalars['Boolean'],
   isTakeAway: Scalars['Boolean'],
 };
@@ -59,7 +60,14 @@ export type EditVisitInput = {
   ratings: Array<RateInput>,
   isPrivate: Scalars['Boolean'],
   isTakeAway: Scalars['Boolean'],
+  images: Array<VisitImageInput>,
 };
+
+/** Type of image */
+export enum ImageType {
+  Visit = 'Visit',
+  Place = 'Place'
+}
 
 export type IPosition = {
   lat: Scalars['Float'],
@@ -114,6 +122,7 @@ export type Mutation = {
   createPlace?: Maybe<Place>,
   toggleWantToVisit: Scalars['Boolean'],
   updatePlace: Place,
+  signImagesData: Array<SignImageData>,
 };
 
 
@@ -168,6 +177,11 @@ export type MutationUpdatePlaceArgs = {
   providerId: Scalars['String']
 };
 
+
+export type MutationSignImagesDataArgs = {
+  data: SignImagesInput
+};
+
 export type MutationResponse = {
    __typename?: 'MutationResponse',
   success: Scalars['Boolean'],
@@ -183,6 +197,7 @@ export type Order = {
    __typename?: 'Order',
   id: Scalars['ID'],
   title: Scalars['String'],
+  images: Array<VisitImage>,
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
 };
@@ -334,6 +349,22 @@ export type RateInput = {
   children?: Maybe<Array<RateInput>>,
 };
 
+export type SignImageData = {
+   __typename?: 'SignImageData',
+  apiUrl: Scalars['String'],
+  query: Scalars['String'],
+};
+
+export type SignImageInput = {
+  type: ImageType,
+  placeProviderId: Scalars['String'],
+  tags: Array<Scalars['String']>,
+};
+
+export type SignImagesInput = {
+  images: Array<SignImageInput>,
+};
+
 export type Tag = {
    __typename?: 'Tag',
   id: Scalars['ID'],
@@ -385,6 +416,7 @@ export type Visit = {
   visitDate: Scalars['DateTime'],
   orders: Array<Order>,
   ratings: Array<Rate>,
+  images: Array<VisitImage>,
   score: Scalars['Float'],
   private: Scalars['Boolean'],
   takeAway: Scalars['Boolean'],
@@ -392,6 +424,24 @@ export type Visit = {
   updatedAt: Scalars['DateTime'],
   place: Place,
   user: User,
+};
+
+export type VisitImage = {
+   __typename?: 'VisitImage',
+  id: Scalars['ID'],
+  placeProviderId: Scalars['String'],
+  publicId: Scalars['String'],
+  url: Scalars['String'],
+  orders: Array<Order>,
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+};
+
+export type VisitImageInput = {
+  id?: Maybe<Scalars['Float']>,
+  publicId: Scalars['String'],
+  url: Scalars['String'],
+  orders: Array<Scalars['String']>,
 };
 
 export type VisitResponse = {
@@ -508,9 +558,20 @@ export type VisitFragment = (
     & VisitRateFragment
   >, user: { __typename?: 'User' }
     & UserFragment
-  , place: { __typename?: 'Place' }
+  , images: Array<{ __typename?: 'VisitImage' }
+    & VisitImageFragment
+  >, place: { __typename?: 'Place' }
     & PlaceFragment
    }
+);
+
+export type VisitImageFragment = (
+  { __typename?: 'VisitImage' }
+  & Pick<VisitImage, 'id' | 'url' | 'publicId'>
+  & { orders: Array<(
+    { __typename?: 'Order' }
+    & Pick<Order, 'id' | 'title'>
+  )> }
 );
 
 export type VisitOrderFragment = (
@@ -627,6 +688,19 @@ export type SendConfirmationEmailMutationVariables = {
 export type SendConfirmationEmailMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'sendConfirmationEmail'>
+);
+
+export type SignImagesDataMutationVariables = {
+  data: SignImagesInput
+};
+
+
+export type SignImagesDataMutation = (
+  { __typename?: 'Mutation' }
+  & { signImagesData: Array<(
+    { __typename?: 'SignImageData' }
+    & Pick<SignImageData, 'apiUrl' | 'query'>
+  )> }
 );
 
 export type ToggleWantToVisitMutationVariables = {
@@ -862,6 +936,17 @@ export const UserFragmentDoc = gql`
   visitCount
 }
     `;
+export const VisitImageFragmentDoc = gql`
+    fragment VisitImage on VisitImage {
+  id
+  url
+  publicId
+  orders {
+    id
+    title
+  }
+}
+    `;
 export const PlaceTagFragmentDoc = gql`
     fragment PlaceTag on Tag {
   id
@@ -974,6 +1059,9 @@ export const VisitFragmentDoc = gql`
   user {
     ...User
   }
+  images {
+    ...VisitImage
+  }
   comment
   visitDate
   takeAway
@@ -987,6 +1075,7 @@ export const VisitFragmentDoc = gql`
     ${VisitOrderFragmentDoc}
 ${VisitRateFragmentDoc}
 ${UserFragmentDoc}
+${VisitImageFragmentDoc}
 ${PlaceFragmentDoc}`;
 export const AddVisitDocument = gql`
     mutation AddVisit($data: AddVisitInput!) {
@@ -1120,6 +1209,22 @@ export type SendConfirmationEmailMutationFn = ApolloReactCommon.MutationFunction
 export type SendConfirmationEmailMutationHookResult = ReturnType<typeof useSendConfirmationEmailMutation>;
 export type SendConfirmationEmailMutationResult = ApolloReactCommon.MutationResult<SendConfirmationEmailMutation>;
 export type SendConfirmationEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>;
+export const SignImagesDataDocument = gql`
+    mutation SignImagesData($data: SignImagesInput!) {
+  signImagesData(data: $data) {
+    apiUrl
+    query
+  }
+}
+    `;
+export type SignImagesDataMutationFn = ApolloReactCommon.MutationFunction<SignImagesDataMutation, SignImagesDataMutationVariables>;
+
+    export function useSignImagesDataMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignImagesDataMutation, SignImagesDataMutationVariables>) {
+      return ApolloReactHooks.useMutation<SignImagesDataMutation, SignImagesDataMutationVariables>(SignImagesDataDocument, baseOptions);
+    }
+export type SignImagesDataMutationHookResult = ReturnType<typeof useSignImagesDataMutation>;
+export type SignImagesDataMutationResult = ApolloReactCommon.MutationResult<SignImagesDataMutation>;
+export type SignImagesDataMutationOptions = ApolloReactCommon.BaseMutationOptions<SignImagesDataMutation, SignImagesDataMutationVariables>;
 export const ToggleWantToVisitDocument = gql`
     mutation ToggleWantToVisit($providerPlaceId: String!) {
   toggleWantToVisit(providerPlaceId: $providerPlaceId)

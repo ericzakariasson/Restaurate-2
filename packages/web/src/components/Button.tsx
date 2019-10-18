@@ -186,10 +186,8 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
   ${p =>
     p.disabled &&
     css`
-      background-color: #fcfcfc;
-      border-color: #ccc;
-      opacity: 0.5;
       box-shadow: none;
+      color: rgba(0, 0, 0, 0.5);
     `}
 `;
 

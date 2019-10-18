@@ -7,7 +7,10 @@ import {
   useVisitQuery,
   VisitDocument,
   useDeleteVisitMutation,
-  MeVisitsDocument
+  MeVisitsDocument,
+  useSignImagesDataMutation,
+  ImageType,
+  VisitImageInput
 } from 'graphql/types';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
@@ -17,6 +20,7 @@ import { formatDate } from 'utils/format';
 import { GeneralError } from '..';
 import { trackEvent } from 'analytics/trackEvent';
 import { notify } from 'components/Notification';
+import { transformPreviewToPromise } from 'scenes/AddVisit/transformPreviewToPromise';
 
 export const EditVisitScene = ({
   match: {
@@ -29,21 +33,11 @@ export const EditVisitScene = ({
 
   const { handlers, values, isValid } = useVisitForm(data && data.visit);
 
-  const [
-    editVisit,
-    { data: editVisitDate, loading: saving }
-  ] = useEditVisitMutation({
-    variables: {
-      data: {
-        visitId: id,
-        visitDate: values.visitDate,
-        comment: values.comment,
-        orders: values.orders,
-        ratings: transformToInput(values.rateState),
-        isPrivate: values.isPrivate,
-        isTakeAway: values.isTakeAway
-      }
-    },
+  const [signImages] = useSignImagesDataMutation();
+
+  const [saving, setSaving] = React.useState(false);
+
+  const [editVisit, { data: editVisitDate }] = useEditVisitMutation({
     refetchQueries: [{ query: VisitDocument, variables: { id } }],
     awaitRefetchQueries: true
   });
@@ -57,9 +51,89 @@ export const EditVisitScene = ({
     awaitRefetchQueries: true
   });
 
-  const handleSave = () => {
-    trackEvent({ category: 'Form', action: 'Edit Visit' });
-    editVisit();
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const placeProviderId = data!.visit!.place.providerId;
+
+      const oldImages: VisitImageInput[] = values.images
+        .filter(image =>
+          values.previewImages.some(i => i.publicId === image.publicId)
+        )
+        .map(image => ({
+          id: Number(image.id),
+          orders: values.previewImages.find(
+            preview => preview.publicId === image.publicId
+          )!.orders,
+          publicId: image.publicId,
+          url: image.url
+        }));
+
+      let visitImages = oldImages;
+
+      const newImages = values.previewImages.filter(
+        image => !Boolean(image.publicId)
+      );
+
+      if (newImages.length > 0) {
+        const { data: signData } = await signImages({
+          variables: {
+            data: {
+              images: newImages.map(preview => ({
+                type: ImageType.Visit,
+                tags: preview.orders,
+                placeProviderId
+              }))
+            }
+          }
+        });
+
+        if (signData && signData.signImagesData) {
+          const imagePromises = signData.signImagesData.map((signedData, i) =>
+            transformPreviewToPromise(signedData, newImages[i])
+          );
+
+          const uploadResult = await Promise.all(imagePromises);
+
+          const newVisitImages: VisitImageInput[] = uploadResult.map(
+            result => ({
+              publicId: result.public_id,
+              orders: result.tags,
+              url: result.secure_url
+            })
+          );
+
+          visitImages = [...oldImages, ...newVisitImages];
+        }
+      }
+
+      await editVisit({
+        variables: {
+          data: {
+            visitId: id,
+            visitDate: values.visitDate,
+            comment: values.comment,
+            orders: values.orders,
+            ratings: transformToInput(values.rateState),
+            isPrivate: values.isPrivate,
+            isTakeAway: values.isTakeAway,
+            images: visitImages
+          }
+        }
+      });
+
+      trackEvent({
+        category: 'Form',
+        action: 'Save Edit Visit'
+      });
+    } catch (e) {
+      notify({
+        title: 'Ett fel uppstod',
+        level: 'error'
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (editVisitDate && editVisitDate.editVisit.saved) {

@@ -1,5 +1,6 @@
+import { PreviewImage } from 'components/UploadImage/UploadImages';
 import { rateNodes } from 'constants/rate.constants';
-import { Rate, VisitFragment } from 'graphql/types';
+import { Rate, VisitFragment, VisitImageFragment } from 'graphql/types';
 import { useArray } from 'hooks';
 import * as React from 'react';
 import { calculateAverageScore, createInitialRateState } from './rateHelper';
@@ -19,6 +20,7 @@ export interface Handlers {
   setScore: (payload: SetRatePayload) => void;
   setTakeAway: (value: boolean) => void;
   setPrivate: (value: boolean) => void;
+  onPreviewImagesChange: (images: PreviewImage[]) => void;
 }
 
 export interface Values {
@@ -29,6 +31,8 @@ export interface Values {
   averageScore: number | null;
   isTakeAway: boolean;
   isPrivate: boolean;
+  previewImages: PreviewImage[];
+  images: VisitImageFragment[];
 }
 
 interface UseVisitForm {
@@ -68,6 +72,9 @@ export function useVisitForm(
   const [isPrivate, setIsPrivate] = React.useState(false);
   const [isTakeAway, setIsTakeAway] = React.useState(false);
 
+  const [previewImages, setPreviewImages] = React.useState<PreviewImage[]>([]);
+  const [images, setImages] = React.useState<VisitImageFragment[]>([]);
+
   const initialRateState = createInitialRateState(rateNodes);
   const [rateState, dispatch] = React.useReducer(rateReducer, initialRateState);
 
@@ -78,6 +85,11 @@ export function useVisitForm(
     dispatch({ type: 'SET_RATE', payload });
 
   const averageScore = calculateAverageScore(rateState);
+
+  const onPreviewImagesChange = React.useCallback(
+    (previewImages: PreviewImage[]) => setPreviewImages(previewImages),
+    []
+  );
 
   React.useEffect(() => {
     if (initialValues) {
@@ -95,6 +107,15 @@ export function useVisitForm(
       setRateState({ rateState: rs });
       setIsPrivate(initialValues.private);
       setIsTakeAway(initialValues.takeAway);
+      setPreviewImages(
+        initialValues.images.map(image => ({
+          orders: image.orders.map(order => order.title),
+          src: image.url,
+          publicId: image.publicId,
+          name: image.publicId
+        }))
+      );
+      setImages(initialValues.images);
     }
   }, [initialValues, setOrders]);
 
@@ -105,7 +126,8 @@ export function useVisitForm(
     setVisitDate,
     setScore,
     setPrivate: setIsPrivate,
-    setTakeAway: setIsTakeAway
+    setTakeAway: setIsTakeAway,
+    onPreviewImagesChange
   };
 
   const values: Values = {
@@ -115,7 +137,9 @@ export function useVisitForm(
     rateState,
     averageScore,
     isPrivate,
-    isTakeAway
+    isTakeAway,
+    previewImages,
+    images
   };
 
   const isValid = Boolean(averageScore && averageScore > 0);
