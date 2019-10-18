@@ -55,68 +55,78 @@ export const EditVisitScene = ({
     setSaving(true);
     const placeProviderId = data!.visit!.place.providerId;
 
-    const oldImages: VisitImageInput[] = values.images.map(image => ({
-      orders: image.orders.map(o => o.title),
-      publicId: image.publicId,
-      url: image.publicId
-    }));
+    const oldImages: VisitImageInput[] = values.images
+      .filter(image =>
+        values.previewImages.some(i => i.publicId === image.publicId)
+      )
+      .map(image => ({
+        id: Number(image.id),
+        orders: image.orders.map(o => o.title),
+        publicId: image.publicId,
+        url: image.url
+      }));
+
+    let visitImages = oldImages;
 
     const newImages = values.previewImages.filter(
       image => !Boolean(image.publicId)
     );
 
-    const { data: signData } = await signImages({
-      variables: {
-        data: {
-          images: newImages.map(preview => ({
-            type: ImageType.Visit,
-            tags: preview.orders,
-            placeProviderId
-          }))
-        }
-      }
-    });
-
-    if (signData && signData.signImagesData) {
-      const imagePromises = signData.signImagesData.map((signedData, i) =>
-        transformPreviewToPromise(signedData, newImages[i])
-      );
-
-      const uploadResult = await Promise.all(imagePromises);
-
-      const newVisitImages: VisitImageInput[] = uploadResult.map(result => ({
-        publicId: result.public_id,
-        orders: result.tags,
-        url: result.secure_url
-      }));
-
-      const visitImages = [...oldImages, ...newVisitImages];
-
-      editVisit({
+    if (newImages.length > 0) {
+      const { data: signData } = await signImages({
         variables: {
           data: {
-            visitId: id,
-            visitDate: values.visitDate,
-            comment: values.comment,
-            orders: values.orders,
-            ratings: transformToInput(values.rateState),
-            isPrivate: values.isPrivate,
-            isTakeAway: values.isTakeAway,
-            images: visitImages
+            images: newImages.map(preview => ({
+              type: ImageType.Visit,
+              tags: preview.orders,
+              placeProviderId
+            }))
           }
         }
       });
 
-      trackEvent({
-        category: 'Form',
-        action: 'Add Visit'
-      });
+      if (signData && signData.signImagesData) {
+        const imagePromises = signData.signImagesData.map((signedData, i) =>
+          transformPreviewToPromise(signedData, newImages[i])
+        );
 
-      setSaving(false);
+        const uploadResult = await Promise.all(imagePromises);
+
+        const newVisitImages: VisitImageInput[] = uploadResult.map(result => ({
+          publicId: result.public_id,
+          orders: result.tags,
+          url: result.secure_url
+        }));
+
+        visitImages = [...oldImages, ...newVisitImages];
+
+        console.log('New added');
+      }
     }
 
-    trackEvent({ category: 'Form', action: 'Save Edit Visit' });
-    editVisit();
+    console.log(visitImages);
+
+    await editVisit({
+      variables: {
+        data: {
+          visitId: id,
+          visitDate: values.visitDate,
+          comment: values.comment,
+          orders: values.orders,
+          ratings: transformToInput(values.rateState),
+          isPrivate: values.isPrivate,
+          isTakeAway: values.isTakeAway,
+          images: visitImages
+        }
+      }
+    });
+
+    trackEvent({
+      category: 'Form',
+      action: 'Save Edit Visit'
+    });
+
+    setSaving(false);
   };
 
   if (editVisitDate && editVisitDate.editVisit.saved) {

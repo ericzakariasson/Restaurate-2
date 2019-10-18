@@ -144,8 +144,6 @@ export const UploadImages = ({
 
   const hasImages = previewImages.length > 0;
 
-  console.log(previewImages);
-
   return (
     <Wrapper>
       <Scrollable>

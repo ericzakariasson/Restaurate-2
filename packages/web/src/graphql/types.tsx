@@ -438,6 +438,7 @@ export type VisitImage = {
 };
 
 export type VisitImageInput = {
+  id?: Maybe<Scalars['Float']>,
   publicId: Scalars['String'],
   url: Scalars['String'],
   orders: Array<Scalars['String']>,

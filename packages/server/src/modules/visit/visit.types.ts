@@ -67,6 +67,9 @@ export class EditVisitInput implements Omit<AddVisitInput, 'providerPlaceId'> {
 
 @InputType()
 export class VisitImageInput {
+  @Field({ nullable: true })
+  id?: number;
+
   @Field()
   publicId: string;
 

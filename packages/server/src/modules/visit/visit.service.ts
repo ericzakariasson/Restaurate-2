@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Visit } from './visit.entity';
@@ -13,6 +13,7 @@ import { RateInput } from './rate/rate.types';
 import { logger } from '../../utils';
 import { UserService } from '../user/user.service';
 import { VisitImage } from './image/visit.image.entity';
+import { PlaceService } from '../place/place.service';
 
 @Service()
 export class VisitService {
@@ -23,8 +24,11 @@ export class VisitService {
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(Rate)
     private readonly rateRepository: Repository<Rate>,
+    @InjectRepository(VisitImage)
+    private readonly visitImageRepository: Repository<VisitImage>,
     private readonly wtvService: WantToVisitService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly placeService: PlaceService
   ) {}
 
   async findById(id: string | number) {
@@ -135,6 +139,12 @@ export class VisitService {
       );
     }
 
+    const place = await this.placeService.findById(visit.placeId);
+
+    if (!place) {
+      return null;
+    }
+
     const ordersToCreate = input.orders.filter(
       title => !visit.orders.some(o => o.title === title)
     );
@@ -144,6 +154,42 @@ export class VisitService {
 
     await this.createOrders(ordersToCreate, user, visit);
     await this.orderRepository.remove(ordersToDelete);
+
+    const imagesToCreate = input.images.filter(
+      image => !visit.images.some(i => i.publicId === image.publicId)
+    );
+
+    const imagesToDelete = visit.images.filter(
+      image => !input.images.some(i => i.publicId === image.publicId)
+    );
+
+    await Promise.all(
+      imagesToCreate.map(async i => {
+        const orders =
+          i.orders.length > 0
+            ? await this.orderRepository.find({
+                where: {
+                  title: In(i.orders)
+                }
+              })
+            : [];
+
+        const image = new VisitImage({
+          orders,
+          placeProviderId: place.providerId,
+          publicId: i.publicId,
+          url: i.url,
+          user,
+          userId: user.id,
+          visit,
+          visitId: visit.id
+        });
+
+        await this.visitImageRepository.save(image);
+      })
+    );
+
+    await this.visitImageRepository.remove(imagesToDelete);
 
     const ratingsToCreate = input.ratings.filter(
       ir => !visit.ratings.some(rate => rate.name === ir.name)
