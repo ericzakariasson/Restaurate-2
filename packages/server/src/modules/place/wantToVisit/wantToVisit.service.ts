@@ -4,6 +4,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { WantToVisit } from './wantToVisit.entity';
 import { UserService } from '../../user/user.service';
 import { User } from '../../user/user.entity';
+import { logger } from '../../../utils/logger';
 
 @Service()
 export class WantToVisitService {
@@ -35,6 +36,7 @@ export class WantToVisitService {
     const exists = await this.findByProviderId(providerId, user.id);
 
     if (exists) {
+      logger.info('Want to visit removed', { wantToVisit: exists.id });
       return this.wtvRepository.remove(exists);
     }
 
@@ -65,6 +67,12 @@ export class WantToVisitService {
   async findByProviderId(providerId: string, userId: number) {
     return this.wtvRepository.findOne({
       where: { placeProviderId: providerId, userId }
+    });
+  }
+
+  async getAllByUser(userId: number) {
+    return this.wtvRepository.find({
+      where: { userId }
     });
   }
 }

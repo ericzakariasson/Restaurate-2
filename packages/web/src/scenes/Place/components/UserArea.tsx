@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { PlaceForm } from './PlaceForm';
 import { UserStat } from './UserStat';
 import { Visits } from './Visits';
+import { Redirect } from 'react-router-dom';
+import { previewPlaceRoute } from 'routes';
 
 const Wrapper = styled.section``;
 
@@ -28,7 +30,7 @@ export const UserArea = ({ providerId }: UserAreaProps) => {
   }
 
   if (!place) {
-    return null;
+    return <Redirect to={previewPlaceRoute({ providerId })} />;
   }
 
   const {

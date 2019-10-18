@@ -16,7 +16,7 @@ import {
 } from './place.helpers';
 import { PlaceDetails, UpdatePlaceInput } from './place.types';
 import { TagService } from './tag/tag.service';
-import { WantToVisit } from './wantToVisit/wantToVisit.entity';
+import { WantToVisitService } from './wantToVisit/wantToVisit.service';
 
 const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
@@ -27,8 +27,7 @@ export class PlaceService {
     private readonly placeRepository: Repository<Place>,
     @InjectRepository(Visit)
     private readonly visitRepository: Repository<Visit>,
-    @InjectRepository(WantToVisit)
-    private readonly wtvRepository: Repository<WantToVisit>,
+    private readonly wtvService: WantToVisitService,
     private readonly userService: UserService,
     private readonly tagService: TagService,
     private readonly cacheService: CacheService,
@@ -123,16 +122,7 @@ export class PlaceService {
   }
 
   async createPlace(providerPlaceId: string, user: User) {
-    const wtv = await this.wtvRepository.findOne({
-      where: {
-        providerPlaceId,
-        userId: user.id
-      }
-    });
-
-    if (wtv) {
-      await this.wtvRepository.remove(wtv);
-    }
+    await this.wtvService.remove(providerPlaceId, user);
 
     const createdPlace = this.placeRepository.create({
       user,
@@ -162,7 +152,7 @@ export class PlaceService {
   }
 
   async getWantToVisitList(userId: number) {
-    const wantToVisit = await this.wtvRepository.find({ where: { userId } });
+    const wantToVisit = await this.wtvService.getAllByUser(userId);
 
     const places = Promise.all(
       wantToVisit.map(
