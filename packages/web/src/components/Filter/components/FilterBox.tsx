@@ -41,11 +41,18 @@ const IconWrapper = styled.div`
 interface FilterBoxProps {
   icon: Icon;
   title: string;
+  onClick: () => void;
+  disabled?: boolean;
 }
 
-export const FilterBox: React.FC<FilterBoxProps> = ({ icon: Icon, title }) => {
+export const FilterBox: React.FC<FilterBoxProps> = ({
+  icon: Icon,
+  title,
+  onClick,
+  disabled
+}) => {
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick} disabled={disabled}>
       <Title>{title}</Title>
       <IconWrapper>
         <Icon size={ICON_SIZE} />
