@@ -4,6 +4,7 @@ import { useWantToVisitListQuery } from 'graphql/types';
 import { PlaceItem } from 'scenes/SearchPlace/components/PlaceItem';
 import styled from 'styled-components';
 import { NoResult } from 'components/NoResult';
+import { previewPlaceRoute } from 'routes';
 
 const List = styled.ul`
   list-style: none;
@@ -25,7 +26,7 @@ export const WantToVisitScene = () => {
           list.map(place => (
             <PlaceItem
               key={place.providerId}
-              to=""
+              to={previewPlaceRoute({ providerId: place.providerId })}
               place={place}
               imageSize={80}
             />

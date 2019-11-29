@@ -14,7 +14,6 @@ import {
 } from '../../graphql/types';
 import { trackEvent } from 'analytics/trackEvent';
 import { OutboundLink } from 'react-ga';
-import { notify } from 'components/Notification';
 
 const Fields = styled.div`
   margin-bottom: 30px;
