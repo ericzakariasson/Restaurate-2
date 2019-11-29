@@ -23,7 +23,7 @@ export const AuthRoute = ({
     return <GeneralError />;
   }
 
-  if (!data.me) {
+  if (!data.me || !data.me.confirmed) {
     return <Redirect to={fallbackRoute} />;
   }
 

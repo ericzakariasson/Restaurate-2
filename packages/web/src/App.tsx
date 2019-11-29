@@ -27,7 +27,8 @@ import {
   RegisterScene,
   SettingsScene,
   VisitScene,
-  WantToVisitScene
+  WantToVisitScene,
+  ConfirmationSentScene
 } from './scenes';
 import { GlobalStyle, theme } from './style';
 import { CloudinaryContext } from 'cloudinary-react';
@@ -71,6 +72,11 @@ const App = () => {
           <Route
             path={routes.confirmUser}
             component={ConfirmUserScene}
+            exact={true}
+          />
+          <Route
+            path={routes.confirmSent}
+            component={ConfirmationSentScene}
             exact={true}
           />
           <Route path={routes.login} component={LoginScene} exact={true} />

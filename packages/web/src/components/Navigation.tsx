@@ -102,13 +102,13 @@ export const Navigation = withRouter(({ location }) => {
     return null;
   }
 
-  const authenticated = data && data.me;
+  const isAuthenticated = data && data.me && data.me.confirmed;
 
   return (
     <header>
       <Nav>
         <List>
-          {authenticated ? (
+          {isAuthenticated ? (
             menuItems.map((item, i) => (
               <Item key={item.to} ref={refs.current[i]} id={item.to}>
                 <Link to={item.to}>{item.name}</Link>
@@ -124,7 +124,7 @@ export const Navigation = withRouter(({ location }) => {
               </Item>
             </>
           )}
-          {authenticated && authenticated.roles.includes(UserRole.Admin) && (
+          {isAuthenticated && data!.me!.roles.includes(UserRole.Admin) && (
             <Item>
               <Link to={routes.admin.metrics}>Metrics</Link>
             </Item>

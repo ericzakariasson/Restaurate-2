@@ -133,7 +133,7 @@ export const LoginScene = () => {
     { loading: sending }
   ] = useSendConfirmationEmailMutation();
 
-  if (meData && meData.me) {
+  if (meData && meData.me && meData.me.confirmed) {
     return <Redirect to={routes.dashboard} />;
   }
 

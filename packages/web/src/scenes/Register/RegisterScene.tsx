@@ -14,6 +14,7 @@ import {
 } from '../../graphql/types';
 import { trackEvent } from 'analytics/trackEvent';
 import { OutboundLink } from 'react-ga';
+import { notify } from 'components/Notification';
 
 const Fields = styled.div`
   margin-bottom: 30px;
@@ -59,7 +60,7 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
 
   const [register] = useRegisterMutation();
 
-  if (data && data.me) {
+  if (data && data.me && data.me.confirmed) {
     return <Redirect to={routes.dashboard} />;
   }
 
@@ -84,7 +85,7 @@ export const RegisterScene = ({ history }: RouteComponentProps) => {
               category: 'User',
               action: 'Register'
             });
-            history.push(routes.dashboard);
+            history.push(routes.confirmSent);
           }
         }}
       >

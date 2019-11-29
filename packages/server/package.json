@@ -56,7 +56,8 @@
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "clean": "rimraf ./dist",
-    "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts"
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/ormconfig.ts",
+    "update-database": "yarn typeorm:cli migration:run"
   },
   "workspaces": {
     "nohoist": [

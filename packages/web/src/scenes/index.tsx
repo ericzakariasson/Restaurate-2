@@ -4,6 +4,7 @@ export * from './MyVisits/MyVisitsScene';
 export * from './Visit/VisitScene';
 export * from './Error/GeneralError';
 export * from './Register/RegisterScene';
+export * from './Register/ConfirmationSentScene';
 export * from './Login/LoginScene';
 export * from './Default/DefaultScene';
 export * from './MyPlaces/MyPlacesScene';

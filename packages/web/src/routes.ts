@@ -10,6 +10,7 @@ export const routes = {
   addVisit: '/add-visit/:providerId',
   places: '/places',
   register: '/register',
+  confirmSent: '/register/confirmation-sent',
   login: '/login',
   visit: '/visit/:id',
   editVisit: '/visit/:id/edit',

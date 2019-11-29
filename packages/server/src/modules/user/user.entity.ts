@@ -56,13 +56,20 @@ export class User {
   @Column()
   password: string;
 
+  @Field()
   @Column({ default: false })
   confirmed: boolean;
 
-  @OneToMany(() => Visit, visit => visit.user)
+  @OneToMany(
+    () => Visit,
+    visit => visit.user
+  )
   visits: Visit[];
 
-  @OneToMany(() => Place, place => place.user)
+  @OneToMany(
+    () => Place,
+    place => place.user
+  )
   places: Visit[];
 
   @Field(() => Date)

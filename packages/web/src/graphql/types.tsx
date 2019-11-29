@@ -388,6 +388,7 @@ export type User = {
   lastName: Scalars['String'],
   name: Scalars['String'],
   email: Scalars['String'],
+  confirmed: Scalars['Boolean'],
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   places: Array<Place>,
@@ -541,7 +542,7 @@ export type TagFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'name' | 'firstName' | 'lastName' | 'roles' | 'email' | 'createdAt' | 'updatedAt' | 'placeCount' | 'visitCount'>
+  & Pick<User, 'id' | 'name' | 'firstName' | 'lastName' | 'roles' | 'confirmed' | 'email' | 'createdAt' | 'updatedAt' | 'placeCount' | 'visitCount'>
 );
 
 export type VisitFragment = (
@@ -929,6 +930,7 @@ export const UserFragmentDoc = gql`
   firstName
   lastName
   roles
+  confirmed
   email
   createdAt
   updatedAt
