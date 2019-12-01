@@ -28,7 +28,10 @@ export class Place {
   providerId: string;
 
   @Field(() => User, { nullable: true })
-  @ManyToOne(() => User, user => user.places)
+  @ManyToOne(
+    () => User,
+    user => user.places
+  )
   user: User;
   @RelationColumn()
   userId: number;
@@ -51,14 +54,21 @@ export class Place {
   comment: string;
 
   @Field(() => [Tag])
-  @ManyToMany(() => Tag, tag => tag.place, {
-    eager: true
-  })
+  @ManyToMany(
+    () => Tag,
+    tag => tag.place,
+    {
+      eager: true
+    }
+  )
   @JoinTable()
   tags: Tag[];
 
   @Field(() => [Visit])
-  @OneToMany(() => Visit, visit => visit.place)
+  @OneToMany(
+    () => Visit,
+    visit => visit.place
+  )
   visits: Visit[];
 
   @Field(() => Date, { nullable: true })

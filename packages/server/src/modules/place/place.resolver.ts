@@ -28,6 +28,8 @@ import {
 import { PlacePreview } from './preview/place.preview.types';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
 import { RateLimitAuthenticated } from '../middleware/rateLimit';
+import { FilterTag } from './tag/tag.dto';
+import { TagService } from './tag/tag.service';
 
 @Service()
 @Resolver(Place)
@@ -35,7 +37,8 @@ export class PlaceResolver {
   constructor(
     private readonly placeService: PlaceService,
     private readonly userService: UserService,
-    private readonly wtvService: WantToVisitService
+    private readonly wtvService: WantToVisitService,
+    private readonly tagService: TagService
   ) {}
 
   @Authorized()
@@ -180,6 +183,14 @@ export class PlaceResolver {
   @Query(() => [PlaceType])
   async allPlaceTypes(): Promise<PlaceType[]> {
     return Object.values(PlaceType);
+  }
+
+  @Authorized()
+  @Query(() => [FilterTag])
+  async filterOptions(@Ctx() ctx: Context): Promise<FilterTag[]> {
+    const tags = await this.tagService.getAllTags(ctx.req.session.userId!);
+    const filterTags = tags.map(FilterTag.fromEntity);
+    return filterTags;
   }
 
   @FieldResolver()

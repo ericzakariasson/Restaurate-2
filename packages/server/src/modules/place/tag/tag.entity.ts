@@ -22,8 +22,11 @@ export class Tag {
   @Column()
   name: string;
 
-  @ManyToMany(() => Place, place => place.tags)
-  place: Place;
+  @ManyToMany(
+    () => Place,
+    place => place.tags
+  )
+  place: Place[];
 
   user: User;
   @RelationColumn()

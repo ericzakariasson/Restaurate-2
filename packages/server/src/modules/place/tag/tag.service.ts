@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Tag } from './tag.entity';
+import { FilterTag } from './tag.dto';
 import { User } from '../../user/user.entity';
 import { Place } from '../place.entity';
 
@@ -23,9 +24,16 @@ export class TagService {
       name,
       user,
       userId: user.id,
-      place
+      place: [place]
     });
 
     return this.tagRepository.save(newTag);
+  }
+
+  async getAllTags(userId: number) {
+    return await this.tagRepository.find({
+      where: { userId },
+      relations: ['place']
+    });
   }
 }
