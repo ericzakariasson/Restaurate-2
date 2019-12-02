@@ -17,6 +17,8 @@ import {
 import { PlaceDetails, UpdatePlaceInput } from './place.types';
 import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
+import { FilterTag } from './tag/tag.dto';
+import { DateRange } from './place.dto';
 
 const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
@@ -243,4 +245,26 @@ export class PlaceService {
 
     return place;
   }
+
+  async placeFilterOptions(userId: number) {
+    const { min, max }: MinMaxDate = await this.visitRepository
+      .createQueryBuilder('visit')
+      .select('MIN(visit.visitDate)')
+      .addSelect('MAX(visit.visitDate)')
+      .where('visit.userId = :userId', { userId })
+      .getRawOne();
+
+    const tags = await this.tagService.getAllTags(userId);
+    const mappedTags = tags.map(FilterTag.fromEntity).sort(t => t.placeCount);
+
+    return {
+      dateRange: new DateRange({ from: min, to: max }),
+      tags: mappedTags
+    };
+  }
+}
+
+interface MinMaxDate {
+  min: Date;
+  max: Date;
 }

@@ -2,7 +2,6 @@ import { Repository } from 'typeorm';
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Tag } from './tag.entity';
-import { FilterTag } from './tag.dto';
 import { User } from '../../user/user.entity';
 import { Place } from '../place.entity';
 

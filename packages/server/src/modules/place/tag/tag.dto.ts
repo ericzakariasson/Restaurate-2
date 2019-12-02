@@ -1,6 +1,7 @@
 import { Tag } from './tag.entity';
-import { Field } from 'type-graphql';
+import { Field, ObjectType } from 'type-graphql';
 
+@ObjectType()
 export class FilterTag implements Partial<Tag> {
   constructor(initializer?: Partial<FilterTag>) {
     Object.assign(this, initializer);
