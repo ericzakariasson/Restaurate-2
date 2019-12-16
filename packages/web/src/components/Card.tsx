@@ -66,6 +66,7 @@ const ScoreBar = styled.div<ScoreBarProps>`
     background: ${p => p.theme.colors.primary.default};
     transform: scaleY(${p => p.score / 10});
     transform-origin: 0 100%;
+    border-radius: 3px;
   }
 `;
 
