@@ -69,9 +69,9 @@ export class CacheService {
     }
   }
 
-  public set<T>(
+  public set(
     key: string,
-    value: T,
+    value: any,
     expires = defaultOptions.ttl
   ): Promise<string> {
     return this.client.set(key, value, 'EX', expires);
