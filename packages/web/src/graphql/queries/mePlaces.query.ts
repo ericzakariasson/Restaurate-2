@@ -7,14 +7,26 @@ export default gql`
       id
       placeCount
       places {
-        ...Place
-        visits {
-          ...Visit
+        id
+        providerId
+        details {
+          providerId
+          name
+          location {
+            address {
+              formatted
+            }
+          }
+        }
+        averageScore
+        visitCount
+        tags {
+          ...PlaceTag
         }
       }
     }
   }
   ${fragments.user}
   ${fragments.place}
-  ${fragments.visit}
+  ${fragments.placeTag}
 `;
