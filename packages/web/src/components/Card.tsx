@@ -136,7 +136,7 @@ export const Score = ({ score }: ScoreProps) => (
     {score !== 0
       ? formatScore(score)
           .split('')
-          .map(c => <ScoreCharacter key={c}>{c}</ScoreCharacter>)
+          .map((c, i) => <ScoreCharacter key={i}>{c}</ScoreCharacter>)
       : '–'}
   </ScoreText>
 );
