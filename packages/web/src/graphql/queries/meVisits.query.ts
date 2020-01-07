@@ -7,7 +7,24 @@ export default gql`
       id
       visitCount
       visits {
-        ...Visit
+        id
+        score
+        visitDate
+        place {
+          id
+          providerId
+          details {
+            providerId
+            name
+            location {
+              address {
+                formatted
+              }
+            }
+          }
+        }
+        createdAt
+        updatedAt
       }
     }
   }

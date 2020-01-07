@@ -26,7 +26,7 @@ export const MyVisitsScene = () => {
   const me = data && data.me;
   const { visits, visitCount } = me!;
 
-  const groupedVisits = groupVisitsByDay(visits);
+  const groupedVisits = groupVisitsByDay(visits as VisitFragment[]);
 
   return (
     <Page
@@ -36,11 +36,11 @@ export const MyVisitsScene = () => {
       {visitCount === 0 ? (
         <NoResult label="besök" />
       ) : (
-        Object.entries(groupedVisits).map(
-          ([date, visits]: [string, VisitFragment[]]) => (
-            <VisitGroup key={date} date={new Date(date)} visits={visits} />
-          )
-        )
+        Object.entries(
+          groupedVisits
+        ).map(([date, visits]: [string, VisitFragment[]]) => (
+          <VisitGroup key={date} date={new Date(date)} visits={visits} />
+        ))
       )}
     </Page>
   );
