@@ -1,15 +1,15 @@
-import { Repository } from 'typeorm';
-import { Service } from 'typedi';
 import * as bcrypt from 'bcryptjs';
+import { Service } from 'typedi';
+import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { User } from './user.entity';
-import { UserRegisterInput } from './user.types';
+import { SessionRequest } from '../../graphql/types';
+import { redis } from '../../services/redis/redis';
+import { logger, sendEmail } from '../../utils';
 import { Place } from '../place/place.entity';
 import { Visit } from '../visit/visit.entity';
-import { SessionRequest } from '../../graphql/types';
-import { logger, sendEmail } from '../../utils';
+import { User } from './user.entity';
 import { createConfirmationUrl } from './user.helper';
-import { redis } from '../../services/redis/redis';
+import { UserRegisterInput } from './user.types';
 
 export class UserNotConfirmedError {}
 export class UserPasswordIsNotValid {}
@@ -134,22 +134,6 @@ export class UserService {
     }
 
     return user;
-  }
-
-  async getUserPlaces(userId: number) {
-    return this.placeRepository.find({
-      where: { userId },
-      order: {
-        updatedAt: 'DESC'
-      }
-    });
-  }
-
-  async getUserVisits(userId: number) {
-    return this.visitRepository.find({
-      where: { userId },
-      order: { visitDate: 'DESC' }
-    });
   }
 
   async getUserPlaceCount(userId: number) {

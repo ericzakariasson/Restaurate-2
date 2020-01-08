@@ -1,25 +1,25 @@
 import {
-  Resolver,
   Arg,
-  Query,
-  FieldResolver,
-  Root,
-  Mutation,
   Authorized,
   Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
   UseMiddleware
 } from 'type-graphql';
-import { Visit } from './visit.entity';
-import { Place } from '../place/place.entity';
-import { User } from '../user/user.entity';
 import { Service } from 'typedi';
-import { PlaceService } from '../place/place.service';
-import { UserService } from '../user/user.service';
-import { VisitService } from './visit.service';
-import { VisitResponse, AddVisitInput, EditVisitInput } from './visit.types';
 import { Context } from '../../graphql/types';
 import { logger } from '../../utils/logger';
 import { RateLimitAuthenticated } from '../middleware/rateLimit';
+import { Place } from '../place/place.entity';
+import { PlaceService } from '../place/place.service';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { Visit } from './visit.entity';
+import { VisitService } from './visit.service';
+import { AddVisitInput, EditVisitInput, VisitResponse } from './visit.types';
 
 @Service()
 @Resolver(Visit)
@@ -97,6 +97,12 @@ export class VisitResolver {
     @Ctx() ctx: Context
   ): Promise<boolean> {
     return this.visitService.deleteVisit(id, ctx.req.session.userId!);
+  }
+
+  @Authorized()
+  @Query(() => [Visit])
+  async visits(@Ctx() ctx: Context): Promise<Visit[]> {
+    return this.visitService.getVisitsByUserId(ctx.req.session.userId!);
   }
 
   @FieldResolver(() => Place)

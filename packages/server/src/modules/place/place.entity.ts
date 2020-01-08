@@ -56,10 +56,7 @@ export class Place {
   @Field(() => [Tag])
   @ManyToMany(
     () => Tag,
-    tag => tag.place,
-    {
-      eager: true
-    }
+    tag => tag.place
   )
   @JoinTable()
   tags: Tag[];

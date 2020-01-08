@@ -29,6 +29,16 @@ export class TagService {
     return this.tagRepository.save(newTag);
   }
 
+  async getTagsByPlaceId(_placeId: number): Promise<Tag[]> {
+    return this.tagRepository
+      .createQueryBuilder('tag')
+      .innerJoin('tag.place', 'place', 'place.id = :placeId', {
+        placeId: 1
+      })
+      .select('tag.*')
+      .getRawMany();
+  }
+
   async getAllTags(userId: number) {
     return await this.tagRepository.find({
       where: { userId },

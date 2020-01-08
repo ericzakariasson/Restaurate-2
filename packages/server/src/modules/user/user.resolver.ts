@@ -1,26 +1,24 @@
 import {
-  Resolver,
-  Ctx,
-  Query,
-  FieldResolver,
-  Root,
-  Mutation,
   Arg,
-  UseMiddleware,
-  Authorized
+  Authorized,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+  UseMiddleware
 } from 'type-graphql';
-import { User } from './user.entity';
-import { Place } from '../place/place.entity';
-import { Visit } from '../visit/visit.entity';
-import { Context } from '../../graphql/types';
 import { Service } from 'typedi';
-import { UserService, UserNotConfirmedError } from './user.service';
-import {
-  UserRegisterInput,
-  LoginMutationResponse,
-  LoginResponseCode
-} from './user.types';
+import { Context } from '../../graphql/types';
 import { RateLimit } from '../middleware/rateLimit';
+import { User } from './user.entity';
+import { UserNotConfirmedError, UserService } from './user.service';
+import {
+  LoginMutationResponse,
+  LoginResponseCode,
+  UserRegisterInput
+} from './user.types';
 
 @Service()
 @Resolver(User)
@@ -96,16 +94,6 @@ export class UserResolver {
     @Ctx() ctx: Context
   ): Promise<User | null> {
     return this.userService.register(data, ctx.req);
-  }
-
-  @FieldResolver(() => [Place])
-  async places(@Root() user: User): Promise<Place[]> {
-    return this.userService.getUserPlaces(user.id);
-  }
-
-  @FieldResolver(() => [Visit])
-  async visits(@Root() user: User): Promise<Visit[]> {
-    return this.userService.getUserVisits(user.id);
   }
 
   @FieldResolver(() => Number)

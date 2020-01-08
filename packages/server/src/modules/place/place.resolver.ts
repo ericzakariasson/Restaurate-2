@@ -11,9 +11,11 @@ import {
 } from 'type-graphql';
 import { Service } from 'typedi';
 import { Context } from '../../graphql/types';
+import { RateLimitAuthenticated } from '../middleware/rateLimit';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { Visit } from '../visit/visit.entity';
+import { PlaceFilterOptions } from './place.dto';
 import { Place } from './place.entity';
 import { transformToBasicDetails } from './place.helpers';
 import { PlaceService } from './place.service';
@@ -26,15 +28,16 @@ import {
   UpdatePlaceInput
 } from './place.types';
 import { PlacePreview } from './preview/place.preview.types';
+import { Tag } from './tag/tag.entity';
+import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
-import { RateLimitAuthenticated } from '../middleware/rateLimit';
-import { PlaceFilterOptions } from './place.dto';
 
 @Service()
 @Resolver(Place)
 export class PlaceResolver {
   constructor(
     private readonly placeService: PlaceService,
+    private readonly tagService: TagService,
     private readonly userService: UserService,
     private readonly wtvService: WantToVisitService
   ) {}
@@ -144,6 +147,18 @@ export class PlaceResolver {
   }
 
   @Authorized()
+  @Query(() => [PlaceDetailsBasic])
+  async placesWantToVisit(@Ctx() ctx: Context): Promise<PlaceDetailsBasic[]> {
+    const placeDetailsList = await this.placeService.getWantToVisitList(
+      ctx.req.session.userId!
+    );
+
+    const transform = transformToBasicDetails([]);
+
+    return placeDetailsList.map(transform);
+  }
+
+  @Authorized()
   @Mutation(() => Boolean)
   async toggleWantToVisit(
     @Arg('providerPlaceId') providerPlaceId: string,
@@ -187,6 +202,12 @@ export class PlaceResolver {
   @Query(() => PlaceFilterOptions)
   async placeFilterOptions(@Ctx() ctx: Context): Promise<PlaceFilterOptions> {
     return this.placeService.placeFilterOptions(ctx.req.session.userId!);
+  }
+
+  @Authorized()
+  @Query(() => [Place])
+  async places(@Ctx() ctx: Context): Promise<Place[]> {
+    return this.placeService.getPlacesByUserId(ctx.req.session.userId!);
   }
 
   @FieldResolver()
@@ -243,5 +264,10 @@ export class PlaceResolver {
     );
 
     return Boolean(wantToVisit);
+  }
+
+  @FieldResolver(() => [Tag])
+  async tags(@Root() place: Place): Promise<Tag[]> {
+    return this.tagService.getTagsByPlaceId(place.id);
   }
 }

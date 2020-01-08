@@ -9,16 +9,16 @@ import { Coordinates } from '../../utils/utils.types';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { Visit } from '../visit/visit.entity';
+import { DateRange } from './place.dto';
 import { Place } from './place.entity';
 import {
   transformProviderDetails,
   transformProviderSearchItem
 } from './place.helpers';
 import { PlaceDetails, UpdatePlaceInput } from './place.types';
+import { FilterTag } from './tag/tag.dto';
 import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
-import { FilterTag } from './tag/tag.dto';
-import { DateRange } from './place.dto';
 
 const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
@@ -163,6 +163,16 @@ export class PlaceService {
     );
 
     return places;
+  }
+
+  async getPlacesByUserId(userId: number): Promise<Place[]> {
+    return this.placeRepository
+      .createQueryBuilder('place')
+      .select('*')
+      .where('place.userId = :userId', { userId })
+      .orderBy('place.createdAt', 'DESC')
+      .limit(1)
+      .getRawMany();
   }
 
   async searchPlaces(userId: number, query: string, location?: Coordinates) {

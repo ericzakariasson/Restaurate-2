@@ -1,19 +1,18 @@
-import { Repository, In } from 'typeorm';
 import { Service } from 'typedi';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Visit } from './visit.entity';
+import { logger, round } from '../../utils';
 import { Place } from '../place/place.entity';
-import { User } from '../user/user.entity';
-import { Order } from './order/order.entity';
-import { Rate } from './rate/rate.entity';
-import { AddVisitInput, EditVisitInput } from './visit.types';
-import { round } from '../../utils';
+import { PlaceService } from '../place/place.service';
 import { WantToVisitService } from '../place/wantToVisit/wantToVisit.service';
-import { RateInput } from './rate/rate.types';
-import { logger } from '../../utils';
+import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { VisitImage } from './image/visit.image.entity';
-import { PlaceService } from '../place/place.service';
+import { Order } from './order/order.entity';
+import { Rate } from './rate/rate.entity';
+import { RateInput } from './rate/rate.types';
+import { Visit } from './visit.entity';
+import { AddVisitInput, EditVisitInput } from './visit.types';
 
 @Service()
 export class VisitService {
@@ -287,5 +286,14 @@ export class VisitService {
         return parent;
       })
     );
+  }
+
+  async getVisitsByUserId(userId: number): Promise<Visit[]> {
+    return this.visitRepository
+      .createQueryBuilder('visit')
+      .select('*')
+      .where('visit.userId = :userId', { userId })
+      .orderBy('visit.visitDate', 'DESC')
+      .getRawMany();
   }
 }
