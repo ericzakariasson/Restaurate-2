@@ -42,8 +42,8 @@ export class PlaceService {
   getVisitCountById = (placeId: number) =>
     this.visitRepository.getVisitCountByPlaceId(placeId);
 
-  getVisits = (placeId: number, options: { limit?: number }) =>
-    this.placeRepository.findVisitsById(placeId, options);
+  getVisitsById = (placeId: number) =>
+    this.visitRepository.findByPlaceId(placeId);
 
   findByProviderId = (providerId: string, userId: number) =>
     this.placeRepository.findByProviderId(providerId, userId);

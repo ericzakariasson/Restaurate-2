@@ -13,7 +13,7 @@ import { Service } from 'typedi';
 import { Context } from '../../graphql/types';
 import { RateLimitAuthenticated } from '../middleware/rateLimit';
 import { User, UserService } from '../user';
-import { Visit } from '../visit';
+import { Visit, VisitService } from '../visit';
 import { PlaceFilterOptions } from './place.dto';
 import { Place } from './place.entity';
 import { transformToBasicDetails } from './place.helpers';
@@ -38,7 +38,8 @@ export class PlaceResolver {
     private readonly placeService: PlaceService,
     private readonly tagService: TagService,
     private readonly userService: UserService,
-    private readonly wtvService: WantToVisitService
+    private readonly wtvService: WantToVisitService,
+    private readonly visitService: VisitService
   ) {}
 
   @Authorized()
@@ -210,11 +211,8 @@ export class PlaceResolver {
   }
 
   @FieldResolver()
-  async visits(
-    @Root() place: Place,
-    @Arg('limit', { nullable: true }) limit?: number
-  ): Promise<Visit[]> {
-    return this.placeService.getVisits(place.id, { limit });
+  visits(@Root() place: Place): Promise<Visit[]> {
+    return this.visitService.getVisitsByPlaceId(place.id);
   }
 
   @FieldResolver()

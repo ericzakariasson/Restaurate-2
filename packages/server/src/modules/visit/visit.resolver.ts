@@ -17,6 +17,7 @@ import { Place, PlaceService } from '../place';
 import { User, UserService } from '../user';
 import { Visit, VisitService } from './';
 import { AddVisitInput, EditVisitInput, VisitResponse } from './visit.types';
+import { Order } from './order/order.entity';
 
 @Service()
 @Resolver(Visit)
@@ -110,5 +111,10 @@ export class VisitResolver {
   @FieldResolver(() => User)
   async user(@Root() visit: Visit): Promise<User | undefined> {
     return this.userService.findById(visit.userId);
+  }
+
+  @FieldResolver(() => [Order])
+  async orders(@Root() visit: Visit): Promise<Order[]> {
+    return this.visitService.getOrdersById(visit.id);
   }
 }

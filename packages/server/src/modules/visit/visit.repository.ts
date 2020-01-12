@@ -10,8 +10,8 @@ export class VisitRepository extends Repository<Visit> {
 
       const map = new Map();
       counts.forEach(({ count, placeId }) => map.set(placeId, parseInt(count)));
-
       const mapped = placeIds.map(placeId => map.get(placeId) || 0);
+
       return mapped;
     }
   );
@@ -25,9 +25,17 @@ export class VisitRepository extends Repository<Visit> {
       .groupBy('visit.placeId')
       .getRawMany();
 
-  findVisitsByUserId = (userId: number) =>
+  findByUserId = (userId: number) =>
     this.createQueryBuilder('visit')
+      .innerJoinAndSelect('visit.ratings', 'rate', 'rate.visitId = visit.id')
       .where('visit.userId = :userId', { userId })
       .orderBy('visit.visitDate', 'DESC')
-      .getRawMany();
+      .getMany();
+
+  findByPlaceId = (placeId: number) =>
+    this.createQueryBuilder('visit')
+      .innerJoinAndSelect('visit.ratings', 'rate', 'rate.visitId = visit.id')
+      .where('visit.placeId = :placeId', { placeId })
+      .orderBy('visit.visitDate', 'DESC')
+      .getMany();
 }

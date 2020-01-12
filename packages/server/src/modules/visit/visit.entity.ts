@@ -22,7 +22,10 @@ export class Visit {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.visits)
+  @ManyToOne(
+    () => User,
+    user => user.visits
+  )
   user: User;
   @RelationColumn()
   userId: number;
@@ -35,35 +38,49 @@ export class Visit {
   @Column()
   visitDate: Date;
 
-  @Field(() => [Order])
-  @OneToMany(() => Order, order => order.visit, {
-    cascade: true,
-    eager: true,
-    nullable: true,
-    onDelete: 'CASCADE'
-  })
+  @OneToMany(
+    () => Order,
+    order => order.visit,
+    {
+      cascade: true,
+      eager: true,
+      nullable: true,
+      onDelete: 'CASCADE'
+    }
+  )
   orders: Order[];
 
   @Field(() => [Rate])
-  @OneToMany(() => Rate, rate => rate.visit, {
-    cascade: true,
-    eager: true,
-    onDelete: 'CASCADE'
-  })
+  @OneToMany(
+    () => Rate,
+    rate => rate.visit,
+    {
+      cascade: true,
+      eager: true,
+      onDelete: 'CASCADE'
+    }
+  )
   ratings: Rate[];
 
   @Field(() => [VisitImage])
-  @OneToMany(() => VisitImage, visitImage => visitImage.visit, {
-    cascade: true,
-    eager: true
-  })
+  @OneToMany(
+    () => VisitImage,
+    visitImage => visitImage.visit,
+    {
+      cascade: true,
+      eager: true
+    }
+  )
   images: VisitImage[];
 
   @Field()
   @Column({ type: 'float' })
   score: number;
 
-  @ManyToOne(() => Place, place => place.visits)
+  @ManyToOne(
+    () => Place,
+    place => place.visits
+  )
   place: Place;
   @RelationColumn()
   placeId: number;
