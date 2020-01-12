@@ -3,7 +3,6 @@ import { In } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { CacheService } from '../../services/cache/cache.service';
 import { HereService } from '../../services/here/here.service';
-import { round } from '../../utils';
 import { logger } from '../../utils/logger';
 import { Coordinates } from '../../utils/utils.types';
 import { User } from '../user/user.entity';
@@ -37,22 +36,8 @@ export class PlaceService {
     private readonly hereService: HereService
   ) {}
 
-  async getAverageScore(id: number) {
-    const visits = await this.visitRepository.find({
-      where: { placeId: id }
-    });
-
-    if (!visits.length) {
-      return 0;
-    }
-
-    const averageScore =
-      visits.reduce((score, visit) => score + visit.score, 0) / visits.length;
-
-    const rounded = round(averageScore);
-
-    return rounded;
-  }
+  getAverageScoreById = (placeId: number) =>
+    this.placeRepository.getAverageScoreById(placeId);
 
   async getVisitCountById(placeId: number) {
     return this.visitRepository.getVisitCountByPlaceId(placeId);

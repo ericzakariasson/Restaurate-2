@@ -240,7 +240,7 @@ export class PlaceResolver {
 
   @FieldResolver(() => Number)
   async averageScore(@Root() place: Place): Promise<number> {
-    return this.placeService.getAverageScore(place.id);
+    return this.placeService.getAverageScoreById(place.id);
   }
 
   @FieldResolver(() => PlaceDetails)

@@ -10,6 +10,14 @@ export class PlaceRepository extends Repository<Place> {
     return places;
   });
 
+  private scoreLoader: DataLoader<number, number> = new DataLoader(
+    async placeIds => {
+      const scores = await this.getAverageScoreByIds(placeIds);
+      const mapped = scores.map(({ round }) => round);
+      return mapped;
+    }
+  );
+
   findByUserId = (userId: number) =>
     this.createQueryBuilder('place')
       .select('*')
@@ -30,9 +38,23 @@ export class PlaceRepository extends Repository<Place> {
       .orderBy('visit.visitDate')
       .addOrderBy('visit.createdAt')
       .getRawMany();
+
+  getAverageScoreById = (placeId: number) => this.scoreLoader.load(placeId);
+
+  getAverageScoreByIds = (placeIds: readonly number[]): Promise<Round[]> =>
+    this.createQueryBuilder('place')
+      .select('ROUND(AVG("visit"."score")::numeric, 2)')
+      .innerJoin('place.visits', 'visit', 'visit.placeId = place.id')
+      .where('place.id IN (:...placeIds)', { placeIds })
+      .groupBy('place.id')
+      .getRawMany();
 }
 
 interface VisitOptions {
   limit?: number;
   skip?: number;
+}
+
+interface Round {
+  round: number;
 }
