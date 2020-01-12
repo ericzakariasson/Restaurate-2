@@ -39,28 +39,14 @@ export class PlaceService {
   getAverageScoreById = (placeId: number) =>
     this.placeRepository.getAverageScoreById(placeId);
 
-  async getVisitCountById(placeId: number) {
-    return this.visitRepository.getVisitCountByPlaceId(placeId);
-  }
+  getVisitCountById = (placeId: number) =>
+    this.visitRepository.getVisitCountByPlaceId(placeId);
 
-  async getVisits(placeId: number, options: { limit?: number }) {
-    return this.placeRepository.findVisitsById(placeId, options);
-  }
+  getVisits = (placeId: number, options: { limit?: number }) =>
+    this.placeRepository.findVisitsById(placeId, options);
 
-  async findByProviderId(providerId: string, userId: number) {
-    const place = await this.placeRepository.findOne({
-      where: {
-        providerId,
-        userId
-      }
-    });
-
-    if (!place) {
-      return null;
-    }
-
-    return place;
-  }
+  findByProviderId = (providerId: string, userId: number) =>
+    this.placeRepository.findByProviderId(providerId, userId);
 
   async getPlaceDetails(providerId: string) {
     const cached = await this.cacheService.getJSON<PlaceDetails>(
@@ -111,9 +97,7 @@ export class PlaceService {
     return this.placeRepository.save(createdPlace);
   }
 
-  async getById(placeId: number) {
-    return this.placeRepository.findById(placeId);
-  }
+  getById = (placeId: number) => this.placeRepository.findById(placeId);
 
   async getUserPlacesByProviderIds(userId: number, providerPlaceIds: string[]) {
     return this.placeRepository.find({
@@ -137,9 +121,8 @@ export class PlaceService {
     return places;
   }
 
-  async getPlacesByUserId(userId: number): Promise<Place[]> {
-    return this.placeRepository.findByUserId(userId);
-  }
+  getPlacesByUserId = (userId: number): Promise<Place[]> =>
+    this.placeRepository.findByUserId(userId);
 
   async searchPlaces(userId: number, query: string, location?: Coordinates) {
     const results = await this.hereService.search(query, location);

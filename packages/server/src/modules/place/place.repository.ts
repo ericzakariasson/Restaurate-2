@@ -49,6 +49,12 @@ export class PlaceRepository extends Repository<Place> {
       .where('place.id IN (:...placeIds)', { placeIds })
       .groupBy('place.id')
       .getRawMany();
+
+  findByProviderId = (providerId: string, userId: number) =>
+    this.createQueryBuilder('place')
+      .where('place.providerId = :providerId', { providerId })
+      .andWhere('place.userId = :userId', { userId })
+      .getOne();
 }
 
 interface VisitOptions {

@@ -12,13 +12,14 @@ import { Order } from './order/order.entity';
 import { Rate } from './rate/rate.entity';
 import { RateInput } from './rate/rate.types';
 import { Visit } from './visit.entity';
+import { VisitRepository } from './visit.repository';
 import { AddVisitInput, EditVisitInput } from './visit.types';
 
 @Service()
 export class VisitService {
   constructor(
-    @InjectRepository(Visit)
-    private readonly visitRepository: Repository<Visit>,
+    @InjectRepository(VisitRepository)
+    private readonly visitRepository: VisitRepository,
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(Rate)
@@ -39,7 +40,6 @@ export class VisitService {
       ratings.reduce((total: number, rate: Rate) => (total += rate.score), 0) /
         ratings.length
     );
-
     return score;
   }
 
@@ -138,7 +138,7 @@ export class VisitService {
       );
     }
 
-    const place = await this.placeService.findById(visit.placeId);
+    const place = await this.placeService.getById(visit.placeId);
 
     if (!place) {
       return null;
@@ -288,12 +288,6 @@ export class VisitService {
     );
   }
 
-  async getVisitsByUserId(userId: number): Promise<Visit[]> {
-    return this.visitRepository
-      .createQueryBuilder('visit')
-      .select('*')
-      .where('visit.userId = :userId', { userId })
-      .orderBy('visit.visitDate', 'DESC')
-      .getRawMany();
-  }
+  getVisitsByUserId = (userId: number): Promise<Visit[]> =>
+    this.visitRepository.findVisitsByUserId(userId);
 }

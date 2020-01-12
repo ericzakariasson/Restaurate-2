@@ -24,4 +24,10 @@ export class VisitRepository extends Repository<Visit> {
       .where('visit.placeId IN (:...placeIds)', { placeIds })
       .groupBy('visit.placeId')
       .getRawMany();
+
+  findVisitsByUserId = (userId: number) =>
+    this.createQueryBuilder('visit')
+      .where('visit.userId = :userId', { userId })
+      .orderBy('visit.visitDate', 'DESC')
+      .getRawMany();
 }
