@@ -20,13 +20,15 @@ import { FilterTag } from './tag/tag.dto';
 import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
 
+import { PlaceRepository } from './place.repository';
+
 const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
 @Service()
 export class PlaceService {
   constructor(
-    @InjectRepository(Place)
-    private readonly placeRepository: Repository<Place>,
+    @InjectRepository(PlaceRepository)
+    private readonly placeRepository: PlaceRepository,
     @InjectRepository(Visit)
     private readonly visitRepository: Repository<Visit>,
     private readonly wtvService: WantToVisitService,
@@ -53,25 +55,12 @@ export class PlaceService {
     return rounded;
   }
 
-  async getVisitCount(id: number) {
-    const visitCount = await this.visitRepository.count({
-      where: { placeId: id }
-    });
-
-    return visitCount;
+  async getVisitCount(placeId: number) {
+    return this.placeRepository.getVisitCountById(placeId);
   }
 
-  async getVisits(id: number, { limit }: { limit?: number }) {
-    const visits = await this.visitRepository.find({
-      where: { placeId: id },
-      take: limit,
-      order: {
-        visitDate: 'DESC',
-        createdAt: 'DESC'
-      }
-    });
-
-    return visits;
+  async getVisits(placeId: number, options: { limit?: number }) {
+    return this.placeRepository.findVisitsById(placeId, options);
   }
 
   async findByProviderId(providerId: string, userId: number) {
@@ -166,13 +155,7 @@ export class PlaceService {
   }
 
   async getPlacesByUserId(userId: number): Promise<Place[]> {
-    return this.placeRepository
-      .createQueryBuilder('place')
-      .select('*')
-      .where('place.userId = :userId', { userId })
-      .orderBy('place.createdAt', 'DESC')
-      .limit(5)
-      .getRawMany();
+    return this.placeRepository.findByUserId(userId);
   }
 
   async searchPlaces(userId: number, query: string, location?: Coordinates) {
