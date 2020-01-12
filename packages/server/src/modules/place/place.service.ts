@@ -171,7 +171,7 @@ export class PlaceService {
       .select('*')
       .where('place.userId = :userId', { userId })
       .orderBy('place.createdAt', 'DESC')
-      .limit(1)
+      .limit(5)
       .getRawMany();
   }
 
@@ -264,7 +264,7 @@ export class PlaceService {
       .where('visit.userId = :userId', { userId })
       .getRawOne();
 
-    const tags = await this.tagService.getAllTags(userId);
+    const tags = await this.tagService.getTagsByUserId(userId);
     const mappedTags = tags.map(FilterTag.fromEntity).sort(t => t.placeCount);
 
     return {

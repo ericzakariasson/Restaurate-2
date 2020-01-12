@@ -1,6 +1,6 @@
 import { createConnection as createTypeOrmConnection } from 'typeorm';
 
-import * as configs from '../ormconfig';
+import { configs } from '../ormconfig';
 
 export const createConnection = () => {
   const connectionOptions =

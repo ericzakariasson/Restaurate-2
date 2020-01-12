@@ -1,6 +1,6 @@
 import { ConnectionOptions } from 'typeorm';
 
-const configs: ConnectionOptions[] = [
+export const configs: ConnectionOptions[] = [
   {
     name: 'default',
     type: 'postgres',
@@ -11,7 +11,7 @@ const configs: ConnectionOptions[] = [
     database: 'restaurate',
     synchronize: false,
     dropSchema: false,
-    logging: false,
+    logging: true,
     entities: ['src/modules/**/*.entity.ts'],
     migrations: ['src/migration/**/*.ts'],
     subscribers: ['src/subscriber/**/*.ts'],
@@ -36,5 +36,3 @@ const configs: ConnectionOptions[] = [
     }
   }
 ];
-
-export = configs;
