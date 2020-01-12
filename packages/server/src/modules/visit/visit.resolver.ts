@@ -13,12 +13,9 @@ import { Service } from 'typedi';
 import { Context } from '../../graphql/types';
 import { logger } from '../../utils/logger';
 import { RateLimitAuthenticated } from '../middleware/rateLimit';
-import { Place } from '../place/place.entity';
-import { PlaceService } from '../place/place.service';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
-import { Visit } from './visit.entity';
-import { VisitService } from './visit.service';
+import { Place, PlaceService } from '../place';
+import { User, UserService } from '../user';
+import { Visit, VisitService } from './';
 import { AddVisitInput, EditVisitInput, VisitResponse } from './visit.types';
 
 @Service()

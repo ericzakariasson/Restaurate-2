@@ -1,6 +1,6 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { Place } from './place.entity';
-import { Visit } from '../visit/visit.entity';
+import { Visit } from '../visit';
 import * as DataLoader from 'dataloader';
 
 @EntityRepository(Place)

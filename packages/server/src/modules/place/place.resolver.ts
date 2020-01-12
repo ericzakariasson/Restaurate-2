@@ -12,13 +12,12 @@ import {
 import { Service } from 'typedi';
 import { Context } from '../../graphql/types';
 import { RateLimitAuthenticated } from '../middleware/rateLimit';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
-import { Visit } from '../visit/visit.entity';
+import { User, UserService } from '../user';
+import { Visit } from '../visit';
 import { PlaceFilterOptions } from './place.dto';
 import { Place } from './place.entity';
 import { transformToBasicDetails } from './place.helpers';
-import { PlaceService } from './place.service';
+import { PlaceService } from './';
 import {
   PlaceDetails,
   PlaceDetailsBasic,
