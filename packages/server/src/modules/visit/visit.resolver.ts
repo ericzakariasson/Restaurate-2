@@ -18,6 +18,7 @@ import { User, UserService } from '../user';
 import { Visit, VisitService } from './';
 import { AddVisitInput, EditVisitInput, VisitResponse } from './visit.types';
 import { Order } from './order/order.entity';
+import { VisitImage } from './image/visit.image.entity';
 
 @Service()
 @Resolver(Visit)
@@ -116,5 +117,10 @@ export class VisitResolver {
   @FieldResolver(() => [Order])
   async orders(@Root() visit: Visit): Promise<Order[]> {
     return this.visitService.getOrdersById(visit.id);
+  }
+
+  @FieldResolver(() => [VisitImage])
+  async images(@Root() visit: Visit): Promise<VisitImage[]> {
+    return this.visitService.getImagesById(visit.id);
   }
 }

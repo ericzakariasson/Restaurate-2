@@ -7,7 +7,7 @@ import { PlaceService } from '../place/place.service';
 import { WantToVisitService } from '../place/wantToVisit/wantToVisit.service';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { VisitImage } from './image/visit.image.entity';
+import { VisitImage, VisitImageRepository } from './image';
 import { OrderRepository } from './order';
 import { Rate } from './rate/rate.entity';
 import { RateInput } from './rate/rate.types';
@@ -24,8 +24,8 @@ export class VisitService {
     private readonly orderRepository: OrderRepository,
     @InjectRepository(Rate)
     private readonly rateRepository: Repository<Rate>,
-    @InjectRepository(VisitImage)
-    private readonly visitImageRepository: Repository<VisitImage>,
+    @InjectRepository(VisitImageRepository)
+    private readonly visitImageRepository: VisitImageRepository,
     private readonly wtvService: WantToVisitService,
     private readonly userService: UserService,
     private readonly placeService: PlaceService
@@ -296,4 +296,7 @@ export class VisitService {
 
   getOrdersById = (visitId: number) =>
     this.orderRepository.findByVisitId(visitId);
+
+  getImagesById = (visitId: number) =>
+    this.visitImageRepository.findByVisitId(visitId);
 }
