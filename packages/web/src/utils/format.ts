@@ -44,6 +44,6 @@ export function formatURL(url: string): string {
   return new URL(url).hostname;
 }
 
-export function formatScore(score: number) {
-  return score.toFixed(1);
+export function formatScore(score: number | null) {
+  return score ? score.toFixed(1) : '–';
 }

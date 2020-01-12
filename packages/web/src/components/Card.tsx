@@ -133,7 +133,7 @@ interface ScoreProps {
 
 export const Score = ({ score }: ScoreProps) => (
   <ScoreText>
-    {score !== 0
+    {score
       ? formatScore(score)
           .split('')
           .map((c, i) => <ScoreCharacter key={i}>{c}</ScoreCharacter>)
