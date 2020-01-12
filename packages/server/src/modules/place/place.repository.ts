@@ -40,7 +40,7 @@ export class PlaceRepository extends Repository<Place> {
     placeIds: readonly number[]
   ): Promise<AverageScore[]> =>
     this.createQueryBuilder('place')
-      .select('ROUND(AVG("visit"."score")::numeric, 2), place.id AS placeId')
+      .select('ROUND(AVG("visit"."score")::numeric, 1), place.id AS placeId')
       .leftJoin('place.visits', 'visit', 'visit.placeId = place.id')
       .where('place.id IN (:...placeIds)', { placeIds })
       .groupBy('place.id')
