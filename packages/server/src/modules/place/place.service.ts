@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { In, Repository } from 'typeorm';
+import { In } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { CacheService } from '../../services/cache/cache.service';
 import { HereService } from '../../services/here/here.service';
@@ -8,19 +8,18 @@ import { logger } from '../../utils/logger';
 import { Coordinates } from '../../utils/utils.types';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { Visit } from '../visit/visit.entity';
+import { VisitRepository } from '../visit/visit.repository';
 import { DateRange } from './place.dto';
 import { Place } from './place.entity';
 import {
   transformProviderDetails,
   transformProviderSearchItem
 } from './place.helpers';
+import { PlaceRepository } from './place.repository';
 import { PlaceDetails, UpdatePlaceInput } from './place.types';
 import { FilterTag } from './tag/tag.dto';
 import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
-
-import { PlaceRepository } from './place.repository';
 
 const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
@@ -29,8 +28,8 @@ export class PlaceService {
   constructor(
     @InjectRepository(PlaceRepository)
     private readonly placeRepository: PlaceRepository,
-    @InjectRepository(Visit)
-    private readonly visitRepository: Repository<Visit>,
+    @InjectRepository(VisitRepository)
+    private readonly visitRepository: VisitRepository,
     private readonly wtvService: WantToVisitService,
     private readonly userService: UserService,
     private readonly tagService: TagService,
@@ -55,8 +54,8 @@ export class PlaceService {
     return rounded;
   }
 
-  async getVisitCount(placeId: number) {
-    return this.placeRepository.getVisitCountById(placeId);
+  async getVisitCountById(placeId: number) {
+    return this.visitRepository.getVisitCountByPlaceId(placeId);
   }
 
   async getVisits(placeId: number, options: { limit?: number }) {

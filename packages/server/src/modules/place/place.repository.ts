@@ -12,13 +12,6 @@ export class PlaceRepository extends Repository<Place> {
       .limit(5)
       .getRawMany();
 
-  getVisitCountById = (placeId: number) =>
-    this.createQueryBuilder('place')
-      .innerJoin('place.visits', 'visit', 'visit.placeId = :placeId', {
-        placeId
-      })
-      .getCount();
-
   findVisitsById = (placeId: number, options: VisitOptions): Promise<Visit[]> =>
     this.createQueryBuilder('place')
       .innerJoin('place.visits', 'visit', 'visit.placeId = :placeId', {

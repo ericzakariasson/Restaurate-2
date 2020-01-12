@@ -235,7 +235,7 @@ export class PlaceResolver {
 
   @FieldResolver(() => Number)
   async visitCount(@Root() place: Place): Promise<number> {
-    return this.placeService.getVisitCount(place.id);
+    return this.placeService.getVisitCountById(place.id);
   }
 
   @FieldResolver(() => Number)
