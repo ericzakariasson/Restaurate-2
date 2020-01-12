@@ -23,9 +23,13 @@ export const MyVisitsScene = () => {
     );
   }
 
-  const me = data && data.me;
-  const { visits, visitCount } = me!;
+  const visits = data && data.visits!;
 
+  if (!visits) {
+    return null;
+  }
+
+  const visitCount = visits.length;
   const groupedVisits = groupVisitsByDay(visits as VisitFragment[]);
 
   return (

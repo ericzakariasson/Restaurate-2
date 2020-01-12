@@ -3,30 +3,24 @@ import * as fragments from '../fragments';
 
 export default gql`
   query MePlaces {
-    me {
+    places {
       id
-      placeCount
-      places {
-        id
+      providerId
+      details {
         providerId
-        details {
-          providerId
-          name
-          location {
-            address {
-              formatted
-            }
+        name
+        location {
+          address {
+            formatted
           }
         }
-        averageScore
-        visitCount
-        tags {
-          ...PlaceTag
-        }
+      }
+      averageScore
+      visitCount
+      tags {
+        ...PlaceTag
       }
     }
   }
-  ${fragments.user}
-  ${fragments.place}
   ${fragments.placeTag}
 `;

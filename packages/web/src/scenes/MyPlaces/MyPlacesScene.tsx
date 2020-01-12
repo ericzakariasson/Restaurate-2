@@ -28,15 +28,20 @@ export const MyPlacesScene = () => {
     );
   }
 
-  const me = data && data.me!;
-  const { places, placeCount } = me!;
+  const places = data && data.places!;
+
+  if (!places) {
+    return null;
+  }
+
+  const placeCount = places.length;
 
   return (
     <Page
       title="Ställen"
       subTitle={
-        placeCount
-          ? `${placeCount} ställe${placeCount > 1 ? 'n' : ''}`
+        places.length
+          ? `${places.length} ställe${places.length > 1 ? 'n' : ''}`
           : undefined
       }
     >

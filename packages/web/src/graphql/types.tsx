@@ -51,6 +51,12 @@ export type Contact = {
   website?: Maybe<Array<KeyValuePair>>,
 };
 
+export type DateRange = {
+   __typename?: 'DateRange',
+  from: Scalars['DateTime'],
+  to: Scalars['DateTime'],
+};
+
 
 export type EditVisitInput = {
   visitId: Scalars['String'],
@@ -61,6 +67,13 @@ export type EditVisitInput = {
   isPrivate: Scalars['Boolean'],
   isTakeAway: Scalars['Boolean'],
   images: Array<VisitImageInput>,
+};
+
+export type FilterTag = {
+   __typename?: 'FilterTag',
+  id: Scalars['Float'],
+  name: Scalars['String'],
+  placeCount: Scalars['Float'],
 };
 
 /** Type of image */
@@ -247,6 +260,12 @@ export type PlaceDetailsBasic = {
   categories: Array<Scalars['String']>,
 };
 
+export type PlaceFilterOptions = {
+   __typename?: 'PlaceFilterOptions',
+  tags: Array<FilterTag>,
+  dateRange: DateRange,
+};
+
 export type PlacePreview = {
    __typename?: 'PlacePreview',
   placeId?: Maybe<Scalars['ID']>,
@@ -289,13 +308,17 @@ export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
   visit?: Maybe<Visit>,
+  visits: Array<Visit>,
   searchPlace: PlaceSearchResult,
   placeDetails: PlaceDetails,
   place?: Maybe<Place>,
   previewPlace?: Maybe<PlacePreview>,
   wantToVisitList: Array<PlaceDetailsBasic>,
+  placesWantToVisit: Array<PlaceDetailsBasic>,
   wantToVisitPlace: Scalars['Boolean'],
   allPlaceTypes: Array<PlaceType>,
+  placeFilterOptions: PlaceFilterOptions,
+  places: Array<Place>,
   metrics: Metrics,
 };
 
@@ -391,8 +414,6 @@ export type User = {
   confirmed: Scalars['Boolean'],
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
-  places: Array<Place>,
-  visits: Array<Visit>,
   placeCount: Scalars['Float'],
   visitCount: Scalars['Float'],
 };
@@ -761,16 +782,21 @@ export type MePlacesQueryVariables = {};
 
 export type MePlacesQuery = (
   { __typename?: 'Query' }
-  & { me: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'placeCount'>
-    & { places: Array<(
-      { __typename?: 'Place' }
-      & { visits: Array<{ __typename?: 'Visit' }
-        & VisitFragment
-      > }
-    )
-      & PlaceFragment
+  & { places: Array<(
+    { __typename?: 'Place' }
+    & Pick<Place, 'id' | 'providerId' | 'averageScore' | 'visitCount'>
+    & { details: (
+      { __typename?: 'PlaceDetails' }
+      & Pick<PlaceDetails, 'providerId' | 'name'>
+      & { location: (
+        { __typename?: 'Location' }
+        & { address: (
+          { __typename?: 'Address' }
+          & Pick<Address, 'formatted'>
+        ) }
+      ) }
+    ), tags: Array<{ __typename?: 'Tag' }
+      & PlaceTagFragment
     > }
   )> }
 );
@@ -780,12 +806,24 @@ export type MeVisitsQueryVariables = {};
 
 export type MeVisitsQuery = (
   { __typename?: 'Query' }
-  & { me: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'visitCount'>
-    & { visits: Array<{ __typename?: 'Visit' }
-      & VisitFragment
-    > }
+  & { visits: Array<(
+    { __typename?: 'Visit' }
+    & Pick<Visit, 'id' | 'score' | 'visitDate' | 'createdAt' | 'updatedAt'>
+    & { place: (
+      { __typename?: 'Place' }
+      & Pick<Place, 'id' | 'providerId'>
+      & { details: (
+        { __typename?: 'PlaceDetails' }
+        & Pick<PlaceDetails, 'providerId' | 'name'>
+        & { location: (
+          { __typename?: 'Location' }
+          & { address: (
+            { __typename?: 'Address' }
+            & Pick<Address, 'formatted'>
+          ) }
+        ) }
+      ) }
+    ) }
   )> }
 );
 
@@ -1308,19 +1346,26 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export const MePlacesDocument = gql`
     query MePlaces {
-  me {
+  places {
     id
-    placeCount
-    places {
-      ...Place
-      visits {
-        ...Visit
+    providerId
+    details {
+      providerId
+      name
+      location {
+        address {
+          formatted
+        }
       }
+    }
+    averageScore
+    visitCount
+    tags {
+      ...PlaceTag
     }
   }
 }
-    ${PlaceFragmentDoc}
-${VisitFragmentDoc}`;
+    ${PlaceTagFragmentDoc}`;
 
     export function useMePlacesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MePlacesQuery, MePlacesQueryVariables>) {
       return ApolloReactHooks.useQuery<MePlacesQuery, MePlacesQueryVariables>(MePlacesDocument, baseOptions);
@@ -1333,15 +1378,28 @@ export type MePlacesQueryHookResult = ReturnType<typeof useMePlacesQuery>;
 export type MePlacesQueryResult = ApolloReactCommon.QueryResult<MePlacesQuery, MePlacesQueryVariables>;
 export const MeVisitsDocument = gql`
     query MeVisits {
-  me {
+  visits {
     id
-    visitCount
-    visits {
-      ...Visit
+    score
+    visitDate
+    place {
+      id
+      providerId
+      details {
+        providerId
+        name
+        location {
+          address {
+            formatted
+          }
+        }
+      }
     }
+    createdAt
+    updatedAt
   }
 }
-    ${VisitFragmentDoc}`;
+    `;
 
     export function useMeVisitsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeVisitsQuery, MeVisitsQueryVariables>) {
       return ApolloReactHooks.useQuery<MeVisitsQuery, MeVisitsQueryVariables>(MeVisitsDocument, baseOptions);
