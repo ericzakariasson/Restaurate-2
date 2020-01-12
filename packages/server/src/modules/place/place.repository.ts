@@ -1,42 +1,38 @@
-import { Repository, EntityRepository } from 'typeorm';
-import { Place } from './place.entity';
-import { Visit } from '../visit';
 import * as DataLoader from 'dataloader';
+import { EntityRepository, Repository } from 'typeorm';
+import { Place } from './place.entity';
 
 @EntityRepository(Place)
 export class PlaceRepository extends Repository<Place> {
   private loader: DataLoader<number, Place> = new DataLoader(async placeIds => {
     const places = await this.findByIds(placeIds as number[]);
-    return places;
+
+    const map = new Map<number, Place>();
+    places.forEach(place => map.set(place.id, place));
+    const mapped = placeIds.map(placeId => map.get(placeId) as Place);
+
+    return mapped;
   });
 
   private scoreLoader: DataLoader<number, number | null> = new DataLoader(
     async placeIds => {
       const scores = await this.getAverageScoreByIds(placeIds);
-      const mapped = scores.map(({ round }) => round);
+
+      const map = new Map<number, number | null>();
+      scores.forEach(({ round, placeid }) => map.set(placeid, round));
+      const mapped = placeIds.map(placeId => map.get(placeId) as number | null);
+
       return mapped;
     }
   );
 
   findByUserId = (userId: number) =>
     this.createQueryBuilder('place')
-      .select('*')
       .where('place.userId = :userId', { userId })
       .orderBy('place.createdAt', 'DESC')
-      .getRawMany();
+      .getMany();
 
   findById = (placeId: number) => this.loader.load(placeId);
-
-  findVisitsById = (placeId: number, options: VisitOptions): Promise<Visit[]> =>
-    this.createQueryBuilder('place')
-      .innerJoin('place.visits', 'visit', 'visit.placeId = :placeId', {
-        placeId
-      })
-      .take(options.limit)
-      .skip(options.skip)
-      .orderBy('visit.visitDate')
-      .addOrderBy('visit.createdAt')
-      .getRawMany();
 
   getAverageScoreById = (placeId: number) => this.scoreLoader.load(placeId);
 
@@ -44,7 +40,7 @@ export class PlaceRepository extends Repository<Place> {
     placeIds: readonly number[]
   ): Promise<AverageScore[]> =>
     this.createQueryBuilder('place')
-      .select('ROUND(AVG("visit"."score")::numeric, 2)')
+      .select('ROUND(AVG("visit"."score")::numeric, 2), place.id AS placeId')
       .leftJoin('place.visits', 'visit', 'visit.placeId = place.id')
       .where('place.id IN (:...placeIds)', { placeIds })
       .groupBy('place.id')
@@ -57,11 +53,7 @@ export class PlaceRepository extends Repository<Place> {
       .getOne();
 }
 
-interface VisitOptions {
-  limit?: number;
-  skip?: number;
-}
-
 interface AverageScore {
   round: number | null;
+  placeid: number;
 }
