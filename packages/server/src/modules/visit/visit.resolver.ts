@@ -107,7 +107,7 @@ export class VisitResolver {
 
   @FieldResolver(() => Place)
   async place(@Root() visit: Visit): Promise<Place | undefined> {
-    return this.placeService.findById(visit.placeId);
+    return this.placeService.getById(visit.placeId);
   }
 
   @FieldResolver(() => User)

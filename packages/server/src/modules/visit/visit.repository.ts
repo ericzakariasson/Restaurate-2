@@ -7,9 +7,7 @@ export class VisitRepository extends Repository<Visit> {
   private countLoader: DataLoader<number, number> = new DataLoader(
     async placeIds => {
       const counts = await this.getVisitCountByPlaceIds(placeIds);
-
       const mapped = counts.map(({ count }) => parseInt(count));
-
       return mapped;
     }
   );

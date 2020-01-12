@@ -126,9 +126,8 @@ export class PlaceService {
     return this.placeRepository.save(createdPlace);
   }
 
-  async findById(id: number) {
-    const place = await this.placeRepository.findOne(id);
-    return place;
+  async getById(placeId: number) {
+    return this.placeRepository.findById(placeId);
   }
 
   async getUserPlacesByProviderIds(userId: number, providerPlaceIds: string[]) {
