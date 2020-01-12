@@ -7,7 +7,11 @@ export class VisitRepository extends Repository<Visit> {
   private countLoader: DataLoader<number, number> = new DataLoader(
     async placeIds => {
       const counts = await this.getVisitCountByPlaceIds(placeIds);
-      const mapped = counts.map(({ count }) => parseInt(count));
+
+      const map = new Map();
+      counts.forEach(({ count, placeId }) => map.set(placeId, parseInt(count)));
+
+      const mapped = placeIds.map(placeId => map.get(placeId) || 0);
       return mapped;
     }
   );
@@ -16,7 +20,7 @@ export class VisitRepository extends Repository<Visit> {
 
   getVisitCountByPlaceIds = (placeIds: readonly number[]) =>
     this.createQueryBuilder('visit')
-      .select('COUNT(visit.id)')
+      .select('COUNT(visit.id), visit.placeId')
       .where('visit.placeId IN (:...placeIds)', { placeIds })
       .groupBy('visit.placeId')
       .getRawMany();

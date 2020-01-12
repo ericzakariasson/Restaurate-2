@@ -10,7 +10,7 @@ export class PlaceRepository extends Repository<Place> {
     return places;
   });
 
-  private scoreLoader: DataLoader<number, number> = new DataLoader(
+  private scoreLoader: DataLoader<number, number | null> = new DataLoader(
     async placeIds => {
       const scores = await this.getAverageScoreByIds(placeIds);
       const mapped = scores.map(({ round }) => round);
@@ -23,7 +23,6 @@ export class PlaceRepository extends Repository<Place> {
       .select('*')
       .where('place.userId = :userId', { userId })
       .orderBy('place.createdAt', 'DESC')
-      .limit(5)
       .getRawMany();
 
   findById = (placeId: number) => this.loader.load(placeId);
@@ -41,10 +40,12 @@ export class PlaceRepository extends Repository<Place> {
 
   getAverageScoreById = (placeId: number) => this.scoreLoader.load(placeId);
 
-  getAverageScoreByIds = (placeIds: readonly number[]): Promise<Round[]> =>
+  getAverageScoreByIds = (
+    placeIds: readonly number[]
+  ): Promise<AverageScore[]> =>
     this.createQueryBuilder('place')
       .select('ROUND(AVG("visit"."score")::numeric, 2)')
-      .innerJoin('place.visits', 'visit', 'visit.placeId = place.id')
+      .leftJoin('place.visits', 'visit', 'visit.placeId = place.id')
       .where('place.id IN (:...placeIds)', { placeIds })
       .groupBy('place.id')
       .getRawMany();
@@ -55,6 +56,6 @@ interface VisitOptions {
   skip?: number;
 }
 
-interface Round {
-  round: number;
+interface AverageScore {
+  round: number | null;
 }

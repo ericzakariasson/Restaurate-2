@@ -238,8 +238,8 @@ export class PlaceResolver {
     return this.placeService.getVisitCountById(place.id);
   }
 
-  @FieldResolver(() => Number)
-  async averageScore(@Root() place: Place): Promise<number> {
+  @FieldResolver(() => Number, { nullable: true })
+  async averageScore(@Root() place: Place): Promise<number | null> {
     return this.placeService.getAverageScoreById(place.id);
   }
 
