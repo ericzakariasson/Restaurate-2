@@ -2,15 +2,34 @@
 
 App to rate your visited resturants and cafés.
 
-## Features
+## Tech
 
-- [x] User account
-- [ ] Add 'want to visit' list
-- [ ] Follow specific users
-- [ ] Option to publish anonymously
-- [ ] Custom tags
-- [ ] Megafilter to find desired place
+### Server
 
-## Todo
+- Node.js
+- TypeORM
+- PostgreQSL
+- TypeGraphQL
+- GraphQL
+- DataLoader
+- Redis
+- Winston
 
-- [ ] Use Formik in add visit form
+### Web
+
+- React
+- Apollo
+- Styled Components
+
+### External Services
+
+- Cloudinary
+- HERE Places API
+- Mapbox
+- Sendgrid
+
+### Tooling
+
+- Typescript
+- Lerna
+- Codegen (GraphQL to Typescript types)
