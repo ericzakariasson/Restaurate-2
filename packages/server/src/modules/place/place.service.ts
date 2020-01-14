@@ -19,6 +19,7 @@ import { PlaceDetails, UpdatePlaceInput } from './place.types';
 import { FilterTag } from './tag/tag.dto';
 import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
+import { Pagination } from 'graphql/pagination';
 
 const placeDetailsKey = (key: string) => `placeDetails:providerId:${key}`;
 
@@ -121,8 +122,8 @@ export class PlaceService {
     return places;
   }
 
-  getPlacesByUserId = (userId: number): Promise<Place[]> =>
-    this.placeRepository.findByUserId(userId);
+  getPlacesByUserId = (userId: number, options: Pagination): Promise<Place[]> =>
+    this.placeRepository.findByUserId(userId, options);
 
   async searchPlaces(userId: number, query: string, location?: Coordinates) {
     const results = await this.hereService.search(query, location);

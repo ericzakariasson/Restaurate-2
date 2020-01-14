@@ -30,6 +30,7 @@ import { PlacePreview } from './preview/place.preview.types';
 import { Tag } from './tag/tag.entity';
 import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
+import { PaginationOptions } from 'graphql/pagination';
 
 @Service()
 @Resolver(Place)
@@ -206,8 +207,14 @@ export class PlaceResolver {
 
   @Authorized()
   @Query(() => [Place])
-  async places(@Ctx() ctx: Context): Promise<Place[]> {
-    return this.placeService.getPlacesByUserId(ctx.req.session.userId!);
+  async places(
+    @Arg('options') options: PaginationOptions,
+    @Ctx() ctx: Context
+  ): Promise<Place[]> {
+    return this.placeService.getPlacesByUserId(
+      ctx.req.session.userId!,
+      options
+    );
   }
 
   @FieldResolver()
