@@ -1,6 +1,6 @@
-import { Repository, EntityRepository } from 'typeorm';
-import { Visit } from './visit.entity';
 import * as DataLoader from 'dataloader';
+import { EntityRepository, Repository } from 'typeorm';
+import { Visit } from './visit.entity';
 
 @EntityRepository(Visit)
 export class VisitRepository extends Repository<Visit> {
@@ -27,7 +27,6 @@ export class VisitRepository extends Repository<Visit> {
 
   findByUserId = (userId: number) =>
     this.createQueryBuilder('visit')
-      .innerJoinAndSelect('visit.ratings', 'rate', 'rate.visitId = visit.id')
       .where('visit.userId = :userId', { userId })
       .orderBy('visit.visitDate', 'DESC')
       .getMany();

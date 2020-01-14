@@ -1,18 +1,15 @@
 import { Service } from 'typedi';
-import { In, Repository } from 'typeorm';
+import { In } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { logger, round } from '../../utils';
-import { Place } from '../place/place.entity';
-import { PlaceService } from '../place/place.service';
+import { Place, PlaceService } from '../place';
 import { WantToVisitService } from '../place/wantToVisit/wantToVisit.service';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
+import { User, UserService } from '../user';
 import { VisitImage, VisitImageRepository } from './image';
 import { OrderRepository } from './order';
-import { Rate } from './rate/rate.entity';
+import { Rate, RateRepository } from './rate';
 import { RateInput } from './rate/rate.types';
-import { Visit } from './visit.entity';
-import { VisitRepository } from './visit.repository';
+import { Visit, VisitRepository } from './';
 import { AddVisitInput, EditVisitInput } from './visit.types';
 
 @Service()
@@ -22,8 +19,8 @@ export class VisitService {
     private readonly visitRepository: VisitRepository,
     @InjectRepository(OrderRepository)
     private readonly orderRepository: OrderRepository,
-    @InjectRepository(Rate)
-    private readonly rateRepository: Repository<Rate>,
+    @InjectRepository(RateRepository)
+    private readonly rateRepository: RateRepository,
     @InjectRepository(VisitImageRepository)
     private readonly visitImageRepository: VisitImageRepository,
     private readonly wtvService: WantToVisitService,
@@ -299,4 +296,7 @@ export class VisitService {
 
   getImagesById = (visitId: number) =>
     this.visitImageRepository.findByVisitId(visitId);
+
+  getRatingsById = (visitId: number) =>
+    this.rateRepository.findByVisitId(visitId);
 }

@@ -16,9 +16,10 @@ import { RateLimitAuthenticated } from '../middleware/rateLimit';
 import { Place, PlaceService } from '../place';
 import { User, UserService } from '../user';
 import { Visit, VisitService } from './';
-import { AddVisitInput, EditVisitInput, VisitResponse } from './visit.types';
-import { Order } from './order/order.entity';
 import { VisitImage } from './image/visit.image.entity';
+import { Order } from './order/order.entity';
+import { Rate } from './rate/rate.entity';
+import { AddVisitInput, EditVisitInput, VisitResponse } from './visit.types';
 
 @Service()
 @Resolver(Visit)
@@ -122,5 +123,10 @@ export class VisitResolver {
   @FieldResolver(() => [VisitImage])
   async images(@Root() visit: Visit): Promise<VisitImage[]> {
     return this.visitService.getImagesById(visit.id);
+  }
+
+  @FieldResolver(() => [Rate])
+  async ratings(@Root() visit: Visit): Promise<Rate[]> {
+    return this.visitService.getRatingsById(visit.id);
   }
 }
