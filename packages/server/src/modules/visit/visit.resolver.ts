@@ -10,6 +10,7 @@ import {
   UseMiddleware
 } from 'type-graphql';
 import { Service } from 'typedi';
+import { PaginationOptions } from '../../graphql/pagination';
 import { Context } from '../../graphql/types';
 import { logger } from '../../utils/logger';
 import { RateLimitAuthenticated } from '../middleware/rateLimit';
@@ -101,8 +102,16 @@ export class VisitResolver {
 
   @Authorized()
   @Query(() => [Visit])
-  async visits(@Ctx() ctx: Context): Promise<Visit[]> {
-    return this.visitService.getVisitsByUserId(ctx.req.session.userId!);
+  async visits(
+    @Arg('options') options: PaginationOptions,
+    @Ctx() ctx: Context
+  ): Promise<Visit[]> {
+    console.log(options);
+
+    return this.visitService.getVisitsByUserId(
+      ctx.req.session.userId!,
+      options
+    );
   }
 
   @FieldResolver(() => Place)

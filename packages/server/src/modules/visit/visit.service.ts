@@ -11,6 +11,7 @@ import { Rate, RateRepository } from './rate';
 import { RateInput } from './rate/rate.types';
 import { Visit, VisitRepository } from './';
 import { AddVisitInput, EditVisitInput } from './visit.types';
+import { Pagination } from 'graphql/pagination';
 
 @Service()
 export class VisitService {
@@ -285,8 +286,8 @@ export class VisitService {
     );
   }
 
-  getVisitsByUserId = (userId: number): Promise<Visit[]> =>
-    this.visitRepository.findByUserId(userId);
+  getVisitsByUserId = (userId: number, options: Pagination): Promise<Visit[]> =>
+    this.visitRepository.findByUserId(userId, options);
 
   getVisitsByPlaceId = (placeId: number) =>
     this.visitRepository.findByPlaceId(placeId);
