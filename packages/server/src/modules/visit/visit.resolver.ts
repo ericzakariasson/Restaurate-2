@@ -20,7 +20,12 @@ import { Visit, VisitService } from './';
 import { VisitImage } from './image/visit.image.entity';
 import { Order } from './order/order.entity';
 import { Rate } from './rate/rate.entity';
-import { AddVisitInput, EditVisitInput, VisitResponse } from './visit.types';
+import {
+  AddVisitInput,
+  EditVisitInput,
+  VisitResponse,
+  PaginatedVisitResponse
+} from './visit.types';
 
 @Service()
 @Resolver(Visit)
@@ -101,15 +106,22 @@ export class VisitResolver {
   }
 
   @Authorized()
-  @Query(() => [Visit])
+  @Query(() => PaginatedVisitResponse)
   async visits(
     @Arg('options') options: PageOptions,
     @Ctx() ctx: Context
-  ): Promise<Visit[]> {
-    return this.visitService.getVisitsByUserId(
+  ): Promise<PaginatedVisitResponse> {
+    const data = await this.visitService.getVisitsByUserId(
       ctx.req.session.userId!,
       options
     );
+
+    const pageInfo = {
+      ...options,
+      hasNextPage: data.length >= options.limit
+    };
+
+    return new PaginatedVisitResponse(data, pageInfo);
   }
 
   @FieldResolver(() => Place)

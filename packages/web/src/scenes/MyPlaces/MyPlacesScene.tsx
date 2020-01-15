@@ -1,55 +1,45 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Page } from '../../components';
+import { Page, Loading } from '../../components';
 import { NoResult } from '../../components/NoResult';
 import { SkeletonCards } from '../../components/Skeleton';
-import { useMePlacesQuery } from '../../graphql/types';
+import { useMePlacesQuery, useMeQuery } from '../../graphql/types';
 import { myPlaceRoute } from '../../routes';
 import { GeneralError } from '../Error/GeneralError';
 import { PlaceListItem } from './component/PlaceListItem';
 import { Filter } from 'components/Filter/Filter';
-import { useInView } from 'react-intersection-observer';
+import { updateQuery } from './updateQuery';
+import { useInfiniteScroll } from 'hooks';
 
 const PlaceList = styled.ul`
   list-style: none;
 `;
 
 export const MyPlacesScene = () => {
+  const { data: meData } = useMeQuery();
   const { data, loading, error, fetchMore, variables } = useMePlacesQuery({
-    variables: { page: 0, limit: 24 }
+    variables: { page: 0, limit: 32 }
   });
 
-  const [ref, inView] = useInView({ rootMargin: '240px' });
-  console.log(data?.places.pageInfo);
+  console.log(data?.places);
 
-  React.useEffect(() => {
-    if (inView) {
+  const loadMore = async () => {
+    if (
+      data?.places.pageInfo.page !== null &&
+      data?.places.pageInfo.page !== undefined &&
+      data.places.pageInfo.hasNextPage
+    ) {
       fetchMore({
         variables: {
-          page: data?.places.pageInfo.page ?? variables.page + 1,
-          limit: data?.places.pageInfo.limit ?? variables.limit + 1
+          page: data.places.pageInfo.page + 1,
+          limit: variables.limit
         },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult || fetchMoreResult.places.data.length === 0) {
-            return prev;
-          }
-
-          return {
-            ...prev,
-            places: {
-              ...prev.places,
-              ...fetchMoreResult.places,
-              pageInfo: {
-                ...fetchMoreResult.places.pageInfo,
-                page: fetchMoreResult.places.pageInfo.page + 1
-              },
-              data: [...prev.places.data, ...fetchMoreResult.places.data]
-            }
-          };
-        }
+        updateQuery
       });
     }
-  }, [inView]);
+  };
+
+  const { ref } = useInfiniteScroll({ loadMore });
 
   if (error) {
     return <GeneralError />;
@@ -63,30 +53,17 @@ export const MyPlacesScene = () => {
     );
   }
 
-  const places = data && data.places!;
-
-  if (!places) {
-    return null;
-  }
-
-  const placeCount = places.data.length;
+  const placeCount = meData?.me?.placeCount;
 
   return (
-    <Page
-      title="Ställen"
-      subTitle={
-        placeCount
-          ? `${placeCount} ställe${placeCount > 1 ? 'n' : ''}`
-          : undefined
-      }
-    >
-      {placeCount === 0 ? (
+    <Page title="Ställen" subTitle={formatPlaceCount(placeCount)}>
+      {data?.places.data.length === 0 ? (
         <NoResult label="ställen" />
       ) : (
         <>
           {/* <Filter /> */}
           <PlaceList>
-            {places.data.map(place => (
+            {data?.places.data.map(place => (
               <PlaceListItem
                 key={place.providerId}
                 name={place.details.name}
@@ -98,9 +75,14 @@ export const MyPlacesScene = () => {
               />
             ))}
           </PlaceList>
-          {data?.places.pageInfo.hasNextPage && <div ref={ref} />}
+          {data?.places.pageInfo.hasNextPage && (
+            <Loading ref={ref} fullscreen={false} />
+          )}
         </>
       )}
     </Page>
   );
 };
+
+const formatPlaceCount = (placeCount?: number) =>
+  placeCount ? `${placeCount} ställe${placeCount > 1 ? 'n' : ''}` : undefined;

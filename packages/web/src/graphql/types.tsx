@@ -233,6 +233,12 @@ export type PaginatedPlaceResponse = {
   pageInfo: PageInfo,
 };
 
+export type PaginatedVisitResponse = {
+   __typename?: 'PaginatedVisitResponse',
+  data: Array<Visit>,
+  pageInfo: PageInfo,
+};
+
 export type Place = {
    __typename?: 'Place',
   id?: Maybe<Scalars['ID']>,
@@ -321,7 +327,7 @@ export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
   visit?: Maybe<Visit>,
-  visits: Array<Visit>,
+  visits: PaginatedVisitResponse,
   searchPlace: PlaceSearchResult,
   placeDetails: PlaceDetails,
   place?: Maybe<Place>,
@@ -502,6 +508,11 @@ export type WantToVisit = {
   createdAt: Scalars['String'],
   updatedAt: Scalars['String'],
 };
+export type PageInfoFragment = (
+  { __typename?: 'PageInfo' }
+  & Pick<PageInfo, 'page' | 'limit' | 'hasNextPage'>
+);
+
 export type PlaceDetailsFragment = (
   { __typename?: 'PlaceDetails' }
   & Pick<PlaceDetails, 'providerId' | 'name'>
@@ -810,10 +821,9 @@ export type MePlacesQuery = (
   { __typename?: 'Query' }
   & { places: (
     { __typename?: 'PaginatedPlaceResponse' }
-    & { pageInfo: (
-      { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'page' | 'limit' | 'hasNextPage'>
-    ), data: Array<(
+    & { pageInfo: { __typename?: 'PageInfo' }
+      & PageInfoFragment
+    , data: Array<(
       { __typename?: 'Place' }
       & Pick<Place, 'id' | 'providerId' | 'averageScore' | 'visitCount'>
       & { details: (
@@ -834,32 +844,37 @@ export type MePlacesQuery = (
 );
 
 export type MeVisitsQueryVariables = {
-  page?: Maybe<Scalars['Int']>,
-  limit?: Maybe<Scalars['Int']>
+  page: Scalars['Int'],
+  limit: Scalars['Int']
 };
 
 
 export type MeVisitsQuery = (
   { __typename?: 'Query' }
-  & { visits: Array<(
-    { __typename?: 'Visit' }
-    & Pick<Visit, 'id' | 'score' | 'visitDate' | 'createdAt' | 'updatedAt'>
-    & { place: (
-      { __typename?: 'Place' }
-      & Pick<Place, 'id' | 'providerId'>
-      & { details: (
-        { __typename?: 'PlaceDetails' }
-        & Pick<PlaceDetails, 'providerId' | 'name'>
-        & { location: (
-          { __typename?: 'Location' }
-          & { address: (
-            { __typename?: 'Address' }
-            & Pick<Address, 'formatted'>
+  & { visits: (
+    { __typename?: 'PaginatedVisitResponse' }
+    & { pageInfo: { __typename?: 'PageInfo' }
+      & PageInfoFragment
+    , data: Array<(
+      { __typename?: 'Visit' }
+      & Pick<Visit, 'id' | 'score' | 'visitDate' | 'createdAt' | 'updatedAt'>
+      & { place: (
+        { __typename?: 'Place' }
+        & Pick<Place, 'id' | 'providerId'>
+        & { details: (
+          { __typename?: 'PlaceDetails' }
+          & Pick<PlaceDetails, 'providerId' | 'name'>
+          & { location: (
+            { __typename?: 'Location' }
+            & { address: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'formatted'>
+            ) }
           ) }
         ) }
       ) }
-    ) }
-  )> }
+    )> }
+  ) }
 );
 
 export type PlaceDetailsQueryVariables = {
@@ -951,6 +966,13 @@ export type WantToVisitPlaceQuery = (
   { __typename?: 'Query' }
   & Pick<Query, 'wantToVisitPlace'>
 );
+export const PageInfoFragmentDoc = gql`
+    fragment PageInfo on PageInfo {
+  page
+  limit
+  hasNextPage
+}
+    `;
 export const PlaceDetailsBasicFragmentDoc = gql`
     fragment PlaceDetailsBasic on PlaceDetailsBasic {
   providerId
@@ -1383,9 +1405,7 @@ export const MePlacesDocument = gql`
     query MePlaces($page: Int!, $limit: Int!) {
   places(options: {page: $page, limit: $limit}) {
     pageInfo {
-      page
-      limit
-      hasNextPage
+      ...PageInfo
     }
     data {
       id
@@ -1406,7 +1426,8 @@ export const MePlacesDocument = gql`
     }
   }
 }
-    ${PlaceTagFragmentDoc}`;
+    ${PageInfoFragmentDoc}
+${PlaceTagFragmentDoc}`;
 
     export function useMePlacesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MePlacesQuery, MePlacesQueryVariables>) {
       return ApolloReactHooks.useQuery<MePlacesQuery, MePlacesQueryVariables>(MePlacesDocument, baseOptions);
@@ -1418,29 +1439,34 @@ export const MePlacesDocument = gql`
 export type MePlacesQueryHookResult = ReturnType<typeof useMePlacesQuery>;
 export type MePlacesQueryResult = ApolloReactCommon.QueryResult<MePlacesQuery, MePlacesQueryVariables>;
 export const MeVisitsDocument = gql`
-    query MeVisits($page: Int, $limit: Int) {
+    query MeVisits($page: Int!, $limit: Int!) {
   visits(options: {page: $page, limit: $limit}) {
-    id
-    score
-    visitDate
-    place {
+    pageInfo {
+      ...PageInfo
+    }
+    data {
       id
-      providerId
-      details {
+      score
+      visitDate
+      place {
+        id
         providerId
-        name
-        location {
-          address {
-            formatted
+        details {
+          providerId
+          name
+          location {
+            address {
+              formatted
+            }
           }
         }
       }
+      createdAt
+      updatedAt
     }
-    createdAt
-    updatedAt
   }
 }
-    `;
+    ${PageInfoFragmentDoc}`;
 
     export function useMeVisitsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeVisitsQuery, MeVisitsQueryVariables>) {
       return ApolloReactHooks.useQuery<MeVisitsQuery, MeVisitsQueryVariables>(MeVisitsDocument, baseOptions);

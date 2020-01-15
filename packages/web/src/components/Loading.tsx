@@ -137,10 +137,12 @@ interface LoaderProps {
   fullscreen?: boolean;
 }
 
-export const Loading = ({ size = 48, fullscreen = true }: LoaderProps) => {
-  return (
-    <Wrapper fullscreen={fullscreen}>
-      <Loader size={size} color="#CCC" />
-    </Wrapper>
-  );
-};
+export const Loading = React.forwardRef<HTMLDivElement, LoaderProps>(
+  ({ size = 48, fullscreen = true }, forwardRef) => {
+    return (
+      <Wrapper fullscreen={fullscreen} ref={forwardRef}>
+        <Loader size={size} color="#CCC" />
+      </Wrapper>
+    );
+  }
+);

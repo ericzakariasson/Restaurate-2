@@ -9,3 +9,4 @@ export { default as visitOrder } from './visitOrder.fragment';
 export { default as visitRate } from './visitRate.fragment';
 export { default as tag } from './tag.fragment';
 export { default as visitImage } from './visit.image.fragment';
+export { default as pageInfo } from './pageInfo.fragment';

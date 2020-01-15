@@ -2,26 +2,32 @@ import gql from 'graphql-tag';
 import * as fragments from '../fragments';
 
 export default gql`
-  query MeVisits($page: Int, $limit: Int) {
+  query MeVisits($page: Int!, $limit: Int!) {
     visits(options: { page: $page, limit: $limit }) {
-      id
-      score
-      visitDate
-      place {
+      pageInfo {
+        ...PageInfo
+      }
+      data {
         id
-        providerId
-        details {
+        score
+        visitDate
+        place {
+          id
           providerId
-          name
-          location {
-            address {
-              formatted
+          details {
+            providerId
+            name
+            location {
+              address {
+                formatted
+              }
             }
           }
         }
+        createdAt
+        updatedAt
       }
-      createdAt
-      updatedAt
     }
   }
+  ${fragments.pageInfo}
 `;

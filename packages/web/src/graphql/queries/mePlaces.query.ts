@@ -5,9 +5,7 @@ export default gql`
   query MePlaces($page: Int!, $limit: Int!) {
     places(options: { page: $page, limit: $limit }) {
       pageInfo {
-        page
-        limit
-        hasNextPage
+        ...PageInfo
       }
       data {
         id
@@ -29,4 +27,5 @@ export default gql`
     }
   }
   ${fragments.placeTag}
+  ${fragments.pageInfo}
 `;
