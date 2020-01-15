@@ -8,13 +8,48 @@ import { myPlaceRoute } from '../../routes';
 import { GeneralError } from '../Error/GeneralError';
 import { PlaceListItem } from './component/PlaceListItem';
 import { Filter } from 'components/Filter/Filter';
+import { useInView } from 'react-intersection-observer';
 
 const PlaceList = styled.ul`
   list-style: none;
 `;
 
 export const MyPlacesScene = () => {
-  const { data, loading, error } = useMePlacesQuery();
+  const { data, loading, error, fetchMore, variables } = useMePlacesQuery({
+    variables: { page: 0, limit: 24 }
+  });
+
+  const [ref, inView] = useInView({ rootMargin: '240px' });
+  console.log(data?.places.pageInfo);
+
+  React.useEffect(() => {
+    if (inView) {
+      fetchMore({
+        variables: {
+          page: data?.places.pageInfo.page ?? variables.page + 1,
+          limit: data?.places.pageInfo.limit ?? variables.limit + 1
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult || fetchMoreResult.places.data.length === 0) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            places: {
+              ...prev.places,
+              ...fetchMoreResult.places,
+              pageInfo: {
+                ...fetchMoreResult.places.pageInfo,
+                page: fetchMoreResult.places.pageInfo.page + 1
+              },
+              data: [...prev.places.data, ...fetchMoreResult.places.data]
+            }
+          };
+        }
+      });
+    }
+  }, [inView]);
 
   if (error) {
     return <GeneralError />;
@@ -34,14 +69,14 @@ export const MyPlacesScene = () => {
     return null;
   }
 
-  const placeCount = places.length;
+  const placeCount = places.data.length;
 
   return (
     <Page
       title="Ställen"
       subTitle={
-        places.length
-          ? `${places.length} ställe${places.length > 1 ? 'n' : ''}`
+        placeCount
+          ? `${placeCount} ställe${placeCount > 1 ? 'n' : ''}`
           : undefined
       }
     >
@@ -51,7 +86,7 @@ export const MyPlacesScene = () => {
         <>
           {/* <Filter /> */}
           <PlaceList>
-            {places.map(place => (
+            {places.data.map(place => (
               <PlaceListItem
                 key={place.providerId}
                 name={place.details.name}
@@ -63,6 +98,7 @@ export const MyPlacesScene = () => {
               />
             ))}
           </PlaceList>
+          {data?.places.pageInfo.hasNextPage && <div ref={ref} />}
         </>
       )}
     </Page>

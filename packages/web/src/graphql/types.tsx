@@ -215,6 +215,24 @@ export type Order = {
   updatedAt: Scalars['DateTime'],
 };
 
+export type PageInfo = {
+   __typename?: 'PageInfo',
+  page: Scalars['Int'],
+  limit: Scalars['Int'],
+  hasNextPage: Scalars['Boolean'],
+};
+
+export type PageOptions = {
+  page?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>,
+};
+
+export type PaginatedPlaceResponse = {
+   __typename?: 'PaginatedPlaceResponse',
+  data: Array<Place>,
+  pageInfo: PageInfo,
+};
+
 export type Place = {
    __typename?: 'Place',
   id?: Maybe<Scalars['ID']>,
@@ -228,15 +246,10 @@ export type Place = {
   createdAt?: Maybe<Scalars['DateTime']>,
   updatedAt?: Maybe<Scalars['DateTime']>,
   visitCount: Scalars['Float'],
-  averageScore: Scalars['Float'],
+  averageScore?: Maybe<Scalars['Float']>,
   details: PlaceDetails,
   hasVisited: Scalars['Boolean'],
   wantToVisit: Scalars['Boolean'],
-};
-
-
-export type PlaceVisitsArgs = {
-  limit?: Maybe<Scalars['Float']>
 };
 
 export type PlaceDetails = {
@@ -318,13 +331,18 @@ export type Query = {
   wantToVisitPlace: Scalars['Boolean'],
   allPlaceTypes: Array<PlaceType>,
   placeFilterOptions: PlaceFilterOptions,
-  places: Array<Place>,
+  places: PaginatedPlaceResponse,
   metrics: Metrics,
 };
 
 
 export type QueryVisitArgs = {
   id: Scalars['String']
+};
+
+
+export type QueryVisitsArgs = {
+  options: PageOptions
 };
 
 
@@ -352,6 +370,11 @@ export type QueryPreviewPlaceArgs = {
 
 export type QueryWantToVisitPlaceArgs = {
   providerId: Scalars['String']
+};
+
+
+export type QueryPlacesArgs = {
+  options: PageOptions
 };
 
 export type Rate = {
@@ -436,7 +459,6 @@ export type Visit = {
   id: Scalars['ID'],
   comment?: Maybe<Scalars['String']>,
   visitDate: Scalars['DateTime'],
-  orders: Array<Order>,
   ratings: Array<Rate>,
   images: Array<VisitImage>,
   score: Scalars['Float'],
@@ -446,6 +468,7 @@ export type Visit = {
   updatedAt: Scalars['DateTime'],
   place: Place,
   user: User,
+  orders: Array<Order>,
 };
 
 export type VisitImage = {
@@ -777,31 +800,43 @@ export type MeQuery = (
   > }
 );
 
-export type MePlacesQueryVariables = {};
+export type MePlacesQueryVariables = {
+  page: Scalars['Int'],
+  limit: Scalars['Int']
+};
 
 
 export type MePlacesQuery = (
   { __typename?: 'Query' }
-  & { places: Array<(
-    { __typename?: 'Place' }
-    & Pick<Place, 'id' | 'providerId' | 'averageScore' | 'visitCount'>
-    & { details: (
-      { __typename?: 'PlaceDetails' }
-      & Pick<PlaceDetails, 'providerId' | 'name'>
-      & { location: (
-        { __typename?: 'Location' }
-        & { address: (
-          { __typename?: 'Address' }
-          & Pick<Address, 'formatted'>
+  & { places: (
+    { __typename?: 'PaginatedPlaceResponse' }
+    & { pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'page' | 'limit' | 'hasNextPage'>
+    ), data: Array<(
+      { __typename?: 'Place' }
+      & Pick<Place, 'id' | 'providerId' | 'averageScore' | 'visitCount'>
+      & { details: (
+        { __typename?: 'PlaceDetails' }
+        & Pick<PlaceDetails, 'name'>
+        & { location: (
+          { __typename?: 'Location' }
+          & { address: (
+            { __typename?: 'Address' }
+            & Pick<Address, 'formatted'>
+          ) }
         ) }
-      ) }
-    ), tags: Array<{ __typename?: 'Tag' }
-      & PlaceTagFragment
-    > }
-  )> }
+      ), tags: Array<{ __typename?: 'Tag' }
+        & PlaceTagFragment
+      > }
+    )> }
+  ) }
 );
 
-export type MeVisitsQueryVariables = {};
+export type MeVisitsQueryVariables = {
+  page?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>
+};
 
 
 export type MeVisitsQuery = (
@@ -1345,23 +1380,29 @@ export const MeDocument = gql`
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export const MePlacesDocument = gql`
-    query MePlaces {
-  places {
-    id
-    providerId
-    details {
+    query MePlaces($page: Int!, $limit: Int!) {
+  places(options: {page: $page, limit: $limit}) {
+    pageInfo {
+      page
+      limit
+      hasNextPage
+    }
+    data {
+      id
       providerId
-      name
-      location {
-        address {
-          formatted
+      details {
+        name
+        location {
+          address {
+            formatted
+          }
         }
       }
-    }
-    averageScore
-    visitCount
-    tags {
-      ...PlaceTag
+      averageScore
+      visitCount
+      tags {
+        ...PlaceTag
+      }
     }
   }
 }
@@ -1377,8 +1418,8 @@ export const MePlacesDocument = gql`
 export type MePlacesQueryHookResult = ReturnType<typeof useMePlacesQuery>;
 export type MePlacesQueryResult = ApolloReactCommon.QueryResult<MePlacesQuery, MePlacesQueryVariables>;
 export const MeVisitsDocument = gql`
-    query MeVisits {
-  visits {
+    query MeVisits($page: Int, $limit: Int) {
+  visits(options: {page: $page, limit: $limit}) {
     id
     score
     visitDate

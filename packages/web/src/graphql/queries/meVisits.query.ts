@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 import * as fragments from '../fragments';
 
 export default gql`
-  query MeVisits {
-    visits {
+  query MeVisits($page: Int, $limit: Int) {
+    visits(options: { page: $page, limit: $limit }) {
       id
       score
       visitDate

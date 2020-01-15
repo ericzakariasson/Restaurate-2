@@ -128,7 +128,7 @@ const ScoreCharacter = styled.span`
 `;
 
 interface ScoreProps {
-  score: number;
+  score?: number | null;
 }
 
 export const Score = ({ score }: ScoreProps) => (
