@@ -1,17 +1,17 @@
 import { Service } from 'typedi';
 import { In } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { PageOptions } from '../../graphql/pagination';
 import { logger, round } from '../../utils';
 import { Place, PlaceService } from '../place';
 import { WantToVisitService } from '../place/wantToVisit/wantToVisit.service';
 import { User, UserService } from '../user';
+import { Visit, VisitRepository } from './';
 import { VisitImage, VisitImageRepository } from './image';
 import { OrderRepository } from './order';
 import { Rate, RateRepository } from './rate';
 import { RateInput } from './rate/rate.types';
-import { Visit, VisitRepository } from './';
 import { AddVisitInput, EditVisitInput } from './visit.types';
-import { Pagination } from 'graphql/pagination';
 
 @Service()
 export class VisitService {
@@ -286,8 +286,10 @@ export class VisitService {
     );
   }
 
-  getVisitsByUserId = (userId: number, options: Pagination): Promise<Visit[]> =>
-    this.visitRepository.findByUserId(userId, options);
+  getVisitsByUserId = (
+    userId: number,
+    options: PageOptions
+  ): Promise<Visit[]> => this.visitRepository.findByUserId(userId, options);
 
   getVisitsByPlaceId = (placeId: number) =>
     this.visitRepository.findByPlaceId(placeId);
