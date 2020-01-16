@@ -19,7 +19,8 @@ const Loader = styled.div`
 export const MyVisitsScene = () => {
   const { data: meData } = useMeQuery();
   const { data, loading, error, fetchMore, variables } = useMeVisitsQuery({
-    variables: { page: 0, limit: 32 }
+    variables: { page: 0, limit: 32 },
+    notifyOnNetworkStatusChange: true
   });
 
   const loadMore = React.useCallback(
