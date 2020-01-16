@@ -7,8 +7,14 @@ import { VisitGroup } from 'components/VisitGroup';
 import { GeneralError } from '../Error/GeneralError';
 import { useMeVisitsQuery, VisitFragment, useMeQuery } from 'graphql/types';
 import { SkeletonCards } from 'components/Skeleton';
-import { useInfiniteScroll } from 'hooks';
 import { updateQuery } from './updateQuery';
+
+import styled from 'styled-components';
+import { useInfiniteScroll } from 'hooks';
+
+const Loader = styled.div`
+  width: 100%;
+`;
 
 export const MyVisitsScene = () => {
   const { data: meData } = useMeQuery();
@@ -16,32 +22,32 @@ export const MyVisitsScene = () => {
     variables: { page: 0, limit: 32 }
   });
 
-  const loadMore = async () => {
-    if (
-      (data?.visits.pageInfo.page !== null &&
-        data?.visits.pageInfo.page !== undefined,
-      data?.visits.pageInfo.hasNextPage)
-    ) {
+  const loadMore = React.useCallback(
+    (nextPage: number) =>
       fetchMore({
         variables: {
-          page: data.visits.pageInfo.page + 1,
+          page: nextPage,
           limit: variables.limit
         },
         updateQuery
-      });
-    }
-  };
+      }),
+    [fetchMore, variables.limit]
+  );
 
-  const { ref } = useInfiniteScroll({ loadMore });
+  const { ref, hasFetchedMore } = useInfiniteScroll({
+    isFetching: loading,
+    pageInfo: data?.visits.pageInfo,
+    loadMore
+  });
 
   if (error) {
     return <GeneralError />;
   }
 
-  if (loading) {
+  if (loading && !hasFetchedMore) {
     return (
       <Page title="Besök" subTitle="- besök">
-        <SkeletonCards count={5} />
+        <SkeletonCards count={7} />
       </Page>
     );
   }
@@ -65,9 +71,7 @@ export const MyVisitsScene = () => {
           <VisitGroup key={date} date={new Date(date)} visits={visits} />
         ))
       )}
-      {data?.visits.pageInfo.hasNextPage && (
-        <Loading ref={ref} fullscreen={false} />
-      )}
+      <Loader ref={ref}>{loading && <Loading fullscreen={false} />}</Loader>
     </Page>
   );
 };

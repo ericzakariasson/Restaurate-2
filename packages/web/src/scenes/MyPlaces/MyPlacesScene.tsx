@@ -15,40 +15,43 @@ const PlaceList = styled.ul`
   list-style: none;
 `;
 
+const Loader = styled.div`
+  width: 100%;
+`;
+
 export const MyPlacesScene = () => {
   const { data: meData } = useMeQuery();
   const { data, loading, error, fetchMore, variables } = useMePlacesQuery({
-    variables: { page: 0, limit: 32 }
+    variables: { page: 0, limit: 32 },
+    notifyOnNetworkStatusChange: true
   });
 
-  console.log(data?.places);
-
-  const loadMore = async () => {
-    if (
-      data?.places.pageInfo.page !== null &&
-      data?.places.pageInfo.page !== undefined &&
-      data.places.pageInfo.hasNextPage
-    ) {
+  const loadMore = React.useCallback(
+    (nextPage: number) =>
       fetchMore({
         variables: {
-          page: data.places.pageInfo.page + 1,
+          page: nextPage,
           limit: variables.limit
         },
         updateQuery
-      });
-    }
-  };
+      }),
+    [fetchMore, variables.limit]
+  );
 
-  const { ref } = useInfiniteScroll({ loadMore });
+  const { ref, hasFetchedMore } = useInfiniteScroll({
+    isFetching: loading,
+    pageInfo: data?.places.pageInfo,
+    loadMore
+  });
 
   if (error) {
     return <GeneralError />;
   }
 
-  if (loading) {
+  if (loading && !hasFetchedMore) {
     return (
       <Page title="Besök" subTitle="- besök">
-        <SkeletonCards count={5} />
+        <SkeletonCards count={7} />
       </Page>
     );
   }
@@ -75,9 +78,7 @@ export const MyPlacesScene = () => {
               />
             ))}
           </PlaceList>
-          {data?.places.pageInfo.hasNextPage && (
-            <Loading ref={ref} fullscreen={false} />
-          )}
+          <Loader ref={ref}>{loading && <Loading fullscreen={false} />}</Loader>
         </>
       )}
     </Page>
@@ -85,4 +86,4 @@ export const MyPlacesScene = () => {
 };
 
 const formatPlaceCount = (placeCount?: number) =>
-  placeCount ? `${placeCount} ställe${placeCount > 1 ? 'n' : ''}` : undefined;
+  placeCount ? `${placeCount} ställe${placeCount !== 1 ? 'n' : ''}` : undefined;
