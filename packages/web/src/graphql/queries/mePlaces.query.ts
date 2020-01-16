@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import * as fragments from '../fragments';
 
 export default gql`
-  query MePlaces($page: Int!, $limit: Int!) {
+  query MePlaces($page: Int!, $limit: Int) {
     places(options: { page: $page, limit: $limit }) {
       pageInfo {
         ...PageInfo

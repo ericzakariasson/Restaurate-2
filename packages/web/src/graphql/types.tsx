@@ -813,7 +813,7 @@ export type MeQuery = (
 
 export type MePlacesQueryVariables = {
   page: Scalars['Int'],
-  limit: Scalars['Int']
+  limit?: Maybe<Scalars['Int']>
 };
 
 
@@ -845,7 +845,7 @@ export type MePlacesQuery = (
 
 export type MeVisitsQueryVariables = {
   page: Scalars['Int'],
-  limit: Scalars['Int']
+  limit?: Maybe<Scalars['Int']>
 };
 
 
@@ -1402,7 +1402,7 @@ export const MeDocument = gql`
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export const MePlacesDocument = gql`
-    query MePlaces($page: Int!, $limit: Int!) {
+    query MePlaces($page: Int!, $limit: Int) {
   places(options: {page: $page, limit: $limit}) {
     pageInfo {
       ...PageInfo
@@ -1439,7 +1439,7 @@ ${PlaceTagFragmentDoc}`;
 export type MePlacesQueryHookResult = ReturnType<typeof useMePlacesQuery>;
 export type MePlacesQueryResult = ApolloReactCommon.QueryResult<MePlacesQuery, MePlacesQueryVariables>;
 export const MeVisitsDocument = gql`
-    query MeVisits($page: Int!, $limit: Int!) {
+    query MeVisits($page: Int!, $limit: Int) {
   visits(options: {page: $page, limit: $limit}) {
     pageInfo {
       ...PageInfo

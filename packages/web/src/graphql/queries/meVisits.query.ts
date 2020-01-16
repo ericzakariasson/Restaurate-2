@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import * as fragments from '../fragments';
 
 export default gql`
-  query MeVisits($page: Int!, $limit: Int!) {
+  query MeVisits($page: Int!, $limit: Int) {
     visits(options: { page: $page, limit: $limit }) {
       pageInfo {
         ...PageInfo

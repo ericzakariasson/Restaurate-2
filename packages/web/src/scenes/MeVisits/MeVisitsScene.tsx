@@ -16,23 +16,20 @@ const Loader = styled.div`
   width: 100%;
 `;
 
-export const MyVisitsScene = () => {
+export const MeVisitsScene = () => {
   const { data: meData } = useMeQuery();
-  const { data, loading, error, fetchMore, variables } = useMeVisitsQuery({
-    variables: { page: 0, limit: 32 },
+  const { data, loading, error, fetchMore } = useMeVisitsQuery({
+    variables: { page: 0 },
     notifyOnNetworkStatusChange: true
   });
 
   const loadMore = React.useCallback(
     (nextPage: number) =>
       fetchMore({
-        variables: {
-          page: nextPage,
-          limit: variables.limit
-        },
+        variables: { page: nextPage },
         updateQuery
       }),
-    [fetchMore, variables.limit]
+    [fetchMore]
   );
 
   const { ref, hasFetchedMore } = useInfiniteScroll({
