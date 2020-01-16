@@ -45,7 +45,7 @@ export const SkeletonCard = ({
         <Line height={12} width={addressWidth} />
       </Left>
       <Right>
-        <Line height={56} width={100} />
+        <Line height={54} width={100} />
       </Right>
     </Wrapper>
   );
