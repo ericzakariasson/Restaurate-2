@@ -66,7 +66,7 @@ interface PlaceListItemProps {
   address: string;
   visitCount: number;
   to: string;
-  averageScore: number;
+  averageScore?: number | null;
   tags: PlaceTagFragment[];
 }
 

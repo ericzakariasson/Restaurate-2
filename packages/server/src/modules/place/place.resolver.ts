@@ -24,12 +24,14 @@ import {
   PlaceSearchResult,
   PlaceType,
   PositionInput,
-  UpdatePlaceInput
+  UpdatePlaceInput,
+  PaginatedPlaceResponse
 } from './place.types';
 import { PlacePreview } from './preview/place.preview.types';
 import { Tag } from './tag/tag.entity';
 import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
+import { PageOptions } from '../../graphql/pagination';
 
 @Service()
 @Resolver(Place)
@@ -205,9 +207,22 @@ export class PlaceResolver {
   }
 
   @Authorized()
-  @Query(() => [Place])
-  async places(@Ctx() ctx: Context): Promise<Place[]> {
-    return this.placeService.getPlacesByUserId(ctx.req.session.userId!);
+  @Query(() => PaginatedPlaceResponse)
+  async places(
+    @Arg('options') options: PageOptions,
+    @Ctx() ctx: Context
+  ): Promise<PaginatedPlaceResponse> {
+    const data = await this.placeService.getPlacesByUserId(
+      ctx.req.session.userId!,
+      options
+    );
+
+    const pageInfo = {
+      ...options,
+      hasNextPage: data.length >= options.limit
+    };
+
+    return new PaginatedPlaceResponse(data, pageInfo);
   }
 
   @FieldResolver()

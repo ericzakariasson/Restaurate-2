@@ -1,6 +1,7 @@
 import * as DataLoader from 'dataloader';
 import { EntityRepository, Repository } from 'typeorm';
 import { Visit } from './visit.entity';
+import { PageOptions } from '../../graphql/pagination';
 
 @EntityRepository(Visit)
 export class VisitRepository extends Repository<Visit> {
@@ -25,10 +26,12 @@ export class VisitRepository extends Repository<Visit> {
       .groupBy('visit.placeId')
       .getRawMany();
 
-  findByUserId = (userId: number) =>
+  findByUserId = (userId: number, { page, limit }: PageOptions) =>
     this.createQueryBuilder('visit')
       .where('visit.userId = :userId', { userId })
       .orderBy('visit.visitDate', 'DESC')
+      .take(limit)
+      .skip(limit * page)
       .getMany();
 
   findByPlaceId = (placeId: number) =>

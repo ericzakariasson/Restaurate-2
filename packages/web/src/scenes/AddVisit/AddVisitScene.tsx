@@ -36,7 +36,10 @@ export const AddVisitScene = ({
   const { values, handlers, isValid } = useVisitForm();
 
   const [addVisit, { data: addVisitData }] = useAddVisitMutation({
-    refetchQueries: [{ query: MeVisitsDocument }, { query: MePlacesDocument }]
+    refetchQueries: [
+      { query: MeVisitsDocument, variables: { page: 0 } },
+      { query: MePlacesDocument, variables: { page: 0 } }
+    ]
   });
 
   const [signImages] = useSignImagesDataMutation();
