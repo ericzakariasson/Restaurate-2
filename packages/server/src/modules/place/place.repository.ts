@@ -14,17 +14,18 @@ export class PlaceRepository extends Repository<Place> {
     return mapped;
   });
 
-  private scoreLoader: DataLoader<number, number | null> = new DataLoader(
-    async placeIds => {
-      const scores = await this.getAverageScoreByIds(placeIds);
+  private averageScoreLoader: DataLoader<
+    number,
+    number | null
+  > = new DataLoader(async placeIds => {
+    const scores = await this.getAverageScoreByIds(placeIds);
 
-      const map = new Map<number, number | null>();
-      scores.forEach(({ round, placeid }) => map.set(placeid, round));
-      const mapped = placeIds.map(placeId => map.get(placeId) as number | null);
+    const map = new Map<number, number | null>();
+    scores.forEach(({ round, placeid }) => map.set(placeid, round));
+    const mapped = placeIds.map(placeId => map.get(placeId) as number | null);
 
-      return mapped;
-    }
-  );
+    return mapped;
+  });
 
   findByUserId = (userId: number) =>
     this.createQueryBuilder('place')
@@ -34,7 +35,8 @@ export class PlaceRepository extends Repository<Place> {
 
   findById = (placeId: number) => this.loader.load(placeId);
 
-  getAverageScoreById = (placeId: number) => this.scoreLoader.load(placeId);
+  getAverageScoreById = (placeId: number) =>
+    this.averageScoreLoader.load(placeId);
 
   getAverageScoreByIds = (
     placeIds: readonly number[]
