@@ -2,25 +2,30 @@ import gql from 'graphql-tag';
 import * as fragments from '../fragments';
 
 export default gql`
-  query MePlaces {
-    places {
-      id
-      providerId
-      details {
+  query MePlaces($page: Int!, $limit: Int) {
+    places(options: { page: $page, limit: $limit }) {
+      pageInfo {
+        ...PageInfo
+      }
+      data {
+        id
         providerId
-        name
-        location {
-          address {
-            formatted
+        details {
+          name
+          location {
+            address {
+              formatted
+            }
           }
         }
-      }
-      averageScore
-      visitCount
-      tags {
-        ...PlaceTag
+        averageScore
+        visitCount
+        tags {
+          ...PlaceTag
+        }
       }
     }
   }
   ${fragments.placeTag}
+  ${fragments.pageInfo}
 `;

@@ -1,4 +1,5 @@
 import * as DataLoader from 'dataloader';
+import { PageOptions } from '../../graphql/pagination';
 import { EntityRepository, Repository } from 'typeorm';
 import { Place } from './place.entity';
 
@@ -27,10 +28,12 @@ export class PlaceRepository extends Repository<Place> {
     return mapped;
   });
 
-  findByUserId = (userId: number) =>
+  findByUserId = (userId: number, { page, limit }: PageOptions) =>
     this.createQueryBuilder('place')
       .where('place.userId = :userId', { userId })
       .orderBy('place.createdAt', 'DESC')
+      .take(limit)
+      .skip(page * limit)
       .getMany();
 
   findById = (placeId: number) => this.loader.load(placeId);

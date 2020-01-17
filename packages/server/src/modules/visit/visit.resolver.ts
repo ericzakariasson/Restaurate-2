@@ -10,6 +10,7 @@ import {
   UseMiddleware
 } from 'type-graphql';
 import { Service } from 'typedi';
+import { PageOptions } from '../../graphql/pagination';
 import { Context } from '../../graphql/types';
 import { logger } from '../../utils/logger';
 import { RateLimitAuthenticated } from '../middleware/rateLimit';
@@ -19,7 +20,12 @@ import { Visit, VisitService } from './';
 import { VisitImage } from './image/visit.image.entity';
 import { Order } from './order/order.entity';
 import { Rate } from './rate/rate.entity';
-import { AddVisitInput, EditVisitInput, VisitResponse } from './visit.types';
+import {
+  AddVisitInput,
+  EditVisitInput,
+  VisitResponse,
+  PaginatedVisitResponse
+} from './visit.types';
 
 @Service()
 @Resolver(Visit)
@@ -100,9 +106,22 @@ export class VisitResolver {
   }
 
   @Authorized()
-  @Query(() => [Visit])
-  async visits(@Ctx() ctx: Context): Promise<Visit[]> {
-    return this.visitService.getVisitsByUserId(ctx.req.session.userId!);
+  @Query(() => PaginatedVisitResponse)
+  async visits(
+    @Arg('options') options: PageOptions,
+    @Ctx() ctx: Context
+  ): Promise<PaginatedVisitResponse> {
+    const data = await this.visitService.getVisitsByUserId(
+      ctx.req.session.userId!,
+      options
+    );
+
+    const pageInfo = {
+      ...options,
+      hasNextPage: data.length >= options.limit
+    };
+
+    return new PaginatedVisitResponse(data, pageInfo);
   }
 
   @FieldResolver(() => Place)
