@@ -1,4 +1,4 @@
-# restaurate
+# Restaurate
 
 App to rate your visited resturants and cafés.
 
@@ -8,9 +8,10 @@ App to rate your visited resturants and cafés.
 
 - Node.js
 - TypeORM
-- PostgreQSL
+- PostgreSQL
 - TypeGraphQL
 - GraphQL
+- Apollo
 - DataLoader
 - Redis
 - Winston
@@ -20,6 +21,9 @@ App to rate your visited resturants and cafés.
 - React
 - Apollo
 - Styled Components
+- React router
+- Formik
+- React spring
 
 ### External Services
 
