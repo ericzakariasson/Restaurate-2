@@ -37,7 +37,7 @@ export class ImageResolver {
         placeDetails.name
       )}-${slugify(placeDetails.location.address.city)}-${data.type}-${id}`;
 
-      const query = cloudinary.v2.utils.sign_request({
+      const query = (cloudinary.v2.utils as any).sign_request({
         public_id: publicId,
         tags: data.tags.join(','),
         timestamp,
