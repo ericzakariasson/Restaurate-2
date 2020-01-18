@@ -6,7 +6,10 @@ import {
   useCreatePlaceMutation,
   PlaceDocument,
   PlaceQueryVariables,
-  PlaceQuery
+  PlaceQuery,
+  MeQuery,
+  MeQueryVariables,
+  MeDocument
 } from 'graphql/types';
 import { myPlaceRoute } from 'routes';
 
@@ -37,13 +40,32 @@ export const CreatePlace = ({ providerId }: CreatePlaceProps) => {
   ] = useCreatePlaceMutation({
     variables,
     update(cache, { data }) {
+      if (!data || !data.createPlace) {
+        return;
+      }
+
       cache.writeQuery<PlaceQuery, PlaceQueryVariables>({
         query: PlaceDocument,
         variables: { providerId },
         data: {
-          place: { ...data!.createPlace!, visits: [] }
+          place: { ...data.createPlace, visits: [] }
         }
       });
+
+      const meData = cache.readQuery<MeQuery>({ query: MeDocument });
+
+      if (meData && meData.me) {
+        cache.writeQuery<MeQuery, MeQueryVariables>({
+          query: MeDocument,
+          data: {
+            ...meData,
+            me: {
+              ...meData.me,
+              placeCount: meData.me?.placeCount + 1
+            }
+          }
+        });
+      }
     }
   });
 
