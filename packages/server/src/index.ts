@@ -6,15 +6,20 @@ import * as cors from 'cors';
 import { useContainer } from 'typeorm';
 import { ApolloServer } from 'apollo-server-express';
 import { generateSchema } from './schema';
-import { SessionRequest } from './graphql/types';
+import { Context } from './graphql/types';
 import { Container } from 'typedi';
 import { createConnection } from './utils/createConnection';
+import {
+  GraphQLRequestContext,
+  ApolloServerPlugin
+} from 'apollo-server-plugin-base';
 import { logger } from './utils/logger';
 import { redis } from './services/redis/redis';
 import * as connectRedis from 'connect-redis';
 import * as helmet from 'helmet';
 import * as sendgrid from '@sendgrid/mail';
 import { v2 as cloudinary } from 'cloudinary';
+import * as shortid from 'shortid';
 
 dotenv.config();
 cloudinary.config(true);
@@ -69,7 +74,24 @@ const startServer = async (): Promise<void> => {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }: { req: SessionRequest }) => ({ req }),
+    context: ({ req }): Context => {
+      const requestId = shortid.generate();
+
+      const container = Container.of(requestId);
+      const context = { container, req, requestId };
+      container.set('context', context);
+
+      return context;
+    },
+    plugins: [
+      {
+        requestDidStart: () => ({
+          willSendResponse({ context }: GraphQLRequestContext<Context>) {
+            Container.reset(context.requestId);
+          }
+        })
+      }
+    ] as ApolloServerPlugin[],
     formatError: error => {
       logger.error('Apollo Server Error', error);
       return error;

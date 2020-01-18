@@ -1,6 +1,7 @@
 import { Request } from 'express';
 
 import { Field, ObjectType } from 'type-graphql';
+import { ContainerInstance } from 'typedi';
 
 @ObjectType()
 export class MutationResponse {
@@ -21,4 +22,6 @@ export interface SessionRequest extends Request {
 
 export interface Context {
   req: SessionRequest;
+  container: ContainerInstance;
+  requestId: string;
 }
