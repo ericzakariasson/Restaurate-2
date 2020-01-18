@@ -9,7 +9,9 @@ import {
   useAddVisitMutation,
   usePlaceDetailsQuery,
   useSignImagesDataMutation,
-  VisitImageInput
+  VisitImageInput,
+  MeQuery,
+  MeDocument
 } from 'graphql/types';
 import * as React from 'react';
 import Helmet from 'react-helmet';
@@ -39,7 +41,27 @@ export const AddVisitScene = ({
     refetchQueries: [
       { query: MeVisitsDocument, variables: { page: 0 } },
       { query: MePlacesDocument, variables: { page: 0 } }
-    ]
+    ],
+    update(cache, { data }) {
+      if (!data?.addVisit.saved) {
+        return;
+      }
+
+      const meData = cache.readQuery<MeQuery>({ query: MeDocument });
+
+      if (meData && meData.me) {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            ...meData,
+            me: {
+              ...meData.me,
+              visitCount: meData.me.visitCount + 1
+            }
+          }
+        });
+      }
+    }
   });
 
   const [signImages] = useSignImagesDataMutation();

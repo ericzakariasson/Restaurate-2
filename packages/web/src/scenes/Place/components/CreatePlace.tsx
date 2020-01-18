@@ -55,13 +55,13 @@ export const CreatePlace = ({ providerId }: CreatePlaceProps) => {
       const meData = cache.readQuery<MeQuery>({ query: MeDocument });
 
       if (meData && meData.me) {
-        cache.writeQuery<MeQuery, MeQueryVariables>({
+        cache.writeQuery<MeQuery>({
           query: MeDocument,
           data: {
             ...meData,
             me: {
               ...meData.me,
-              placeCount: meData.me?.placeCount + 1
+              placeCount: meData.me.placeCount + 1
             }
           }
         });
