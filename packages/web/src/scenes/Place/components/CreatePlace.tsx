@@ -1,17 +1,16 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Redirect } from 'react-router';
 import { Button } from 'components';
 import {
-  useCreatePlaceMutation,
-  PlaceDocument,
-  PlaceQueryVariables,
-  PlaceQuery,
+  MeDocument,
   MeQuery,
-  MeQueryVariables,
-  MeDocument
+  PlaceDocument,
+  PlaceQuery,
+  PlaceQueryVariables,
+  useCreatePlaceMutation
 } from 'graphql/types';
+import * as React from 'react';
+import { Redirect } from 'react-router';
 import { myPlaceRoute } from 'routes';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   padding: 20px;

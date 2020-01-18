@@ -12,7 +12,7 @@ generates:
       - typescript-operations
       - typescript-react-apollo
     config:
-      reactApolloVersion: 3
+      reactApolloVersion: 2
       withHooks: true
       withHOC: false
       withComponent: false

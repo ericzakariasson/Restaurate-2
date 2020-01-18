@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useParams } from 'react-router-dom';
 import { addVisitRoute, routes } from 'routes';
 import styled from 'styled-components';
 import { Loading, NavButton, Page } from '../../components';
-import { PlaceQueryVariables, usePlaceDetailsQuery } from '../../graphql/types';
+import { usePlaceDetailsLazyQuery } from '../../graphql/types';
 import { GeneralError } from '../Error/GeneralError';
 import { Details } from './components/Details';
 import { Preview } from './components/Preview';
@@ -24,19 +24,22 @@ const Buttons = styled.div`
 `;
 
 export const PlaceScene = () => {
-  const { providerId, userId } = useParams();
-  const isPreview = useRouteMatch({ path: routes.previewPlace });
-  const isMe = useRouteMatch({ path: routes.myPlace });
+  const { providerId } = useParams();
 
-  const variables: PlaceQueryVariables = {
-    providerId
-  };
+  const [
+    getPlaceDetails,
+    { data, loading, error }
+  ] = usePlaceDetailsLazyQuery();
 
-  if (!isPreview && !isMe) {
-    variables.userId = userId;
+  React.useEffect(() => {
+    if (providerId) {
+      getPlaceDetails({ variables: { providerId } });
+    }
+  }, [providerId, getPlaceDetails]);
+
+  if (!providerId) {
+    return <Redirect to={routes.places} />;
   }
-
-  const { data, loading, error } = usePlaceDetailsQuery({ variables });
 
   if (loading) {
     return <Loading />;
@@ -46,11 +49,12 @@ export const PlaceScene = () => {
     return <GeneralError />;
   }
 
-  const details = data && data.placeDetails;
-  const { name, location } = details!;
-
   return (
-    <Page title={name} subTitle={location.address.formatted} paddingBottom>
+    <Page
+      title={data?.placeDetails.name || '–'}
+      subTitle={data?.placeDetails.location.address.formatted}
+      paddingBottom
+    >
       <Details providerId={providerId} />
       <Switch>
         <Route path={routes.previewPlace} exact={true}>

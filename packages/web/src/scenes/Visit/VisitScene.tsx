@@ -1,7 +1,7 @@
 import { trackEvent } from 'analytics/trackEvent';
-import { Label, Loading, NavButton, Page, Score, Image } from 'components';
+import { Image, Label, Loading, NavButton, Page, Score } from 'components';
 import { rateNodes } from 'constants/rate.constants';
-import { Rate, useVisitQuery } from 'graphql/types';
+import { Rate, useVisitLazyQuery } from 'graphql/types';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { editVisitRoute, myPlaceRoute } from 'routes';
@@ -117,11 +117,15 @@ const sortRatings = (a: Rate, b: Rate) => {
 };
 
 export const VisitScene = () => {
-  const { id } = useParams();
+  const { id = '' } = useParams();
 
-  const { data, loading, error } = useVisitQuery({
-    variables: { id }
-  });
+  const [getVisit, { data, loading, error }] = useVisitLazyQuery();
+
+  React.useEffect(() => {
+    if (id) {
+      getVisit({ variables: { id } });
+    }
+  }, [id, getVisit]);
 
   if (loading) {
     return <Loading />;

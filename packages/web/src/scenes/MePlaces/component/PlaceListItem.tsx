@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { PlaceTagFragment } from 'graphql/types';
+import { Tag } from 'graphql/types';
 import { Score } from 'components/Card';
 
 export const Card = styled.div`
@@ -67,7 +67,7 @@ interface PlaceListItemProps {
   visitCount: number;
   to: string;
   averageScore?: number | null;
-  tags: PlaceTagFragment[];
+  tags: Tag[];
 }
 
 export const PlaceListItem = ({

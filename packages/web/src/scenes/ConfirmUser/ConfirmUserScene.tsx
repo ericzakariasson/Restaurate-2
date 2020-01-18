@@ -9,7 +9,6 @@ export const ConfirmUserScene = () => {
   const { token } = useParams();
 
   const [confirmUser, { data, loading, called }] = useConfirmUserMutation({
-    variables: { token },
     refetchQueries: [{ query: MeDocument }],
     awaitRefetchQueries: true
   });
@@ -17,7 +16,9 @@ export const ConfirmUserScene = () => {
   const success = data && data.confirmUser;
 
   React.useEffect(() => {
-    confirmUser(token);
+    if (token) {
+      confirmUser({ variables: { token } });
+    }
   }, [confirmUser, token]);
 
   if (loading) {

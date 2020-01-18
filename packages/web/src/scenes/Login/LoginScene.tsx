@@ -149,11 +149,9 @@ export const LoginScene = () => {
         onSubmit={async values => {
           const { data: response } = await login({ variables: { ...values } });
 
-          const code = response && response.login.code;
-
           const id = handleLoginCode(
-            response && response.login,
-            code,
+            response?.login,
+            response?.login.code,
             () => sendConfirmation(values.email),
             sending
           );

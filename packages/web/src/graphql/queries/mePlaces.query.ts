@@ -21,11 +21,11 @@ export default gql`
         averageScore
         visitCount
         tags {
-          ...PlaceTag
+          ...Tag
         }
       }
     }
   }
-  ${fragments.placeTag}
+  ${fragments.tag}
   ${fragments.pageInfo}
 `;

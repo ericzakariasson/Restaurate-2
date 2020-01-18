@@ -1,5 +1,5 @@
 import { Input } from 'components';
-import { PlaceTagFragment, useUpdatePlaceMutation } from 'graphql/types';
+import { Tag, useUpdatePlaceMutation } from 'graphql/types';
 import * as React from 'react';
 import { Check, Edit2, Loader, Plus, X } from 'react-feather';
 import styled from 'styled-components';
@@ -24,7 +24,7 @@ interface TagProps {
   editing: boolean;
 }
 
-const Tag = styled.li<TagProps>`
+const TagItem = styled.li<TagProps>`
   display: flex;
   align-items: center;
 
@@ -40,7 +40,7 @@ const TagName = styled.span`
 const TagInput = styled(Input)``;
 
 interface TagsProps {
-  tags: PlaceTagFragment[];
+  tags: Tag[];
   providerId: string;
 }
 
@@ -92,7 +92,7 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
         <List>
           {tags.length > 0
             ? tags.map((tag, i) => (
-                <Tag key={tag.id} editing={editing}>
+                <TagItem key={tag.id} editing={editing}>
                   <TagName>{tag.name}</TagName>
                   {editing ? (
                     <ActionButton
@@ -103,7 +103,7 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
                   ) : (
                     i !== tags.length - 1 && ','
                   )}
-                </Tag>
+                </TagItem>
               ))
             : !editing && '–'}
           {!editing && (

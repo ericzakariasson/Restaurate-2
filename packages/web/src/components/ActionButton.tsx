@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Icon } from 'react-feather';
 
-const Background = styled.button`
+const Button = styled.button`
   background: #f5f5f5;
   border-radius: 4px;
   display: flex;
@@ -43,10 +43,19 @@ export const ActionButton = ({
   as = 'button',
   disabled
 }: ActionButtonProps) => {
+  if (as === 'button') {
+    return (
+      <Button onClick={onClick} type={type} disabled={disabled}>
+        {content}
+        <Icon {...iconProps} />
+      </Button>
+    );
+  }
+
   return (
-    <Background as={as} onClick={onClick} type={type} disabled={disabled}>
+    <Button as={as} onClick={onClick}>
       {content}
       <Icon {...iconProps} />
-    </Background>
+    </Button>
   );
 };

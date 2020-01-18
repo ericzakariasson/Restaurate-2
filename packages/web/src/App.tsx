@@ -48,11 +48,16 @@ const App = () => {
 
   return (
     <>
+      <GlobalStyle />
       <NotificationContainer />
       <Helmet defaultTitle="Restaurate" titleTemplate="%s – Restaurate">
         <meta
           name="description"
           content="Betygsätt dina restaurang- och cafébesök"
+        />
+        <link
+          href="https://fonts.googleapis.com/css?family=Karla:400,700|Overpass+Mono:400,600&display=swap"
+          rel="stylesheet"
         />
       </Helmet>
       <Navigation />
@@ -124,7 +129,6 @@ const App = () => {
           />
           <Route component={NotFoundScene} />
         </Switch>
-        <GlobalStyle />
       </Wrapper>
     </>
   );

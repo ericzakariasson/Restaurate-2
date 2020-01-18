@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 export type Maybe<T> = T | null;
+
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -10,7 +11,6 @@ export type Scalars = {
   Boolean: boolean,
   Int: number,
   Float: number,
-  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any,
 };
 
@@ -76,7 +76,6 @@ export type FilterTag = {
   placeCount: Scalars['Float'],
 };
 
-/** Type of image */
 export enum ImageType {
   Visit = 'Visit',
   Place = 'Place'
@@ -107,7 +106,6 @@ export type LoginMutationResponse = {
   user?: Maybe<User>,
 };
 
-/** Response code for login resolver */
 export enum LoginResponseCode {
   Success = 'Success',
   NotFound = 'NotFound',
@@ -118,7 +116,6 @@ export type Metrics = {
    __typename?: 'Metrics',
   registeredUsers: Scalars['Float'],
   confirmedUsers: Scalars['Float'],
-  /** Users with at least one visit */
   activeUsers: Scalars['Float'],
 };
 
@@ -295,7 +292,6 @@ export type PlaceSearchResult = {
   places: Array<PlaceDetailsBasic>,
 };
 
-/** Type of place */
 export enum PlaceType {
   Restaurant = 'Restaurant',
   Cafe = 'Cafe',
@@ -314,7 +310,6 @@ export type PositionInput = {
   lng: Scalars['Float'],
 };
 
-/** Price level of place */
 export enum PriceLevel {
   NotSet = 'NotSet',
   Inexpensive = 'Inexpensive',
@@ -454,7 +449,6 @@ export type UserRegisterInput = {
   password: Scalars['String'],
 };
 
-/** User role */
 export enum UserRole {
   Admin = 'Admin',
   User = 'User'
@@ -508,6 +502,7 @@ export type WantToVisit = {
   createdAt: Scalars['String'],
   updatedAt: Scalars['String'],
 };
+
 export type PageInfoFragment = (
   { __typename?: 'PageInfo' }
   & Pick<PageInfo, 'page' | 'limit' | 'hasNextPage'>
@@ -516,15 +511,19 @@ export type PageInfoFragment = (
 export type PlaceDetailsFragment = (
   { __typename?: 'PlaceDetails' }
   & Pick<PlaceDetails, 'providerId' | 'name'>
-  & { location: { __typename?: 'Location' }
+  & { location: (
+    { __typename?: 'Location' }
     & LocationFragment
-  , categories: Array<{ __typename?: 'Category' }
+  ), categories: Array<(
+    { __typename?: 'Category' }
     & CategoryFragment
-  >, contact: { __typename?: 'Contact' }
+  )>, contact: (
+    { __typename?: 'Contact' }
     & ContactFragment
-  , openingHours: Maybe<{ __typename?: 'OpeningHours' }
+  ), openingHours: Maybe<(
+    { __typename?: 'OpeningHours' }
     & OpeningHoursFragment
-  > }
+  )> }
 );
 
 export type LocationFragment = (
@@ -571,23 +570,21 @@ export type PlaceDetailsBasicFragment = (
 export type PlaceFragment = (
   { __typename?: 'Place' }
   & Pick<Place, 'id' | 'providerId' | 'priceLevel' | 'types' | 'averageScore' | 'visitCount' | 'comment' | 'wantToVisit' | 'hasVisited' | 'createdAt' | 'updatedAt'>
-  & { tags: Array<{ __typename?: 'Tag' }
-    & PlaceTagFragment
-  >, details: { __typename?: 'PlaceDetails' }
+  & { tags: Array<(
+    { __typename?: 'Tag' }
+    & TagFragment
+  )>, details: (
+    { __typename?: 'PlaceDetails' }
     & PlaceDetailsFragment
-  , user: Maybe<{ __typename?: 'User' }
+  ), user: Maybe<(
+    { __typename?: 'User' }
     & UserFragment
-  > }
+  )> }
 );
 
 export type PlacePreviewFragment = (
   { __typename?: 'PlacePreview' }
   & Pick<PlacePreview, 'placeId'>
-);
-
-export type PlaceTagFragment = (
-  { __typename?: 'Tag' }
-  & Pick<Tag, 'id' | 'name' | 'createdAt'>
 );
 
 export type TagFragment = (
@@ -603,22 +600,26 @@ export type UserFragment = (
 export type VisitFragment = (
   { __typename?: 'Visit' }
   & Pick<Visit, 'id' | 'score' | 'comment' | 'visitDate' | 'takeAway' | 'private' | 'createdAt' | 'updatedAt'>
-  & { orders: Array<{ __typename?: 'Order' }
+  & { orders: Array<(
+    { __typename?: 'Order' }
     & VisitOrderFragment
-  >, ratings: Array<(
+  )>, ratings: Array<(
     { __typename?: 'Rate' }
-    & { children: Maybe<Array<{ __typename?: 'Rate' }
+    & { children: Maybe<Array<(
+      { __typename?: 'Rate' }
       & VisitRateFragment
-    >> }
-  )
+    )>> }
     & VisitRateFragment
-  >, user: { __typename?: 'User' }
+  )>, user: (
+    { __typename?: 'User' }
     & UserFragment
-  , images: Array<{ __typename?: 'VisitImage' }
+  ), images: Array<(
+    { __typename?: 'VisitImage' }
     & VisitImageFragment
-  >, place: { __typename?: 'Place' }
+  )>, place: (
+    { __typename?: 'Place' }
     & PlaceFragment
-   }
+  ) }
 );
 
 export type VisitImageFragment = (
@@ -670,9 +671,10 @@ export type CreatePlaceMutationVariables = {
 
 export type CreatePlaceMutation = (
   { __typename?: 'Mutation' }
-  & { createPlace: Maybe<{ __typename?: 'Place' }
+  & { createPlace: Maybe<(
+    { __typename?: 'Place' }
     & PlaceFragment
-  > }
+  )> }
 );
 
 export type DeleteVisitMutationVariables = {
@@ -709,9 +711,10 @@ export type LoginMutation = (
   & { login: (
     { __typename?: 'LoginMutationResponse' }
     & Pick<LoginMutationResponse, 'code' | 'success' | 'messages'>
-    & { user: Maybe<{ __typename?: 'User' }
+    & { user: Maybe<(
+      { __typename?: 'User' }
       & UserFragment
-    > }
+    )> }
   ) }
 );
 
@@ -777,9 +780,10 @@ export type UpdatePlaceMutationVariables = {
 
 export type UpdatePlaceMutation = (
   { __typename?: 'Mutation' }
-  & { updatePlace: { __typename?: 'Place' }
+  & { updatePlace: (
+    { __typename?: 'Place' }
     & PlaceFragment
-   }
+  ) }
 );
 
 export type MetricsQueryVariables = {};
@@ -806,9 +810,10 @@ export type MeQueryVariables = {};
 
 export type MeQuery = (
   { __typename?: 'Query' }
-  & { me: Maybe<{ __typename?: 'User' }
+  & { me: Maybe<(
+    { __typename?: 'User' }
     & UserFragment
-  > }
+  )> }
 );
 
 export type MePlacesQueryVariables = {
@@ -821,9 +826,10 @@ export type MePlacesQuery = (
   { __typename?: 'Query' }
   & { places: (
     { __typename?: 'PaginatedPlaceResponse' }
-    & { pageInfo: { __typename?: 'PageInfo' }
+    & { pageInfo: (
+      { __typename?: 'PageInfo' }
       & PageInfoFragment
-    , data: Array<(
+    ), data: Array<(
       { __typename?: 'Place' }
       & Pick<Place, 'id' | 'providerId' | 'averageScore' | 'visitCount'>
       & { details: (
@@ -836,9 +842,10 @@ export type MePlacesQuery = (
             & Pick<Address, 'formatted'>
           ) }
         ) }
-      ), tags: Array<{ __typename?: 'Tag' }
-        & PlaceTagFragment
-      > }
+      ), tags: Array<(
+        { __typename?: 'Tag' }
+        & TagFragment
+      )> }
     )> }
   ) }
 );
@@ -853,9 +860,10 @@ export type MeVisitsQuery = (
   { __typename?: 'Query' }
   & { visits: (
     { __typename?: 'PaginatedVisitResponse' }
-    & { pageInfo: { __typename?: 'PageInfo' }
+    & { pageInfo: (
+      { __typename?: 'PageInfo' }
       & PageInfoFragment
-    , data: Array<(
+    ), data: Array<(
       { __typename?: 'Visit' }
       & Pick<Visit, 'id' | 'score' | 'visitDate' | 'createdAt' | 'updatedAt'>
       & { place: (
@@ -884,9 +892,10 @@ export type PlaceDetailsQueryVariables = {
 
 export type PlaceDetailsQuery = (
   { __typename?: 'Query' }
-  & { placeDetails: { __typename?: 'PlaceDetails' }
+  & { placeDetails: (
+    { __typename?: 'PlaceDetails' }
     & PlaceDetailsFragment
-   }
+  ) }
 );
 
 export type PlaceQueryVariables = {
@@ -899,12 +908,12 @@ export type PlaceQuery = (
   { __typename?: 'Query' }
   & { place: Maybe<(
     { __typename?: 'Place' }
-    & { visits: Array<{ __typename?: 'Visit' }
+    & { visits: Array<(
+      { __typename?: 'Visit' }
       & VisitFragment
-    > }
-  )
+    )> }
     & PlaceFragment
-  > }
+  )> }
 );
 
 export type PreviewPlaceQueryVariables = {
@@ -914,9 +923,10 @@ export type PreviewPlaceQueryVariables = {
 
 export type PreviewPlaceQuery = (
   { __typename?: 'Query' }
-  & { previewPlace: Maybe<{ __typename?: 'PlacePreview' }
+  & { previewPlace: Maybe<(
+    { __typename?: 'PlacePreview' }
     & PlacePreviewFragment
-  > }
+  )> }
 );
 
 export type SearchPlaceQueryVariables = {
@@ -929,9 +939,10 @@ export type SearchPlaceQuery = (
   { __typename?: 'Query' }
   & { searchPlace: (
     { __typename?: 'PlaceSearchResult' }
-    & { places: Array<{ __typename?: 'PlaceDetailsBasic' }
+    & { places: Array<(
+      { __typename?: 'PlaceDetailsBasic' }
       & PlaceDetailsBasicFragment
-    > }
+    )> }
   ) }
 );
 
@@ -942,9 +953,10 @@ export type VisitQueryVariables = {
 
 export type VisitQuery = (
   { __typename?: 'Query' }
-  & { visit: Maybe<{ __typename?: 'Visit' }
+  & { visit: Maybe<(
+    { __typename?: 'Visit' }
     & VisitFragment
-  > }
+  )> }
 );
 
 export type WantToVisitListQueryVariables = {};
@@ -952,9 +964,10 @@ export type WantToVisitListQueryVariables = {};
 
 export type WantToVisitListQuery = (
   { __typename?: 'Query' }
-  & { wantToVisitList: Array<{ __typename?: 'PlaceDetailsBasic' }
+  & { wantToVisitList: Array<(
+    { __typename?: 'PlaceDetailsBasic' }
     & PlaceDetailsBasicFragment
-  > }
+  )> }
 );
 
 export type WantToVisitPlaceQueryVariables = {
@@ -966,6 +979,7 @@ export type WantToVisitPlaceQuery = (
   { __typename?: 'Query' }
   & Pick<Query, 'wantToVisitPlace'>
 );
+
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
   page
@@ -990,14 +1004,6 @@ export const PlaceDetailsBasicFragmentDoc = gql`
 export const PlacePreviewFragmentDoc = gql`
     fragment PlacePreview on PlacePreview {
   placeId
-}
-    `;
-export const TagFragmentDoc = gql`
-    fragment Tag on Tag {
-  id
-  name
-  createdAt
-  updatedAt
 }
     `;
 export const VisitOrderFragmentDoc = gql`
@@ -1044,11 +1050,12 @@ export const VisitImageFragmentDoc = gql`
   }
 }
     `;
-export const PlaceTagFragmentDoc = gql`
-    fragment PlaceTag on Tag {
+export const TagFragmentDoc = gql`
+    fragment Tag on Tag {
   id
   name
   createdAt
+  updatedAt
 }
     `;
 export const LocationFragmentDoc = gql`
@@ -1123,7 +1130,7 @@ export const PlaceFragmentDoc = gql`
   averageScore
   visitCount
   tags {
-    ...PlaceTag
+    ...Tag
   }
   details {
     ...PlaceDetails
@@ -1137,7 +1144,7 @@ export const PlaceFragmentDoc = gql`
   createdAt
   updatedAt
 }
-    ${PlaceTagFragmentDoc}
+    ${TagFragmentDoc}
 ${PlaceDetailsFragmentDoc}
 ${UserFragmentDoc}`;
 export const VisitFragmentDoc = gql`
@@ -1183,9 +1190,26 @@ export const AddVisitDocument = gql`
     `;
 export type AddVisitMutationFn = ApolloReactCommon.MutationFunction<AddVisitMutation, AddVisitMutationVariables>;
 
-    export function useAddVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddVisitMutation, AddVisitMutationVariables>) {
-      return ApolloReactHooks.useMutation<AddVisitMutation, AddVisitMutationVariables>(AddVisitDocument, baseOptions);
-    }
+/**
+ * __useAddVisitMutation__
+ *
+ * To run a mutation, you first call `useAddVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addVisitMutation, { data, loading, error }] = useAddVisitMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useAddVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddVisitMutation, AddVisitMutationVariables>) {
+        return ApolloReactHooks.useMutation<AddVisitMutation, AddVisitMutationVariables>(AddVisitDocument, baseOptions);
+      }
 export type AddVisitMutationHookResult = ReturnType<typeof useAddVisitMutation>;
 export type AddVisitMutationResult = ApolloReactCommon.MutationResult<AddVisitMutation>;
 export type AddVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<AddVisitMutation, AddVisitMutationVariables>;
@@ -1196,9 +1220,26 @@ export const ConfirmUserDocument = gql`
     `;
 export type ConfirmUserMutationFn = ApolloReactCommon.MutationFunction<ConfirmUserMutation, ConfirmUserMutationVariables>;
 
-    export function useConfirmUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ConfirmUserMutation, ConfirmUserMutationVariables>) {
-      return ApolloReactHooks.useMutation<ConfirmUserMutation, ConfirmUserMutationVariables>(ConfirmUserDocument, baseOptions);
-    }
+/**
+ * __useConfirmUserMutation__
+ *
+ * To run a mutation, you first call `useConfirmUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmUserMutation, { data, loading, error }] = useConfirmUserMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useConfirmUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ConfirmUserMutation, ConfirmUserMutationVariables>) {
+        return ApolloReactHooks.useMutation<ConfirmUserMutation, ConfirmUserMutationVariables>(ConfirmUserDocument, baseOptions);
+      }
 export type ConfirmUserMutationHookResult = ReturnType<typeof useConfirmUserMutation>;
 export type ConfirmUserMutationResult = ApolloReactCommon.MutationResult<ConfirmUserMutation>;
 export type ConfirmUserMutationOptions = ApolloReactCommon.BaseMutationOptions<ConfirmUserMutation, ConfirmUserMutationVariables>;
@@ -1211,9 +1252,26 @@ export const CreatePlaceDocument = gql`
     ${PlaceFragmentDoc}`;
 export type CreatePlaceMutationFn = ApolloReactCommon.MutationFunction<CreatePlaceMutation, CreatePlaceMutationVariables>;
 
-    export function useCreatePlaceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePlaceMutation, CreatePlaceMutationVariables>) {
-      return ApolloReactHooks.useMutation<CreatePlaceMutation, CreatePlaceMutationVariables>(CreatePlaceDocument, baseOptions);
-    }
+/**
+ * __useCreatePlaceMutation__
+ *
+ * To run a mutation, you first call `useCreatePlaceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePlaceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPlaceMutation, { data, loading, error }] = useCreatePlaceMutation({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *   },
+ * });
+ */
+export function useCreatePlaceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePlaceMutation, CreatePlaceMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreatePlaceMutation, CreatePlaceMutationVariables>(CreatePlaceDocument, baseOptions);
+      }
 export type CreatePlaceMutationHookResult = ReturnType<typeof useCreatePlaceMutation>;
 export type CreatePlaceMutationResult = ApolloReactCommon.MutationResult<CreatePlaceMutation>;
 export type CreatePlaceMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePlaceMutation, CreatePlaceMutationVariables>;
@@ -1224,9 +1282,26 @@ export const DeleteVisitDocument = gql`
     `;
 export type DeleteVisitMutationFn = ApolloReactCommon.MutationFunction<DeleteVisitMutation, DeleteVisitMutationVariables>;
 
-    export function useDeleteVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteVisitMutation, DeleteVisitMutationVariables>) {
-      return ApolloReactHooks.useMutation<DeleteVisitMutation, DeleteVisitMutationVariables>(DeleteVisitDocument, baseOptions);
-    }
+/**
+ * __useDeleteVisitMutation__
+ *
+ * To run a mutation, you first call `useDeleteVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteVisitMutation, { data, loading, error }] = useDeleteVisitMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteVisitMutation, DeleteVisitMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteVisitMutation, DeleteVisitMutationVariables>(DeleteVisitDocument, baseOptions);
+      }
 export type DeleteVisitMutationHookResult = ReturnType<typeof useDeleteVisitMutation>;
 export type DeleteVisitMutationResult = ApolloReactCommon.MutationResult<DeleteVisitMutation>;
 export type DeleteVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteVisitMutation, DeleteVisitMutationVariables>;
@@ -1239,9 +1314,26 @@ export const EditVisitDocument = gql`
     `;
 export type EditVisitMutationFn = ApolloReactCommon.MutationFunction<EditVisitMutation, EditVisitMutationVariables>;
 
-    export function useEditVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<EditVisitMutation, EditVisitMutationVariables>) {
-      return ApolloReactHooks.useMutation<EditVisitMutation, EditVisitMutationVariables>(EditVisitDocument, baseOptions);
-    }
+/**
+ * __useEditVisitMutation__
+ *
+ * To run a mutation, you first call `useEditVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editVisitMutation, { data, loading, error }] = useEditVisitMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useEditVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<EditVisitMutation, EditVisitMutationVariables>) {
+        return ApolloReactHooks.useMutation<EditVisitMutation, EditVisitMutationVariables>(EditVisitDocument, baseOptions);
+      }
 export type EditVisitMutationHookResult = ReturnType<typeof useEditVisitMutation>;
 export type EditVisitMutationResult = ApolloReactCommon.MutationResult<EditVisitMutation>;
 export type EditVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<EditVisitMutation, EditVisitMutationVariables>;
@@ -1259,9 +1351,27 @@ export const LoginDocument = gql`
     ${UserFragmentDoc}`;
 export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, LoginMutationVariables>;
 
-    export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-      return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
-    }
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
+      }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
@@ -1272,9 +1382,25 @@ export const LogoutDocument = gql`
     `;
 export type LogoutMutationFn = ApolloReactCommon.MutationFunction<LogoutMutation, LogoutMutationVariables>;
 
-    export function useLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
-      return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, baseOptions);
-    }
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, baseOptions);
+      }
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = ApolloReactCommon.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
@@ -1287,9 +1413,26 @@ export const RegisterDocument = gql`
     `;
 export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
-    export function useRegisterMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-      return ApolloReactHooks.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, baseOptions);
-    }
+/**
+ * __useRegisterMutation__
+ *
+ * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerMutation, { data, loading, error }] = useRegisterMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useRegisterMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+        return ApolloReactHooks.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, baseOptions);
+      }
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
@@ -1300,9 +1443,26 @@ export const SendConfirmationEmailDocument = gql`
     `;
 export type SendConfirmationEmailMutationFn = ApolloReactCommon.MutationFunction<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>;
 
-    export function useSendConfirmationEmailMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>) {
-      return ApolloReactHooks.useMutation<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>(SendConfirmationEmailDocument, baseOptions);
-    }
+/**
+ * __useSendConfirmationEmailMutation__
+ *
+ * To run a mutation, you first call `useSendConfirmationEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendConfirmationEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendConfirmationEmailMutation, { data, loading, error }] = useSendConfirmationEmailMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSendConfirmationEmailMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>) {
+        return ApolloReactHooks.useMutation<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>(SendConfirmationEmailDocument, baseOptions);
+      }
 export type SendConfirmationEmailMutationHookResult = ReturnType<typeof useSendConfirmationEmailMutation>;
 export type SendConfirmationEmailMutationResult = ApolloReactCommon.MutationResult<SendConfirmationEmailMutation>;
 export type SendConfirmationEmailMutationOptions = ApolloReactCommon.BaseMutationOptions<SendConfirmationEmailMutation, SendConfirmationEmailMutationVariables>;
@@ -1316,9 +1476,26 @@ export const SignImagesDataDocument = gql`
     `;
 export type SignImagesDataMutationFn = ApolloReactCommon.MutationFunction<SignImagesDataMutation, SignImagesDataMutationVariables>;
 
-    export function useSignImagesDataMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignImagesDataMutation, SignImagesDataMutationVariables>) {
-      return ApolloReactHooks.useMutation<SignImagesDataMutation, SignImagesDataMutationVariables>(SignImagesDataDocument, baseOptions);
-    }
+/**
+ * __useSignImagesDataMutation__
+ *
+ * To run a mutation, you first call `useSignImagesDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignImagesDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signImagesDataMutation, { data, loading, error }] = useSignImagesDataMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useSignImagesDataMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignImagesDataMutation, SignImagesDataMutationVariables>) {
+        return ApolloReactHooks.useMutation<SignImagesDataMutation, SignImagesDataMutationVariables>(SignImagesDataDocument, baseOptions);
+      }
 export type SignImagesDataMutationHookResult = ReturnType<typeof useSignImagesDataMutation>;
 export type SignImagesDataMutationResult = ApolloReactCommon.MutationResult<SignImagesDataMutation>;
 export type SignImagesDataMutationOptions = ApolloReactCommon.BaseMutationOptions<SignImagesDataMutation, SignImagesDataMutationVariables>;
@@ -1329,9 +1506,26 @@ export const ToggleWantToVisitDocument = gql`
     `;
 export type ToggleWantToVisitMutationFn = ApolloReactCommon.MutationFunction<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>;
 
-    export function useToggleWantToVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>) {
-      return ApolloReactHooks.useMutation<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>(ToggleWantToVisitDocument, baseOptions);
-    }
+/**
+ * __useToggleWantToVisitMutation__
+ *
+ * To run a mutation, you first call `useToggleWantToVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useToggleWantToVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [toggleWantToVisitMutation, { data, loading, error }] = useToggleWantToVisitMutation({
+ *   variables: {
+ *      providerPlaceId: // value for 'providerPlaceId'
+ *   },
+ * });
+ */
+export function useToggleWantToVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>) {
+        return ApolloReactHooks.useMutation<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>(ToggleWantToVisitDocument, baseOptions);
+      }
 export type ToggleWantToVisitMutationHookResult = ReturnType<typeof useToggleWantToVisitMutation>;
 export type ToggleWantToVisitMutationResult = ApolloReactCommon.MutationResult<ToggleWantToVisitMutation>;
 export type ToggleWantToVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>;
@@ -1344,9 +1538,27 @@ export const UpdatePlaceDocument = gql`
     ${PlaceFragmentDoc}`;
 export type UpdatePlaceMutationFn = ApolloReactCommon.MutationFunction<UpdatePlaceMutation, UpdatePlaceMutationVariables>;
 
-    export function useUpdatePlaceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePlaceMutation, UpdatePlaceMutationVariables>) {
-      return ApolloReactHooks.useMutation<UpdatePlaceMutation, UpdatePlaceMutationVariables>(UpdatePlaceDocument, baseOptions);
-    }
+/**
+ * __useUpdatePlaceMutation__
+ *
+ * To run a mutation, you first call `useUpdatePlaceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePlaceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePlaceMutation, { data, loading, error }] = useUpdatePlaceMutation({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdatePlaceMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePlaceMutation, UpdatePlaceMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdatePlaceMutation, UpdatePlaceMutationVariables>(UpdatePlaceDocument, baseOptions);
+      }
 export type UpdatePlaceMutationHookResult = ReturnType<typeof useUpdatePlaceMutation>;
 export type UpdatePlaceMutationResult = ApolloReactCommon.MutationResult<UpdatePlaceMutation>;
 export type UpdatePlaceMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePlaceMutation, UpdatePlaceMutationVariables>;
@@ -1360,14 +1572,29 @@ export const MetricsDocument = gql`
 }
     `;
 
-    export function useMetricsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MetricsQuery, MetricsQueryVariables>) {
-      return ApolloReactHooks.useQuery<MetricsQuery, MetricsQueryVariables>(MetricsDocument, baseOptions);
-    }
-      export function useMetricsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MetricsQuery, MetricsQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<MetricsQuery, MetricsQueryVariables>(MetricsDocument, baseOptions);
+/**
+ * __useMetricsQuery__
+ *
+ * To run a query within a React component, call `useMetricsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMetricsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMetricsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMetricsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MetricsQuery, MetricsQueryVariables>) {
+        return ApolloReactHooks.useQuery<MetricsQuery, MetricsQueryVariables>(MetricsDocument, baseOptions);
       }
-      
+export function useMetricsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MetricsQuery, MetricsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MetricsQuery, MetricsQueryVariables>(MetricsDocument, baseOptions);
+        }
 export type MetricsQueryHookResult = ReturnType<typeof useMetricsQuery>;
+export type MetricsLazyQueryHookResult = ReturnType<typeof useMetricsLazyQuery>;
 export type MetricsQueryResult = ApolloReactCommon.QueryResult<MetricsQuery, MetricsQueryVariables>;
 export const AllPlaceTypesDocument = gql`
     query AllPlaceTypes {
@@ -1375,14 +1602,29 @@ export const AllPlaceTypesDocument = gql`
 }
     `;
 
-    export function useAllPlaceTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>) {
-      return ApolloReactHooks.useQuery<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>(AllPlaceTypesDocument, baseOptions);
-    }
-      export function useAllPlaceTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>(AllPlaceTypesDocument, baseOptions);
+/**
+ * __useAllPlaceTypesQuery__
+ *
+ * To run a query within a React component, call `useAllPlaceTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllPlaceTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllPlaceTypesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllPlaceTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>) {
+        return ApolloReactHooks.useQuery<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>(AllPlaceTypesDocument, baseOptions);
       }
-      
+export function useAllPlaceTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>(AllPlaceTypesDocument, baseOptions);
+        }
 export type AllPlaceTypesQueryHookResult = ReturnType<typeof useAllPlaceTypesQuery>;
+export type AllPlaceTypesLazyQueryHookResult = ReturnType<typeof useAllPlaceTypesLazyQuery>;
 export type AllPlaceTypesQueryResult = ApolloReactCommon.QueryResult<AllPlaceTypesQuery, AllPlaceTypesQueryVariables>;
 export const MeDocument = gql`
     query Me {
@@ -1392,14 +1634,29 @@ export const MeDocument = gql`
 }
     ${UserFragmentDoc}`;
 
-    export function useMeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeQuery, MeQueryVariables>) {
-      return ApolloReactHooks.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
-    }
-      export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        return ApolloReactHooks.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
       }
-      
+export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+        }
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export const MePlacesDocument = gql`
     query MePlaces($page: Int!, $limit: Int) {
@@ -1421,22 +1678,39 @@ export const MePlacesDocument = gql`
       averageScore
       visitCount
       tags {
-        ...PlaceTag
+        ...Tag
       }
     }
   }
 }
     ${PageInfoFragmentDoc}
-${PlaceTagFragmentDoc}`;
+${TagFragmentDoc}`;
 
-    export function useMePlacesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MePlacesQuery, MePlacesQueryVariables>) {
-      return ApolloReactHooks.useQuery<MePlacesQuery, MePlacesQueryVariables>(MePlacesDocument, baseOptions);
-    }
-      export function useMePlacesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MePlacesQuery, MePlacesQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<MePlacesQuery, MePlacesQueryVariables>(MePlacesDocument, baseOptions);
+/**
+ * __useMePlacesQuery__
+ *
+ * To run a query within a React component, call `useMePlacesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMePlacesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMePlacesQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useMePlacesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MePlacesQuery, MePlacesQueryVariables>) {
+        return ApolloReactHooks.useQuery<MePlacesQuery, MePlacesQueryVariables>(MePlacesDocument, baseOptions);
       }
-      
+export function useMePlacesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MePlacesQuery, MePlacesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MePlacesQuery, MePlacesQueryVariables>(MePlacesDocument, baseOptions);
+        }
 export type MePlacesQueryHookResult = ReturnType<typeof useMePlacesQuery>;
+export type MePlacesLazyQueryHookResult = ReturnType<typeof useMePlacesLazyQuery>;
 export type MePlacesQueryResult = ApolloReactCommon.QueryResult<MePlacesQuery, MePlacesQueryVariables>;
 export const MeVisitsDocument = gql`
     query MeVisits($page: Int!, $limit: Int) {
@@ -1468,14 +1742,31 @@ export const MeVisitsDocument = gql`
 }
     ${PageInfoFragmentDoc}`;
 
-    export function useMeVisitsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeVisitsQuery, MeVisitsQueryVariables>) {
-      return ApolloReactHooks.useQuery<MeVisitsQuery, MeVisitsQueryVariables>(MeVisitsDocument, baseOptions);
-    }
-      export function useMeVisitsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeVisitsQuery, MeVisitsQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<MeVisitsQuery, MeVisitsQueryVariables>(MeVisitsDocument, baseOptions);
+/**
+ * __useMeVisitsQuery__
+ *
+ * To run a query within a React component, call `useMeVisitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeVisitsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeVisitsQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useMeVisitsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeVisitsQuery, MeVisitsQueryVariables>) {
+        return ApolloReactHooks.useQuery<MeVisitsQuery, MeVisitsQueryVariables>(MeVisitsDocument, baseOptions);
       }
-      
+export function useMeVisitsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeVisitsQuery, MeVisitsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<MeVisitsQuery, MeVisitsQueryVariables>(MeVisitsDocument, baseOptions);
+        }
 export type MeVisitsQueryHookResult = ReturnType<typeof useMeVisitsQuery>;
+export type MeVisitsLazyQueryHookResult = ReturnType<typeof useMeVisitsLazyQuery>;
 export type MeVisitsQueryResult = ApolloReactCommon.QueryResult<MeVisitsQuery, MeVisitsQueryVariables>;
 export const PlaceDetailsDocument = gql`
     query PlaceDetails($providerId: String!) {
@@ -1485,14 +1776,30 @@ export const PlaceDetailsDocument = gql`
 }
     ${PlaceDetailsFragmentDoc}`;
 
-    export function usePlaceDetailsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PlaceDetailsQuery, PlaceDetailsQueryVariables>) {
-      return ApolloReactHooks.useQuery<PlaceDetailsQuery, PlaceDetailsQueryVariables>(PlaceDetailsDocument, baseOptions);
-    }
-      export function usePlaceDetailsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PlaceDetailsQuery, PlaceDetailsQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<PlaceDetailsQuery, PlaceDetailsQueryVariables>(PlaceDetailsDocument, baseOptions);
+/**
+ * __usePlaceDetailsQuery__
+ *
+ * To run a query within a React component, call `usePlaceDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePlaceDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePlaceDetailsQuery({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *   },
+ * });
+ */
+export function usePlaceDetailsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PlaceDetailsQuery, PlaceDetailsQueryVariables>) {
+        return ApolloReactHooks.useQuery<PlaceDetailsQuery, PlaceDetailsQueryVariables>(PlaceDetailsDocument, baseOptions);
       }
-      
+export function usePlaceDetailsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PlaceDetailsQuery, PlaceDetailsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<PlaceDetailsQuery, PlaceDetailsQueryVariables>(PlaceDetailsDocument, baseOptions);
+        }
 export type PlaceDetailsQueryHookResult = ReturnType<typeof usePlaceDetailsQuery>;
+export type PlaceDetailsLazyQueryHookResult = ReturnType<typeof usePlaceDetailsLazyQuery>;
 export type PlaceDetailsQueryResult = ApolloReactCommon.QueryResult<PlaceDetailsQuery, PlaceDetailsQueryVariables>;
 export const PlaceDocument = gql`
     query Place($providerId: String!, $userId: String) {
@@ -1506,14 +1813,31 @@ export const PlaceDocument = gql`
     ${PlaceFragmentDoc}
 ${VisitFragmentDoc}`;
 
-    export function usePlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PlaceQuery, PlaceQueryVariables>) {
-      return ApolloReactHooks.useQuery<PlaceQuery, PlaceQueryVariables>(PlaceDocument, baseOptions);
-    }
-      export function usePlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PlaceQuery, PlaceQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<PlaceQuery, PlaceQueryVariables>(PlaceDocument, baseOptions);
+/**
+ * __usePlaceQuery__
+ *
+ * To run a query within a React component, call `usePlaceQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePlaceQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePlaceQuery({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function usePlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PlaceQuery, PlaceQueryVariables>) {
+        return ApolloReactHooks.useQuery<PlaceQuery, PlaceQueryVariables>(PlaceDocument, baseOptions);
       }
-      
+export function usePlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PlaceQuery, PlaceQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<PlaceQuery, PlaceQueryVariables>(PlaceDocument, baseOptions);
+        }
 export type PlaceQueryHookResult = ReturnType<typeof usePlaceQuery>;
+export type PlaceLazyQueryHookResult = ReturnType<typeof usePlaceLazyQuery>;
 export type PlaceQueryResult = ApolloReactCommon.QueryResult<PlaceQuery, PlaceQueryVariables>;
 export const PreviewPlaceDocument = gql`
     query PreviewPlace($providerId: String!) {
@@ -1523,14 +1847,30 @@ export const PreviewPlaceDocument = gql`
 }
     ${PlacePreviewFragmentDoc}`;
 
-    export function usePreviewPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PreviewPlaceQuery, PreviewPlaceQueryVariables>) {
-      return ApolloReactHooks.useQuery<PreviewPlaceQuery, PreviewPlaceQueryVariables>(PreviewPlaceDocument, baseOptions);
-    }
-      export function usePreviewPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PreviewPlaceQuery, PreviewPlaceQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<PreviewPlaceQuery, PreviewPlaceQueryVariables>(PreviewPlaceDocument, baseOptions);
+/**
+ * __usePreviewPlaceQuery__
+ *
+ * To run a query within a React component, call `usePreviewPlaceQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePreviewPlaceQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePreviewPlaceQuery({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *   },
+ * });
+ */
+export function usePreviewPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PreviewPlaceQuery, PreviewPlaceQueryVariables>) {
+        return ApolloReactHooks.useQuery<PreviewPlaceQuery, PreviewPlaceQueryVariables>(PreviewPlaceDocument, baseOptions);
       }
-      
+export function usePreviewPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PreviewPlaceQuery, PreviewPlaceQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<PreviewPlaceQuery, PreviewPlaceQueryVariables>(PreviewPlaceDocument, baseOptions);
+        }
 export type PreviewPlaceQueryHookResult = ReturnType<typeof usePreviewPlaceQuery>;
+export type PreviewPlaceLazyQueryHookResult = ReturnType<typeof usePreviewPlaceLazyQuery>;
 export type PreviewPlaceQueryResult = ApolloReactCommon.QueryResult<PreviewPlaceQuery, PreviewPlaceQueryVariables>;
 export const SearchPlaceDocument = gql`
     query SearchPlace($query: String!, $position: PositionInput) {
@@ -1542,14 +1882,31 @@ export const SearchPlaceDocument = gql`
 }
     ${PlaceDetailsBasicFragmentDoc}`;
 
-    export function useSearchPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchPlaceQuery, SearchPlaceQueryVariables>) {
-      return ApolloReactHooks.useQuery<SearchPlaceQuery, SearchPlaceQueryVariables>(SearchPlaceDocument, baseOptions);
-    }
-      export function useSearchPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchPlaceQuery, SearchPlaceQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<SearchPlaceQuery, SearchPlaceQueryVariables>(SearchPlaceDocument, baseOptions);
+/**
+ * __useSearchPlaceQuery__
+ *
+ * To run a query within a React component, call `useSearchPlaceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPlaceQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchPlaceQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      position: // value for 'position'
+ *   },
+ * });
+ */
+export function useSearchPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchPlaceQuery, SearchPlaceQueryVariables>) {
+        return ApolloReactHooks.useQuery<SearchPlaceQuery, SearchPlaceQueryVariables>(SearchPlaceDocument, baseOptions);
       }
-      
+export function useSearchPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchPlaceQuery, SearchPlaceQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SearchPlaceQuery, SearchPlaceQueryVariables>(SearchPlaceDocument, baseOptions);
+        }
 export type SearchPlaceQueryHookResult = ReturnType<typeof useSearchPlaceQuery>;
+export type SearchPlaceLazyQueryHookResult = ReturnType<typeof useSearchPlaceLazyQuery>;
 export type SearchPlaceQueryResult = ApolloReactCommon.QueryResult<SearchPlaceQuery, SearchPlaceQueryVariables>;
 export const VisitDocument = gql`
     query Visit($id: String!) {
@@ -1559,14 +1916,30 @@ export const VisitDocument = gql`
 }
     ${VisitFragmentDoc}`;
 
-    export function useVisitQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<VisitQuery, VisitQueryVariables>) {
-      return ApolloReactHooks.useQuery<VisitQuery, VisitQueryVariables>(VisitDocument, baseOptions);
-    }
-      export function useVisitLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<VisitQuery, VisitQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<VisitQuery, VisitQueryVariables>(VisitDocument, baseOptions);
+/**
+ * __useVisitQuery__
+ *
+ * To run a query within a React component, call `useVisitQuery` and pass it any options that fit your needs.
+ * When your component renders, `useVisitQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVisitQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useVisitQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<VisitQuery, VisitQueryVariables>) {
+        return ApolloReactHooks.useQuery<VisitQuery, VisitQueryVariables>(VisitDocument, baseOptions);
       }
-      
+export function useVisitLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<VisitQuery, VisitQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<VisitQuery, VisitQueryVariables>(VisitDocument, baseOptions);
+        }
 export type VisitQueryHookResult = ReturnType<typeof useVisitQuery>;
+export type VisitLazyQueryHookResult = ReturnType<typeof useVisitLazyQuery>;
 export type VisitQueryResult = ApolloReactCommon.QueryResult<VisitQuery, VisitQueryVariables>;
 export const WantToVisitListDocument = gql`
     query WantToVisitList {
@@ -1576,14 +1949,29 @@ export const WantToVisitListDocument = gql`
 }
     ${PlaceDetailsBasicFragmentDoc}`;
 
-    export function useWantToVisitListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WantToVisitListQuery, WantToVisitListQueryVariables>) {
-      return ApolloReactHooks.useQuery<WantToVisitListQuery, WantToVisitListQueryVariables>(WantToVisitListDocument, baseOptions);
-    }
-      export function useWantToVisitListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<WantToVisitListQuery, WantToVisitListQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<WantToVisitListQuery, WantToVisitListQueryVariables>(WantToVisitListDocument, baseOptions);
+/**
+ * __useWantToVisitListQuery__
+ *
+ * To run a query within a React component, call `useWantToVisitListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWantToVisitListQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWantToVisitListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useWantToVisitListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WantToVisitListQuery, WantToVisitListQueryVariables>) {
+        return ApolloReactHooks.useQuery<WantToVisitListQuery, WantToVisitListQueryVariables>(WantToVisitListDocument, baseOptions);
       }
-      
+export function useWantToVisitListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<WantToVisitListQuery, WantToVisitListQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<WantToVisitListQuery, WantToVisitListQueryVariables>(WantToVisitListDocument, baseOptions);
+        }
 export type WantToVisitListQueryHookResult = ReturnType<typeof useWantToVisitListQuery>;
+export type WantToVisitListLazyQueryHookResult = ReturnType<typeof useWantToVisitListLazyQuery>;
 export type WantToVisitListQueryResult = ApolloReactCommon.QueryResult<WantToVisitListQuery, WantToVisitListQueryVariables>;
 export const WantToVisitPlaceDocument = gql`
     query WantToVisitPlace($providerId: String!) {
@@ -1591,12 +1979,28 @@ export const WantToVisitPlaceDocument = gql`
 }
     `;
 
-    export function useWantToVisitPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>) {
-      return ApolloReactHooks.useQuery<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>(WantToVisitPlaceDocument, baseOptions);
-    }
-      export function useWantToVisitPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>) {
-        return ApolloReactHooks.useLazyQuery<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>(WantToVisitPlaceDocument, baseOptions);
+/**
+ * __useWantToVisitPlaceQuery__
+ *
+ * To run a query within a React component, call `useWantToVisitPlaceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWantToVisitPlaceQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWantToVisitPlaceQuery({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *   },
+ * });
+ */
+export function useWantToVisitPlaceQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>) {
+        return ApolloReactHooks.useQuery<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>(WantToVisitPlaceDocument, baseOptions);
       }
-      
+export function useWantToVisitPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>(WantToVisitPlaceDocument, baseOptions);
+        }
 export type WantToVisitPlaceQueryHookResult = ReturnType<typeof useWantToVisitPlaceQuery>;
+export type WantToVisitPlaceLazyQueryHookResult = ReturnType<typeof useWantToVisitPlaceLazyQuery>;
 export type WantToVisitPlaceQueryResult = ApolloReactCommon.QueryResult<WantToVisitPlaceQuery, WantToVisitPlaceQueryVariables>;

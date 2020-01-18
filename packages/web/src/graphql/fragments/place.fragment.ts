@@ -11,7 +11,7 @@ export default gql`
     averageScore
     visitCount
     tags {
-      ...PlaceTag
+      ...Tag
     }
     details {
       ...PlaceDetails
@@ -25,7 +25,7 @@ export default gql`
     createdAt
     updatedAt
   }
-  ${fragments.placeTag}
+  ${fragments.tag}
   ${fragments.placeDetails}
   ${fragments.user}
 `;

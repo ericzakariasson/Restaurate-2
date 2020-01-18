@@ -2,7 +2,6 @@ export { default as place } from './place.fragment';
 export { default as placePreview } from './place.preview.fragment';
 export { default as placeDetailsBasic } from './place.detailsBasic.fragment';
 export { default as placeDetails } from './place.details.fragment';
-export { default as placeTag } from './placeTag.fragment';
 export { default as user } from './user.fragment';
 export { default as visit } from './visit.fragment';
 export { default as visitOrder } from './visitOrder.fragment';

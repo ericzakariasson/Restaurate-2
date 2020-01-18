@@ -226,7 +226,6 @@ export const NavButton = ({
   variant,
   margin,
   size = 'large',
-  disabled = false,
   type = 'button',
   color = 'primary'
 }: NavButtonProps) => (
@@ -235,7 +234,6 @@ export const NavButton = ({
     to={to}
     type={type}
     size={size}
-    disabled={disabled}
     variant={variant}
     color={color}
     margin={margin}

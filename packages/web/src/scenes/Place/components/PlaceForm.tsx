@@ -1,4 +1,4 @@
-import { PlaceTagFragment, PlaceType, PriceLevel } from 'graphql/types';
+import { PlaceType, PriceLevel, Tag } from 'graphql/types';
 import * as React from 'react';
 import styled from 'styled-components';
 import { Comment } from './Comment';
@@ -14,7 +14,7 @@ interface PlaceFormProps {
   providerId: string;
   types?: PlaceType[] | null;
   priceLevel: PriceLevel;
-  tags: PlaceTagFragment[];
+  tags: Tag[];
   comment?: string | null;
 }
 

@@ -1,15 +1,14 @@
+import { useInfiniteScroll } from 'hooks';
 import * as React from 'react';
 import styled from 'styled-components';
-import { Page, Loading } from '../../components';
+import { Loading, Page } from '../../components';
 import { NoResult } from '../../components/NoResult';
 import { SkeletonCards } from '../../components/Skeleton';
 import { useMePlacesQuery, useMeQuery } from '../../graphql/types';
 import { myPlaceRoute } from '../../routes';
 import { GeneralError } from '../Error/GeneralError';
 import { PlaceListItem } from './component/PlaceListItem';
-import { Filter } from 'components/Filter/Filter';
 import { updateQuery } from './updateQuery';
-import { useInfiniteScroll } from 'hooks';
 
 const PlaceList = styled.ul`
   list-style: none;
