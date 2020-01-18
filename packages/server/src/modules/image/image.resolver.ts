@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from 'cloudinary';
+import * as cloudinary from 'cloudinary';
 import { format } from 'date-fns';
 import { Arg, Authorized, Mutation, Resolver, Ctx } from 'type-graphql';
 import { Service } from 'typedi';
@@ -27,7 +27,7 @@ export class ImageResolver {
 
       const timestamp = Math.round(Date.now() / 1000);
 
-      const apiUrl = cloudinary.utils.api_url('upload', {
+      const apiUrl: string = await cloudinary.v2.utils.api_url('upload', {
         resource_type: 'auto'
       });
 
@@ -37,7 +37,7 @@ export class ImageResolver {
         placeDetails.name
       )}-${slugify(placeDetails.location.address.city)}-${data.type}-${id}`;
 
-      const query = cloudinary.utils.sign_request({
+      const query = cloudinary.v2.utils.sign_request({
         public_id: publicId,
         tags: data.tags.join(','),
         timestamp,

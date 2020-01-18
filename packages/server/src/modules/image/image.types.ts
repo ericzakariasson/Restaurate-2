@@ -2,9 +2,8 @@ import { Field, InputType, ObjectType, registerEnumType } from 'type-graphql';
 
 @ObjectType()
 export class SignImageData {
-  constructor({ apiUrl, query }: SignImageData) {
-    this.apiUrl = apiUrl;
-    this.query = query;
+  constructor(initializer: SignImageData) {
+    Object.assign(this, initializer);
   }
 
   @Field()
