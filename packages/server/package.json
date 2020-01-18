@@ -1,7 +1,7 @@
 {
   "name": "@restaurate/server",
   "version": "0.0.1",
-  "description": "Awesome project developed with TypeORM.",
+  "description": "Server for restaurate",
   "private": true,
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -39,7 +39,6 @@
     "express-session": "^1.16.1",
     "helmet": "^3.21.1",
     "ioredis": "^4.14.1",
-    "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
     "pg": "^7.3.0",
     "qs": "^6.7.0",
@@ -50,8 +49,7 @@
     "typeorm": "0.2.21",
     "typeorm-typedi-extensions": "^0.2.3",
     "uuid": "^3.3.3",
-    "winston": "^3.2.1",
-    "winston-daily-rotate-file": "^4.1.0"
+    "winston": "^3.2.1"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
