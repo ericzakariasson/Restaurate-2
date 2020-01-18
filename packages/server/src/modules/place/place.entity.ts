@@ -53,7 +53,7 @@ export class Place {
   @Column({ nullable: true })
   comment: string;
 
-  @Field(() => [Tag])
+  @Field(() => [Tag], { defaultValue: [] })
   @ManyToMany(
     () => Tag,
     tag => tag.place

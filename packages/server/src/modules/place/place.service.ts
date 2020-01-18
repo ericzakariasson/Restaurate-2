@@ -142,7 +142,7 @@ export class PlaceService {
   }
 
   async setTags(place: Place, tagNames: string[], user: User) {
-    place.tags = place.tags.filter(tag => tagNames.includes(tag.name));
+    place.tags = (place.tags || []).filter(tag => tagNames.includes(tag.name));
 
     const newTagNames = tagNames.filter(
       tagName => !place.tags.some(tag => tag.name === tagName)
