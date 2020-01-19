@@ -37,7 +37,10 @@ export class VisitImage {
   @Column()
   url: string;
 
-  @ManyToOne(() => Visit, visit => visit.images)
+  @ManyToOne(
+    () => Visit,
+    visit => visit.images
+  )
   visit: Visit;
   @RelationColumn()
   visitId: number;
@@ -47,7 +50,7 @@ export class VisitImage {
   @RelationColumn()
   userId: number;
 
-  @Field(() => [Order])
+  @Field(() => [Order], { nullable: true })
   @ManyToMany(() => Order, { eager: true })
   @JoinTable()
   orders: Order[];

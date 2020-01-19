@@ -479,7 +479,7 @@ export type VisitImage = {
   placeProviderId: Scalars['String'],
   publicId: Scalars['String'],
   url: Scalars['String'],
-  orders: Array<Order>,
+  orders?: Maybe<Array<Order>>,
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
 };
@@ -627,10 +627,10 @@ export type VisitFragment = (
 export type VisitImageFragment = (
   { __typename?: 'VisitImage' }
   & Pick<VisitImage, 'id' | 'url' | 'publicId'>
-  & { orders: Array<(
+  & { orders: Maybe<Array<(
     { __typename?: 'Order' }
     & Pick<Order, 'id' | 'title'>
-  )> }
+  )>> }
 );
 
 export type VisitOrderFragment = (

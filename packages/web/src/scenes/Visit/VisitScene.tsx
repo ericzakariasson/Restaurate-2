@@ -117,7 +117,7 @@ const sortRatings = (a: Rate, b: Rate) => {
 };
 
 export const VisitScene = () => {
-  const { id = '' } = useParams();
+  const { id } = useParams();
 
   const [getVisit, { data, loading, error }] = useVisitLazyQuery();
 
@@ -127,6 +127,10 @@ export const VisitScene = () => {
     }
   }, [id, getVisit]);
 
+  if (!id) {
+    return null;
+  }
+
   if (loading) {
     return <Loading />;
   }
@@ -135,27 +139,17 @@ export const VisitScene = () => {
     return <GeneralError />;
   }
 
-  const visit = data && data.visit;
-  const {
-    place,
-    visitDate,
-    orders,
-    comment,
-    ratings,
-    images,
-    score,
-    private: isPrivate,
-    takeAway
-  } = visit!;
-
   return (
-    <Page title={place.details.name} subTitle={formatDate(visitDate)}>
-      {isPrivate && <Private>Privat</Private>}
+    <Page
+      title={data?.visit?.place.details.name ?? '–'}
+      subTitle={formatDate(data?.visit?.visitDate)}
+    >
+      {data?.visit?.private && <Private>Privat</Private>}
       <Block>
         <Label text="Beställningar" />
-        {orders && orders.length > 0 ? (
+        {(data?.visit?.orders.length ?? 0) > 0 ? (
           <OrderList>
-            {orders.map(order => (
+            {data?.visit?.orders.map(order => (
               <OrderItem key={order.id}>
                 <OrderTitle>– {order.title}</OrderTitle>
               </OrderItem>
@@ -168,7 +162,7 @@ export const VisitScene = () => {
       <Block>
         <Label text="Betyg" />
         <Ratings>
-          {[...ratings].sort(sortRatings).map(rate => {
+          {[...(data?.visit?.ratings || [])].sort(sortRatings).map(rate => {
             return (
               <Rating key={rate.name}>
                 <RatingWrapper>
@@ -193,15 +187,15 @@ export const VisitScene = () => {
             );
           })}
         </Ratings>
-        <Score score={score} />
+        <Score score={data?.visit?.score} />
       </Block>
       <Block>
         <Label text="Bilder" />
         <Images>
           <ImageList>
-            {images.map(image => (
+            {data?.visit?.images.map(image => (
               <li>
-                {image.orders.join(', ')}
+                {image.orders && image.orders.join(', ')}
                 <Image key={image.id} publicId={image.publicId} />
               </li>
             ))}
@@ -210,11 +204,11 @@ export const VisitScene = () => {
       </Block>
       <Block>
         <Label text="Kommentar" />
-        <Comment>{comment || '–'}</Comment>
+        <Comment>{data?.visit?.comment || '–'}</Comment>
       </Block>
       <Block>
         <Label text="Övrigt" />
-        {takeAway ? (
+        {data?.visit?.takeAway ? (
           <OrderList>
             <OrderItem>
               <OrderTitle>– Take away</OrderTitle>
@@ -224,14 +218,16 @@ export const VisitScene = () => {
           '–'
         )}
       </Block>
-      <NavButton
-        variant="secondary"
-        color="white"
-        to={myPlaceRoute({ providerId: place.providerId })}
-        text={`${place.details.name}`}
-        size="large"
-        margin={['bottom']}
-      />
+      {data?.visit?.place.providerId && (
+        <NavButton
+          variant="secondary"
+          color="white"
+          to={myPlaceRoute({ providerId: data.visit.place.providerId })}
+          text={`${data.visit.place.details.name}`}
+          size="large"
+          margin={['bottom']}
+        />
+      )}
       <NavButton
         onClick={() => trackEvent({ category: 'Form', action: 'Edit Visit' })}
         text="Redigera"

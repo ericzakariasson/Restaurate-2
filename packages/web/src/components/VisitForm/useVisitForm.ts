@@ -109,7 +109,7 @@ export function useVisitForm(
       setIsTakeAway(initialValues.takeAway);
       setPreviewImages(
         initialValues.images.map(image => ({
-          orders: image.orders.map(order => order.title),
+          orders: image.orders?.map(order => order.title) ?? [],
           src: image.url,
           publicId: image.publicId,
           name: image.publicId

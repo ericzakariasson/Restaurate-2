@@ -6,5 +6,6 @@ export class VisitImageRepository extends Repository<VisitImage> {
   findByVisitId = (visitId: number): Promise<VisitImage[]> =>
     this.createQueryBuilder('visitImage')
       .where('visitImage.visitId = :visitId', { visitId })
+      .leftJoin('visitImage.orders', 'order')
       .getMany();
 }
