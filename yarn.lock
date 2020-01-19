@@ -2211,6 +2211,11 @@
     npmlog "^4.1.2"
     whatwg-url "^7.0.0"
 
+"@lerna/global-options@^3.13.0":
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/@lerna/global-options/-/global-options-3.13.0.tgz#217662290db06ad9cf2c49d8e3100ee28eaebae1"
+  integrity sha512-SlZvh1gVRRzYLVluz9fryY1nJpZ0FHDGB66U9tFfvnnxmueckRQxLopn3tXj3NU1kc3QANT2I5BsQkOqZ4TEFQ==
+
 "@lerna/has-npm-version@3.16.5":
   version "3.16.5"
   resolved "https://registry.yarnpkg.com/@lerna/has-npm-version/-/has-npm-version-3.16.5.tgz#ab83956f211d8923ea6afe9b979b38cc73b15326"
