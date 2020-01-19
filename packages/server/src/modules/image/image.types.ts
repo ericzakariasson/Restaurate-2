@@ -33,7 +33,9 @@ export class SignImagesInput {
 
 export enum ImageType {
   Visit = 'VISIT',
-  Place = 'PLACE'
+  Place = 'PLACE',
+  VisitDev = 'VISIT-DEV',
+  PlaceDev = 'PLACE-DEV'
 }
 
 registerEnumType(ImageType, {

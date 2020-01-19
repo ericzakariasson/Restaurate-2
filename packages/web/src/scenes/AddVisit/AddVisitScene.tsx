@@ -74,7 +74,10 @@ export const AddVisitScene = ({
       variables: {
         data: {
           images: values.previewImages.map(preview => ({
-            type: ImageType.Visit,
+            type:
+              process.env.NODE_ENV === 'production'
+                ? ImageType.Visit
+                : ImageType.VisitDev,
             tags: preview.orders,
             placeProviderId: providerId
           }))

@@ -78,7 +78,9 @@ export type FilterTag = {
 
 export enum ImageType {
   Visit = 'Visit',
-  Place = 'Place'
+  Place = 'Place',
+  VisitDev = 'VisitDev',
+  PlaceDev = 'PlaceDev'
 }
 
 export type IPosition = {

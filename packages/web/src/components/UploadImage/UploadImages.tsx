@@ -104,7 +104,7 @@ export const UploadImages = ({
         title:
           excludedImages === 1
             ? '1 bild var för stor'
-            : `${excludedImages} bild var för stora`,
+            : `${excludedImages} bilder var för stora`,
         level: 'warning'
       });
     }
