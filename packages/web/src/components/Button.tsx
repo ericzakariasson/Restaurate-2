@@ -85,6 +85,7 @@ const BaseButton = styled.button<StyledProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 500;
 `;
 
 const StyledTextButton = styled(BaseButton)<StyledTextButtonProps>`

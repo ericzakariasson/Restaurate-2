@@ -38,7 +38,7 @@ const Link = styled(NavLink)`
   display: block;
   text-decoration: none;
   color: #222;
-  font-size: ${p => p.theme.fontSize.large};
+  font-size: ${p => p.theme.fontSize.normal};
   padding: 8px 16px;
   font-weight: 700;
   white-space: nowrap;

@@ -37,8 +37,8 @@ export type Size =
 export const theme = {
   transition: '0.15s ease-in-out',
   page: {
-    padding: '30px 20px',
-    sidePadding: '20px',
+    padding: '24px 16px',
+    sidePadding: '16px',
     maxWidth: '960px'
   },
   colors: {

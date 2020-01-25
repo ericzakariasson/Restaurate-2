@@ -38,8 +38,9 @@ interface TitleProps {
 
 const Title = styled.h1<TitleProps>`
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
   transition: ${p => p.theme.transition};
+  color: ${p => p.theme.colors.black.default};
 `;
 
 const SubTitle = styled.p`

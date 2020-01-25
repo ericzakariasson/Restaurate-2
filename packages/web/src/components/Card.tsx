@@ -18,7 +18,6 @@ export const Card = styled.div`
 const NeutralLink = styled(Link)`
   display: flex;
   justify-content: space-between;
-  align-items: center;
   text-decoration: none;
   color: #222;
 `;
@@ -105,38 +104,17 @@ export const CardWithScore = ({
 );
 
 const ScoreText = styled.h4`
-  font-size: 2.4rem;
-  font-weight: 400;
+  font-size: 2rem;
+  font-weight: 500;
   white-space: pre;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.125rem;
+  color: ${p => p.theme.colors.black.default};
 `;
-
-const ScoreCharacter = styled.span`
-  display: inline-block;
-
-  &:nth-child(1) {
-    width: 24px;
-    text-align: right;
-  }
-
-  &:nth-child(2) {
-    width: 7px;
-  }
-
-  &:nth-child(3) {
-    width: 24px;
-  }
-`;
-
 interface ScoreProps {
   score?: number | null;
 }
 
 export const Score = ({ score }: ScoreProps) => (
-  <ScoreText>
-    {score
-      ? formatScore(score)
-          .split('')
-          .map((c, i) => <ScoreCharacter key={i}>{c}</ScoreCharacter>)
-      : '–'}
-  </ScoreText>
+  <ScoreText>{formatScore(score)}</ScoreText>
 );
