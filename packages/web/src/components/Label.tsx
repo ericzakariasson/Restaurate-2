@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Size } from 'style';
+import { Size } from 'style/theme';
 
 interface LabelProps {
   text: string;
@@ -25,7 +25,6 @@ const Normal = styled.label<LabelStyleProps>`
   text-transform: uppercase;
   letter-spacing: 0.1rem;
   margin-bottom: ${p => (p.noMargin ? 0 : '5px')};
-  font-family: ${p => p.theme.fonts.monospace};
 `;
 
 export const Label = ({

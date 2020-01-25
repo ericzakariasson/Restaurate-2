@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Size } from 'style';
+import { Size } from 'style/theme';
 import { Loader } from 'react-feather';
 
 type Type = 'submit' | 'reset' | 'button';

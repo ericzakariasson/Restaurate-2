@@ -30,8 +30,10 @@ import {
   WantToVisitScene,
   ConfirmationSentScene
 } from './scenes';
-import { GlobalStyle, theme } from './style';
+import { GlobalStyle, theme } from './style/theme';
 import { CloudinaryContext } from 'cloudinary-react';
+
+import './style/inter.css';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -54,10 +56,6 @@ const App = () => {
         <meta
           name="description"
           content="Betygsätt dina restaurang- och cafébesök"
-        />
-        <link
-          href="https://fonts.googleapis.com/css?family=Karla:400,700|Overpass+Mono:400,600&display=swap"
-          rel="stylesheet"
         />
       </Helmet>
       <Navigation />

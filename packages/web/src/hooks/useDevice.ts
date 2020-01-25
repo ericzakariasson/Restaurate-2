@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { devices } from 'style';
+import { devices } from 'style/theme';
 
 const isMobileBrowser = () =>
   typeof window.orientation !== 'undefined' ||

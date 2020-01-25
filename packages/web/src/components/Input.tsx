@@ -3,7 +3,7 @@ import { FieldProps } from 'formik';
 import styled from 'styled-components';
 
 import { Label } from './Label';
-import { Size } from 'style';
+import { Size } from 'style/theme';
 
 type Padding = { [key in Size | string]: string };
 

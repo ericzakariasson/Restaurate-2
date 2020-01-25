@@ -5,7 +5,7 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -144,8 +144,7 @@ export const theme = {
     }
   },
   fonts: {
-    default: 'Karla, sans-serif',
-    monospace: '"Overpass Mono", monospace'
+    default: 'Karla, sans-serif'
   },
   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.08)',
   fontSize: {

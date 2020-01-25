@@ -48,7 +48,6 @@ interface LabelProps {
 }
 
 const Label = styled.span<LabelProps>`
-  font-family: ${p => p.theme.fonts.monospace};
   text-transform: uppercase;
   color: #666;
   margin-bottom: -5px; /* Compensate for monospace */
