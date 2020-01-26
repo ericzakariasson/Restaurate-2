@@ -146,7 +146,8 @@ export const theme = {
   fonts: {
     default: 'Karla, sans-serif'
   },
-  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.08)',
+  boxShadow:
+    '0px 2px 4px rgba(0, 0, 0, 0.08), 0px 4px 16px rgba(0, 0, 0, 0.06);',
   fontSize: {
     xxsmall: '0.625rem',
     xsmall: '0.75rem',

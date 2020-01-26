@@ -13,7 +13,6 @@ const PageWrapper = styled.section<PageWrapperProps>`
   padding: ${p => p.theme.page.padding};
   display: flex;
   flex-direction: column;
-  background: #fefefe;
   ${p =>
     p.center &&
     css`

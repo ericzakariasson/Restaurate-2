@@ -1,13 +1,13 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Tag } from 'graphql/types';
 import { Score } from 'components/Card';
+import { PlaceInfo } from 'components/PlaceInfo';
 
 export const Card = styled.div`
   padding: 1rem;
   background: #fefefe;
-  border: 1px solid #eee;
   box-shadow: ${p => p.theme.boxShadow};
   border-radius: 0.5rem;
 
@@ -26,18 +26,7 @@ const NeutralLink = styled(Link)`
 const Place = styled.div`
   margin-right: 15px;
   min-width: 0;
-`;
-
-const Name = styled.h3`
-  font-size: ${p => p.theme.fontSize.large};
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-`;
-
-const Address = styled.p`
-  font-weight: 400;
-  color: ${p => p.theme.colors.black.default};
-  font-size: ${p => p.theme.fontSize.small};
+  flex: 1;
 `;
 
 const Numbers = styled.div`
@@ -57,11 +46,45 @@ const VisitCount = styled.h5`
   text-align: right;
 `;
 
-const TagList = styled.ul`
+interface TagListProps {
+  extra: number;
+}
+
+const TagList = styled.ul<TagListProps>`
   list-style: none;
   display: flex;
   margin-top: 0.5rem;
   align-items: center;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 2rem;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(255, 255, 255, 1) 100%
+    );
+  }
+  ${p =>
+    p.extra > 0 &&
+    css`
+    &::before {
+      content: "+${p.extra}";
+      position: absolute;
+      right: 0;
+      z-index: 1;
+      font-size: ${p.theme.fontSize.small};
+      font-weight: 700;
+    }
+  
+  `}
 `;
 
 const TagItem = styled.li`
@@ -80,11 +103,7 @@ const TagItem = styled.li`
   }
 `;
 
-const TagCount = styled.span`
-  font-weight: 600;
-  font-size: 0.75rem;
-  color: ${p => p.theme.colors.black.default};
-`;
+const TAG_LIMIT = 3;
 
 interface PlaceListItemProps {
   name: string;
@@ -106,13 +125,11 @@ export const PlaceListItem = ({
   <Card>
     <NeutralLink to={to}>
       <Place>
-        <Name>{name}</Name>
-        <Address>{address}</Address>
-        <TagList>
-          {tags.slice(0, 3).map(t => (
+        <PlaceInfo name={name} address={address} />
+        <TagList extra={tags.length - TAG_LIMIT}>
+          {tags.slice(0, TAG_LIMIT).map(t => (
             <TagItem key={t.id}>{t.name}</TagItem>
           ))}
-          {tags.length > 3 && <TagCount>+{tags.length - 3}</TagCount>}
         </TagList>
       </Place>
       <ScoreArea>

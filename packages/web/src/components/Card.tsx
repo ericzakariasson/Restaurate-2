@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { formatScore } from 'utils/format';
+import { PlaceInfo } from './PlaceInfo';
 
 export const Card = styled.div`
   padding: 15px;
   background: #fefefe;
-  border: 1px solid #eee;
   box-shadow: ${p => p.theme.boxShadow};
   border-radius: 8px;
 
@@ -24,17 +24,6 @@ const NeutralLink = styled(Link)`
 
 const Place = styled.div`
   margin-right: 10px;
-`;
-
-const Name = styled.h3`
-  font-size: ${p => p.theme.fontSize.large};
-  margin-bottom: 3px;
-`;
-
-const Address = styled.p`
-  font-weight: 600;
-  color: #aaa;
-  font-size: ${p => p.theme.fontSize.small};
 `;
 
 const Numbers = styled.div`
@@ -89,8 +78,7 @@ export const CardWithScore = ({
   <Card as={as}>
     <NeutralLink to={to}>
       <Place>
-        <Name>{name}</Name>
-        <Address>{address}</Address>
+        <PlaceInfo name={name} address={address} />
       </Place>
       <ScoreArea>
         <Numbers>
