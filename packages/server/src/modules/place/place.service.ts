@@ -54,12 +54,18 @@ export class PlaceService {
       placeDetailsKey(providerId)
     );
 
+    console.log('cached', cached);
+
     if (cached) {
       return cached;
     }
 
     const data = await this.hereService.details(providerId);
     const placeDetails = transformProviderDetails(data);
+
+    if (!placeDetails) {
+      return null;
+    }
 
     const success = await this.cacheService.setJSON(
       placeDetailsKey(providerId),
@@ -110,16 +116,16 @@ export class PlaceService {
     });
   }
 
-  async getWantToVisitList(userId: number) {
+  async getWantToVisitList(userId: number): Promise<PlaceDetails[]> {
     const wantToVisit = await this.wtvService.getAllByUser(userId);
 
-    const places = Promise.all(
+    const places = await Promise.all(
       wantToVisit.map(
         async wtv => await this.getPlaceDetails(wtv.placeProviderId)
       )
     );
 
-    return places;
+    return places.filter(Boolean) as PlaceDetails[];
   }
 
   getPlacesByUserId = (

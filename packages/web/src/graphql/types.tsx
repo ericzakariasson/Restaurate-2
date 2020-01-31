@@ -252,7 +252,7 @@ export type Place = {
   updatedAt?: Maybe<Scalars['DateTime']>,
   visitCount: Scalars['Float'],
   averageScore?: Maybe<Scalars['Float']>,
-  details: PlaceDetails,
+  details?: Maybe<PlaceDetails>,
   hasVisited: Scalars['Boolean'],
   wantToVisit: Scalars['Boolean'],
 };
@@ -575,10 +575,10 @@ export type PlaceFragment = (
   & { tags: Array<(
     { __typename?: 'Tag' }
     & TagFragment
-  )>, details: (
+  )>, details: Maybe<(
     { __typename?: 'PlaceDetails' }
     & PlaceDetailsFragment
-  ), user: Maybe<(
+  )>, user: Maybe<(
     { __typename?: 'User' }
     & UserFragment
   )> }
@@ -834,7 +834,7 @@ export type MePlacesQuery = (
     ), data: Array<(
       { __typename?: 'Place' }
       & Pick<Place, 'id' | 'providerId' | 'averageScore' | 'visitCount'>
-      & { details: (
+      & { details: Maybe<(
         { __typename?: 'PlaceDetails' }
         & Pick<PlaceDetails, 'name'>
         & { location: (
@@ -844,7 +844,7 @@ export type MePlacesQuery = (
             & Pick<Address, 'formatted'>
           ) }
         ) }
-      ), tags: Array<(
+      )>, tags: Array<(
         { __typename?: 'Tag' }
         & TagFragment
       )> }
@@ -867,11 +867,17 @@ export type MeVisitsQuery = (
       & PageInfoFragment
     ), data: Array<(
       { __typename?: 'Visit' }
-      & Pick<Visit, 'id' | 'score' | 'visitDate' | 'createdAt' | 'updatedAt'>
-      & { place: (
+      & Pick<Visit, 'id' | 'score' | 'visitDate' | 'comment' | 'createdAt' | 'updatedAt'>
+      & { orders: Array<(
+        { __typename?: 'Order' }
+        & VisitOrderFragment
+      )>, images: Array<(
+        { __typename?: 'VisitImage' }
+        & Pick<VisitImage, 'id'>
+      )>, place: (
         { __typename?: 'Place' }
         & Pick<Place, 'id' | 'providerId'>
-        & { details: (
+        & { details: Maybe<(
           { __typename?: 'PlaceDetails' }
           & Pick<PlaceDetails, 'providerId' | 'name'>
           & { location: (
@@ -881,7 +887,7 @@ export type MeVisitsQuery = (
               & Pick<Address, 'formatted'>
             ) }
           ) }
-        ) }
+        )> }
       ) }
     )> }
   ) }
@@ -1724,6 +1730,13 @@ export const MeVisitsDocument = gql`
       id
       score
       visitDate
+      orders {
+        ...VisitOrder
+      }
+      images {
+        id
+      }
+      comment
       place {
         id
         providerId
@@ -1742,7 +1755,8 @@ export const MeVisitsDocument = gql`
     }
   }
 }
-    ${PageInfoFragmentDoc}`;
+    ${PageInfoFragmentDoc}
+${VisitOrderFragmentDoc}`;
 
 /**
  * __useMeVisitsQuery__

@@ -97,8 +97,14 @@ const transformOpeningHours = (providerOpeningHours: HereOpeningHours) => {
   return openingHours;
 };
 
-export const transformProviderDetails = (item: HerePlaceDetails) => {
+export const transformProviderDetails = (item: HerePlaceDetails | null) => {
   const details = new PlaceDetails();
+
+  console.log('item', item);
+
+  if (!item) {
+    return null;
+  }
 
   details.providerId = item.placeId;
   details.name = item.name;
@@ -114,8 +120,12 @@ export const transformProviderDetails = (item: HerePlaceDetails) => {
 };
 
 export const transformToBasicDetails = (userPlaces: Place[]) => (
-  details: PlaceDetails
+  details: PlaceDetails | null
 ) => {
+  if (!details) {
+    return null;
+  }
+
   const samePlace = userPlaces.find(
     place => place.providerId === details.providerId
   );
@@ -126,14 +136,8 @@ export const transformToBasicDetails = (userPlaces: Place[]) => (
   basicDetails.name = details.name;
   basicDetails.providerId = details.providerId;
   basicDetails.position = details.location.position;
-
   basicDetails.hasPlace = Boolean(samePlace);
-
-  basicDetails.visits = samePlace
-    ? samePlace.visits
-      ? samePlace.visits.length
-      : 0
-    : 0;
+  basicDetails.visits = samePlace?.visits.length ?? 0;
 
   return basicDetails;
 };

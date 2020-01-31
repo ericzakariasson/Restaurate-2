@@ -108,8 +108,8 @@ export const TextButton = ({
 const StyledButton = styled(BaseButton)<StyledButtonProps>`
   color: #222;
   width: 100%;
-  font-weight: 700;
-  border: 1px solid;
+  font-weight: 600;
+  border: none;
   box-shadow: ${p => p.theme.boxShadow};
   transition: ${p => p.theme.transition} background;
 
@@ -121,7 +121,6 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
     p.variant === 'primary' &&
     css`
       background-color: ${p.theme.colors[p.color].hues[0]};
-      border-color: ${p.theme.colors[p.color].hues[0]};
     `}
 
     ${p =>

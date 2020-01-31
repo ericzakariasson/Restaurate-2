@@ -11,6 +11,13 @@ export default gql`
         id
         score
         visitDate
+        orders {
+          ...VisitOrder
+        }
+        images {
+          id
+        }
+        comment
         place {
           id
           providerId
@@ -29,5 +36,6 @@ export default gql`
       }
     }
   }
+  ${fragments.visitOrder}
   ${fragments.pageInfo}
 `;

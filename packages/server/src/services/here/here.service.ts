@@ -11,6 +11,7 @@ import { logger } from '../../utils/logger';
 
 const getGeolocationHeader = ({ lat, lng }: Coordinates) => `geo:${lat},${lng}`;
 
+// Gothenburg, should you IP location instead
 const FALLBACK_COORDINATES: Coordinates = {
   lat: 57.7087,
   lng: 11.9751
@@ -62,6 +63,7 @@ class HereRepository {
 
     if (response.status !== 200) {
       logger.error('HERE response error', response.statusText);
+      return null;
     }
 
     const json: T = await response.json();
@@ -94,10 +96,10 @@ export class HereService {
       }
     );
 
-    return data.results ? data.results.items : [];
+    return data?.results.items ?? [];
   }
 
-  public async details(id: string): Promise<HerePlaceDetails> {
+  public async details(id: string): Promise<HerePlaceDetails | null> {
     return this.repository.fetch<HerePlaceDetails>('places/lookup', {
       source: 'sharing',
       id

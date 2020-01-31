@@ -141,7 +141,7 @@ export const VisitScene = () => {
 
   return (
     <Page
-      title={data?.visit?.place.details.name ?? '–'}
+      title={data?.visit?.place?.details?.name ?? '–'}
       subTitle={formatDate(data?.visit?.visitDate)}
     >
       {data?.visit?.private && <Private>Privat</Private>}
@@ -223,7 +223,7 @@ export const VisitScene = () => {
           variant="secondary"
           color="white"
           to={myPlaceRoute({ providerId: data.visit.place.providerId })}
-          text={`${data.visit.place.details.name}`}
+          text={data.visit.place.details?.name ?? '—'}
           size="large"
           margin={['bottom']}
         />

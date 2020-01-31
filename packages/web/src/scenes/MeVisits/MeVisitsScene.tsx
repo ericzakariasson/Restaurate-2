@@ -5,7 +5,7 @@ import { NoResult } from 'components/NoResult';
 import { groupVisitsByDay } from 'utils/groupVisitsByDay';
 import { VisitGroup } from 'components/VisitGroup';
 import { GeneralError } from '../Error/GeneralError';
-import { useMeVisitsQuery, VisitFragment, useMeQuery } from 'graphql/types';
+import { useMeVisitsQuery, Visit, useMeQuery } from 'graphql/types';
 import { SkeletonCards } from 'components/Skeleton';
 import { updateQuery } from './updateQuery';
 
@@ -51,9 +51,7 @@ export const MeVisitsScene = () => {
   }
 
   const visitCount = meData?.me?.visitCount;
-  const groupedVisits = groupVisitsByDay(
-    (data?.visits.data ?? []) as VisitFragment[]
-  );
+  const groupedVisits = groupVisitsByDay((data?.visits.data ?? []) as Visit[]);
 
   return (
     <Page
@@ -65,7 +63,7 @@ export const MeVisitsScene = () => {
       ) : (
         Object.entries(
           groupedVisits
-        ).map(([date, visits]: [string, VisitFragment[]]) => (
+        ).map(([date, visits]: [string, Visit[]]) => (
           <VisitGroup key={date} date={new Date(date)} visits={visits} />
         ))
       )}

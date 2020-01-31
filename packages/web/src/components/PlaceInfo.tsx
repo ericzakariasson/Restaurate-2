@@ -14,15 +14,15 @@ const Address = styled.p`
 `;
 
 interface PlaceInfoProps {
-  name: string;
-  address: string;
+  name: string | undefined;
+  address: string | undefined;
 }
 
 export const PlaceInfo: React.FC<PlaceInfoProps> = ({ name, address }) => {
   return (
     <>
-      <Name>{name}</Name>
-      <Address>{address}</Address>
+      <Name>{name ?? '–'}</Name>
+      <Address>{address ?? '–'}</Address>
     </>
   );
 };

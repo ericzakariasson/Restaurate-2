@@ -23,14 +23,14 @@ const List = styled.ul`
   list-style: none;
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 0.5rem;
 `;
 
 const Item = styled.li`
-  padding: 10px 0;
+  padding: 0.5rem 0;
 
   &:not(:last-of-type) {
-    margin-right: 5px;
+    margin-right: 0.5rem;
   }
 `;
 
@@ -39,11 +39,12 @@ const Link = styled(NavLink)`
   text-decoration: none;
   color: #222;
   font-size: ${p => p.theme.fontSize.normal};
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   font-weight: 700;
   white-space: nowrap;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   transition: ${p => p.theme.transition};
+  font-weight: 600;
 
   &.active {
     background: #eee;

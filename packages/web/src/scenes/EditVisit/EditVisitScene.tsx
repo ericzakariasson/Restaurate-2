@@ -167,7 +167,7 @@ export const EditVisitScene = ({
 
   return (
     <Page
-      title={`Redigerar: ${place.details.name}`}
+      title={`Redigerar: ${place.details?.name ?? '–'}`}
       subTitle={formatDate(visitDate)}
     >
       <Helmet>

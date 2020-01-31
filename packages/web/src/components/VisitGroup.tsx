@@ -1,18 +1,17 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { CardWithScore } from '.';
-import { VisitFragment } from '../graphql/types';
-import { visitRoute } from '../routes';
+import { Visit } from '../graphql/types';
 import { formatDate } from '../utils/format';
+import { VisitCard } from './VisitCard';
 
 const Group = styled.article`
   &:not(:last-of-type) {
-    margin-bottom: 40px;
+    margin-bottom: 3rem;
   }
 `;
 
 const Label = styled.h3`
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   font-weight: 400;
   font-size: ${p => p.theme.fontSize.large};
   color: #666;
@@ -30,10 +29,10 @@ const VisitCount = styled.span`
 
 interface VisitGroupProps {
   date: Date;
-  visits: VisitFragment[];
+  visits: Visit[];
 }
 
-export const VisitGroup = ({ date, visits }: VisitGroupProps) => {
+export const VisitGroup: React.FC<VisitGroupProps> = ({ date, visits }) => {
   return (
     <Group>
       <Label>
@@ -42,13 +41,7 @@ export const VisitGroup = ({ date, visits }: VisitGroupProps) => {
       </Label>
       <VisitList>
         {visits.map(visit => (
-          <CardWithScore
-            key={visit.id}
-            name={visit.place.details.name}
-            address={visit.place.details.location.address.formatted || '–'}
-            to={visitRoute(visit.id)}
-            score={visit.score}
-          />
+          <VisitCard key={visit.id} visit={visit} />
         ))}
       </VisitList>
     </Group>

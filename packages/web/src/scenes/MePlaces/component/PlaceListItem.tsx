@@ -1,9 +1,9 @@
 import * as React from 'react';
-import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Tag } from 'graphql/types';
+import styled from 'styled-components';
 import { Score } from 'components/Card';
 import { PlaceInfo } from 'components/PlaceInfo';
+import { Tag } from 'graphql/types';
 
 export const Card = styled.div`
   padding: 1rem;
@@ -43,14 +43,12 @@ const ScoreArea = styled.div`
 
 const VisitCount = styled.h5`
   margin-top: 0.5rem;
+  font-weight: 600;
   text-align: right;
+  font-size: ${p => p.theme.fontSize.small};
 `;
 
-interface TagListProps {
-  extra: number;
-}
-
-const TagList = styled.ul<TagListProps>`
+const TagList = styled.ul`
   list-style: none;
   display: flex;
   margin-top: 0.5rem;
@@ -65,26 +63,13 @@ const TagList = styled.ul<TagListProps>`
     right: 0;
     top: 0;
     height: 100%;
-    width: 2rem;
+    width: 3rem;
     background: linear-gradient(
       90deg,
       rgba(0, 0, 0, 0) 0%,
       rgba(255, 255, 255, 1) 100%
     );
   }
-  ${p =>
-    p.extra > 0 &&
-    css`
-    &::before {
-      content: "+${p.extra}";
-      position: absolute;
-      right: 0;
-      z-index: 1;
-      font-size: ${p.theme.fontSize.small};
-      font-weight: 700;
-    }
-  
-  `}
 `;
 
 const TagItem = styled.li`
@@ -103,11 +88,11 @@ const TagItem = styled.li`
   }
 `;
 
-const TAG_LIMIT = 3;
+const TAG_LIMIT = 5;
 
 interface PlaceListItemProps {
-  name: string;
-  address: string;
+  name: string | undefined;
+  address: string | undefined;
   visitCount: number;
   to: string;
   averageScore?: number | null;
@@ -126,11 +111,13 @@ export const PlaceListItem = ({
     <NeutralLink to={to}>
       <Place>
         <PlaceInfo name={name} address={address} />
-        <TagList extra={tags.length - TAG_LIMIT}>
-          {tags.slice(0, TAG_LIMIT).map(t => (
-            <TagItem key={t.id}>{t.name}</TagItem>
-          ))}
-        </TagList>
+        {tags.length > 0 && (
+          <TagList>
+            {tags.slice(0, TAG_LIMIT).map(t => (
+              <TagItem key={t.id}>{t.name}</TagItem>
+            ))}
+          </TagList>
+        )}
       </Place>
       <ScoreArea>
         <Numbers>

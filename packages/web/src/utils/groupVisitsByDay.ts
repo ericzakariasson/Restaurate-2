@@ -1,9 +1,9 @@
-import { VisitFragment } from '../graphql/types';
+import { Visit } from '../graphql/types';
 
-type Groups = { [key: string]: VisitFragment[] };
+type Groups = { [key: string]: Visit[] };
 
-export const groupVisitsByDay = (visits: VisitFragment[]): Groups =>
-  visits.reduce((groups: Groups, visit: VisitFragment) => {
+export const groupVisitsByDay = (visits: Visit[]): Groups =>
+  visits.reduce((groups: Groups, visit: Visit) => {
     const visitDay = new Date(visit.visitDate).toISOString().slice(0, 10);
 
     const group = visitDay in groups ? groups[visitDay] : [];

@@ -64,7 +64,7 @@ export class PlaceResolver {
   @Query(() => PlaceDetails)
   async placeDetails(
     @Arg('providerId') providerId: string
-  ): Promise<PlaceDetails> {
+  ): Promise<PlaceDetails | null> {
     return this.placeService.getPlaceDetails(providerId);
   }
 
@@ -106,6 +106,10 @@ export class PlaceResolver {
     const { userId } = ctx.req.session;
     const details = await this.placeService.getPlaceDetails(providerId);
 
+    if (!details) {
+      return null;
+    }
+
     const place = await this.placeService.findByProviderId(
       details.providerId,
       userId!
@@ -145,7 +149,9 @@ export class PlaceResolver {
 
     const transform = transformToBasicDetails([]);
 
-    return placeDetailsList.map(transform);
+    return placeDetailsList
+      .map(transform)
+      .filter(Boolean) as PlaceDetailsBasic[];
   }
 
   @Authorized()
@@ -157,7 +163,9 @@ export class PlaceResolver {
 
     const transform = transformToBasicDetails([]);
 
-    return placeDetailsList.map(transform);
+    return placeDetailsList
+      .map(transform)
+      .filter(Boolean) as PlaceDetailsBasic[];
   }
 
   @Authorized()
@@ -255,8 +263,8 @@ export class PlaceResolver {
     return this.placeService.getAverageScoreById(place.id);
   }
 
-  @FieldResolver(() => PlaceDetails)
-  async details(@Root() place: Place): Promise<PlaceDetails> {
+  @FieldResolver(() => PlaceDetails, { nullable: true })
+  async details(@Root() place: Place): Promise<PlaceDetails | null> {
     return this.placeService.getPlaceDetails(place.providerId);
   }
 

@@ -20,40 +20,46 @@ export class ImageResolver {
     @Arg('data')
     input: SignImagesInput
   ): Promise<SignImageData[]> {
-    const signedImagesData = input.images.map(async data => {
-      const placeDetails = await this.placeService.getPlaceDetails(
-        data.placeProviderId
-      );
+    const signedImagesData = input.images
+      .map(async data => {
+        const placeDetails = await this.placeService.getPlaceDetails(
+          data.placeProviderId
+        );
 
-      const timestamp = Math.round(Date.now() / 1000);
+        if (!placeDetails) {
+          return null;
+        }
 
-      const apiUrl: string = await cloudinary.v2.utils.api_url('upload', {
-        resource_type: 'auto'
-      });
+        const timestamp = Math.round(Date.now() / 1000);
 
-      const id = shortid.generate();
+        const apiUrl: string = await cloudinary.v2.utils.api_url('upload', {
+          resource_type: 'auto'
+        });
 
-      const publicId = `${format(new Date(), 'yyyyMMdd')}-${slugify(
-        placeDetails.name
-      )}-${slugify(placeDetails.location.address.city)}-${data.type}-${id}`;
+        const id = shortid.generate();
 
-      const query = (cloudinary.v2.utils as any).sign_request({
-        public_id: publicId,
-        tags: data.tags.join(','),
-        timestamp,
-        folder: data.type,
-        context: `type=${data.type}|place_provider_id=${data.placeProviderId}|user_id=${ctx.req.session.userId}`,
-        format: 'jpg'
-      });
+        const publicId = `${format(new Date(), 'yyyyMMdd')}-${slugify(
+          placeDetails.name
+        )}-${slugify(placeDetails.location.address.city)}-${data.type}-${id}`;
 
-      const payload = new SignImageData({
-        apiUrl,
-        query: JSON.stringify(query)
-      });
+        const query = (cloudinary.v2.utils as any).sign_request({
+          public_id: publicId,
+          tags: data.tags.join(','),
+          timestamp,
+          folder: data.type,
+          context: `type=${data.type}|place_provider_id=${data.placeProviderId}|user_id=${ctx.req.session.userId}`,
+          format: 'jpg'
+        });
 
-      return payload;
-    });
+        const payload = new SignImageData({
+          apiUrl,
+          query: JSON.stringify(query)
+        });
 
-    return Promise.all(signedImagesData);
+        return payload;
+      })
+      .filter(Boolean);
+
+    return Promise.all(signedImagesData as Promise<SignImageData>[]);
   }
 }

@@ -65,8 +65,8 @@ export const MePlacesScene = () => {
             {data?.places.data.map(place => (
               <PlaceListItem
                 key={place.providerId}
-                name={place.details.name}
-                address={place.details.location.address.formatted}
+                name={place.details?.name}
+                address={place.details?.location.address.formatted}
                 visitCount={place.visitCount}
                 averageScore={place.averageScore}
                 to={myPlaceRoute({ providerId: place.providerId })}
