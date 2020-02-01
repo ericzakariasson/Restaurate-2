@@ -54,8 +54,6 @@ export class PlaceService {
       placeDetailsKey(providerId)
     );
 
-    console.log('cached', cached);
-
     if (cached) {
       return cached;
     }

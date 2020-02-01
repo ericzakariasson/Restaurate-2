@@ -100,8 +100,6 @@ const transformOpeningHours = (providerOpeningHours: HereOpeningHours) => {
 export const transformProviderDetails = (item: HerePlaceDetails | null) => {
   const details = new PlaceDetails();
 
-  console.log('item', item);
-
   if (!item) {
     return null;
   }
