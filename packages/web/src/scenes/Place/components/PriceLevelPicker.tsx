@@ -5,7 +5,7 @@ import {
 } from 'graphql/types';
 import { useDevice } from 'hooks';
 import * as React from 'react';
-import { ChevronDown } from 'react-feather';
+import { Edit } from 'react-feather';
 import styled, { css } from 'styled-components';
 import { formatPriceLevel } from 'utils/format';
 import { ActionButton } from '../../../components/ActionButton';
@@ -79,7 +79,7 @@ export const PriceLevelPicker = ({
         {isMobile && (
           <>
             {!!priceLevel ? formatPriceLevel(priceLevel) : '–'}
-            <ActionButton onClick={handleClick} icon={ChevronDown} />
+            <ActionButton onClick={handleClick} icon={Edit} />
           </>
         )}
         <StyledSelect

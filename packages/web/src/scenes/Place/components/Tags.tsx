@@ -1,7 +1,7 @@
 import { Input } from 'components';
 import { Tag, useUpdatePlaceMutation } from 'graphql/types';
 import * as React from 'react';
-import { Check, Edit2, Loader, Plus, X } from 'react-feather';
+import { Check, Edit, Loader, Plus, X } from 'react-feather';
 import styled from 'styled-components';
 import { ActionButton } from '../../../components/ActionButton';
 import { InputBlock } from './InputBlock';
@@ -27,6 +27,8 @@ interface TagProps {
 const TagItem = styled.li<TagProps>`
   display: flex;
   align-items: center;
+  padding: 0.375rem 0.75rem;
+  background: #f5f5f5;
 
   &:not(:last-of-type) {
     margin-right: ${p => (p.editing ? 10 : 6)}px;
@@ -34,7 +36,9 @@ const TagItem = styled.li<TagProps>`
 `;
 
 const TagName = styled.span`
-  line-height: 1.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
 `;
 
 const TagInput = styled(Input)``;
@@ -94,25 +98,17 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
             ? tags.map((tag, i) => (
                 <TagItem key={tag.id} editing={editing}>
                   <TagName>{tag.name}</TagName>
-                  {editing ? (
+                  {editing && (
                     <ActionButton
                       onClick={handleRemove(tag.id)}
                       icon={X}
                       iconProps={{ ...iconProps, size: 16 }}
                     />
-                  ) : (
-                    i !== tags.length - 1 && ','
                   )}
                 </TagItem>
               ))
             : !editing && '–'}
-          {!editing && (
-            <ActionButton
-              onClick={toggleEditing}
-              icon={Edit2}
-              iconProps={{ ...iconProps, size: 16 }}
-            />
-          )}
+          {!editing && <ActionButton onClick={toggleEditing} icon={Edit} />}
         </List>
       </InputBlock>
       {editing && (

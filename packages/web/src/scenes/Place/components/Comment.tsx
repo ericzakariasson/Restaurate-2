@@ -1,7 +1,7 @@
 import { Textarea } from 'components';
 import { useUpdatePlaceMutation } from 'graphql/types';
 import * as React from 'react';
-import { Check, Edit2, Loader, X } from 'react-feather';
+import { Check, Edit, Loader, X } from 'react-feather';
 import styled from 'styled-components';
 import { ActionButton } from '../../../components/ActionButton';
 import { InputBlock } from './InputBlock';
@@ -45,11 +45,7 @@ export const Comment = ({ comment, providerId }: CommentProps) => {
       <InputBlock label="Kommentar">
         {comment || '–'}
         {!editing && (
-          <ActionButton
-            onClick={() => setEditing(true)}
-            icon={Edit2}
-            iconProps={{ ...iconProps, size: 16 }}
-          />
+          <ActionButton onClick={() => setEditing(true)} icon={Edit} />
         )}
       </InputBlock>
       {editing && (

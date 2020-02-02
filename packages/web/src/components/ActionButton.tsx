@@ -4,18 +4,18 @@ import styled from 'styled-components';
 import { Icon } from 'react-feather';
 
 const Button = styled.button`
-  background: #f5f5f5;
-  border-radius: 4px;
+  background: #fff;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 20px;
-  width: 20px;
+  height: 2rem;
+  width: 2rem;
   border: none;
   outline: none;
   padding: 0;
   margin: 0;
-  margin-left: 10px;
+  margin-left: 0.5rem;
   box-shadow: ${p => p.theme.boxShadow};
 `;
 
@@ -37,7 +37,7 @@ interface ActionButtonProps {
 export const ActionButton = ({
   onClick,
   icon: Icon,
-  iconProps = { size: 20, color: '#666' },
+  iconProps = { size: 18, color: '#222' },
   content,
   type = 'button',
   as = 'button',
