@@ -12,8 +12,7 @@ const Wrapper = styled.section``;
 
 const UserStats = styled.div`
   display: flex;
-  margin-bottom: 20px;
-  margin-top: 5px;
+  margin-bottom: 1rem;
 `;
 
 interface UserAreaProps {

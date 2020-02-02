@@ -5,22 +5,15 @@ import styled from 'styled-components';
 import { Loading, NavButton, Page } from '../../components';
 import { usePlaceDetailsLazyQuery } from '../../graphql/types';
 import { GeneralError } from '../Error/GeneralError';
-import { Details } from './components/Details';
+import { PlaceDetails } from './components/PlaceDetails';
 import { Preview } from './components/Preview';
 import { UserArea } from './components/UserArea';
 import { WantToVisitButton } from './components/WantToVisitButton';
 
 const Buttons = styled.div`
   display: flex;
-  position: fixed;
-  left: 0;
-  bottom: 0;
   width: 100%;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0);
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(3px);
-  border-top: 1px solid #eee;
+  margin-bottom: 1rem;
 `;
 
 export const PlaceScene = () => {
@@ -55,7 +48,17 @@ export const PlaceScene = () => {
       subTitle={data?.placeDetails.location.address.formatted}
       paddingBottom
     >
-      <Details providerId={providerId} />
+      <PlaceDetails providerId={providerId} />
+      <Buttons>
+        <NavButton
+          text="Nytt besök"
+          variant="primary"
+          color="black"
+          size="normal"
+          to={addVisitRoute(providerId)}
+        />
+        <WantToVisitButton providerId={providerId} />
+      </Buttons>
       <Switch>
         <Route path={routes.previewPlace} exact={true}>
           <Preview providerId={providerId} />
@@ -64,15 +67,6 @@ export const PlaceScene = () => {
           <UserArea providerId={providerId} />
         </Route>
       </Switch>
-      <Buttons>
-        <WantToVisitButton providerId={providerId} />
-        <NavButton
-          text="Nytt besök"
-          variant="primary"
-          size="normal"
-          to={addVisitRoute(providerId)}
-        />
-      </Buttons>
     </Page>
   );
 };

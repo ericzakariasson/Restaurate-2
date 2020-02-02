@@ -24,7 +24,6 @@ const VisitList = styled.ul`
 const VisitItem = styled.li`
   border-radius: 8px;
   box-shadow: ${p => p.theme.boxShadow};
-  border: 1px solid #ccc;
 
   &:not(:last-child) {
     margin-bottom: 15px;

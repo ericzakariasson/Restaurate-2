@@ -7,12 +7,12 @@ const Stat = styled.article`
   flex-direction: column;
 
   &:not(:last-of-type) {
-    margin-right: 30px;
+    margin-right: 1.5rem;
   }
 `;
 
 const StatValue = styled.h3`
-  font-size: ${p => p.theme.fontSize.xxxxl};
+  font-size: 2.5rem;
   font-weight: 400;
 `;
 

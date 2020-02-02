@@ -6,9 +6,8 @@ import { OutboundLink } from 'react-ga';
 
 const MapWrapper = styled.div`
   position: relative;
-  margin-bottom: 20px;
-  box-shadow: ${p => p.theme.boxShadow};
-  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
 `;
 
 interface MapCardProps {
@@ -18,12 +17,11 @@ interface MapCardProps {
 const MapCard = styled.div<MapCardProps>`
   background: url(${p => p.url}) #f5f5f5;
   width: 100%;
-  min-height: 120px;
+  min-height: 8rem;
   background-size: cover;
   background-position: center;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   position: relative;
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.08);
 
   &::before {
     content: '';
@@ -31,8 +29,8 @@ const MapCard = styled.div<MapCardProps>`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
+    width: 0.5rem;
+    height: 0.5rem;
     background: ${p => p.theme.colors.primary.default};
     border-radius: 50%;
   }
@@ -40,18 +38,21 @@ const MapCard = styled.div<MapCardProps>`
 
 const GetDirections = styled(OutboundLink)`
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  padding: 8px;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  padding: 0.5rem;
   display: block;
-  border-radius: 5px;
-  background: rgba(34, 34, 34, 0.5);
+  border-radius: 0.5rem;
+  background: #fff;
   box-shadow: ${p => p.theme.boxShadow};
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(3px);
   z-index: 1;
+
+  svg {
+    stroke-width: 2px;
+  }
 `;
 
 interface PlaceMapProps {
@@ -80,7 +81,7 @@ export const PlaceMap = ({ lat, lng }: PlaceMapProps) => {
         to={directionUrl}
         rel="noopener"
       >
-        <MapIcon color="#FFF" size={20} />
+        <MapIcon color="#222" size={20} />
       </GetDirections>
       <MapCard url={mapUrl} />
     </MapWrapper>

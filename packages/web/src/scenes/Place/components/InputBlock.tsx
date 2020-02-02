@@ -4,7 +4,7 @@ import { Label } from 'components';
 
 const Block = styled.article`
   &:not(:last-of-type) {
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
   }
 `;
 
@@ -18,16 +18,11 @@ const BlockText = styled.h4`
 interface InputBlockProps {
   label: string;
   children: React.ReactNode;
-  noMargin?: boolean;
 }
 
-export const InputBlock = ({
-  children,
-  label,
-  noMargin = true
-}: InputBlockProps) => (
+export const InputBlock = ({ children, label }: InputBlockProps) => (
   <Block>
-    <Label text={label} noMargin={noMargin} />
+    <Label text={label} />
     <BlockText>{children}</BlockText>
   </Block>
 );

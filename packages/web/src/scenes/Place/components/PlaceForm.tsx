@@ -27,7 +27,7 @@ export const PlaceForm = ({
 }: PlaceFormProps) => {
   return (
     <UserPlaceInputs>
-      <Types types={types} providerId={providerId} />
+      <Types selected={types} providerId={providerId} />
       <PriceLevelPicker priceLevel={priceLevel} providerId={providerId} />
       <Tags tags={tags} providerId={providerId} />
       <Comment comment={comment} providerId={providerId} />

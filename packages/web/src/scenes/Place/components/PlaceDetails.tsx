@@ -12,11 +12,11 @@ const Contact = styled.div`
   margin-bottom: 15px;
 `;
 
-interface DetailsProps {
+interface PlaceDetailsProps {
   providerId: string;
 }
 
-export const Details = ({ providerId }: DetailsProps) => {
+export const PlaceDetails = ({ providerId }: PlaceDetailsProps) => {
   const { data, loading } = usePlaceDetailsQuery({ variables: { providerId } });
 
   const details = data && data.placeDetails;

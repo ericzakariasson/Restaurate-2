@@ -66,15 +66,15 @@ interface Padding {
 }
 
 const padding: Padding = {
-  xxsmall: '4px 8px',
-  xsmall: '4px 8px',
-  small: '10px 12px',
-  normal: '14px 16px',
-  large: '14px 16px'
+  xxsmall: '0.25rem 0.5rem',
+  xsmall: '0.25rem 0.5rem',
+  small: '0.5rem 0.75rem',
+  normal: '0.75rem 1rem',
+  large: '1rem'
 };
 
 const BaseButton = styled.button<StyledProps>`
-  border-radius: 8px;
+  border-radius: 0.5rem;
   margin: 0;
   border: none;
   background: none;
@@ -82,6 +82,7 @@ const BaseButton = styled.button<StyledProps>`
   font-size: ${p => p.theme.fontSize[p.size]};
   padding: ${p => padding[p.size]};
   transition: ${p => p.theme.transition};
+  box-shadow: ${p => p.theme.boxShadow};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,7 +111,6 @@ const StyledButton = styled(BaseButton)<StyledButtonProps>`
   width: 100%;
   font-weight: 600;
   border: none;
-  box-shadow: ${p => p.theme.boxShadow};
   transition: ${p => p.theme.transition} background;
 
   ${p =>

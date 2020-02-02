@@ -28,7 +28,7 @@ const PageWrapper = styled.section<PageWrapperProps>`
 `;
 
 const PageTitleWrapper = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 `;
 
 interface TitleProps {
@@ -44,7 +44,7 @@ const Title = styled.h1<TitleProps>`
 
 const SubTitle = styled.p`
   font-size: 1rem;
-  margin-top: 3px;
+  margin-top: 0.25rem;
 `;
 
 interface PageTitleProps {
