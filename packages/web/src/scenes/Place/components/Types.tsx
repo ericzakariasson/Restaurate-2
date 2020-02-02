@@ -14,40 +14,6 @@ const List = styled.ul`
   flex-wrap: wrap;
 `;
 
-interface TypeProps {
-  selected: boolean;
-}
-
-const Type = styled.li<TypeProps>`
-  font-size: 14px;
-  padding: 0.5rem 1rem;
-  color: #222;
-  font-weight: 400;
-  border-radius: 0.5rem;
-  position: relative;
-
-  &:not(:last-child) {
-    margin-right: 0.5rem;
-  }
-`;
-
-const Dashed = styled.svg`
-  position: absolute;
-  top: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-
-  path {
-    fill: none;
-    stroke: blue;
-    stroke-width: 5;
-    stroke-dasharray: 10, 10;
-  }
-`;
-
-const iconProps = { color: '#666', size: 18 };
-
 interface TypesProps {
   selected?: PlaceType[] | null;
   providerId: string;
@@ -115,7 +81,7 @@ interface TypeLabelProps {
 }
 
 const TypeLabel = styled.label<TypeLabelProps>`
-  font-size: 14px;
+  font-size: 1rem;
   padding: 0.5rem 1rem;
   color: #222;
   font-weight: 500;
@@ -129,7 +95,9 @@ const TypeLabel = styled.label<TypeLabelProps>`
   ${p =>
     p.selected &&
     css`
-      border: 1px solid #222;
+      border: 1px solid #eee;
+      background: #eee;
+      font-weight: 600;
     `}
 
   &:not(:last-child) {

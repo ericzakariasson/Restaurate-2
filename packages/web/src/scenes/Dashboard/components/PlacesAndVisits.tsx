@@ -35,8 +35,6 @@ const Box = styled.h2<BoxProps>`
   background: ${p => (p.disabled ? '#FCFCFC' : '#FFF')};
   color: #222;
   border-radius: 6px;
-  border: 1px solid;
-  border-color: ${p => (p.disabled ? '#DDD' : '#EEE')};
   box-shadow: ${p => p.theme.boxShadow};
   padding: 15px;
   display: flex;

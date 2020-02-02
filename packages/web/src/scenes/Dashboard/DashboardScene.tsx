@@ -18,21 +18,25 @@ export const DashboardScene = () => {
     return <GeneralError />;
   }
 
-  const me = data && data.me;
-
-  const { firstName, placeCount, visitCount } = me!;
-
   return (
-    <Page title={firstName}>
-      <PlacesAndVisits placeCount={placeCount} visitCount={visitCount} />
+    <Page title={data!.me!.firstName}>
+      <PlacesAndVisits
+        placeCount={data!.me!.placeCount}
+        visitCount={data!.me!.visitCount}
+      />
       <NavButton
-        onClick={() => trackEvent({ category: "CTA", action: "Search Place CTA" })}
+        onClick={() =>
+          trackEvent({ category: 'CTA', action: 'Search Place CTA' })
+        }
         variant="primary"
         to={routes.searchPlace}
         text="Sök ställe"
         margin={['bottom']}
       />
       <NavButton
+        onClick={() =>
+          trackEvent({ category: 'CTA', action: 'Want To Visit CTA' })
+        }
         variant="secondary"
         color="white"
         to={routes.wantToVisit}

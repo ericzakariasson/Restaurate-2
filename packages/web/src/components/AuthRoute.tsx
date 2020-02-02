@@ -15,12 +15,16 @@ export const AuthRoute = ({
 }: AuthRouteProps) => {
   const { data, loading, error } = useMeQuery();
 
-  if (loading || !data) {
+  if (loading) {
     return <Loading />;
   }
 
   if (error) {
     return <GeneralError />;
+  }
+
+  if (!data) {
+    return null;
   }
 
   if (!data.me || !data.me.confirmed) {

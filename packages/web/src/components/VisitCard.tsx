@@ -107,7 +107,7 @@ export const visitInfo = (visit: Visit) => {
         )}`
       : null;
 
-  return [orders, comment, images].filter(Boolean).join(' • ');
+  return [orders, images, comment].filter(Boolean).join(' • ');
 };
 
 const plural = (word: string, suffix: string, condition: boolean) =>

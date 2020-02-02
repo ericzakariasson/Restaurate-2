@@ -27,6 +27,7 @@ const Line = styled.div<LineProps>`
   width: ${p => p.width}%;
   height: ${p => p.height}px;
   background: #eee;
+  border-radius: 0.25rem;
 `;
 
 interface SkeletonCardProps {
