@@ -39,7 +39,7 @@ export const PlaceScene = () => {
   }
 
   if (error) {
-    return <GeneralError />;
+    return <GeneralError error={error} />;
   }
 
   return (

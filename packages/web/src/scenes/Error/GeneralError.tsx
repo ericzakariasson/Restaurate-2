@@ -14,9 +14,8 @@ const Wrapper = styled.div`
 
 const Title = styled.h1``;
 
-const Error = styled.p`
+const Error = styled.code`
   max-width: 100%;
-  word-break: break-all;
 `;
 
 interface GeneralErrorProps {
@@ -29,7 +28,7 @@ export const GeneralError = ({ error }: GeneralErrorProps) => {
   return (
     <Wrapper>
       <Title>Ett fel har uppstått!</Title>
-      {!isProduction && <Error>{JSON.stringify(error)}</Error>}
+      {!isProduction && <Error>{JSON.stringify(error, null, 4)}</Error>}
     </Wrapper>
   );
 };
