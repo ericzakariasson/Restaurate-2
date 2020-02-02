@@ -21,9 +21,9 @@ export const CardLink = styled(Link)`
   color: unset;
 `;
 
-const ScoreText = styled.h4`
+const ScoreText = styled.h4<{ light?: boolean }>`
   font-size: 2rem;
-  font-weight: 500;
+  font-weight: ${p => (p.light ? 400 : 500)};
   white-space: pre;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.125rem;
@@ -31,8 +31,9 @@ const ScoreText = styled.h4`
 `;
 interface ScoreProps {
   score: number | null | undefined;
+  light?: boolean;
 }
 
-export const Score = ({ score }: ScoreProps) => (
-  <ScoreText>{formatScore(score)}</ScoreText>
+export const Score = ({ score, light }: ScoreProps) => (
+  <ScoreText light={light}>{formatScore(score)}</ScoreText>
 );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Loading } from 'components';
-import { usePlaceQuery } from 'graphql/types';
+import { usePlaceQuery, Visit } from 'graphql/types';
 import styled from 'styled-components';
 import { PlaceForm } from './PlaceForm';
 import { UserStat } from './UserStat';
@@ -55,7 +55,7 @@ export const UserArea = ({ providerId }: UserAreaProps) => {
         tags={tags}
         comment={comment}
       />
-      <Visits visits={visits} />
+      <Visits visits={visits as Visit[]} />
     </Wrapper>
   );
 };

@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom';
 import { visitRoute } from 'routes';
 
 import { formatDate } from 'utils/format';
-import { VisitFragment } from 'graphql/types';
+import { Visit } from 'graphql/types';
+import { Score } from 'components';
+import { InfoText, visitInfo } from 'components/VisitCard';
 
 const Wrapper = styled.article`
   margin-top: 20px;
@@ -14,7 +16,8 @@ const Wrapper = styled.article`
 
 const Title = styled.h4`
   font-size: ${p => p.theme.fontSize.large};
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
+  font-weight: 500;
 `;
 
 const VisitList = styled.ul`
@@ -39,27 +42,27 @@ const VisitLink = styled(Link)`
   align-items: center;
 `;
 
-const VisitDate = styled.span``;
-
-const VisitScore = styled.span`
-  font-size: 1.125rem;
-  font-weight: 700;
+const VisitDate = styled.time`
+  font-weight: 500;
 `;
 
 interface VisitsProps {
-  visits: VisitFragment[];
+  visits: Visit[];
 }
 
-export const Visits = ({ visits }: VisitsProps) => {
+export const Visits: React.FC<VisitsProps> = ({ visits }) => {
   return (
     <Wrapper>
-      {visits.length > 0 && <Title>{visits.length} besök</Title>}
+      {visits.length > 0 && <Title>Alla besök ({visits.length})</Title>}
       <VisitList>
         {visits.map(visit => (
           <VisitItem key={visit.id}>
             <VisitLink to={visitRoute(visit.id)}>
-              <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
-              <VisitScore>{visit.score.toFixed(1)}</VisitScore>
+              <div>
+                <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
+                <InfoText>{visitInfo(visit)}</InfoText>
+              </div>
+              <Score score={visit.score} light />
             </VisitLink>
           </VisitItem>
         ))}

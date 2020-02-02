@@ -50,7 +50,7 @@ const ScoreBar = styled.div<ScoreBarProps>`
   }
 `;
 
-const InfoText = styled.p`
+export const InfoText = styled.p`
   color: #666;
   font-size: ${p => p.theme.fontSize.small};
   font-weight: 600;
@@ -86,7 +86,7 @@ export const VisitCard: React.FC<VisitCardProps> = ({ visit, as = 'li' }) => {
   );
 };
 
-const visitInfo = (visit: Visit) => {
+export const visitInfo = (visit: Visit) => {
   const orders =
     visit.orders.length > 0
       ? `${visit.orders.length} ${plural(
