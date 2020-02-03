@@ -8,7 +8,7 @@ const Block = styled.article`
   }
 `;
 
-const BlockText = styled.h4`
+const BlockText = styled.div`
   font-size: 1.375rem;
   font-weight: 400;
   display: flex;
@@ -26,3 +26,9 @@ export const InputBlock = ({ children, label }: InputBlockProps) => (
     <BlockText>{children}</BlockText>
   </Block>
 );
+
+export const EmptyValue = styled.p`
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #ddd;
+`;

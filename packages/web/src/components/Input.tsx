@@ -21,21 +21,22 @@ interface InputProps {
 
 export const Input = styled.input<InputProps>`
   display: block;
-  padding: ${p => padding[p.fontSize || 'large']};
-  border-radius: 6px;
-  background: #fcfcfc;
-  border: 1px solid #eee;
-  outline: none;
-  font-size: ${p => p.theme.fontSize[p.fontSize || 'large']};
   width: 100%;
-  transition: ${p => p.theme.transition};
-  box-shadow: ${p => p.theme.boxShadow};
-  -webkit-appearance: none;
+  padding: 12px;
+  font-size: 1rem;
   color: #222;
+  background: #f5f5f5;
+  border-radius: 0.5rem;
+  border: 1px solid #f5f5f5;
+  outline: none;
+  font-weight: 500;
+  transition: ${p => p.theme.transition};
+  -webkit-appearance: none;
 
   &:focus {
-    border-color: #ccc;
     transition: ${p => p.theme.transition};
+    background: #fcfcfc;
+    border-color: #eee;
   }
 
   &::-webkit-search-cancel-button {

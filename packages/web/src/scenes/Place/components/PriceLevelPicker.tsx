@@ -9,7 +9,7 @@ import { Edit } from 'react-feather';
 import styled, { css } from 'styled-components';
 import { formatPriceLevel } from 'utils/format';
 import { ActionButton } from '../../../components/ActionButton';
-import { InputBlock } from './InputBlock';
+import { InputBlock, EmptyValue } from './InputBlock';
 
 interface SelectProps {
   hide: boolean;
@@ -78,7 +78,11 @@ export const PriceLevelPicker = ({
       <InputBlock label="Prisklass">
         {isMobile && (
           <>
-            {!!priceLevel ? formatPriceLevel(priceLevel) : '–'}
+            {priceLevel === PriceLevel.NotSet ? (
+              <EmptyValue>Ingen prisklass</EmptyValue>
+            ) : (
+              formatPriceLevel(priceLevel)
+            )}
             <ActionButton onClick={handleClick} icon={Edit} />
           </>
         )}

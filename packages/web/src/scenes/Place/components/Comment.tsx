@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Check, Edit, Loader, X } from 'react-feather';
 import styled from 'styled-components';
 import { ActionButton } from '../../../components/ActionButton';
-import { InputBlock } from './InputBlock';
+import { InputBlock, EmptyValue } from './InputBlock';
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,7 +43,7 @@ export const Comment = ({ comment, providerId }: CommentProps) => {
   return (
     <>
       <InputBlock label="Kommentar">
-        {comment || '–'}
+        {comment ? <p>{comment}</p> : <EmptyValue>Ingen kommentar</EmptyValue>}
         {!editing && (
           <ActionButton onClick={() => setEditing(true)} icon={Edit} />
         )}

@@ -23,7 +23,7 @@ const Normal = styled.label<LabelStyleProps>`
   color: ${p => (p.error ? p.theme.colors.error.default : '#999')};
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.05rem;
   margin-bottom: ${p => (p.noMargin ? 0 : '0.5rem')};
 `;
 

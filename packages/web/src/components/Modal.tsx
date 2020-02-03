@@ -8,7 +8,11 @@ import { animated, useTransition, config } from 'react-spring';
 
 const modalRoot = document.getElementById('modal-root');
 
-const Popup = styled(animated.aside)`
+interface PopupProps {
+  padding?: boolean;
+}
+
+const Popup = styled(animated.aside)<PopupProps>`
   background: #fff;
   border-radius: 1.5rem;
   position: fixed;
@@ -16,8 +20,8 @@ const Popup = styled(animated.aside)`
   right: 1rem;
   bottom: 1rem;
   z-index: 10;
-  padding: 1.5rem 1rem;
   box-shadow: ${p => p.theme.boxShadow};
+  padding: ${p => p.padding && '0 1rem 1.5rem'};
 `;
 
 const Background = styled(animated.div)`
@@ -34,6 +38,7 @@ const PopupHeader = styled.header`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  padding: 1.5rem 1rem 0;
 `;
 
 const PopupTitle = styled.h1`
@@ -50,11 +55,12 @@ const CloseButton = styled.button`
   border: none;
 `;
 
-interface ModalProps {
+export interface ModalProps {
   open: boolean;
   title?: string;
   showCloseButton?: boolean;
   onClose?: () => void;
+  padding?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -62,7 +68,8 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   title,
   onClose,
-  showCloseButton = true
+  showCloseButton = true,
+  padding = false
 }) => {
   const popupTransitions = useTransition(open, null, {
     from: { transform: 'translate3d(0, 100%, 0)' },
@@ -83,7 +90,7 @@ export const Modal: React.FC<ModalProps> = ({
           {popupTransitions.map(
             ({ item, key, props }) =>
               item && (
-                <Popup key={key} style={props}>
+                <Popup key={key} style={props} padding={padding}>
                   <PopupHeader>
                     {title && <PopupTitle>{title}</PopupTitle>}
                     {showCloseButton && (
