@@ -11,3 +11,4 @@ export * from './PoweredBy';
 export * from './ActionButton';
 export * from './Switch';
 export * from './Image';
+export * from './Modal';

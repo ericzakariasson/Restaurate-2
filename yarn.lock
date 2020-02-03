@@ -2036,6 +2036,11 @@
   version "3.18.5"
   resolved "https://registry.yarnpkg.com/@lerna/cli/-/cli-3.18.5.tgz#c90c461542fcd35b6d5b015a290fb0dbfb41d242"
   integrity sha512-erkbxkj9jfc89vVs/jBLY/fM0I80oLmJkFUV3Q3wk9J3miYhP14zgVEBsPZY68IZlEjT6T3Xlq2xO1AVaatHsA==
+  dependencies:
+    "@lerna/global-options" "3.13.0"
+    dedent "^0.7.0"
+    npmlog "^4.1.2"
+    yargs "^14.2.2"
 
 "@lerna/collect-uncommitted@3.16.5":
   version "3.16.5"
@@ -2211,7 +2216,7 @@
     npmlog "^4.1.2"
     whatwg-url "^7.0.0"
 
-"@lerna/global-options@^3.13.0":
+"@lerna/global-options@3.13.0", "@lerna/global-options@^3.13.0":
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/@lerna/global-options/-/global-options-3.13.0.tgz#217662290db06ad9cf2c49d8e3100ee28eaebae1"
   integrity sha512-SlZvh1gVRRzYLVluz9fryY1nJpZ0FHDGB66U9tFfvnnxmueckRQxLopn3tXj3NU1kc3QANT2I5BsQkOqZ4TEFQ==
@@ -8215,6 +8220,11 @@ execa@^1.0.0:
     p-finally "^1.0.0"
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
+
+exenv@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+  integrity sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
 
 exit@^0.1.2:
   version "0.1.2"
@@ -14993,6 +15003,13 @@ react-scripts@^3.3.0:
   optionalDependencies:
     fsevents "2.1.2"
 
+react-scrolllock@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/react-scrolllock/-/react-scrolllock-5.0.0.tgz#e383ffc8d2bc372194f9e06a68d04687640b399c"
+  integrity sha512-S5zbJMHU3jVRyOe2VfDU5PD8Lt56k61zgCQ7esnXpEkt3pySqK55k6QLw09qA1+y5yDJZOW7q0s9ha0grPs2WQ==
+  dependencies:
+    exenv "^1.2.2"
+
 react-side-effect@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-1.2.0.tgz#0e940c78faba0c73b9b0eba9cd3dda8dfb7e7dae"
@@ -18522,7 +18539,7 @@ yargs@^13.0.0, yargs@^13.2.1, yargs@^13.3.0:
     y18n "^4.0.0"
     yargs-parser "^13.1.1"
 
-yargs@^14.2.0:
+yargs@^14.2.0, yargs@^14.2.2:
   version "14.2.2"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-14.2.2.tgz#2769564379009ff8597cdd38fba09da9b493c4b5"
   integrity sha512-/4ld+4VV5RnrynMhPZJ/ZpOCGSCeghMykZ3BhdFBDa9Wy/RH6uEGNWDJog+aUlq+9OM1CFTgtYRW5Is1Po9NOA==

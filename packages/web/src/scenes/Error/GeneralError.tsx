@@ -9,13 +9,18 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 20px;
+  padding: 1rem;
 `;
 
 const Title = styled.h1``;
 
-const Error = styled.code`
+const Error = styled.pre`
   max-width: 100%;
+  padding: 1rem;
+  background: #eee;
+  font-family: monospace;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
 `;
 
 interface GeneralErrorProps {

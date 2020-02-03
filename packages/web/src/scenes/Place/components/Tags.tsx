@@ -3,8 +3,9 @@ import { Tag, useUpdatePlaceMutation } from 'graphql/types';
 import * as React from 'react';
 import { Check, Edit, Loader, Plus, X } from 'react-feather';
 import styled from 'styled-components';
-import { ActionButton } from '../../../components/ActionButton';
+import { ActionButton, Modal } from 'components';
 import { InputBlock } from './InputBlock';
+import { useModal } from 'hooks';
 
 const Form = styled.form`
   display: flex;
@@ -52,9 +53,14 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
   const [editing, setEditing] = React.useState(false);
   const [input, setInput] = React.useState('');
 
+  const { open, close, isOpen } = useModal({ defaultOpen: true });
+
   const [updatePlace, { loading: saving }] = useUpdatePlaceMutation();
 
-  const toggleEditing = () => setEditing(editing => !editing);
+  const toggleEditing = () => {
+    setEditing(editing => !editing);
+    open();
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setInput(e.target.value);
@@ -92,6 +98,9 @@ export const Tags = ({ tags, providerId }: TagsProps) => {
 
   return (
     <>
+      <Modal open={isOpen} title="Taggar" onClose={close}>
+        Modal content
+      </Modal>
       <InputBlock label="Taggar">
         <List>
           {tags.length > 0
