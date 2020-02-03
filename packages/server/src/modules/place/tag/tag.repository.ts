@@ -30,4 +30,20 @@ export class TagRepository extends Repository<Tag> {
       .innerJoin('tag.user', 'user', 'user.id = :userId', { userId })
       .select('tag.*')
       .getRawMany();
+
+  searchByName = (term: string, idsToIgnore: number[] = [], limit?: number) => {
+    const query = this.createQueryBuilder('tag')
+      .select()
+      .where('name ILIKE :term', { term: `%${term}%` });
+
+    if (idsToIgnore.length > 0) {
+      query.andWhere('id NOT IN (:...ids)', { ids: idsToIgnore });
+    }
+
+    if (limit) {
+      query.take(limit);
+    }
+
+    return query.getMany();
+  };
 }

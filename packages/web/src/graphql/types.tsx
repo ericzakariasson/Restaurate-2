@@ -186,7 +186,7 @@ export type MutationToggleWantToVisitArgs = {
 
 export type MutationUpdatePlaceArgs = {
   data: UpdatePlaceInput,
-  providerId: Scalars['String']
+  placeId: Scalars['Int']
 };
 
 
@@ -335,6 +335,7 @@ export type Query = {
   allPlaceTypes: Array<PlaceType>,
   placeFilterOptions: PlaceFilterOptions,
   places: PaginatedPlaceResponse,
+  searchTag: Array<Tag>,
   metrics: Metrics,
 };
 
@@ -378,6 +379,12 @@ export type QueryWantToVisitPlaceArgs = {
 
 export type QueryPlacesArgs = {
   options: PageOptions
+};
+
+
+export type QuerySearchTagArgs = {
+  ignoreIds: Array<Scalars['Int']>,
+  term: Scalars['String']
 };
 
 export type Rate = {
@@ -775,7 +782,7 @@ export type ToggleWantToVisitMutation = (
 );
 
 export type UpdatePlaceMutationVariables = {
-  providerId: Scalars['String'],
+  placeId: Scalars['Int'],
   data: UpdatePlaceInput
 };
 
@@ -952,6 +959,20 @@ export type SearchPlaceQuery = (
       & PlaceDetailsBasicFragment
     )> }
   ) }
+);
+
+export type SearchTagQueryVariables = {
+  term: Scalars['String'],
+  ignoreIds: Array<Scalars['Int']>
+};
+
+
+export type SearchTagQuery = (
+  { __typename?: 'Query' }
+  & { searchTag: Array<(
+    { __typename?: 'Tag' }
+    & TagFragment
+  )> }
 );
 
 export type VisitQueryVariables = {
@@ -1538,8 +1559,8 @@ export type ToggleWantToVisitMutationHookResult = ReturnType<typeof useToggleWan
 export type ToggleWantToVisitMutationResult = ApolloReactCommon.MutationResult<ToggleWantToVisitMutation>;
 export type ToggleWantToVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<ToggleWantToVisitMutation, ToggleWantToVisitMutationVariables>;
 export const UpdatePlaceDocument = gql`
-    mutation UpdatePlace($providerId: String!, $data: UpdatePlaceInput!) {
-  updatePlace(providerId: $providerId, data: $data) {
+    mutation UpdatePlace($placeId: Int!, $data: UpdatePlaceInput!) {
+  updatePlace(placeId: $placeId, data: $data) {
     ...Place
   }
 }
@@ -1559,7 +1580,7 @@ export type UpdatePlaceMutationFn = ApolloReactCommon.MutationFunction<UpdatePla
  * @example
  * const [updatePlaceMutation, { data, loading, error }] = useUpdatePlaceMutation({
  *   variables: {
- *      providerId: // value for 'providerId'
+ *      placeId: // value for 'placeId'
  *      data: // value for 'data'
  *   },
  * });
@@ -1924,6 +1945,40 @@ export function useSearchPlaceLazyQuery(baseOptions?: ApolloReactHooks.LazyQuery
 export type SearchPlaceQueryHookResult = ReturnType<typeof useSearchPlaceQuery>;
 export type SearchPlaceLazyQueryHookResult = ReturnType<typeof useSearchPlaceLazyQuery>;
 export type SearchPlaceQueryResult = ApolloReactCommon.QueryResult<SearchPlaceQuery, SearchPlaceQueryVariables>;
+export const SearchTagDocument = gql`
+    query SearchTag($term: String!, $ignoreIds: [Int!]!) {
+  searchTag(term: $term, ignoreIds: $ignoreIds) {
+    ...Tag
+  }
+}
+    ${TagFragmentDoc}`;
+
+/**
+ * __useSearchTagQuery__
+ *
+ * To run a query within a React component, call `useSearchTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTagQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTagQuery({
+ *   variables: {
+ *      term: // value for 'term'
+ *      ignoreIds: // value for 'ignoreIds'
+ *   },
+ * });
+ */
+export function useSearchTagQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchTagQuery, SearchTagQueryVariables>) {
+        return ApolloReactHooks.useQuery<SearchTagQuery, SearchTagQueryVariables>(SearchTagDocument, baseOptions);
+      }
+export function useSearchTagLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchTagQuery, SearchTagQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SearchTagQuery, SearchTagQueryVariables>(SearchTagDocument, baseOptions);
+        }
+export type SearchTagQueryHookResult = ReturnType<typeof useSearchTagQuery>;
+export type SearchTagLazyQueryHookResult = ReturnType<typeof useSearchTagLazyQuery>;
+export type SearchTagQueryResult = ApolloReactCommon.QueryResult<SearchTagQuery, SearchTagQueryVariables>;
 export const VisitDocument = gql`
     query Visit($id: String!) {
   visit(id: $id) {

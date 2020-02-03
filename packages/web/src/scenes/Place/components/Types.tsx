@@ -16,10 +16,10 @@ const List = styled.ul`
 
 interface TypesProps {
   selected?: PlaceType[] | null;
-  providerId: string;
+  placeId: number;
 }
 
-export const Types = ({ selected, providerId }: TypesProps) => {
+export const Types = ({ selected, placeId }: TypesProps) => {
   const { data, loading } = useAllPlaceTypesQuery();
 
   const [updatePlace] = useUpdatePlaceMutation();
@@ -36,7 +36,7 @@ export const Types = ({ selected, providerId }: TypesProps) => {
 
     updatePlace({
       variables: {
-        providerId,
+        placeId,
         data: {
           types: updated
         }

@@ -14,10 +14,10 @@ const Wrapper = styled.div`
 
 interface CommentProps {
   comment?: string | null;
-  providerId: string;
+  placeId: number;
 }
 
-export const Comment = ({ comment, providerId }: CommentProps) => {
+export const Comment = ({ comment, placeId }: CommentProps) => {
   const [editing, setEditing] = React.useState(false);
   const [value, setValue] = React.useState(comment || '');
 
@@ -26,7 +26,7 @@ export const Comment = ({ comment, providerId }: CommentProps) => {
   const handleClick = async () => {
     await updatePlace({
       variables: {
-        providerId,
+        placeId,
         data: {
           comment: value
         }

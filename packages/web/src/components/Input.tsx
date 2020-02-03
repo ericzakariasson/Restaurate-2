@@ -7,13 +7,13 @@ import { Size } from 'style/theme';
 
 type Padding = { [key in Size | string]: string };
 
-const padding: Padding = {
-  xxsmall: '4px 8px',
-  xsmall: '4px 8px',
-  small: '10px 15px',
-  normal: '10px 15px',
-  large: '15px'
-};
+// const padding: Padding = {
+//   xxsmall: '4px 8px',
+//   xsmall: '4px 8px',
+//   small: '10px 15px',
+//   normal: '10px 15px',
+//   large: '15px'
+// };
 
 interface InputProps {
   fontSize?: Size;

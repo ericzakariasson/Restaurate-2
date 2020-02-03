@@ -36,4 +36,8 @@ export class TagService {
   async getTagsByUserId(userId: number) {
     return this.tagRepository.findByUserId(userId);
   }
+
+  async searchTag(term: string, idsToIgnore: number[]) {
+    return this.tagRepository.searchByName(term, idsToIgnore, 5);
+  }
 }

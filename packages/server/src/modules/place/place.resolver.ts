@@ -7,31 +7,32 @@ import {
   Query,
   Resolver,
   Root,
-  UseMiddleware
+  UseMiddleware,
+  Int
 } from 'type-graphql';
 import { Service } from 'typedi';
+import { PageOptions } from '../../graphql/pagination';
 import { Context } from '../../graphql/types';
 import { RateLimitAuthenticated } from '../middleware/rateLimit';
 import { User, UserService } from '../user';
 import { Visit, VisitService } from '../visit';
+import { PlaceService } from './';
 import { PlaceFilterOptions } from './place.dto';
 import { Place } from './place.entity';
 import { transformToBasicDetails } from './place.helpers';
-import { PlaceService } from './';
 import {
+  PaginatedPlaceResponse,
   PlaceDetails,
   PlaceDetailsBasic,
   PlaceSearchResult,
   PlaceType,
   PositionInput,
-  UpdatePlaceInput,
-  PaginatedPlaceResponse
+  UpdatePlaceInput
 } from './place.types';
 import { PlacePreview } from './preview/place.preview.types';
 import { Tag } from './tag/tag.entity';
 import { TagService } from './tag/tag.service';
 import { WantToVisitService } from './wantToVisit/wantToVisit.service';
-import { PageOptions } from '../../graphql/pagination';
 
 @Service()
 @Resolver(Place)
@@ -195,11 +196,11 @@ export class PlaceResolver {
   @Authorized()
   @Mutation(() => Place)
   async updatePlace(
-    @Arg('providerId') providerId: string,
+    @Arg('placeId', () => Int) placeId: number,
     @Arg('data') input: UpdatePlaceInput,
     @Ctx() ctx: Context
   ): Promise<Place> {
-    return this.placeService.update(providerId, input, ctx.req.session.userId!);
+    return this.placeService.update(placeId, input, ctx.req.session.userId!);
   }
 
   @Authorized()
@@ -231,6 +232,18 @@ export class PlaceResolver {
     };
 
     return new PaginatedPlaceResponse(data, pageInfo);
+  }
+
+  @Authorized()
+  @Query(() => [Tag])
+  async searchTag(
+    @Arg('term') term: string,
+    @Arg('ignoreIds', () => [Int]) ignoreIds: number[]
+  ): Promise<Tag[]> {
+    if (!term) {
+      return [];
+    }
+    return this.tagService.searchTag(term, ignoreIds);
   }
 
   @FieldResolver()

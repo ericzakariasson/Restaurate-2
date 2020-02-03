@@ -87,6 +87,10 @@ export class PlaceService {
     return this.createPlace(providerPlaceId, user);
   }
 
+  async findById(placeId: number) {
+    return this.placeRepository.findById(placeId);
+  }
+
   async createPlace(providerPlaceId: string, user: User) {
     await this.wtvService.remove(providerPlaceId, user);
 
@@ -169,19 +173,19 @@ export class PlaceService {
     return place;
   }
 
-  async update(providerId: string, input: UpdatePlaceInput, userId: number) {
+  async update(placeId: number, input: UpdatePlaceInput, userId: number) {
     const user = await this.userService.findById(userId);
 
     if (!user) {
-      logger.error('No user found', { providerId, user: userId });
-      throw new Error(`No user found with id "${providerId}"`);
+      logger.error('No user found', { placeId, user: userId });
+      throw new Error(`No user found with id "${userId}"`);
     }
 
-    const place = await this.findByIdOrCreate(providerId, user);
+    const place = await this.findById(placeId);
 
     if (!place) {
-      logger.error('No place found', { providerId, user: userId });
-      throw new Error(`No place found with provider id "${providerId}"`);
+      logger.error('No place found', { placeId, user: userId });
+      throw new Error(`No place found with id "${placeId}"`);
     }
 
     if (input.comment) {

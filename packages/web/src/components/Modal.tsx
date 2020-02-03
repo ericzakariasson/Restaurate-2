@@ -22,6 +22,7 @@ const Popup = styled(animated.aside)<PopupProps>`
   z-index: 10;
   box-shadow: ${p => p.theme.boxShadow};
   padding: ${p => p.padding && '0 1rem 1.5rem'};
+  min-height: 50vh;
 `;
 
 const Background = styled(animated.div)`
@@ -69,7 +70,7 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   onClose,
   showCloseButton = true,
-  padding = false
+  padding = undefined
 }) => {
   const popupTransitions = useTransition(open, null, {
     from: { transform: 'translate3d(0, 100%, 0)' },

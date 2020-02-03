@@ -36,19 +36,12 @@ const StyledSelect = styled.select<SelectProps>`
 
 const priceLevelArray = Object.values(PriceLevel);
 
-const refetchPreview = (providerId: string) => ({
-  refetchQueries: [{ query: PreviewPlaceDocument, variables: { providerId } }]
-});
-
 interface PriceLevelProps {
   priceLevel: PriceLevel;
-  providerId: string;
+  placeId: number;
 }
 
-export const PriceLevelPicker = ({
-  priceLevel,
-  providerId
-}: PriceLevelProps) => {
+export const PriceLevelPicker = ({ priceLevel, placeId }: PriceLevelProps) => {
   const [updatePlace] = useUpdatePlaceMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -58,12 +51,11 @@ export const PriceLevelPicker = ({
 
     updatePlace({
       variables: {
-        providerId,
+        placeId,
         data: {
           priceLevel: priceLevelIndex
         }
-      },
-      ...refetchPreview(providerId)
+      }
     });
   };
 

@@ -49,7 +49,7 @@ export const UserArea = ({ providerId }: UserAreaProps) => {
         <UserStat label="Betyg" value={averageScore || '–'} />
       </UserStats>
       <PlaceForm
-        providerId={providerId}
+        placeId={Number(place.id)}
         types={types}
         priceLevel={priceLevel}
         tags={tags}

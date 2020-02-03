@@ -11,7 +11,7 @@ const UserPlaceInputs = styled.section`
 `;
 
 interface PlaceFormProps {
-  providerId: string;
+  placeId: number;
   types?: PlaceType[] | null;
   priceLevel: PriceLevel;
   tags: Tag[];
@@ -19,7 +19,7 @@ interface PlaceFormProps {
 }
 
 export const PlaceForm = ({
-  providerId,
+  placeId,
   types,
   priceLevel,
   tags,
@@ -27,10 +27,10 @@ export const PlaceForm = ({
 }: PlaceFormProps) => {
   return (
     <UserPlaceInputs>
-      <Types selected={types} providerId={providerId} />
-      <PriceLevelPicker priceLevel={priceLevel} providerId={providerId} />
-      <Tags tags={tags} providerId={providerId} />
-      <Comment comment={comment} providerId={providerId} />
+      <Types selected={types} placeId={placeId} />
+      <PriceLevelPicker priceLevel={priceLevel} placeId={placeId} />
+      <Tags tags={tags} placeId={placeId} />
+      <Comment comment={comment} placeId={placeId} />
     </UserPlaceInputs>
   );
 };
