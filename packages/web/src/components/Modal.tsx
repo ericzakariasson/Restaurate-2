@@ -23,6 +23,8 @@ const Popup = styled(animated.aside)<PopupProps>`
   box-shadow: ${p => p.theme.boxShadow};
   padding: ${p => p.padding && '0 1rem 1.5rem'};
   min-height: 50vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Background = styled(animated.div)`

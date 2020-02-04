@@ -4,15 +4,25 @@ import { TagItem } from 'components/Tag';
 import {
   Tag,
   useSearchTagLazyQuery,
-  useUpdatePlaceMutation
+  useUpdatePlaceMutation,
+  useAddTagMutation,
+  PlaceDocument,
+  PlaceQuery,
+  PlaceQueryVariables,
+  useRemoveTagMutation
 } from 'graphql/types';
 import { useDebounce } from 'hooks';
-import { Plus } from 'react-feather';
+import { Plus, X, Icon } from 'react-feather';
 import { animated, config, useTransition } from 'react-spring';
 import styled from 'styled-components';
 import { EmptyValue } from './InputBlock';
 
-const Content = styled.div``;
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-bottom: 1.5rem;
+`;
 
 const SearchArea = styled.div`
   padding: 0 1rem 1rem;
@@ -20,14 +30,13 @@ const SearchArea = styled.div`
 
 const TagArea = styled.div`
   border-top: 1px solid #eee;
-  padding: 1rem 1rem 1.5rem;
+  padding-top: 1rem;
 `;
-
-const TagList = styled.ul``;
 
 const SearchResultList = styled.ul`
   list-style: none;
   padding: 0 1rem 1rem;
+  flex: 1;
 `;
 
 const SearchResultItem = styled(animated.li)`
@@ -40,29 +49,57 @@ const SearchResultItem = styled(animated.li)`
 interface EditTagsModalProps extends ModalProps {
   tags: Tag[];
   placeId: number;
+  providerId: string;
 }
 
 export const EditTagsModal: React.FC<EditTagsModalProps> = ({
   open,
   onClose,
   tags,
-  placeId
+  placeId,
+  providerId
 }) => {
-  const [value, setValue] = React.useState('ka');
+  const [value, setValue] = React.useState('');
   const term = useDebounce(value, 300);
 
-  const [search, { data, loading }] = useSearchTagLazyQuery();
+  const [search, { data, loading, called }] = useSearchTagLazyQuery();
 
   const [update] = useUpdatePlaceMutation();
 
   React.useEffect(() => {
-    search({
+    if (term) {
+      search({
+        variables: {
+          term,
+          ignoreIds: tags.map(t => Number(t.id))
+        }
+      });
+    }
+  }, [term, search, tags]);
+
+  const handleSelectTag = async (tag: Tag) => {
+    await update({
+      variables: { placeId, data: { tags: [...tags, tag].map(t => t.name) } }
+    });
+  };
+
+  const handleRemoveTag = async (tag: Tag) => {
+    await update({
       variables: {
-        term,
-        ignoreIds: tags.map(t => Number(t.id))
+        placeId,
+        data: { tags: tags.filter(t => t.id !== tag.id).map(t => t.name) }
       }
     });
-  }, [term, search, tags]);
+  };
+
+  const handleCreateTag = async () => {
+    await update({
+      variables: { placeId, data: { tags: [...tags.map(t => t.name), value] } }
+    });
+    setValue('');
+  };
+
+  const searchResult = data?.searchTag ?? [];
 
   return (
     <Modal open={open} onClose={onClose} title="Taggar">
@@ -71,64 +108,64 @@ export const EditTagsModal: React.FC<EditTagsModalProps> = ({
           <Label text="Sök eller lägg till" />
           <Input value={value} onChange={e => setValue(e.target.value)} />
         </SearchArea>
-        <SearchResult
-          tags={data?.searchTag ?? []}
-          onSelect={tag => {}}
-          onCreate={() => {}}
-          value={term}
-          loading={loading}
-        />
-        <TagArea>
-          {tags.length > 0 ? (
-            <TagList>
-              {tags.map(tag => (
-                <TagItem key={tag.id}>{tag.name}</TagItem>
-              ))}
-            </TagList>
-          ) : (
-            <EmptyValue>Inga taggar</EmptyValue>
+        <AnimatedTagList
+          tags={searchResult}
+          onSelect={handleSelectTag}
+          icon={Plus}
+        >
+          {called && !loading && value.length > 0 && searchResult.length === 0 && (
+            <SearchResultItem>
+              <TagItem>{value}</TagItem>
+              <ActionButton icon={Plus} onClick={handleCreateTag} />
+            </SearchResultItem>
           )}
+        </AnimatedTagList>
+        <TagArea>
+          <AnimatedTagList
+            tags={tags}
+            onSelect={handleRemoveTag}
+            icon={X}
+            animateIn={false}
+          >
+            {tags.length === 0 && <EmptyValue>Inga taggar</EmptyValue>}
+          </AnimatedTagList>
         </TagArea>
       </Content>
     </Modal>
   );
 };
 
-interface SearchResultProps {
+interface AnimatedTagList {
   tags: Tag[];
   onSelect: (tag: Tag) => void;
-  onCreate: () => void;
-  value: string;
-  loading: boolean;
+  icon: Icon;
+  animateIn?: boolean;
 }
 
-const SearchResult: React.FC<SearchResultProps> = ({
+const AnimatedTagList: React.FC<AnimatedTagList> = ({
   tags,
+  children,
   onSelect,
-  value,
-  onCreate,
-  loading
+  icon,
+  animateIn = true
 }) => {
+  const height = 48;
   const transitions = useTransition(tags, tag => tag.id, {
     from: { opacity: 0, height: 0 },
     leave: { opacity: 0, height: 0 },
-    enter: () => ({ opacity: 1, height: 48 }),
-    config: config.slow
+    enter: { opacity: 1, height },
+    config: config.slow,
+    initial: animateIn ? { height } : undefined
   });
   return (
     <SearchResultList>
       {transitions.map(({ item: tag, props, key }) => (
         <SearchResultItem key={key} style={props}>
           <TagItem>{tag.name}</TagItem>
-          <ActionButton icon={Plus} onClick={() => onSelect(tag)} />
+          <ActionButton icon={icon} onClick={() => onSelect(tag)} />
         </SearchResultItem>
       ))}
-      {!loading && tags.length === 0 && (
-        <SearchResultItem>
-          <TagItem>{value}</TagItem>
-          <ActionButton icon={Plus} onClick={onCreate} />
-        </SearchResultItem>
-      )}
+      {children}
     </SearchResultList>
   );
 };

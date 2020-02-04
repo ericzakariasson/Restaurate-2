@@ -22,17 +22,16 @@ interface UserAreaProps {
 export const UserArea = ({ providerId }: UserAreaProps) => {
   const { data, loading } = usePlaceQuery({ variables: { providerId } });
 
-  const place = data && data.place;
-
-  if (loading) {
+  if (loading || !data) {
     return <Loading fullscreen={false} />;
   }
 
-  if (!place) {
+  if (data.place === null) {
     return <Redirect to={previewPlaceRoute({ providerId })} />;
   }
 
   const {
+    id,
     visitCount,
     averageScore,
     types,
@@ -40,7 +39,7 @@ export const UserArea = ({ providerId }: UserAreaProps) => {
     tags,
     comment,
     visits
-  } = place;
+  } = data.place;
 
   return (
     <Wrapper>
@@ -49,11 +48,12 @@ export const UserArea = ({ providerId }: UserAreaProps) => {
         <UserStat label="Betyg" value={averageScore || '–'} />
       </UserStats>
       <PlaceForm
-        placeId={Number(place.id)}
+        placeId={Number(id)}
         types={types}
         priceLevel={priceLevel}
         tags={tags}
         comment={comment}
+        providerId={providerId}
       />
       <Visits visits={visits as Visit[]} />
     </Wrapper>

@@ -68,16 +68,7 @@ export const WantToVisitButton = ({ providerId }: WantToVisitButtonProps) => {
 
   return (
     <Button
-      text={
-        <ButtonText>
-          {wantToVisit ? 'Ta bort' : 'Vill besöka'}
-          <ActionButton
-            as="span"
-            icon={wantToVisit ? X : Plus}
-            iconProps={{ size: 16, color: '#666' }}
-          />
-        </ButtonText>
-      }
+      text={<ButtonText>{wantToVisit ? 'Ta bort' : 'Vill besöka'}</ButtonText>}
       variant="secondary"
       color="white"
       size="normal"

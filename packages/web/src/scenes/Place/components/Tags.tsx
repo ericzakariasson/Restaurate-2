@@ -15,12 +15,17 @@ const List = styled.ul`
   align-items: center;
 `;
 
+const TagItemWithMargin = styled(TagItem)`
+  margin-bottom: 0.5rem;
+`;
+
 interface TagsProps {
   tags: Tag[];
   placeId: number;
+  providerId: string;
 }
 
-export const Tags = ({ tags, placeId }: TagsProps) => {
+export const Tags = ({ tags, placeId, providerId }: TagsProps) => {
   const { open, close, isOpen } = useModal({ defaultOpen: true });
 
   return (
@@ -30,14 +35,15 @@ export const Tags = ({ tags, placeId }: TagsProps) => {
         onClose={close}
         tags={tags}
         placeId={placeId}
+        providerId={providerId}
       />
       <InputBlock label="Taggar">
         <List>
           {tags.length > 0 ? (
             tags.map(tag => (
-              <TagItem as="li" key={tag.id}>
+              <TagItemWithMargin as="li" key={tag.id}>
                 {tag.name}
-              </TagItem>
+              </TagItemWithMargin>
             ))
           ) : (
             <EmptyValue>Inga taggar</EmptyValue>

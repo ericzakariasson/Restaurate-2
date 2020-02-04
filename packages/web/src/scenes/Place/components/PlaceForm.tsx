@@ -16,6 +16,7 @@ interface PlaceFormProps {
   priceLevel: PriceLevel;
   tags: Tag[];
   comment?: string | null;
+  providerId: string;
 }
 
 export const PlaceForm = ({
@@ -23,13 +24,14 @@ export const PlaceForm = ({
   types,
   priceLevel,
   tags,
-  comment
+  comment,
+  providerId
 }: PlaceFormProps) => {
   return (
     <UserPlaceInputs>
       <Types selected={types} placeId={placeId} />
       <PriceLevelPicker priceLevel={priceLevel} placeId={placeId} />
-      <Tags tags={tags} placeId={placeId} />
+      <Tags tags={tags} placeId={placeId} providerId={providerId} />
       <Comment comment={comment} placeId={placeId} />
     </UserPlaceInputs>
   );

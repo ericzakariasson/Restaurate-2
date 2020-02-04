@@ -73,19 +73,22 @@ export class PlaceResolver {
   @Query(() => Place, { nullable: true })
   async place(
     @Ctx() ctx: Context,
-    @Arg('providerId') providerId: string,
-    @Arg('userId', { nullable: true }) userId?: string
+    @Arg('id', { nullable: true }) id?: string,
+    @Arg('providerId', { nullable: true }) providerId?: string
   ): Promise<Place | null> {
-    const parsedUserId = Number(userId);
+    let place: Place | null = null;
 
-    if (userId && isNaN(parsedUserId)) {
-      throw new Error('is NaN');
+    if (id) {
+      place = await this.placeService.findById(id);
     }
 
-    const place = await this.placeService.findByProviderId(
-      providerId,
-      userId ? parsedUserId : ctx.req.session.userId!
-    );
+    if (providerId) {
+      place =
+        (await this.placeService.findByProviderId(
+          providerId,
+          ctx.req.session.userId!
+        )) ?? null;
+    }
 
     if (!place) {
       return null;
@@ -201,6 +204,25 @@ export class PlaceResolver {
     @Ctx() ctx: Context
   ): Promise<Place> {
     return this.placeService.update(placeId, input, ctx.req.session.userId!);
+  }
+
+  @Authorized()
+  @Mutation(() => Tag)
+  async addTag(
+    @Arg('placeId', () => Int) placeId: number,
+    @Arg('name') name: string,
+    @Ctx() ctx: Context
+  ): Promise<Tag> {
+    return this.placeService.addTag(placeId, name, ctx.req.session.userId!);
+  }
+  @Authorized()
+  @Mutation(() => Place)
+  async removeTag(
+    @Arg('id', () => Int) id: number,
+    @Arg('placeId', () => Int) placeId: number,
+    @Ctx() ctx: Context
+  ): Promise<Place> {
+    return this.placeService.removeTag(id, placeId, ctx.req.session.userId!);
   }
 
   @Authorized()

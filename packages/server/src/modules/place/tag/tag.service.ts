@@ -19,14 +19,7 @@ export class TagService {
       return tag;
     }
 
-    const newTag = this.tagRepository.create({
-      name,
-      user,
-      userId: user.id,
-      place: [place]
-    });
-
-    return this.tagRepository.save(newTag);
+    return this.createTag(name, place, user);
   }
 
   async getTagsByPlaceId(placeId: number): Promise<Tag[]> {
@@ -39,5 +32,16 @@ export class TagService {
 
   async searchTag(term: string, idsToIgnore: number[]) {
     return this.tagRepository.searchByName(term, idsToIgnore, 5);
+  }
+
+  async createTag(name: string, place: Place, user: User) {
+    const newTag = this.tagRepository.create({
+      name,
+      user,
+      userId: user.id,
+      place: [place]
+    });
+
+    return this.tagRepository.save(newTag);
   }
 }

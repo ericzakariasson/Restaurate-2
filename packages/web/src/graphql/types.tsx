@@ -134,6 +134,8 @@ export type Mutation = {
   createPlace?: Maybe<Place>,
   toggleWantToVisit: Scalars['Boolean'],
   updatePlace: Place,
+  addTag: Tag,
+  removeTag: Place,
   signImagesData: Array<SignImageData>,
 };
 
@@ -187,6 +189,18 @@ export type MutationToggleWantToVisitArgs = {
 export type MutationUpdatePlaceArgs = {
   data: UpdatePlaceInput,
   placeId: Scalars['Int']
+};
+
+
+export type MutationAddTagArgs = {
+  name: Scalars['String'],
+  placeId: Scalars['Int']
+};
+
+
+export type MutationRemoveTagArgs = {
+  placeId: Scalars['Int'],
+  id: Scalars['Int']
 };
 
 
@@ -362,8 +376,8 @@ export type QueryPlaceDetailsArgs = {
 
 
 export type QueryPlaceArgs = {
-  userId?: Maybe<Scalars['String']>,
-  providerId: Scalars['String']
+  providerId?: Maybe<Scalars['String']>,
+  id?: Maybe<Scalars['String']>
 };
 
 
@@ -650,6 +664,20 @@ export type VisitRateFragment = (
   & Pick<Rate, 'id' | 'name' | 'score' | 'calculatedScore' | 'createdAt' | 'updatedAt'>
 );
 
+export type AddTagMutationVariables = {
+  placeId: Scalars['Int'],
+  name: Scalars['String']
+};
+
+
+export type AddTagMutation = (
+  { __typename?: 'Mutation' }
+  & { addTag: (
+    { __typename?: 'Tag' }
+    & TagFragment
+  ) }
+);
+
 export type AddVisitMutationVariables = {
   data: AddVisitInput
 };
@@ -746,6 +774,20 @@ export type RegisterMutation = (
     { __typename?: 'User' }
     & Pick<User, 'id'>
   )> }
+);
+
+export type RemoveTagMutationVariables = {
+  placeId: Scalars['Int'],
+  id: Scalars['Int']
+};
+
+
+export type RemoveTagMutation = (
+  { __typename?: 'Mutation' }
+  & { removeTag: (
+    { __typename?: 'Place' }
+    & PlaceFragment
+  ) }
 );
 
 export type SendConfirmationEmailMutationVariables = {
@@ -914,8 +956,8 @@ export type PlaceDetailsQuery = (
 );
 
 export type PlaceQueryVariables = {
-  providerId: Scalars['String'],
-  userId?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>,
+  providerId?: Maybe<Scalars['String']>
 };
 
 
@@ -1210,6 +1252,39 @@ ${VisitRateFragmentDoc}
 ${UserFragmentDoc}
 ${VisitImageFragmentDoc}
 ${PlaceFragmentDoc}`;
+export const AddTagDocument = gql`
+    mutation AddTag($placeId: Int!, $name: String!) {
+  addTag(placeId: $placeId, name: $name) {
+    ...Tag
+  }
+}
+    ${TagFragmentDoc}`;
+export type AddTagMutationFn = ApolloReactCommon.MutationFunction<AddTagMutation, AddTagMutationVariables>;
+
+/**
+ * __useAddTagMutation__
+ *
+ * To run a mutation, you first call `useAddTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTagMutation, { data, loading, error }] = useAddTagMutation({
+ *   variables: {
+ *      placeId: // value for 'placeId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useAddTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddTagMutation, AddTagMutationVariables>) {
+        return ApolloReactHooks.useMutation<AddTagMutation, AddTagMutationVariables>(AddTagDocument, baseOptions);
+      }
+export type AddTagMutationHookResult = ReturnType<typeof useAddTagMutation>;
+export type AddTagMutationResult = ApolloReactCommon.MutationResult<AddTagMutation>;
+export type AddTagMutationOptions = ApolloReactCommon.BaseMutationOptions<AddTagMutation, AddTagMutationVariables>;
 export const AddVisitDocument = gql`
     mutation AddVisit($data: AddVisitInput!) {
   addVisit(data: $data) {
@@ -1465,6 +1540,39 @@ export function useRegisterMutation(baseOptions?: ApolloReactHooks.MutationHookO
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const RemoveTagDocument = gql`
+    mutation RemoveTag($placeId: Int!, $id: Int!) {
+  removeTag(placeId: $placeId, id: $id) {
+    ...Place
+  }
+}
+    ${PlaceFragmentDoc}`;
+export type RemoveTagMutationFn = ApolloReactCommon.MutationFunction<RemoveTagMutation, RemoveTagMutationVariables>;
+
+/**
+ * __useRemoveTagMutation__
+ *
+ * To run a mutation, you first call `useRemoveTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeTagMutation, { data, loading, error }] = useRemoveTagMutation({
+ *   variables: {
+ *      placeId: // value for 'placeId'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveTagMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveTagMutation, RemoveTagMutationVariables>) {
+        return ApolloReactHooks.useMutation<RemoveTagMutation, RemoveTagMutationVariables>(RemoveTagDocument, baseOptions);
+      }
+export type RemoveTagMutationHookResult = ReturnType<typeof useRemoveTagMutation>;
+export type RemoveTagMutationResult = ApolloReactCommon.MutationResult<RemoveTagMutation>;
+export type RemoveTagMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTagMutation, RemoveTagMutationVariables>;
 export const SendConfirmationEmailDocument = gql`
     mutation SendConfirmationEmail($email: String!) {
   sendConfirmationEmail(email: $email)
@@ -1839,8 +1947,8 @@ export type PlaceDetailsQueryHookResult = ReturnType<typeof usePlaceDetailsQuery
 export type PlaceDetailsLazyQueryHookResult = ReturnType<typeof usePlaceDetailsLazyQuery>;
 export type PlaceDetailsQueryResult = ApolloReactCommon.QueryResult<PlaceDetailsQuery, PlaceDetailsQueryVariables>;
 export const PlaceDocument = gql`
-    query Place($providerId: String!, $userId: String) {
-  place(providerId: $providerId, userId: $userId) {
+    query Place($id: String, $providerId: String) {
+  place(id: $id, providerId: $providerId) {
     ...Place
     visits {
       ...Visit
@@ -1862,8 +1970,8 @@ ${VisitFragmentDoc}`;
  * @example
  * const { data, loading, error } = usePlaceQuery({
  *   variables: {
+ *      id: // value for 'id'
  *      providerId: // value for 'providerId'
- *      userId: // value for 'userId'
  *   },
  * });
  */

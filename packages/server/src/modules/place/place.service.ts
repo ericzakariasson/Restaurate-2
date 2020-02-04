@@ -87,8 +87,8 @@ export class PlaceService {
     return this.createPlace(providerPlaceId, user);
   }
 
-  async findById(placeId: number) {
-    return this.placeRepository.findById(placeId);
+  async findById(placeId: number | string) {
+    return this.placeRepository.findById(Number(placeId));
   }
 
   async createPlace(providerPlaceId: string, user: User) {
@@ -210,6 +210,38 @@ export class PlaceService {
     if (input.tags) {
       await this.setTags(place, input.tags, user);
     }
+
+    await this.placeRepository.save(place);
+
+    return place;
+  }
+
+  async addTag(placeId: number, name: string, userId: number) {
+    const place = await this.placeRepository.findById(placeId);
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      logger.error('No user found with id', { userId });
+      throw new Error('No user specified');
+    }
+
+    return this.tagService.createTag(name, place, user);
+  }
+
+  async removeTag(id: number, placeId: number, userId: number) {
+    const place = await this.placeRepository.findOne(placeId, {
+      relations: ['tags']
+    });
+
+    if (!place) {
+      throw new Error('No place found');
+    }
+
+    if (place.userId !== userId) {
+      throw new Error('You can not edit a place that is not yours');
+    }
+
+    place.tags = (place.tags ?? []).filter(tag => tag.id !== id);
 
     await this.placeRepository.save(place);
 

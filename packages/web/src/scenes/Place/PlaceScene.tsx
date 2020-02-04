@@ -50,13 +50,15 @@ export const PlaceScene = () => {
     >
       <PlaceDetails providerId={providerId} />
       <Buttons>
-        <NavButton
-          text="Nytt besök"
-          variant="primary"
-          color="black"
-          size="normal"
-          to={addVisitRoute(providerId)}
-        />
+        <Route path={routes.myPlace} exact={true}>
+          <NavButton
+            text="Nytt besök"
+            variant="primary"
+            color="black"
+            size="normal"
+            to={addVisitRoute(providerId)}
+          />
+        </Route>
         <WantToVisitButton providerId={providerId} />
       </Buttons>
       <Switch>
@@ -65,6 +67,9 @@ export const PlaceScene = () => {
         </Route>
         <Route path={routes.myPlace} exact={true}>
           <UserArea providerId={providerId} />
+        </Route>
+        <Route>
+          <Redirect to={routes.previewPlace} />
         </Route>
       </Switch>
     </Page>

@@ -13,15 +13,17 @@ import { myPlaceRoute } from 'routes';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  padding: 20px;
-  border-radius: 20px;
-  background: #f5f5f5;
-  margin: 15px 0 30px;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  border: 2px dashed #ddd;
+  margin: 1rem 0 2rem;
 `;
 
 const CreateText = styled.p`
-  color: #444;
-  margin-bottom: 20px;
+  color: #222;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
   line-height: 1.5;
 `;
 interface CreatePlaceProps {
@@ -88,7 +90,7 @@ export const CreatePlace = ({ providerId }: CreatePlaceProps) => {
         text="Lägg till i mina ställen"
         onClick={() => createPlace()}
         loading={saving}
-        size="normal"
+        size="large"
       />
     </Wrapper>
   );
