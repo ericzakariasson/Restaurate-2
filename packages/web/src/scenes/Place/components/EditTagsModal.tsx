@@ -4,12 +4,7 @@ import { TagItem } from 'components/Tag';
 import {
   Tag,
   useSearchTagLazyQuery,
-  useUpdatePlaceMutation,
-  useAddTagMutation,
-  PlaceDocument,
-  PlaceQuery,
-  PlaceQueryVariables,
-  useRemoveTagMutation
+  useUpdatePlaceMutation
 } from 'graphql/types';
 import { useDebounce } from 'hooks';
 import { Plus, X, Icon } from 'react-feather';
@@ -43,21 +38,19 @@ const SearchResultItem = styled(animated.li)`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  overflow: hidden;
+  /* overflow: hidden; */
 `;
 
 interface EditTagsModalProps extends ModalProps {
   tags: Tag[];
   placeId: number;
-  providerId: string;
 }
 
 export const EditTagsModal: React.FC<EditTagsModalProps> = ({
   open,
   onClose,
   tags,
-  placeId,
-  providerId
+  placeId
 }) => {
   const [value, setValue] = React.useState('');
   const term = useDebounce(value, 300);
@@ -79,7 +72,10 @@ export const EditTagsModal: React.FC<EditTagsModalProps> = ({
 
   const handleSelectTag = async (tag: Tag) => {
     await update({
-      variables: { placeId, data: { tags: [...tags, tag].map(t => t.name) } }
+      variables: {
+        placeId,
+        data: { tags: tags.concat(tag).map(t => t.name) }
+      }
     });
   };
 
@@ -94,7 +90,10 @@ export const EditTagsModal: React.FC<EditTagsModalProps> = ({
 
   const handleCreateTag = async () => {
     await update({
-      variables: { placeId, data: { tags: [...tags.map(t => t.name), value] } }
+      variables: {
+        placeId,
+        data: { tags: [...tags.map(t => t.name), value] }
+      }
     });
     setValue('');
   };
@@ -106,7 +105,11 @@ export const EditTagsModal: React.FC<EditTagsModalProps> = ({
       <Content>
         <SearchArea>
           <Label text="Sök eller lägg till" />
-          <Input value={value} onChange={e => setValue(e.target.value)} />
+          <Input
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            placeholder="Indisk, vegetarisk, mysig..."
+          />
         </SearchArea>
         <AnimatedTagList
           tags={searchResult}
@@ -121,12 +124,7 @@ export const EditTagsModal: React.FC<EditTagsModalProps> = ({
           )}
         </AnimatedTagList>
         <TagArea>
-          <AnimatedTagList
-            tags={tags}
-            onSelect={handleRemoveTag}
-            icon={X}
-            animateIn={false}
-          >
+          <AnimatedTagList tags={tags} onSelect={handleRemoveTag} icon={X}>
             {tags.length === 0 && <EmptyValue>Inga taggar</EmptyValue>}
           </AnimatedTagList>
         </TagArea>
@@ -139,23 +137,20 @@ interface AnimatedTagList {
   tags: Tag[];
   onSelect: (tag: Tag) => void;
   icon: Icon;
-  animateIn?: boolean;
 }
 
 const AnimatedTagList: React.FC<AnimatedTagList> = ({
   tags,
   children,
   onSelect,
-  icon,
-  animateIn = true
+  icon
 }) => {
   const height = 48;
   const transitions = useTransition(tags, tag => tag.id, {
     from: { opacity: 0, height: 0 },
     leave: { opacity: 0, height: 0 },
     enter: { opacity: 1, height },
-    config: config.slow,
-    initial: animateIn ? { height } : undefined
+    config: config.default
   });
   return (
     <SearchResultList>

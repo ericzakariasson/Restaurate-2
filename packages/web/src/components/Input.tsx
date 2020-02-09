@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FieldProps } from 'formik';
-import styled from 'styled-components';
+import styled, { css, StyledProps } from 'styled-components';
 
 import { Label } from './Label';
 import { Size } from 'style/theme';
@@ -19,7 +19,7 @@ interface InputProps {
   fontSize?: Size;
 }
 
-export const Input = styled.input<InputProps>`
+export const baseStyle = (p: StyledProps<any>) => css`
   display: block;
   width: 100%;
   padding: 12px;
@@ -30,11 +30,11 @@ export const Input = styled.input<InputProps>`
   border: 1px solid #f5f5f5;
   outline: none;
   font-weight: 500;
-  transition: ${p => p.theme.transition};
+  transition: ${p.theme.transition};
   -webkit-appearance: none;
 
   &:focus {
-    transition: ${p => p.theme.transition};
+    transition: ${p.theme.transition};
     background: #fcfcfc;
     border-color: #eee;
   }
@@ -47,6 +47,10 @@ export const Input = styled.input<InputProps>`
   &::placeholder {
     color: #ddd;
   }
+`;
+
+export const Input = styled.input<InputProps>`
+  ${baseStyle}
 `;
 
 interface InputFieldProps extends FieldProps {

@@ -9,9 +9,7 @@ import {
   WantToVisitPlaceQueryVariables
 } from 'graphql/types';
 import * as React from 'react';
-import { Plus, X } from 'react-feather';
 import styled from 'styled-components';
-import { ActionButton } from '../../../components/ActionButton';
 
 const ButtonText = styled.span`
   display: flex;

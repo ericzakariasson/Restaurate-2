@@ -23,7 +23,7 @@ const Wrapper = styled.div<WrapperProps>`
   justify-content: center;
   padding: 20px;
   flex: 1;
-  animation: ${popIn} ease-in-out 0.25s;
+  /* animation: ${popIn} ease-in-out 0.25s; */
 
   ${p =>
     p.fullscreen &&

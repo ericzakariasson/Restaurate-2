@@ -1,32 +1,32 @@
-import { ActionButton, Input } from 'components';
-import { Tag, useUpdatePlaceMutation } from 'graphql/types';
+import { ActionButton } from 'components';
+import { TagItem } from 'components/Tag';
+import { Tag } from 'graphql/types';
 import { useModal } from 'hooks';
 import * as React from 'react';
 import { Edit } from 'react-feather';
 import styled from 'styled-components';
 import { EditTagsModal } from './EditTagsModal';
-import { InputBlock, EmptyValue } from './InputBlock';
-import { TagItem } from 'components/Tag';
+import { EmptyValue, InputBlock } from './InputBlock';
 
 const List = styled.ul`
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  margin: -0.25rem;
 `;
 
 const TagItemWithMargin = styled(TagItem)`
-  margin-bottom: 0.5rem;
+  margin: 0.25rem;
 `;
 
 interface TagsProps {
   tags: Tag[];
   placeId: number;
-  providerId: string;
 }
 
-export const Tags = ({ tags, placeId, providerId }: TagsProps) => {
-  const { open, close, isOpen } = useModal({ defaultOpen: true });
+export const Tags = ({ tags, placeId }: TagsProps) => {
+  const { open, close, isOpen } = useModal();
 
   return (
     <>
@@ -35,7 +35,6 @@ export const Tags = ({ tags, placeId, providerId }: TagsProps) => {
         onClose={close}
         tags={tags}
         placeId={placeId}
-        providerId={providerId}
       />
       <InputBlock label="Taggar">
         <List>

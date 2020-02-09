@@ -1,15 +1,11 @@
-import {
-  PreviewPlaceDocument,
-  PriceLevel,
-  useUpdatePlaceMutation
-} from 'graphql/types';
+import { PriceLevel, useUpdatePlaceMutation } from 'graphql/types';
 import { useDevice } from 'hooks';
 import * as React from 'react';
 import { Edit } from 'react-feather';
 import styled, { css } from 'styled-components';
 import { formatPriceLevel } from 'utils/format';
 import { ActionButton } from '../../../components/ActionButton';
-import { InputBlock, EmptyValue } from './InputBlock';
+import { EmptyValue, InputBlock } from './InputBlock';
 
 interface SelectProps {
   hide: boolean;

@@ -53,7 +53,6 @@ export const UserArea = ({ providerId }: UserAreaProps) => {
         priceLevel={priceLevel}
         tags={tags}
         comment={comment}
-        providerId={providerId}
       />
       <Visits visits={visits as Visit[]} />
     </Wrapper>

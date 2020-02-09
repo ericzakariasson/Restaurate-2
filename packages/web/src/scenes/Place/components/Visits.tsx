@@ -55,17 +55,20 @@ export const Visits: React.FC<VisitsProps> = ({ visits }) => {
     <Wrapper>
       {visits.length > 0 && <Title>Alla besök ({visits.length})</Title>}
       <VisitList>
-        {visits.map(visit => (
-          <VisitItem key={visit.id}>
-            <VisitLink to={visitRoute(visit.id)}>
-              <div>
-                <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
-                <InfoText>{visitInfo(visit)}</InfoText>
-              </div>
-              <Score score={visit.score} light />
-            </VisitLink>
-          </VisitItem>
-        ))}
+        {visits.map(visit => {
+          const info = visitInfo(visit);
+          return (
+            <VisitItem key={visit.id}>
+              <VisitLink to={visitRoute(visit.id)}>
+                <div>
+                  <VisitDate>{formatDate(visit.visitDate)}</VisitDate>
+                  {info && <InfoText>{info}</InfoText>}
+                </div>
+                <Score score={visit.score} light />
+              </VisitLink>
+            </VisitItem>
+          );
+        })}
       </VisitList>
     </Wrapper>
   );

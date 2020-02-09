@@ -1,15 +1,14 @@
-import { Textarea } from 'components';
+import { Modal, Textarea } from 'components';
 import { useUpdatePlaceMutation } from 'graphql/types';
+import { useModal } from 'hooks';
 import * as React from 'react';
-import { Check, Edit, Loader, X } from 'react-feather';
-import styled from 'styled-components';
+import { Edit } from 'react-feather';
 import { ActionButton } from '../../../components/ActionButton';
-import { InputBlock, EmptyValue } from './InputBlock';
+import { EmptyValue, InputBlock } from './InputBlock';
+import styled from 'styled-components';
 
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
+const ModalContent = styled.div`
+  padding: 0 1rem 1.5rem;
 `;
 
 interface CommentProps {
@@ -18,12 +17,11 @@ interface CommentProps {
 }
 
 export const Comment = ({ comment, placeId }: CommentProps) => {
-  const [editing, setEditing] = React.useState(false);
   const [value, setValue] = React.useState(comment || '');
 
-  const [updatePlace, { loading: saving }] = useUpdatePlaceMutation();
+  const [updatePlace] = useUpdatePlaceMutation();
 
-  const handleClick = async () => {
+  const saveComment = async () => {
     await updatePlace({
       variables: {
         placeId,
@@ -32,39 +30,29 @@ export const Comment = ({ comment, placeId }: CommentProps) => {
         }
       }
     });
-    setEditing(false);
+  };
+
+  const { open, isOpen, close } = useModal();
+
+  const handleClose = () => {
+    close();
+    saveComment();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setValue(e.target.value);
 
-  const iconProps = { color: '#666', size: 18 };
-
   return (
     <>
+      <Modal open={isOpen} onClose={handleClose} title="Kommentar">
+        <ModalContent>
+          <Textarea autoFocus value={value} onChange={handleChange} rows={5} />
+        </ModalContent>
+      </Modal>
       <InputBlock label="Kommentar">
         {comment ? <p>{comment}</p> : <EmptyValue>Ingen kommentar</EmptyValue>}
-        {!editing && (
-          <ActionButton onClick={() => setEditing(true)} icon={Edit} />
-        )}
+        <ActionButton onClick={open} icon={Edit} />
       </InputBlock>
-      {editing && (
-        <div>
-          <Textarea autoFocus value={value} onChange={handleChange} rows={3} />
-          <Wrapper>
-            <ActionButton
-              onClick={() => setEditing(false)}
-              icon={X}
-              iconProps={iconProps}
-            />
-            <ActionButton
-              onClick={handleClick}
-              icon={saving ? Loader : Check}
-              iconProps={iconProps}
-            />
-          </Wrapper>
-        </div>
-      )}
     </>
   );
 };

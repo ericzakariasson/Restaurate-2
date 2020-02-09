@@ -4,7 +4,7 @@ interface UseModalOptions {
   defaultOpen?: boolean;
 }
 
-export function useModal({ defaultOpen = false }: UseModalOptions) {
+export function useModal({ defaultOpen = false }: UseModalOptions = {}) {
   const [isOpen, setOpen] = React.useState(defaultOpen);
 
   return {
