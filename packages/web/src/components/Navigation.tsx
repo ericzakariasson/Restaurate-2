@@ -66,8 +66,8 @@ const menuItems = [
     name: 'Besök'
   },
   {
-    to: routes.searchPlace,
-    name: 'Sök ställe'
+    to: routes.search,
+    name: 'Sök'
   },
   {
     to: routes.wantToVisit,

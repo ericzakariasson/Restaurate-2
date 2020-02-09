@@ -15,3 +15,5 @@ export * from './NotFound/NotFoundScene';
 export * from './EditVisit/EditVisitScene';
 export * from './ConfirmUser/ConfirmUserScene';
 export * from './Admin/';
+export * from './SearchUser/SearchUserScene';
+export * from './Search/SearchScene';

@@ -28,7 +28,9 @@ import {
   SettingsScene,
   VisitScene,
   WantToVisitScene,
-  ConfirmationSentScene
+  ConfirmationSentScene,
+  SearchScene,
+  SearchUserScene
 } from './scenes';
 import { GlobalStyle, theme } from './style/theme';
 import { CloudinaryContext } from 'cloudinary-react';
@@ -86,6 +88,16 @@ const App = () => {
           <AuthRoute
             path={routes.searchPlace}
             component={SearchPlaceScene}
+            exact={true}
+          />
+          <AuthRoute
+            path={routes.searchUser}
+            component={SearchUserScene}
+            exact={true}
+          />
+          <AuthRoute
+            path={routes.search}
+            component={SearchScene}
             exact={true}
           />
           <AuthRoute

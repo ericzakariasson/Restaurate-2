@@ -18,6 +18,8 @@ export const routes = {
   previewPlace: '/place/:providerId/preview',
   myPlace: '/place/:providerId/me',
   searchPlace: '/search/place',
+  search: '/search',
+  searchUser: '/search/user',
   wantToVisit: '/want-to-visit',
   settings: '/settings',
   confirmUser: '/user/confirm/:token',

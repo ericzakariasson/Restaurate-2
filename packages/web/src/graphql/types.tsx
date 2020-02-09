@@ -246,6 +246,12 @@ export type PaginatedPlaceResponse = {
   pageInfo: PageInfo,
 };
 
+export type PaginatedUserResponse = {
+   __typename?: 'PaginatedUserResponse',
+  data: Array<User>,
+  pageInfo: PageInfo,
+};
+
 export type PaginatedVisitResponse = {
    __typename?: 'PaginatedVisitResponse',
   data: Array<Visit>,
@@ -337,6 +343,7 @@ export enum PriceLevel {
 export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
+  searchUsers: PaginatedUserResponse,
   visit?: Maybe<Visit>,
   visits: PaginatedVisitResponse,
   searchPlace: PlaceSearchResult,
@@ -351,6 +358,12 @@ export type Query = {
   places: PaginatedPlaceResponse,
   searchTag: Array<Tag>,
   metrics: Metrics,
+};
+
+
+export type QuerySearchUsersArgs = {
+  options: PageOptions,
+  term: Scalars['String']
 };
 
 
@@ -1015,6 +1028,23 @@ export type SearchTagQuery = (
     { __typename?: 'Tag' }
     & TagFragment
   )> }
+);
+
+export type SearchUserQueryVariables = {
+  term: Scalars['String'],
+  options: PageOptions
+};
+
+
+export type SearchUserQuery = (
+  { __typename?: 'Query' }
+  & { searchUsers: (
+    { __typename?: 'PaginatedUserResponse' }
+    & { data: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name' | 'visitCount'>
+    )> }
+  ) }
 );
 
 export type VisitQueryVariables = {
@@ -2087,6 +2117,44 @@ export function useSearchTagLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHo
 export type SearchTagQueryHookResult = ReturnType<typeof useSearchTagQuery>;
 export type SearchTagLazyQueryHookResult = ReturnType<typeof useSearchTagLazyQuery>;
 export type SearchTagQueryResult = ApolloReactCommon.QueryResult<SearchTagQuery, SearchTagQueryVariables>;
+export const SearchUserDocument = gql`
+    query SearchUser($term: String!, $options: PageOptions!) {
+  searchUsers(term: $term, options: $options) {
+    data {
+      id
+      name
+      visitCount
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchUserQuery__
+ *
+ * To run a query within a React component, call `useSearchUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchUserQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchUserQuery({
+ *   variables: {
+ *      term: // value for 'term'
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useSearchUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchUserQuery, SearchUserQueryVariables>) {
+        return ApolloReactHooks.useQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, baseOptions);
+      }
+export function useSearchUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchUserQuery, SearchUserQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, baseOptions);
+        }
+export type SearchUserQueryHookResult = ReturnType<typeof useSearchUserQuery>;
+export type SearchUserLazyQueryHookResult = ReturnType<typeof useSearchUserLazyQuery>;
+export type SearchUserQueryResult = ApolloReactCommon.QueryResult<SearchUserQuery, SearchUserQueryVariables>;
 export const VisitDocument = gql`
     query Visit($id: String!) {
   visit(id: $id) {
