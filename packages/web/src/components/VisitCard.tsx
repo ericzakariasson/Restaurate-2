@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Card, CardLink, Score } from './Card';
 import { PlaceInfo } from './PlaceInfo';
 import { visitRoute } from '../routes';
+import { plural } from 'utils/format';
 
 const PlaceArea = styled.div`
   margin-right: 0.5rem;
@@ -109,6 +110,3 @@ export const visitInfo = (visit: Visit) => {
 
   return [orders, images, comment].filter(Boolean).join(' • ');
 };
-
-const plural = (word: string, suffix: string, condition: boolean) =>
-  `${word}${condition ? suffix : ''}`;

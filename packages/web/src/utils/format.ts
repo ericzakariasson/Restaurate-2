@@ -47,3 +47,7 @@ export function formatURL(url: string): string {
 export function formatScore(score: number | null | undefined) {
   return score?.toFixed(1) ?? '–';
 }
+
+export function plural(word: string, suffix: string, condition: boolean) {
+  return `${word}${condition ? suffix : ''}`;
+}

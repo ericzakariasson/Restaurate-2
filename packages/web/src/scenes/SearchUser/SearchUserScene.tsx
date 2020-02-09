@@ -3,6 +3,34 @@ import { Page, Input, Label } from 'components';
 import { useDebounce } from 'hooks';
 import { useSearchUserLazyQuery } from 'graphql/types';
 import { useTransition, animated } from 'react-spring';
+import styled from 'styled-components';
+import { plural } from 'utils/format';
+
+const ResultList = styled.ul`
+  margin-top: 1rem;
+  list-style: none;
+`;
+
+const ResultItem = styled(animated.li)`
+  box-shadow: ${p => p.theme.boxShadow};
+  border-radius: 0.25rem;
+  overflow: hidden;
+`;
+
+const Name = styled.p`
+  padding: 1rem;
+  color: #222;
+  font-size: 1.15rem;
+  font-weight: 500;
+  padding-bottom: 0.25rem;
+`;
+
+const Stats = styled.p`
+  padding: 1rem;
+  color: #666;
+  font-size: 0.875rem;
+  padding-top: 0;
+`;
 
 export const SearchUserScene = () => {
   const [value, setValue] = React.useState('');
@@ -24,9 +52,9 @@ export const SearchUserScene = () => {
   const searchResult = data?.searchUsers.data ?? [];
 
   const transitions = useTransition(searchResult, user => user.id, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 }
+    from: { opacity: 0, height: 0, marginBottom: '0rem' },
+    enter: { opacity: 1, height: 75, marginBottom: '1rem' },
+    leave: { opacity: 0, height: 0, marginBottom: '0rem' }
   });
 
   return (
@@ -38,13 +66,17 @@ export const SearchUserScene = () => {
         onChange={handleChange}
         placeholder="Anders Svensson"
       />
-      <ul>
+      <ResultList>
         {transitions.map(({ key, props, item }) => (
-          <animated.li key={key} style={props}>
-            {item.name} <span>{item.visitCount}</span>
-          </animated.li>
+          <ResultItem key={key} style={props}>
+            <Name>{item.name}</Name>
+            <Stats>
+              {item.placeCount} {plural('ställe', 'n', item.placeCount !== 0)} •{' '}
+              {item.visitCount} besök
+            </Stats>
+          </ResultItem>
         ))}
-      </ul>
+      </ResultList>
     </Page>
   );
 };

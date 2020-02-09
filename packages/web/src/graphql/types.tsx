@@ -1042,7 +1042,7 @@ export type SearchUserQuery = (
     { __typename?: 'PaginatedUserResponse' }
     & { data: Array<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'name' | 'visitCount'>
+      & Pick<User, 'id' | 'name' | 'visitCount' | 'placeCount'>
     )> }
   ) }
 );
@@ -2124,6 +2124,7 @@ export const SearchUserDocument = gql`
       id
       name
       visitCount
+      placeCount
     }
   }
 }
