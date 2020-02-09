@@ -66,7 +66,7 @@ const TagList = styled.ul`
     width: 3rem;
     background: linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0) 0%,
+      rgba(255, 255, 255, 0) 0%,
       rgba(255, 255, 255, 1) 100%
     );
   }
