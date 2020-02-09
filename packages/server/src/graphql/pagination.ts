@@ -31,7 +31,7 @@ export class PageInfo implements Pagination {
   hasNextPage: boolean;
 }
 
-export default function PaginatedResponse<TItem>(
+export function PaginatedResponse<TItem>(
   getNodesType: () => [ClassType<TItem>]
 ) {
   @ObjectType({ isAbstract: true })

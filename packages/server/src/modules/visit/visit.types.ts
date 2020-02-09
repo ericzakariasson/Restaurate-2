@@ -1,7 +1,7 @@
 import { InputType, Field, ObjectType } from 'type-graphql';
 import { RateInput } from './rate/rate.types';
 import { Visit } from './visit.entity';
-import PaginatedResponse from '../../graphql/pagination';
+import { PaginatedResponse } from '../../graphql/pagination';
 
 @InputType()
 export class AddVisitInput {

@@ -3,6 +3,7 @@ import { IsEmail, Length } from 'class-validator';
 // import { MutationResponse } from '../../graphql/types';
 import { User } from './user.entity';
 import { MutationResponse } from '../../graphql/types';
+import { PaginatedResponse } from '../../graphql/pagination';
 
 @InputType()
 export class UserRegisterInput {
@@ -40,3 +41,6 @@ registerEnumType(LoginResponseCode, {
   name: 'LoginResponseCode', // this one is mandatory
   description: 'Response code for login resolver' // this one is optional
 });
+
+@ObjectType()
+export class PaginatedUserResponse extends PaginatedResponse(() => [User]) {}

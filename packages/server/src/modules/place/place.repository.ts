@@ -32,8 +32,8 @@ export class PlaceRepository extends Repository<Place> {
     this.createQueryBuilder('place')
       .where('place.userId = :userId', { userId })
       .orderBy('place.createdAt', 'DESC')
-      .take(limit)
       .skip(page * limit)
+      .take(limit)
       .getMany();
 
   findById = (placeId: number) => this.loader.load(placeId);

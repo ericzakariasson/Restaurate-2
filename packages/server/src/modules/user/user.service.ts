@@ -10,6 +10,8 @@ import { Visit } from '../visit/visit.entity';
 import { User } from './user.entity';
 import { createConfirmationUrl } from './user.helper';
 import { UserRegisterInput } from './user.types';
+import { PageOptions } from 'graphql/pagination';
+import { UserRepository } from './user.repository';
 
 export class UserNotConfirmedError {}
 export class UserPasswordIsNotValid {}
@@ -19,7 +21,7 @@ export class UserNotFound {}
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userRepository: UserRepository,
     @InjectRepository(Place)
     private readonly placeRepository: Repository<Place>,
     @InjectRepository(Visit)
@@ -142,5 +144,9 @@ export class UserService {
 
   async getUserVisitCount(userId: number) {
     return this.visitRepository.count({ where: { userId } });
+  }
+
+  async searchUsers(term: string, options: PageOptions) {
+    return this.userRepository.searchByName(term, options);
   }
 }

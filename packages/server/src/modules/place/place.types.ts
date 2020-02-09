@@ -1,6 +1,6 @@
 import { Field, InputType, InterfaceType, ObjectType } from 'type-graphql';
 import { Coordinates } from '../../utils/utils.types';
-import PaginatedResponse from '../../graphql/pagination';
+import { PaginatedResponse } from '../../graphql/pagination';
 import { Place } from './place.entity';
 
 export enum PlaceType {

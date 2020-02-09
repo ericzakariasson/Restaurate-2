@@ -10,6 +10,7 @@ import {
   UseMiddleware
 } from 'type-graphql';
 import { Service } from 'typedi';
+import { PageOptions } from '../../graphql/pagination';
 import { Context } from '../../graphql/types';
 import { RateLimit } from '../middleware/rateLimit';
 import { User } from './user.entity';
@@ -17,6 +18,7 @@ import { UserNotConfirmedError, UserService } from './user.service';
 import {
   LoginMutationResponse,
   LoginResponseCode,
+  PaginatedUserResponse,
   UserRegisterInput
 } from './user.types';
 
@@ -27,6 +29,26 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: Context): Promise<User | null> {
     return this.userService.getMe(ctx.req.session.userId!);
+  }
+
+  @Authorized()
+  @Query(() => PaginatedUserResponse)
+  async searchUsers(
+    @Arg('term') term: string,
+    @Arg('options') options: PageOptions
+  ): Promise<PaginatedUserResponse> {
+    if (term.length < 3) {
+      return new PaginatedUserResponse([], { ...options, hasNextPage: false });
+    }
+
+    const data = await this.userService.searchUsers(term, options);
+
+    const pageInfo = {
+      ...options,
+      hasNextPage: data.length >= options.limit
+    };
+
+    return new PaginatedUserResponse(data, pageInfo);
   }
 
   @UseMiddleware(RateLimit(20))
