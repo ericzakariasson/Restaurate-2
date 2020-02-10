@@ -25,7 +25,8 @@ export const routes = {
   confirmUser: '/user/confirm/:token',
   admin: {
     metrics: '/admin/metrics'
-  }
+  },
+  user: '/user/:userId'
 };
 
 export const visitRoute = (id: string) => `/visit/${id}`;
@@ -44,5 +45,8 @@ export const addVisitRoute = (providerPlaceId: string) =>
 
 export const editVisitRoute = (id: string) =>
   routes.editVisit.replace(':id', id);
+
+export const userRoute = (userId: string) =>
+  routes.user.replace(':userId', userId);
 
 export type WithVisitId = { id: string };

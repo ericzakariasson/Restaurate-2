@@ -30,7 +30,8 @@ import {
   WantToVisitScene,
   ConfirmationSentScene,
   SearchScene,
-  SearchUserScene
+  SearchUserScene,
+  UserScene
 } from './scenes';
 import { GlobalStyle, theme } from './style/theme';
 import { CloudinaryContext } from 'cloudinary-react';
@@ -127,6 +128,7 @@ const App = () => {
             component={SettingsScene}
             exact={true}
           />
+          <AuthRoute path={routes.user} component={UserScene} exact={true} />
           <AuthRoute
             path={routes.editVisit}
             component={EditVisitScene}

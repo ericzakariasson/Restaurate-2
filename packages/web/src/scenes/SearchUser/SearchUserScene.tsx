@@ -5,10 +5,16 @@ import { useSearchUserLazyQuery } from 'graphql/types';
 import { useTransition, animated } from 'react-spring';
 import styled from 'styled-components';
 import { plural } from 'utils/format';
+import { NavLink } from 'react-router-dom';
+import { userRoute } from 'routes';
 
 const ResultList = styled.ul`
   margin-top: 1rem;
   list-style: none;
+`;
+
+const NoStyleLink = styled(NavLink)`
+  text-decoration: none;
 `;
 
 const ResultItem = styled(animated.li)`
@@ -67,13 +73,15 @@ export const SearchUserScene = () => {
         placeholder="Anders Svensson"
       />
       <ResultList>
-        {transitions.map(({ key, props, item }) => (
+        {transitions.map(({ key, props, item: user }) => (
           <ResultItem key={key} style={props}>
-            <Name>{item.name}</Name>
-            <Stats>
-              {item.placeCount} {plural('ställe', 'n', item.placeCount !== 0)} •{' '}
-              {item.visitCount} besök
-            </Stats>
+            <NoStyleLink to={userRoute(user.id)}>
+              <Name>{user.name}</Name>
+              <Stats>
+                {user.placeCount} {plural('ställe', 'n', user.placeCount !== 0)}{' '}
+                • {user.visitCount} besök
+              </Stats>
+            </NoStyleLink>
           </ResultItem>
         ))}
       </ResultList>

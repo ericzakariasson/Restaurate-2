@@ -1,7 +1,7 @@
 import { trackEvent } from 'analytics/trackEvent';
 import { Image, Label, Loading, NavButton, Page, Score } from 'components';
 import { rateNodes } from 'constants/rate.constants';
-import { Rate, useVisitLazyQuery } from 'graphql/types';
+import { Rate, useVisitLazyQuery, useMeQuery } from 'graphql/types';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { editVisitRoute, myPlaceRoute } from 'routes';
@@ -119,6 +119,8 @@ const sortRatings = (a: Rate, b: Rate) => {
 export const VisitScene = () => {
   const { id } = useParams();
 
+  const { data: meData } = useMeQuery();
+
   const [getVisit, { data, loading, error }] = useVisitLazyQuery();
 
   React.useEffect(() => {
@@ -142,7 +144,11 @@ export const VisitScene = () => {
   return (
     <Page
       title={data?.visit?.place?.details?.name ?? '–'}
-      subTitle={formatDate(data?.visit?.visitDate)}
+      subTitle={`Besökt ${formatDate(data?.visit?.visitDate)}${
+        data?.visit?.user && data?.visit?.user.id !== meData?.me?.id
+          ? ` av ${data.visit.user.name}`
+          : ''
+      }`}
     >
       {data?.visit?.private && <Private>Privat</Private>}
       <Block>
@@ -194,7 +200,7 @@ export const VisitScene = () => {
         <Images>
           <ImageList>
             {data?.visit?.images.map(image => (
-              <li>
+              <li key={image.id}>
                 {image.orders && image.orders.join(', ')}
                 <Image key={image.id} publicId={image.publicId} />
               </li>

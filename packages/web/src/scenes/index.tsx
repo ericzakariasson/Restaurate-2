@@ -17,3 +17,4 @@ export * from './ConfirmUser/ConfirmUserScene';
 export * from './Admin/';
 export * from './SearchUser/SearchUserScene';
 export * from './Search/SearchScene';
+export * from './User/UserScene';

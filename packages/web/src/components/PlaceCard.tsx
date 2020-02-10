@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Score } from 'components/Card';
 import { PlaceInfo } from 'components/PlaceInfo';
-import { Tag } from 'graphql/types';
+import { Place } from 'graphql/types';
 
 export const Card = styled.div`
   padding: 1rem;
@@ -23,7 +23,7 @@ const NeutralLink = styled(Link)`
   color: #222;
 `;
 
-const Place = styled.div`
+const PlaceWrapper = styled.div`
   margin-right: 15px;
   min-width: 0;
   flex: 1;
@@ -90,35 +90,30 @@ const TagItem = styled.li`
 
 const TAG_LIMIT = 5;
 
-interface PlaceListItemProps {
-  name: string | undefined;
-  address: string | undefined;
-  visitCount: number;
+interface PlaceCardProps {
+  place: Place;
   to: string;
-  averageScore?: number | null;
-  tags: Tag[];
 }
 
-export const PlaceListItem = ({
-  name,
-  to,
-  address,
-  visitCount,
-  averageScore,
-  tags
-}: PlaceListItemProps) => (
+export const PlaceCard: React.FC<PlaceCardProps> = ({
+  place: { details, visitCount, averageScore, tags },
+  to
+}) => (
   <Card>
     <NeutralLink to={to}>
-      <Place>
-        <PlaceInfo name={name} address={address} />
-        {tags.length > 0 && (
+      <PlaceWrapper>
+        <PlaceInfo
+          name={details?.name ?? '—'}
+          address={details?.location.address.formatted ?? '—'}
+        />
+        {tags?.length > 0 && (
           <TagList>
             {tags.slice(0, TAG_LIMIT).map(t => (
               <TagItem key={t.id}>{t.name}</TagItem>
             ))}
           </TagList>
         )}
-      </Place>
+      </PlaceWrapper>
       <ScoreArea>
         <Numbers>
           <Score score={averageScore} />

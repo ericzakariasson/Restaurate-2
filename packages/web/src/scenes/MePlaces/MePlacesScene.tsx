@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { Loading, Page } from '../../components';
 import { NoResult } from '../../components/NoResult';
 import { SkeletonCards } from '../../components/Skeleton';
-import { useMePlacesQuery, useMeQuery } from '../../graphql/types';
+import { useMePlacesQuery, useMeQuery, Place } from 'graphql/types';
 import { myPlaceRoute } from '../../routes';
 import { GeneralError } from '../Error/GeneralError';
-import { PlaceListItem } from './component/PlaceListItem';
+import { PlaceCard } from 'components/PlaceCard';
 import { updateQuery } from './updateQuery';
 
 const PlaceList = styled.ul`
@@ -56,26 +56,21 @@ export const MePlacesScene = () => {
 
   return (
     <Page title="Ställen" subTitle={formatPlaceCount(placeCount)}>
-      {data?.places.data.length === 0 ? (
-        <NoResult label="ställen" />
-      ) : (
+      {data?.places.data && data.places.data.length > 0 ? (
         <>
-          {/* <Filter /> */}
           <PlaceList>
-            {data?.places.data.map(place => (
-              <PlaceListItem
+            {data.places.data.map(place => (
+              <PlaceCard
                 key={place.providerId}
-                name={place.details?.name}
-                address={place.details?.location.address.formatted}
-                visitCount={place.visitCount}
-                averageScore={place.averageScore}
+                place={place as Place}
                 to={myPlaceRoute({ providerId: place.providerId })}
-                tags={place.tags}
               />
             ))}
           </PlaceList>
           <Loader ref={ref}>{loading && <Loading fullscreen={false} />}</Loader>
         </>
+      ) : (
+        <NoResult label="ställen" />
       )}
     </Page>
   );
