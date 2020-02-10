@@ -344,6 +344,7 @@ export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
   searchUsers: PaginatedUserResponse,
+  user?: Maybe<User>,
   visit?: Maybe<Visit>,
   visits: PaginatedVisitResponse,
   searchPlace: PlaceSearchResult,
@@ -364,6 +365,11 @@ export type Query = {
 export type QuerySearchUsersArgs = {
   options: PageOptions,
   term: Scalars['String']
+};
+
+
+export type QueryUserArgs = {
+  userId: Scalars['Int']
 };
 
 
@@ -476,6 +482,18 @@ export type User = {
   updatedAt: Scalars['DateTime'],
   placeCount: Scalars['Float'],
   visitCount: Scalars['Float'],
+  places: Array<Place>,
+  visits: Array<Visit>,
+};
+
+
+export type UserPlacesArgs = {
+  options: PageOptions
+};
+
+
+export type UserVisitsArgs = {
+  options: PageOptions
 };
 
 export type UserRegisterInput = {
@@ -1045,6 +1063,60 @@ export type SearchUserQuery = (
       & Pick<User, 'id' | 'name' | 'visitCount' | 'placeCount'>
     )> }
   ) }
+);
+
+export type UserQueryVariables = {
+  userId: Scalars['Int'],
+  placeOptions: PageOptions,
+  visitOptions: PageOptions
+};
+
+
+export type UserQuery = (
+  { __typename?: 'Query' }
+  & { user: Maybe<(
+    { __typename?: 'User' }
+    & { places: Array<(
+      { __typename?: 'Place' }
+      & Pick<Place, 'id' | 'providerId' | 'averageScore'>
+      & { details: Maybe<(
+        { __typename?: 'PlaceDetails' }
+        & Pick<PlaceDetails, 'providerId' | 'name'>
+        & { location: (
+          { __typename?: 'Location' }
+          & { address: (
+            { __typename?: 'Address' }
+            & Pick<Address, 'formatted'>
+          ) }
+        ) }
+      )> }
+    )>, visits: Array<(
+      { __typename?: 'Visit' }
+      & Pick<Visit, 'id' | 'score' | 'visitDate' | 'comment'>
+      & { orders: Array<(
+        { __typename?: 'Order' }
+        & VisitOrderFragment
+      )>, images: Array<(
+        { __typename?: 'VisitImage' }
+        & Pick<VisitImage, 'id'>
+      )>, place: (
+        { __typename?: 'Place' }
+        & Pick<Place, 'id' | 'providerId'>
+        & { details: Maybe<(
+          { __typename?: 'PlaceDetails' }
+          & Pick<PlaceDetails, 'providerId' | 'name'>
+          & { location: (
+            { __typename?: 'Location' }
+            & { address: (
+              { __typename?: 'Address' }
+              & Pick<Address, 'formatted'>
+            ) }
+          ) }
+        )> }
+      ) }
+    )> }
+    & UserFragment
+  )> }
 );
 
 export type VisitQueryVariables = {
@@ -2156,6 +2228,81 @@ export function useSearchUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryH
 export type SearchUserQueryHookResult = ReturnType<typeof useSearchUserQuery>;
 export type SearchUserLazyQueryHookResult = ReturnType<typeof useSearchUserLazyQuery>;
 export type SearchUserQueryResult = ApolloReactCommon.QueryResult<SearchUserQuery, SearchUserQueryVariables>;
+export const UserDocument = gql`
+    query User($userId: Int!, $placeOptions: PageOptions!, $visitOptions: PageOptions!) {
+  user(userId: $userId) {
+    ...User
+    places(options: $placeOptions) {
+      id
+      providerId
+      details {
+        providerId
+        name
+        location {
+          address {
+            formatted
+          }
+        }
+      }
+      averageScore
+    }
+    visits(options: $visitOptions) {
+      id
+      score
+      visitDate
+      orders {
+        ...VisitOrder
+      }
+      images {
+        id
+      }
+      comment
+      place {
+        id
+        providerId
+        details {
+          providerId
+          name
+          location {
+            address {
+              formatted
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    ${UserFragmentDoc}
+${VisitOrderFragmentDoc}`;
+
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      placeOptions: // value for 'placeOptions'
+ *      visitOptions: // value for 'visitOptions'
+ *   },
+ * });
+ */
+export function useUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>) {
+        return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+      }
+export function useUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+        }
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
+export type UserQueryResult = ApolloReactCommon.QueryResult<UserQuery, UserQueryVariables>;
 export const VisitDocument = gql`
     query Visit($id: String!) {
   visit(id: $id) {

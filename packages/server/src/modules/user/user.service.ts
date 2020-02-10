@@ -29,7 +29,8 @@ export class UserService {
   ) {}
 
   async findById(id: number) {
-    return this.userRepository.findOne(id);
+    const user = await this.userRepository.findOne(id);
+    return user ?? null;
   }
 
   async findByEmail(email: string) {

@@ -130,7 +130,7 @@ export class VisitResolver {
   }
 
   @FieldResolver(() => User)
-  async user(@Root() visit: Visit): Promise<User | undefined> {
+  async user(@Root() visit: Visit): Promise<User | null> {
     return this.userService.findById(visit.userId);
   }
 

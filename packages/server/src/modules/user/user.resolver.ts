@@ -7,7 +7,8 @@ import {
   Query,
   Resolver,
   Root,
-  UseMiddleware
+  UseMiddleware,
+  Int
 } from 'type-graphql';
 import { Service } from 'typedi';
 import { PageOptions } from '../../graphql/pagination';
@@ -21,11 +22,17 @@ import {
   PaginatedUserResponse,
   UserRegisterInput
 } from './user.types';
+import { Place, PlaceService } from '../place';
+import { Visit, VisitService } from '../visit';
 
 @Service()
 @Resolver(User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly placeService: PlaceService,
+    private readonly visitService: VisitService
+  ) {}
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: Context): Promise<User | null> {
     return this.userService.getMe(ctx.req.session.userId!);
@@ -49,6 +56,12 @@ export class UserResolver {
     };
 
     return new PaginatedUserResponse(data, pageInfo);
+  }
+
+  @Authorized()
+  @Query(() => User, { nullable: true })
+  async user(@Arg('userId', () => Int) userId: number): Promise<User | null> {
+    return this.userService.findById(userId);
   }
 
   @UseMiddleware(RateLimit(20))
@@ -126,5 +139,21 @@ export class UserResolver {
   @FieldResolver(() => Number)
   async visitCount(@Root() user: User): Promise<number> {
     return this.userService.getUserVisitCount(user.id);
+  }
+
+  @FieldResolver(() => [Place])
+  async places(
+    @Root() user: User,
+    @Arg('options') options: PageOptions
+  ): Promise<Place[]> {
+    return this.placeService.getPlacesByUserId(user.id, options);
+  }
+
+  @FieldResolver(() => [Visit])
+  async visits(
+    @Root() user: User,
+    @Arg('options') options: PageOptions
+  ): Promise<Visit[]> {
+    return this.visitService.getVisitsByUserId(user.id, options);
   }
 }
