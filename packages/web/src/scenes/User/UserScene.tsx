@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory, Route } from 'react-router-dom';
 import { useUserQuery, User, Visit, Place } from 'graphql/types';
 import { QueryPage } from 'components/QueryPage';
 import { VisitCard } from 'components/VisitCard';
@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { groupVisitsByDay } from 'utils/groupVisitsByDay';
 import { VisitGroup } from 'components/VisitGroup';
 import { TabControl } from 'components/TabControl';
-import { userPlaceRoute } from 'routes';
+import { userPlaceRoute, routes } from 'routes';
 
 const InfoText = styled.p`
   margin-bottom: 1rem;
@@ -27,13 +27,10 @@ const ArticleTitle = styled.h1`
   font-weight: 500;
 `;
 
-enum Tabs {
-  Visits = 'Besök',
-  Places = 'Platser'
-}
-
 export const UserScene = () => {
-  const { userId } = useParams();
+  const { userId, tab } = useParams();
+
+  const history = useHistory();
 
   const query = useUserQuery({
     variables: {
@@ -43,11 +40,24 @@ export const UserScene = () => {
     }
   });
 
-  const tabs = [Tabs.Visits, Tabs.Places];
+  const tabs = [
+    {
+      label: 'Besök',
+      value: 'visits'
+    },
+    {
+      label: 'Platser',
+      value: 'places'
+    }
+  ];
 
-  const [activeTab, setActiveTab] = React.useState<Tabs>(Tabs.Visits);
+  React.useEffect(() => {
+    if (!tab) {
+      history.push(tabs[0].value);
+    }
+  }, [tabs, tab, history]);
 
-  const onChangeTab = (value: Tabs) => setActiveTab(value);
+  const activeTab = tabs.find(t => t.value === tab);
 
   return (
     <QueryPage<User> title={user => user.name} query={query}>
@@ -62,12 +72,12 @@ export const UserScene = () => {
             </InfoText>
           </section>
           <section>
-            <TabControl<Tabs>
+            <TabControl
               tabs={tabs}
-              activeTab={activeTab}
-              setActiveTab={onChangeTab}
+              activeTab={activeTab!}
+              onChange={tab => history.push(tab.value)}
             />
-            {activeTab === Tabs.Visits && (
+            <Route path={routes.user.replace(':tab', 'visits')}>
               <Article>
                 <ArticleTitle>Besök</ArticleTitle>
                 {Object.entries(groupVisitsByDay(user.visits)).map(
@@ -80,8 +90,8 @@ export const UserScene = () => {
                   )
                 )}
               </Article>
-            )}
-            {activeTab === Tabs.Places && (
+            </Route>
+            <Route path={routes.user.replace(':tab', 'places')}>
               <Article>
                 <ArticleTitle>Platser</ArticleTitle>
                 <ul>
@@ -97,7 +107,7 @@ export const UserScene = () => {
                   ))}
                 </ul>
               </Article>
-            )}
+            </Route>
           </section>
         </>
       )}

@@ -56,27 +56,23 @@ interface Tab {
   value: string;
 }
 
-interface TabControlProps<T> {
-  tabs: T[];
-  activeTab: T;
-  setActiveTab: (tab: T) => void;
+interface TabControlProps {
+  tabs: Tab[];
+  activeTab: Tab;
+  onChange: (tab: Tab) => void;
 }
 
-export function TabControl<T>({
-  tabs,
-  activeTab,
-  setActiveTab
-}: TabControlProps<T>) {
-  const activeTabIndex = tabs.findIndex(tab => tab === activeTab);
+export function TabControl({ tabs, activeTab, onChange }: TabControlProps) {
+  const activeTabIndex = tabs.findIndex(tab => tab.value === activeTab.value);
   return (
     <Wrapper>
       {tabs.map((tab, i) => (
         <Tab
-          key={String(tab)}
+          key={tab.value}
           active={i === activeTabIndex}
-          onClick={() => setActiveTab(tab)}
+          onClick={() => onChange(tab)}
         >
-          {tab}
+          {tab.label}
         </Tab>
       ))}
       <Highlight total={tabs.length} active={activeTabIndex}>

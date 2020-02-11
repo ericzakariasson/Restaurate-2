@@ -27,7 +27,7 @@ export const routes = {
   admin: {
     metrics: '/admin/metrics'
   },
-  user: '/user/:userId'
+  user: '/user/:userId/:tab'
 };
 
 type ProviderId = { providerId: string };
@@ -47,7 +47,8 @@ export const placeRoute = ({ providerId }: ProviderId) =>
 export const userPlaceRoute = ({ providerId, userId }: ProviderId & UserId) =>
   routes.userPlace
     .replace(':providerId', providerId)
-    .replace(':userId', userId);
+    .replace(':userId', userId)
+    .replace(':tab', 'visits');
 
 export const addVisitRoute = (providerPlaceId: string) =>
   `/add-visit/${providerPlaceId}`;
