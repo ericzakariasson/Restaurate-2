@@ -17,6 +17,7 @@ export const routes = {
   place: '/place/:providerId',
   previewPlace: '/place/:providerId/preview',
   myPlace: '/place/:providerId/me',
+  userPlace: '/place/:providerId/:userId',
   searchPlace: '/search/place',
   search: '/search',
   searchUser: '/search/user',
@@ -29,16 +30,24 @@ export const routes = {
   user: '/user/:userId'
 };
 
+type ProviderId = { providerId: string };
+type UserId = { userId: string };
+
 export const visitRoute = (id: string) => `/visit/${id}`;
 
-export const previewPlaceRoute = ({ providerId }: { providerId: string }) =>
+export const previewPlaceRoute = ({ providerId }: ProviderId) =>
   routes.previewPlace.replace(':providerId', providerId);
 
-export const myPlaceRoute = ({ providerId }: { providerId: string }) =>
+export const myPlaceRoute = ({ providerId }: ProviderId) =>
   routes.myPlace.replace(':providerId', providerId);
 
-export const placeRoute = ({ providerId }: { providerId: string }) =>
+export const placeRoute = ({ providerId }: ProviderId) =>
   routes.place.replace(':providerId', providerId);
+
+export const userPlaceRoute = ({ providerId, userId }: ProviderId & UserId) =>
+  routes.userPlace
+    .replace(':providerId', providerId)
+    .replace(':userId', userId);
 
 export const addVisitRoute = (providerPlaceId: string) =>
   `/add-visit/${providerPlaceId}`;

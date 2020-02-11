@@ -39,7 +39,7 @@ const Highlight = styled.div<HighlightProps>`
   position: absolute;
   z-index: 1;
   transform: translate3d(${p => p.active * 100}%, 0, 0);
-  transition: 0.3s cubic-bezier(0.8, 0, 0.2, 1);
+  transition: 0.4s cubic-bezier(0.8, 0, 0.2, 1);
   will-change: transform;
 `;
 

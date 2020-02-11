@@ -51,7 +51,7 @@ export class PlaceRepository extends Repository<Place> {
       .groupBy('place.id')
       .getRawMany();
 
-  findByProviderId = (providerId: string, userId: number) =>
+  findByProviderId = (providerId: string, userId: number | string) =>
     this.createQueryBuilder('place')
       .where('place.providerId = :providerId', { providerId })
       .andWhere('place.userId = :userId', { userId })

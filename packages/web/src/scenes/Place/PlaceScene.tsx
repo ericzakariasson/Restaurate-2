@@ -65,7 +65,7 @@ export const PlaceScene = () => {
         <Route path={routes.previewPlace} exact={true}>
           <Preview providerId={providerId} />
         </Route>
-        <Route path={routes.myPlace} exact={true}>
+        <Route path={routes.userPlace} exact={true}>
           <UserArea providerId={providerId} />
         </Route>
         <Route>

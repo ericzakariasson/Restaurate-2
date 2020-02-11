@@ -74,7 +74,8 @@ export class PlaceResolver {
   async place(
     @Ctx() ctx: Context,
     @Arg('id', { nullable: true }) id?: string,
-    @Arg('providerId', { nullable: true }) providerId?: string
+    @Arg('providerId', { nullable: true }) providerId?: string,
+    @Arg('userId', { nullable: true }) userId?: string
   ): Promise<Place | null> {
     let place: Place | null = null;
 
@@ -86,7 +87,7 @@ export class PlaceResolver {
       place =
         (await this.placeService.findByProviderId(
           providerId,
-          ctx.req.session.userId!
+          userId ?? ctx.req.session.userId!
         )) ?? null;
     }
 
@@ -94,9 +95,9 @@ export class PlaceResolver {
       return null;
     }
 
-    if (place.userId !== ctx.req.session.userId) {
-      return null;
-    }
+    // if (place.userId !== ctx.req.session.userId) {
+    //   return null;
+    // }
 
     return place;
   }

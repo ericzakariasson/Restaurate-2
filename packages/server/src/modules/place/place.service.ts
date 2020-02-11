@@ -46,7 +46,7 @@ export class PlaceService {
   getVisitsById = (placeId: number) =>
     this.visitRepository.findByPlaceId(placeId);
 
-  findByProviderId = (providerId: string, userId: number) =>
+  findByProviderId = (providerId: string, userId: number | string) =>
     this.placeRepository.findByProviderId(providerId, userId);
 
   async getPlaceDetails(providerId: string) {

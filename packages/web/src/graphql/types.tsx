@@ -395,6 +395,7 @@ export type QueryPlaceDetailsArgs = {
 
 
 export type QueryPlaceArgs = {
+  userId?: Maybe<Scalars['String']>,
   providerId?: Maybe<Scalars['String']>,
   id?: Maybe<Scalars['String']>
 };
@@ -988,7 +989,8 @@ export type PlaceDetailsQuery = (
 
 export type PlaceQueryVariables = {
   id?: Maybe<Scalars['String']>,
-  providerId?: Maybe<Scalars['String']>
+  providerId?: Maybe<Scalars['String']>,
+  userId?: Maybe<Scalars['String']>
 };
 
 
@@ -1089,6 +1091,9 @@ export type UserQuery = (
             & Pick<Address, 'formatted'>
           ) }
         ) }
+      )>, tags: Array<(
+        { __typename?: 'Tag' }
+        & TagFragment
       )> }
     )>, visits: Array<(
       { __typename?: 'Visit' }
@@ -2049,8 +2054,8 @@ export type PlaceDetailsQueryHookResult = ReturnType<typeof usePlaceDetailsQuery
 export type PlaceDetailsLazyQueryHookResult = ReturnType<typeof usePlaceDetailsLazyQuery>;
 export type PlaceDetailsQueryResult = ApolloReactCommon.QueryResult<PlaceDetailsQuery, PlaceDetailsQueryVariables>;
 export const PlaceDocument = gql`
-    query Place($id: String, $providerId: String) {
-  place(id: $id, providerId: $providerId) {
+    query Place($id: String, $providerId: String, $userId: String) {
+  place(id: $id, providerId: $providerId, userId: $userId) {
     ...Place
     visits {
       ...Visit
@@ -2074,6 +2079,7 @@ ${VisitFragmentDoc}`;
  *   variables: {
  *      id: // value for 'id'
  *      providerId: // value for 'providerId'
+ *      userId: // value for 'userId'
  *   },
  * });
  */
@@ -2244,6 +2250,9 @@ export const UserDocument = gql`
           }
         }
       }
+      tags {
+        ...Tag
+      }
       averageScore
     }
     visits(options: $visitOptions) {
@@ -2274,6 +2283,7 @@ export const UserDocument = gql`
   }
 }
     ${UserFragmentDoc}
+${TagFragmentDoc}
 ${VisitOrderFragmentDoc}`;
 
 /**

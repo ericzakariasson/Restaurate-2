@@ -63,6 +63,7 @@ class HereRepository {
 
     if (response.status !== 200) {
       logger.error('HERE response error', response.statusText);
+      logger.debug(response);
       return null;
     }
 

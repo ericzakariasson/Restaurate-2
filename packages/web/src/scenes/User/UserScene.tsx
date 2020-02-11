@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { groupVisitsByDay } from 'utils/groupVisitsByDay';
 import { VisitGroup } from 'components/VisitGroup';
 import { TabControl } from 'components/TabControl';
+import { userPlaceRoute } from 'routes';
 
 const InfoText = styled.p`
   margin-bottom: 1rem;
@@ -85,7 +86,14 @@ export const UserScene = () => {
                 <ArticleTitle>Platser</ArticleTitle>
                 <ul>
                   {user.places.map((place: Place) => (
-                    <PlaceCard key={place.id!} place={place} to="" />
+                    <PlaceCard
+                      key={place.id!}
+                      place={place}
+                      to={userPlaceRoute({
+                        providerId: place.providerId,
+                        userId: user.id
+                      })}
+                    />
                   ))}
                 </ul>
               </Article>

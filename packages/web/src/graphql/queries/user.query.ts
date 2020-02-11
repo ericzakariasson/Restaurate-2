@@ -21,6 +21,9 @@ export default gql`
             }
           }
         }
+        tags {
+          ...Tag
+        }
         averageScore
       }
       visits(options: $visitOptions) {
@@ -51,4 +54,5 @@ export default gql`
     }
   }
   ${fragments.user}
+  ${fragments.tag}
 `;

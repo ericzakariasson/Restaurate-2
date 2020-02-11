@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { PlaceForm } from './PlaceForm';
 import { UserStat } from './UserStat';
 import { Visits } from './Visits';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { previewPlaceRoute } from 'routes';
 
 const Wrapper = styled.section``;
@@ -20,7 +20,11 @@ interface UserAreaProps {
 }
 
 export const UserArea = ({ providerId }: UserAreaProps) => {
-  const { data, loading } = usePlaceQuery({ variables: { providerId } });
+  const { userId } = useParams();
+
+  const { data, loading } = usePlaceQuery({
+    variables: { providerId, userId: userId === 'me' ? undefined : userId }
+  });
 
   if (loading || !data) {
     return <Loading fullscreen={false} />;
