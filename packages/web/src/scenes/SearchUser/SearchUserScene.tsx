@@ -5,7 +5,7 @@ import { useSearchUserLazyQuery } from 'graphql/types';
 import { useTransition, animated } from 'react-spring';
 import styled from 'styled-components';
 import { plural } from 'utils/format';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { userRoute } from 'routes';
 
 const ResultList = styled.ul`
@@ -39,13 +39,19 @@ const Stats = styled.p`
 `;
 
 export const SearchUserScene = () => {
-  const [value, setValue] = React.useState('');
+  const history = useHistory();
+  const searchParams = new URLSearchParams(useLocation().search);
+  const storedTerm = searchParams.get('term');
+
+  const [value, setValue] = React.useState(storedTerm ?? '');
   const term = useDebounce(value, 300);
 
   const [search, { data }] = useSearchUserLazyQuery();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
+    history.push({ search: `term=${e.target.value}` });
+  };
 
   React.useEffect(() => {
     if (term.length > 2) {

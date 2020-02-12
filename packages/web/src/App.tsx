@@ -128,7 +128,7 @@ const App = () => {
             component={SettingsScene}
             exact={true}
           />
-          <AuthRoute path={routes.user} component={UserScene} exact={true} />
+          <AuthRoute path={routes.user.index} component={UserScene} />
           <AuthRoute
             path={routes.editVisit}
             component={EditVisitScene}

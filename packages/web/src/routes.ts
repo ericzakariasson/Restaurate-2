@@ -27,7 +27,11 @@ export const routes = {
   admin: {
     metrics: '/admin/metrics'
   },
-  user: '/user/:userId/:tab'
+  user: {
+    index: '/user/:userId/:tab?',
+    visits: '/user/:userId/visits',
+    places: '/user/:userId/places'
+  }
 };
 
 type ProviderId = { providerId: string };
@@ -47,8 +51,7 @@ export const placeRoute = ({ providerId }: ProviderId) =>
 export const userPlaceRoute = ({ providerId, userId }: ProviderId & UserId) =>
   routes.userPlace
     .replace(':providerId', providerId)
-    .replace(':userId', userId)
-    .replace(':tab', 'visits');
+    .replace(':userId', userId);
 
 export const addVisitRoute = (providerPlaceId: string) =>
   `/add-visit/${providerPlaceId}`;
@@ -57,6 +60,6 @@ export const editVisitRoute = (id: string) =>
   routes.editVisit.replace(':id', id);
 
 export const userRoute = (userId: string) =>
-  routes.user.replace(':userId', userId);
+  routes.user.index.replace(':userId', userId).replace(':tab?', '');
 
 export type WithVisitId = { id: string };

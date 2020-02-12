@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useParams, useHistory, Route } from 'react-router-dom';
+import { useParams, useHistory, Route, useRouteMatch } from 'react-router-dom';
 import { useUserQuery, User, Visit, Place } from 'graphql/types';
 import { QueryPage } from 'components/QueryPage';
-import { VisitCard } from 'components/VisitCard';
 import { PlaceCard } from 'components/PlaceCard';
 import { formatDate, plural } from 'utils/format';
 import styled from 'styled-components';
@@ -29,7 +28,6 @@ const ArticleTitle = styled.h1`
 
 export const UserScene = () => {
   const { userId, tab } = useParams();
-
   const history = useHistory();
 
   const query = useUserQuery({
@@ -55,9 +53,9 @@ export const UserScene = () => {
     if (!tab) {
       history.push(tabs[0].value);
     }
-  }, [tabs, tab, history]);
+  }, [tab, history, tabs]);
 
-  const activeTab = tabs.find(t => t.value === tab);
+  const activeTab = tabs.find(t => t.value === tab)!;
 
   return (
     <QueryPage<User> title={user => user.name} query={query}>
@@ -74,10 +72,10 @@ export const UserScene = () => {
           <section>
             <TabControl
               tabs={tabs}
-              activeTab={activeTab!}
+              activeTab={activeTab}
               onChange={tab => history.push(tab.value)}
             />
-            <Route path={routes.user.replace(':tab', 'visits')}>
+            <Route path={routes.user.visits}>
               <Article>
                 <ArticleTitle>Besök</ArticleTitle>
                 {Object.entries(groupVisitsByDay(user.visits)).map(
@@ -91,7 +89,7 @@ export const UserScene = () => {
                 )}
               </Article>
             </Route>
-            <Route path={routes.user.replace(':tab', 'places')}>
+            <Route path={routes.user.places}>
               <Article>
                 <ArticleTitle>Platser</ArticleTitle>
                 <ul>
