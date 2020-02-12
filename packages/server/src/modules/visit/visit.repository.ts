@@ -26,13 +26,24 @@ export class VisitRepository extends Repository<Visit> {
       .groupBy('visit.placeId')
       .getRawMany();
 
-  findByUserId = (userId: number, { page, limit }: PageOptions) =>
-    this.createQueryBuilder('visit')
-      .where('visit.userId = :userId', { userId })
+  findByUserId = (
+    userId: number,
+    publicOnly: boolean,
+    { page, limit }: PageOptions
+  ) => {
+    const q = this.createQueryBuilder('visit').where('visit.userId = :userId', {
+      userId
+    });
+
+    if (publicOnly) {
+      q.andWhere('visit.private = false');
+    }
+    return q
       .orderBy('visit.visitDate', 'DESC')
       .take(limit)
       .skip(limit * page)
       .getMany();
+  };
 
   findByPlaceId = (placeId: number) =>
     this.createQueryBuilder('visit')

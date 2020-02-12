@@ -25,6 +25,7 @@ export default gql`
           ...Tag
         }
         averageScore
+        visitCount
       }
       visits(options: $visitOptions) {
         id

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useParams, useHistory, Route, useRouteMatch } from 'react-router-dom';
+import { useParams, useHistory, Route } from 'react-router-dom';
 import { useUserQuery, User, Visit, Place } from 'graphql/types';
 import { QueryPage } from 'components/QueryPage';
 import { PlaceCard } from 'components/PlaceCard';

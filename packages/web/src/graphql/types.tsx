@@ -1080,7 +1080,7 @@ export type UserQuery = (
     { __typename?: 'User' }
     & { places: Array<(
       { __typename?: 'Place' }
-      & Pick<Place, 'id' | 'providerId' | 'averageScore'>
+      & Pick<Place, 'id' | 'providerId' | 'averageScore' | 'visitCount'>
       & { details: Maybe<(
         { __typename?: 'PlaceDetails' }
         & Pick<PlaceDetails, 'providerId' | 'name'>
@@ -2254,6 +2254,7 @@ export const UserDocument = gql`
         ...Tag
       }
       averageScore
+      visitCount
     }
     visits(options: $visitOptions) {
       id

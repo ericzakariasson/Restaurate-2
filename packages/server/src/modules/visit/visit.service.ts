@@ -288,8 +288,12 @@ export class VisitService {
 
   getVisitsByUserId = (
     userId: number,
-    options: PageOptions
-  ): Promise<Visit[]> => this.visitRepository.findByUserId(userId, options);
+    authenticatedUserId: number,
+    pageOptions: PageOptions
+  ): Promise<Visit[]> => {
+    const publicOnly = userId !== authenticatedUserId;
+    return this.visitRepository.findByUserId(userId, publicOnly, pageOptions);
+  };
 
   getVisitsByPlaceId = (placeId: number) =>
     this.visitRepository.findByPlaceId(placeId);

@@ -113,6 +113,7 @@ export class VisitResolver {
   ): Promise<PaginatedVisitResponse> {
     const data = await this.visitService.getVisitsByUserId(
       ctx.req.session.userId!,
+      ctx.req.session.userId!,
       options
     );
 

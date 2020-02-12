@@ -241,17 +241,17 @@ export class PlaceResolver {
   @Authorized()
   @Query(() => PaginatedPlaceResponse)
   async places(
-    @Arg('options') options: PageOptions,
-    @Ctx() ctx: Context
+    @Ctx() ctx: Context,
+    @Arg('options') pageOptions: PageOptions
   ): Promise<PaginatedPlaceResponse> {
     const data = await this.placeService.getPlacesByUserId(
       ctx.req.session.userId!,
-      options
+      pageOptions
     );
 
     const pageInfo = {
-      ...options,
-      hasNextPage: data.length >= options.limit
+      ...pageOptions,
+      hasNextPage: data.length >= pageOptions.limit
     };
 
     return new PaginatedPlaceResponse(data, pageInfo);

@@ -144,16 +144,21 @@ export class UserResolver {
   @FieldResolver(() => [Place])
   async places(
     @Root() user: User,
-    @Arg('options') options: PageOptions
+    @Arg('options') pageOptions: PageOptions
   ): Promise<Place[]> {
-    return this.placeService.getPlacesByUserId(user.id, options);
+    return this.placeService.getPlacesByUserId(user.id, pageOptions);
   }
 
   @FieldResolver(() => [Visit])
   async visits(
+    @Ctx() ctx: Context,
     @Root() user: User,
-    @Arg('options') options: PageOptions
+    @Arg('options') pageOptions: PageOptions
   ): Promise<Visit[]> {
-    return this.visitService.getVisitsByUserId(user.id, options);
+    return this.visitService.getVisitsByUserId(
+      user.id,
+      ctx.req.session.userId!,
+      pageOptions
+    );
   }
 }

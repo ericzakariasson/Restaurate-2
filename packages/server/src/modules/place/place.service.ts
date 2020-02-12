@@ -132,8 +132,8 @@ export class PlaceService {
 
   getPlacesByUserId = (
     userId: number,
-    options: PageOptions
-  ): Promise<Place[]> => this.placeRepository.findByUserId(userId, options);
+    pageOptions: PageOptions
+  ): Promise<Place[]> => this.placeRepository.findByUserId(userId, pageOptions);
 
   async searchPlaces(userId: number, query: string, location?: Coordinates) {
     const results = await this.hereService.search(query, location);
