@@ -44,7 +44,7 @@
     "shortid": "^2.2.15",
     "type-graphql": "^0.17.4",
     "typedi": "^0.8.0",
-    "typeorm": "0.2.22",
+    "typeorm": "0.2.25",
     "typeorm-typedi-extensions": "^0.2.3",
     "uuid": "^3.3.3",
     "winston": "^3.2.1"
